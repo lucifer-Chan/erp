@@ -1,7 +1,12 @@
 package com.yintong.erp.domain.basis.security;
 
 import com.yintong.erp.utils.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
@@ -10,7 +15,7 @@ import javax.persistence.*;
  * @create 2018-05-05 下午5:20
  * 员工实体类
  **/
-@Data
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
 public class ErpEmployee extends BaseEntity{
     @Id
@@ -26,4 +31,10 @@ public class ErpEmployee extends BaseEntity{
     private String mobile;
     @Column(columnDefinition = "varchar(20) comment '条形码'")
     private String barCode;
+
+    @Override
+    protected void prePersist(){
+        if(StringUtils.hasLength(password))
+            this.password = new BCryptPasswordEncoder().encode(password.trim());
+    }
 }

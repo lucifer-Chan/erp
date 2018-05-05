@@ -1,18 +1,24 @@
 package com.yintong.erp.domain.basis.security;
 
 import com.yintong.erp.utils.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lucifer.chan
  * @create 2018-05-05 下午5:38
- * 菜单
+ * 菜单-只有两层，无parentCode的为菜单组，有parentCode的为可操作菜单
  **/
-@Data
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
 public class ErpMenu extends BaseEntity{
     @Id
@@ -24,4 +30,9 @@ public class ErpMenu extends BaseEntity{
     private String matches;
     @Column(columnDefinition = "varchar(10) comment '父节点编码'")
     private String parentCode;
+    @Column(columnDefinition = "varchar(100) comment '页面uri'")
+    private String uri;
+
+    @Transient
+    private List<ErpMenu> children = new ArrayList<>();
 }
