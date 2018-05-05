@@ -79,7 +79,7 @@ public class EmployeeDetails implements UserDetails, Constants.Roles{
     }
 
     public boolean isAdmin(){
-        return getAuthorities().stream().anyMatch(authority->authority.getAuthority().contains(ADMIN_ROLE_CODE));
+        return getAuthorities().stream().anyMatch(authority->authority.getAuthority().contains("ROLE_" + ADMIN_ROLE_CODE));
     }
 
 }
