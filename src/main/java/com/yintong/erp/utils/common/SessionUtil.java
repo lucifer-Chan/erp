@@ -34,13 +34,13 @@ public class SessionUtil {
         return currentUser.getId();
     }
 
-    private static ErpEmployee getCurrentUser(){
+    public static ErpEmployee getCurrentUser(){
         EmployeeDetails employeeDetails = getEmployeeDetails();
         SessionExpiryException.notNull(employeeDetails, "会话过期！未获取到当前用户明细");
         return employeeDetails.getEmployee();
     }
 
-    private static EmployeeDetails getEmployeeDetails(){
+    public static EmployeeDetails getEmployeeDetails(){
         SecurityContext securityContext =
                 (SecurityContext)SpringUtil.getRequest().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         SessionExpiryException.notNull(securityContext, "会话过期！");
