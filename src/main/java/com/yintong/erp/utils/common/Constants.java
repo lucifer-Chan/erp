@@ -21,6 +21,6 @@ public interface Constants {
         String ANY_ROLE_MATCHES = "/any/**";
 
         //不登陆也可以访问
-        String OPEN_MATCHES = "/open/**";
+        String OPEN_MATCHES = "/open/**,/js/**";
     }
 }

@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="js/jquery.min.js"></script>
+</head>
+<body>
+    <div id="form">
+        <input type="text" id="username" value="admin"/>
+        <input type="password" id="password" placeholder="密码"/>
+        <input type="submit" id="login" value="Login"/>
+    </div>
+
+</body>
+<script>
+    $('#login').click(function() {
+            $.ajax({
+                type: "POST",
+                url: '/login',
+                data: {
+                    username : $('#username').val(),
+                    password : $('#password').val()
+                },
+                success: function (data) {
+                    console.log('success', JSON.parse(data));
+                },
+                error: function(xhr) {
+                    console.error('error', JSON.parse(xhr.responseText));
+                }
+            });
+        }
+
+    );
+</script>
+
+</html>

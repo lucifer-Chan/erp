@@ -2,6 +2,7 @@ package com.yintong.erp.service;
 
 import com.yintong.erp.domain.basis.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,8 +24,12 @@ public class PreDataService {
 
     @Autowired ErpEmployeeMenuRepository erpEmployeeMenuRepository;
 
+    @Value("${yintong.erp.model.debug}")
+    private boolean debug;
+
     @PostConstruct
     void init(){
+        if(!debug) return;
         initMenus();
         initEmployees();
     }

@@ -1,5 +1,7 @@
 package com.yintong.erp.web;
 
+import com.yintong.erp.utils.base.BaseResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,4 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("open")
 public class OpenController {
+    @GetMapping("test")
+    public BaseResult test(){
+        return new BaseResult();
+    }
 }
