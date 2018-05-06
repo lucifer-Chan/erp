@@ -13,6 +13,7 @@ public class SessionExpiryException extends RuntimeException{
     }
     private static final long serialVersionUID = -999999999999999999L;
 
+    //试下能不能 push
     public static void notNull(Object object, String message){
         if(Objects.isNull(object))
             throw new SessionExpiryException(message);
