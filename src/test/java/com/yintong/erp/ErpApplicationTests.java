@@ -18,4 +18,9 @@ public class ErpApplicationTests {
 
 	}
 
+	@Test
+	public void entityTest2(){
+
+	}
+
 }
