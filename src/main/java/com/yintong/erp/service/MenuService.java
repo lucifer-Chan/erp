@@ -1,18 +1,22 @@
 package com.yintong.erp.service;
 
-import com.yintong.erp.domain.basis.security.ErpEmployeeMenu;
-import com.yintong.erp.domain.basis.security.ErpEmployeeMenuRepository;
-import com.yintong.erp.domain.basis.security.ErpMenu;
-import com.yintong.erp.domain.basis.security.ErpMenuRepository;
+import com.yintong.erp.domain.basis.security.*;
+
 import com.yintong.erp.utils.common.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static com.yintong.erp.utils.common.Constants.Roles.*;
+
 
 /**
  * @author lucifer.chan
@@ -25,12 +29,16 @@ public class MenuService {
 
     @Autowired ErpMenuRepository menuRepository;
 
+    @Autowired ErpEmployeeRepository employeeRepository;
+
     /**
      * 根据员工Id获取员工的菜单-非树型结构
      * @param employeeId
      * @return
      */
     public List<ErpMenu> getMenusByEmployeeId(Long employeeId){
+        if(isAdmin(employeeId))
+            return menuRepository.findAll().stream().filter(menu-> StringUtils.hasLength(menu.getParentCode())).collect(toList());
         List<String> menuCodes = employeeMenuRepository.findByEmployeeId(employeeId).stream()
                 .map(ErpEmployeeMenu::getMenuCode)
                 .collect(toList());
@@ -56,10 +64,38 @@ public class MenuService {
      * 获取全部菜单-tree
      * @return
      */
-    private List<ErpMenu> allMenus(){
+    public List<ErpMenu> allMenus(){
         List<ErpMenu> ret = menuRepository.findByParentCodeIsNullOrderByCode();
         ret.forEach(menu-> menu.setChildren(menuRepository.findByParentCodeOrderByCode(menu.getCode())));
         return ret;
+    }
+
+    /**
+     * 更新用户权限
+     * @param employeeId
+     * @param menuCodes
+     */
+    @Transactional
+    public void updateMenusOfEmployee(Long employeeId, List<String> menuCodes){
+        ErpEmployee employee = employeeRepository.findById(employeeId).orElse(null);
+        Assert.notNull(employee, "未找到用户!");
+        Assert.isTrue(!isAdmin(employeeId), "无权修改管理员的权限!");
+        employeeMenuRepository.deleteByEmployeeId(employeeId);
+        if(CollectionUtils.isEmpty(menuCodes)) return;
+        employeeMenuRepository.saveAll(
+                menuCodes.stream()
+                        .map(code->ErpEmployeeMenu.builder().employeeId(employeeId).menuCode(code).build())
+                        .collect(toList())
+        );
+    }
+
+    /**
+     * 查询员工是否是管理员
+     * @param employeeId
+     * @return
+     */
+    private boolean isAdmin(Long employeeId){
+        return Objects.nonNull(employeeMenuRepository.findByEmployeeIdAndMenuCode(employeeId, ADMIN_ROLE_CODE));
     }
 
 }

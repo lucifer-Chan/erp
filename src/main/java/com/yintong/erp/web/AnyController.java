@@ -23,6 +23,6 @@ public class AnyController {
      */
     @GetMapping("menus")
     public BaseResult getMyMenus(){
-        return new BaseResult().addList(menuService.getMenusOfCurrentUser());
+        return new BaseResult().addList("menus", menuService.getMenusOfCurrentUser());
     }
 }

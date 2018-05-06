@@ -3,10 +3,9 @@ package com.yintong.erp.web;
 import com.yintong.erp.service.MenuService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author lucifer.chan
@@ -19,13 +18,34 @@ public class EmployeeController {
     @Autowired MenuService menuService;
 
     /**
+     * 获取所有菜单
+     * @return
+     */
+    @GetMapping("menus")
+    public BaseResult getAllMenus(){
+        return new BaseResult().addList("menus", menuService.allMenus());
+    }
+
+    /**
      * 获取员工的菜单
      * @param employeeId
      * @return
      */
     @GetMapping("{employeeId}/menus")
     public BaseResult getMenusByEmployee(@PathVariable("employeeId") Long employeeId){
-        return new BaseResult().addList(menuService.getMenusByEmployeeId(employeeId));
+        return new BaseResult().addList("menus", menuService.getMenusByEmployeeId(employeeId));
+    }
+
+    /**
+     * 修改用户权限
+     * @param employeeId
+     * @param menus
+     * @return
+     */
+    @PostMapping("{employeeId}/menus")
+    public BaseResult saveMenus(@PathVariable("employeeId") Long employeeId, @RequestBody List<String> menus){
+        menuService.updateMenusOfEmployee(employeeId, menus);
+        return new BaseResult();
     }
 
 
