@@ -37,32 +37,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Cons
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        http.csrf().disable();
-//        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry =
-//                http.csrf().disable()
-//                        .authorizeRequests()
-//                            .antMatchers(OPEN_MATCHES.split(",")).permitAll()
-//                        .and()
-//                            .formLogin()
-//                            .loginPage("/login")
-//                                .failureHandler(failureHandler)
-//                                .successHandler(successHandler)
-//                            .permitAll()
-//                        .and()
-//                            .logout()
-//                                .logoutSuccessHandler(logoutSuccessHandler)
-//                            .permitAll()
-//                        .and()
-//                            .authorizeRequests()
-//                        .antMatchers("/", "/login.html").authenticated();
-//        //根据权限表中的信息制定权限规则
-//        employeeDetailService().matches().forEach(entry->
-//                registry.antMatchers(entry.getValue()).hasAnyRole(entry.getKey(), ADMIN_ROLE_CODE)
-//        );
-//
-//        registry.anyRequest().authenticated();
-//
-//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+//        http.csrf().disable();
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry =
+                http.csrf().disable()
+                        .authorizeRequests()
+                            .antMatchers(OPEN_MATCHES.split(",")).permitAll()
+                        .and()
+                            .formLogin()
+                            .loginPage("/login")
+                                .failureHandler(failureHandler)
+                                .successHandler(successHandler)
+                            .permitAll()
+                        .and()
+                            .logout()
+                                .logoutSuccessHandler(logoutSuccessHandler)
+                            .permitAll()
+                        .and()
+                            .authorizeRequests()
+                        .antMatchers("/", "/login.html").authenticated();
+        //根据权限表中的信息制定权限规则
+        employeeDetailService().matches().forEach(entry->
+                registry.antMatchers(entry.getValue()).hasAnyRole(entry.getKey(), ADMIN_ROLE_CODE)
+        );
+
+        registry.anyRequest().authenticated();
+
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
 
     @Override
