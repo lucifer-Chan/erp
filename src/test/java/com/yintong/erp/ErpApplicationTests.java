@@ -13,4 +13,9 @@ public class ErpApplicationTests {
 	public void contextLoads() {
 	}
 
+	@Test
+	public void entityTest1(){
+
+	}
+
 }
