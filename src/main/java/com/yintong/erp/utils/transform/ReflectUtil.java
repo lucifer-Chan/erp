@@ -2,12 +2,13 @@ package com.yintong.erp.utils.transform;
 
 import net.sf.json.JSONObject;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import static java.util.stream.Collectors.*;
 
 /**
  * @author lucifer.chan
@@ -33,25 +34,7 @@ public class ReflectUtil {
         put("Timestamp", "get");
         // TODO ..~
     }};
-
-    static final Map<String, String> resultSetMethodMap = new HashMap<String, String>(){{
-        put("String", "getString");
-        put("int", "getInt");
-        put("double", "getDouble");
-        put("Double", "getDouble");
-        put("float", "getFloat");
-        put("Float", "getFloat");
-        put("long", "getLong");
-        put("Long", "getLong");
-        put("BigDecimal", "getBigDecimal");
-        put("BinaryStream", "getBinaryStream");
-        put("Blob", "getBlob");
-        put("Timestamp", "getTimestamp");
-        put("Date", "getDate");
-        put("Clob", "getClob");
-    }};
-
-
+    
     @SuppressWarnings("unchecked")
     public static <T> T getValueFromJson(JSONObject json, Class<?> clazz, String arg){
         try {
@@ -92,7 +75,7 @@ public class ReflectUtil {
         return getClassesUntilRoot(o).stream()
                 .map(Class::getDeclaredMethods)
                 .flatMap(Stream::of)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
 
@@ -123,7 +106,7 @@ public class ReflectUtil {
                 .map(Class::getDeclaredFields)
                 .flatMap(Stream::of)
                 .filter(field -> isEditable(field) && !isIgnored(field))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /**
@@ -136,7 +119,7 @@ public class ReflectUtil {
                 .map(Class::getDeclaredFields)
                 .flatMap(Stream::of)
                 .filter(ReflectUtil::isEditable)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /**
@@ -184,20 +167,33 @@ public class ReflectUtil {
     }
 
     /**
+     * 获取一个类上拥有annotationClass的所有Field
+     * @param o
+     * @param annotationClass
+     * @param <T>
+     * @return
+     */
+    public static <T extends Annotation> List<Field> getFieldsByAnnotation(Object o, Class<T> annotationClass){
+        return getAllFields(o).stream()
+                .filter(field -> field.isAnnotationPresent(annotationClass))
+                .collect(toList());
+    }
+
+    /**
      * value和sourceFieldName和Field上的注解的values、value是否匹配
      * @param field
      * @param sourceFieldName
      * @return
      */
     static boolean isFieldAnnotationMatchedSourceFieldName(Field field, String sourceFieldName){
-        for(String value : geTransformerSourcePropertyValues(field)){
+        for(String value : getTransformerSourcePropertyValues(field)){
             if(value.toUpperCase().equals(sourceFieldName.toUpperCase()))
                 return true;
         }
         return false;
     }
 
-    static String [] geTransformerSourcePropertyValues(Field field){
+    static String [] getTransformerSourcePropertyValues(Field field){
         if(field.isAnnotationPresent(annotationClass)){
             TransformerSourceProperty property = field.getAnnotation(annotationClass);
             String [] values = property.values();
