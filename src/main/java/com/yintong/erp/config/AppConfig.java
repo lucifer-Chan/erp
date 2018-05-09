@@ -1,12 +1,19 @@
 package com.yintong.erp.config;
 
+import com.yintong.erp.utils.bar.BarCodeProvider;
 import com.yintong.erp.utils.common.SimpleCache;
 import com.yintong.erp.utils.common.SpringUtil;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.event.spi.PreInsertEventListener;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.persistence.EntityManagerFactory;
 
 /**
  * @author lucifer.chan
@@ -22,6 +29,20 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public SimpleCache simpleCache(){
         return new SimpleCache();
+    }
+
+    @Bean
+    public BarCodeProvider barCodeProvider(){
+        return new BarCodeProvider();
+    }
+
+    @Bean
+    public EventListenerRegistry eventListenerRegistry(EntityManagerFactory emf) {
+        BarCodeProvider barCodeProvider = barCodeProvider();
+        EventListenerRegistry registry = emf.unwrap(SessionFactoryImpl.class).getServiceRegistry().getService(EventListenerRegistry.class);
+        registry.getEventListenerGroup(EventType.PRE_INSERT).appendListener(barCodeProvider);
+        registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(barCodeProvider);
+        return registry;
     }
 
     @Override
