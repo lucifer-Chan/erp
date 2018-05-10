@@ -1,32 +1,38 @@
-package com.yintong.erp.domain.basis.baseCommon;
+package com.yintong.erp.domain.basis.security;
 
-import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 
 /**
- * Created by jianqiang on 2018/5/10 0010.
- * 客户供应商公共属性
+ * Created by jianqiang on 2018/5/11 0011.
+ * 人员-供应商
  */
-@MappedSuperclass
-@Getter
-@Setter
-public class ErpBaseCustCommon extends BaseEntityWithBarCode {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+public class ErpBaseSupplier extends BaseEntityWithBarCode {
 
-    @Column(columnDefinition = "varchar(64) comment '客户/供应商编号'")
-    private String custNo;
-    @Column(columnDefinition = "varchar(64) comment '客户/供应全称'")
-    private String custName;
-    @Column(columnDefinition = "varchar(20) comment '类型'")
-    private String custType;
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(columnDefinition = "varchar(64) comment '供应商编号'")
+    private String supplierNo;
+    @Column(columnDefinition = "varchar(20) comment '供应商名称'")
+    private String supplierName;
+    @Column(columnDefinition = "varchar(20) comment '供应商类别编码'")
+    private String supplierTypeCode;
     @Column(columnDefinition = "varchar(64) comment '地址'")
-    private String custAddrDetail;
+    private String address;
     @Column(columnDefinition = "varchar(20) comment '联系人'")
     private String contactName;
     @Column(columnDefinition = "varchar(20) comment '手机号'")
@@ -39,11 +45,10 @@ public class ErpBaseCustCommon extends BaseEntityWithBarCode {
     private String consign;
     @Column(columnDefinition = "varchar(20) comment '所属业务员'")
     private String salesman;
-    @Column(columnDefinition = "varchar(64) comment '客户/供应商所属地'")
+    @Column(columnDefinition = "varchar(64) comment '所属地'")
     private String possession;
     @Column(columnDefinition = "varchar(10) comment '等级'")
     private String rank;
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
-
 }
