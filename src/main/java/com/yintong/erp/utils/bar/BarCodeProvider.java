@@ -55,29 +55,43 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
 
     private void onPreCommit(AbstractPreDatabaseOperationEvent event, Object[] state){
         Object entity = event.getEntity();
+        //前缀
+        BAR_CODE_PREFIX prefix;
         Class<?> clazz = ReflectUtil.getClassesUntilRoot(entity).stream()
                 .filter(c -> c.isAnnotationPresent(BarCode.class))
                 .findFirst().orElse(null);
-        if(Objects.isNull(clazz)) return;
-        String id = wrapperAttribute(event.getId(), ID_LENGTH);
+        //注解在类上的前缀
+        if(Objects.nonNull(clazz)) {
+            BAR_CODE_PREFIX [] prefixes = clazz.getAnnotation(BarCode.class).value();
+            Assert.isTrue(prefixes.length > 0, "@BarCode注解在实体类上时，必须有value属性值！");
+            prefix = prefixes[0];
+        } else {
+            //注解在属性上的前缀-取属性值
+            List<Field> prefixes = ReflectUtil.getFieldsByAnnotation(entity, BarCode.class);
+            Assert.isTrue(prefixes.size() == 1, "实体类必须有且只有一个拥有@BarCode的字段！");
+            //供提取前缀的字段
+            Field prefixField = prefixes.get(0);
+            Assert.isTrue(prefixField.getGenericType().equals(String.class), "@BarCode标注的字段必须为String类型");
+            Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(prefixField, entity);
+            Assert.isTrue(Objects.nonNull(value) && StringUtils.hasLength(value.toString()), "@BarCode标注的字段必须有值");
+            prefix = BAR_CODE_PREFIX.valueOf(value.toString());
+        }
 
-        //前缀
-        BAR_CODE_PREFIX prefix = clazz.getAnnotation(BarCode.class).value();
+        //id
+        String id = wrapperAttribute(event.getId(), ID_LENGTH);
         List<Field> columns = ReflectUtil.getFieldsByAnnotation(entity, BarCodeColumn.class);
-        //拥有@BarCodeIndex的字段，排序
-        List<Field> indexes = ReflectUtil.getFieldsByAnnotation(entity, BarCodeIndex.class).stream()
-                .sorted(Comparator.comparingInt(f -> f.getAnnotation(BarCodeIndex.class).value()))
-                .collect(Collectors.toList());
         Assert.isTrue(columns.size() == 1, "实体类必须有且只有一个拥有@BarCodeColumn的字段！");
         //供存储的字段
         Field targetField = columns.get(0);
         Assert.isTrue(targetField.getGenericType().equals(String.class), "@BarCodeColumn标注的字段必须为String类型");
 
         String[] propertyNames = event.getPersister().getEntityMetamodel().getPropertyNames();
-//            Object[] state = event.getState();
-
         //1-前缀+id
         StringBuilder barCode = new StringBuilder(prefix.name()).append(id);
+        //拥有@BarCodeIndex的字段，排序
+        List<Field> indexes = ReflectUtil.getFieldsByAnnotation(entity, BarCodeIndex.class).stream()
+                .sorted(Comparator.comparingInt(f -> f.getAnnotation(BarCodeIndex.class).value()))
+                .collect(Collectors.toList());
 
         //2-预条码+indexes
         for (Field field : indexes){

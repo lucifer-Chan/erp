@@ -10,7 +10,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.*;
  *  功能：在数据新增的时候生成"前缀+id+@BarCodeIndex[...]"保存到拥有@BarCodeColumn注解的列中
  *  如果BarCodeIndex注解的值为null，则用"K"暂时替代
  */
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BarCode {
@@ -19,6 +19,6 @@ public @interface BarCode {
      * 条码前缀
      * @return
      */
-    BAR_CODE_PREFIX value();
+    BAR_CODE_PREFIX [] value() default {};
 
 }
