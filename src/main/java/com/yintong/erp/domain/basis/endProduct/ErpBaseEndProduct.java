@@ -1,7 +1,7 @@
 package com.yintong.erp.domain.basis.endProduct;
 
-import com.yintong.erp.domain.basis.baseCommon.ErpBaseCommon;
-import com.yintong.erp.utils.base.BaseEntity;
+
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,20 +21,24 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseEndProduct  extends ErpBaseCommon {
+public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
 
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '成品编号'")
-    private String productNo;
-    @Column(columnDefinition = "varchar(20) comment '成品名称'")
-    private String productName;
-    @Column(columnDefinition = "varchar(64) comment '成品类别'")
-    private String productType;
+    @Column(columnDefinition = "varchar(64) comment '成品表编号'")
+    private String endProductNo;
+    @Column(columnDefinition = "varchar(20) comment '成品表名称'")
+    private String endProductName;
+    @Column(columnDefinition = "varchar(20) comment '成品表类别编码'")
+    private String endProductTypeCode;
+    @Column(columnDefinition = "varchar(64) comment '规格描述'")
+    private String specification;
     @Column(columnDefinition = "varchar(64) comment '图纸编号'")
     private String drawingNo;
     @Column(columnDefinition = "varchar(20) comment '模具位'")
     private String ModelLocation;
+    @Column(columnDefinition = "varchar(128) comment '备注'")
+    private String remark;
 
 }
