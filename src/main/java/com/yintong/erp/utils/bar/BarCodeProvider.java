@@ -1,6 +1,7 @@
 package com.yintong.erp.utils.bar;
 
 import com.yintong.erp.utils.transform.ReflectUtil;
+import lombok.NonNull;
 import org.hibernate.event.spi.*;
 import org.jooq.lambda.Unchecked;
 import org.springframework.util.Assert;
@@ -22,6 +23,23 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.*;
  **/
 public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventListener {
 
+    /**
+     * 属性补位
+     *  1：不足9位-前补0
+     *  2：大于9位报错
+     *
+     * @param attribute -要包装的属性
+     * @param maxLength -最大位数
+     * @return
+     */
+    private String wrapperAttribute(@NonNull Serializable attribute, int maxLength){
+        StringBuilder ret = new StringBuilder(attribute.toString());
+        int length = ret.length();
+        Assert.isTrue(length <= maxLength, "@Id不能大于"+ maxLength +"位");
+        for (int i = 0; i < maxLength - length; i ++)
+            ret.insert(0, "0");
+        return ret.toString();
+    }
 
     @Override
     public boolean onPreInsert(PreInsertEvent event) {
@@ -36,12 +54,12 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
     }
 
     private void onPreCommit(AbstractPreDatabaseOperationEvent event, Object[] state){
-        Serializable id = event.getId();
         Object entity = event.getEntity();
         Class<?> clazz = ReflectUtil.getClassesUntilRoot(entity).stream()
                 .filter(c -> c.isAnnotationPresent(BarCode.class))
                 .findFirst().orElse(null);
         if(Objects.isNull(clazz)) return;
+        String id = wrapperAttribute(event.getId(), ID_LENGTH);
 
         //前缀
         BAR_CODE_PREFIX prefix = clazz.getAnnotation(BarCode.class).value();
@@ -63,8 +81,15 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
 
         //2-预条码+indexes
         for (Field field : indexes){
+            //2-1 获取属性的真实值
             Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(field, entity);
-            barCode.append((Objects.isNull(value) || !StringUtils.hasLength(value.toString()))? "K" : value);
+            //2-2 构造出属性的计算值
+            if(Objects.isNull(value) || !StringUtils.hasLength(value.toString())) {
+                barCode.append(EMPTY_REPLACE);
+            } else {
+                BarCodeIndex barCodeIndex = field.getAnnotation(BarCodeIndex.class);
+                barCode.append(wrapperAttribute(value.toString(), barCodeIndex.holder() ? 1 : barCodeIndex.length()));
+            }
         }
 
         for (int i = 0; i < propertyNames.length ; i ++) {

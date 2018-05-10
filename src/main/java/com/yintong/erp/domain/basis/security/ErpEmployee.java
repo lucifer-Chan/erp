@@ -1,23 +1,23 @@
 package com.yintong.erp.domain.basis.security;
 
-import com.yintong.erp.utils.base.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
 
 /**
  * @author lucifer.chan
  * @create 2018-05-05 下午5:20
  * 员工实体类
  **/
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
-public class ErpEmployee extends BaseEntity{
+@BarCode(UE00)
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class ErpEmployee extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
@@ -29,8 +29,6 @@ public class ErpEmployee extends BaseEntity{
     private String password;
     @Column(columnDefinition = "varchar(40) comment '电话号码'")
     private String mobile;
-    @Column(columnDefinition = "varchar(20) comment '条形码'")
-    private String barCode;
 
     @Override
     protected void prePersist(){

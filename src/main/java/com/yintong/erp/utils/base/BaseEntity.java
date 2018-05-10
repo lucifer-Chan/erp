@@ -16,8 +16,7 @@ import java.util.Date;
  * 实体基类
  **/
 @MappedSuperclass
-@Getter
-@Setter
+@Getter @Setter
 public abstract class BaseEntity implements JSONable, Filterable {
 
     public static final int ENABLED = 0;
@@ -68,5 +67,10 @@ public abstract class BaseEntity implements JSONable, Filterable {
             lastUpdatedBy = -1L;
         }
         preUpdate();
+    }
+
+    @Override
+    public String toString() {
+        return this.toJSONObject().toString();
     }
 }

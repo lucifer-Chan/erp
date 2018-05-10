@@ -4,10 +4,6 @@ import org.apache.commons.collections4.KeyValue;
 import org.springframework.util.Assert;
 
 public interface BarCodeConstants {
-    String LEVEL_FIRST = "UPMEDSJXRQOIV";
-    String LEVEL_SECOND = "ECSTNRAZMFJLHQ123456780";
-    String LEVEL_THIRD = "0CSETDWURYMFABNQZ0";
-    String LEVEL_FOURTH = "0RYBNQ";
 
     /**
      * 前缀的枚举
@@ -119,11 +115,14 @@ public interface BarCodeConstants {
     }
 
     /**
-     * 条码生成策略
+     * id的最大位数
      */
-    enum BAR_CODE_STRATEGY{
-        PREFIX_AND_ID,
-    }
+    int ID_LENGTH = 9;
+
+    /**
+     * 空位补字段
+     */
+    String EMPTY_REPLACE = "K";
 
 
     
