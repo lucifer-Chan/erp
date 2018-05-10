@@ -1,10 +1,7 @@
 package com.yintong.erp.utils.bar;
 
 import com.yintong.erp.utils.transform.ReflectUtil;
-import org.hibernate.event.spi.PreInsertEvent;
-import org.hibernate.event.spi.PreInsertEventListener;
-import org.hibernate.event.spi.PreUpdateEvent;
-import org.hibernate.event.spi.PreUpdateEventListener;
+import org.hibernate.event.spi.*;
 import org.jooq.lambda.Unchecked;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -28,6 +25,18 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
 
     @Override
     public boolean onPreInsert(PreInsertEvent event) {
+        onPreCommit(event, event.getState());
+        return false;
+    }
+
+    @Override
+    public boolean onPreUpdate(PreUpdateEvent event) {
+        onPreCommit(event, event.getState());
+        return false;
+    }
+
+
+    private void onPreCommit(AbstractPreDatabaseOperationEvent event, Object[] state){
         Serializable id = event.getId();
         Object entity = event.getEntity();
         Class<?> clazz = entity.getClass();
@@ -45,7 +54,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
             Assert.isTrue(targetField.getGenericType().equals(String.class), "@BarCodeColumn标注的字段必须为String类型");
 
             String[] propertyNames = event.getPersister().getEntityMetamodel().getPropertyNames();
-            Object[] state = event.getState();
+//            Object[] state = event.getState();
 
             //1-前缀+id
             StringBuilder barCode = new StringBuilder(prefix.name()).append(id);
@@ -67,13 +76,5 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
                 e.printStackTrace();
             }
         }
-
-        return false;
-    }
-
-    @Override
-    public boolean onPreUpdate(PreUpdateEvent event) {
-        System.out.println("我特么在更新哦～");
-        return false;
     }
 }
