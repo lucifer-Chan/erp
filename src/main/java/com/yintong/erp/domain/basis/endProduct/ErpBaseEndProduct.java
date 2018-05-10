@@ -1,7 +1,6 @@
 package com.yintong.erp.domain.basis.endProduct;
 
-import com.yintong.erp.domain.basis.baseCommon.ErpBaseCommon;
-import com.yintong.erp.utils.base.BaseEntity;
+
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

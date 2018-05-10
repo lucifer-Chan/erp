@@ -1,6 +1,7 @@
 package com.yintong.erp.domain.basis.modelTool;
 
-import com.yintong.erp.domain.basis.baseCommon.ErpBaseCommon;
+
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseModelTool extends ErpBaseCommon {
+public class ErpBaseModelTool extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
