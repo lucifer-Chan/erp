@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.ModelTool;
+package com.yintong.erp.domain.basis.modelTool;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

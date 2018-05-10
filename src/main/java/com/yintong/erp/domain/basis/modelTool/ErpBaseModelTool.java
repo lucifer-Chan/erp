@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.ModelTool;
+package com.yintong.erp.domain.basis.modelTool;
 
 import com.yintong.erp.domain.basis.baseCommon.ErpBaseCommon;
 import lombok.AllArgsConstructor;
