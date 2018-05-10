@@ -17,7 +17,7 @@ import java.util.Date;
  **/
 @MappedSuperclass
 @Getter @Setter
-public abstract class BaseEntity implements JSONable, Filterable {
+public abstract class BaseEntity implements Filterable {
 
     public static final int ENABLED = 0;
 

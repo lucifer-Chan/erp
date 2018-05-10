@@ -5,7 +5,7 @@ import com.yintong.erp.utils.transform.ReflectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-//import com.gaoenergy.utils.DateUtil;
+import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import org.springframework.util.StringUtils;
 
@@ -50,7 +50,7 @@ public class BaseResult{
 
 
     public BaseResult put(String key, Object value){
-        ret.put(key, value);
+        ret.put(key, Objects.isNull(value) || value instanceof JSONNull ? "" : value);
         return this;
     }
 
