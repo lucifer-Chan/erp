@@ -85,7 +85,7 @@ public class ReflectUtil {
      * @return
      */
     public static List<Class<?>> getClassesUntilRoot(Object o){
-        List<Class<?>> ret = new ArrayList<>();
+        List<Class<?>> ret = new LinkedList<>();
         if(Objects.isNull(o))
             return ret;
         Class<?> clazz = o.getClass();
