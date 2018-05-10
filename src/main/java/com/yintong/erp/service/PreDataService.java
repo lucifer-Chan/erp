@@ -106,7 +106,6 @@ public class PreDataService {
     private void initCategories(){
         categoryRepository.deleteAll();
 
-
         LinkedHashMap<String, ErpBaseCategory> map = new LinkedHashMap<>();
 
         for (BAR_CODE_PREFIX prefix : BAR_CODE_PREFIX.values()){
@@ -121,8 +120,6 @@ public class PreDataService {
                     .name(first.getValue())
                     .fullName(first.getValue()).build();
             map.putIfAbsent(_1.getCode(), _1);
-            //categoryRepository.save(ErpBaseCategory.builder().code(first.getKey()).name(first.getValue()).build());
-
             //二级分类
             if(!"0".equals(second.getKey())){
                 String code = first.getKey() + second.getKey();
@@ -136,14 +133,6 @@ public class PreDataService {
                                 .parentCode(first.getKey())
                                 .build();
                 map.putIfAbsent(_2.getCode(), _2);
-//                categoryRepository.save(
-//                        ErpBaseCategory.builder()
-//                                .name(second.getValue())
-//                                .code(code)
-//                                .fullName(first.getValue() + "-" + second.getValue())
-//                                .parentCode(first.getKey())
-//                                .build()
-//                );
             }
             //三级分类
             if(!"0".equals(third.getKey())){
@@ -158,14 +147,6 @@ public class PreDataService {
                         .parentCode(first.getKey() + second.getKey())
                         .build();
                 map.putIfAbsent(_3.getCode(), _3);
-//                categoryRepository.save(
-//                        ErpBaseCategory.builder()
-//                                .name(third.getValue())
-//                                .code(code)
-//                                .fullName(first.getValue() + "-" + second.getValue() + "-" + third.getValue())
-//                                .parentCode(first.getKey() + second.getKey())
-//                                .build()
-//                );
             }
 
             //四级分类
@@ -177,14 +158,6 @@ public class PreDataService {
                         .parentCode(first.getKey() + second.getKey() + third.getKey())
                         .build();
                 map.putIfAbsent(_4.getCode(), _4);
-//                categoryRepository.save(
-//                        ErpBaseCategory.builder()
-//                                .name(fourth.getValue())
-//                                .code(prefix.name())
-//                                .fullName(prefix.description())
-//                                .parentCode(first.getKey() + second.getKey() + third.getKey())
-//                                .build()
-//                );
             }
 
 
