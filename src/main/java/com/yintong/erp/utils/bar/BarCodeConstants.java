@@ -40,16 +40,16 @@ public interface BarCodeConstants {
         MM00("原材料-铝丝"),
         MF00("原材料-铁丝"),
         MRA0("原材料-废品-银丝"),
-        MRZR("原材料-废品-紫铜丝"),
-        MRZY("原材料-废品-黄铜丝"),
-        MRZB("原材料-废品-铜基丝"),
-        MRZN("原材料-废品-铜镍丝"),
-        MRZQ("原材料-废品-白铜丝"),
+        MRZR("原材料-废品-铜丝-紫铜丝"),
+        MRZY("原材料-废品-铜丝-黄铜丝"),
+        MRZB("原材料-废品-铜丝-铜基丝"),
+        MRZN("原材料-废品-铜丝-铜镍丝"),
+        MRZQ("原材料-废品-铜丝-白铜丝"),
         MRZ0("原材料-废品-铜丝"),
-        EJ10("设备-三复合机"),
-        EL10("设备-柳州机"),
-        EH20("设备-上海机"),
-        EQ20("设备-半空心机"),
+        EJ00("设备-三复合机"),
+        EL00("设备-柳州机"),
+        EH00("设备-上海机"),
+        EQ00("设备-半空心机"),
         S000("仓位"),
         J000("销售计划单"),
         X000("销售单"),
@@ -77,26 +77,26 @@ public interface BarCodeConstants {
             return description;
         }
 
-        public static KeyValue<String, String> first(BAR_CODE_PREFIX prefix){
-            return part(prefix, 0);
+        public KeyValue<String, String> first(){
+            return part(0);
         }
 
-        public static KeyValue<String, String> second(BAR_CODE_PREFIX prefix){
-            return part(prefix, 1);
+        public KeyValue<String, String> second(){
+            return part(1);
         }
 
-        public static KeyValue<String, String> third(BAR_CODE_PREFIX prefix){
-            return part(prefix, 2);
+        public KeyValue<String, String> third(){
+            return part(2);
         }
 
-        public static KeyValue<String, String> fourth(BAR_CODE_PREFIX prefix){
-            return part(prefix, 3);
+        public KeyValue<String, String> fourth(){
+            return part(3);
         }
 
-        private static KeyValue<String, String> part(BAR_CODE_PREFIX prefix, int at){
+        private KeyValue<String, String> part(int at){
             Assert.isTrue(at>=0 && at <4, "位数区间必须介于[0,4)");
-            String name = prefix.name();
-            String [] desc = prefix.description.split("-");
+            String name = name();
+            String [] desc = description.split("-");
 
             return new KeyValue<String, String>() {
                 @Override

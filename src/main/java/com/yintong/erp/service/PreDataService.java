@@ -1,12 +1,17 @@
 package com.yintong.erp.service;
 
+import com.yintong.erp.domain.basis.ErpBaseCategory;
+import com.yintong.erp.domain.basis.ErpBaseCategoryRepository;
 import com.yintong.erp.domain.basis.security.*;
+import com.yintong.erp.utils.bar.BarCodeConstants.*;
+import org.apache.commons.collections4.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -16,6 +21,7 @@ import java.util.List;
  **/
 
 @Component
+
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -24,14 +30,17 @@ public class PreDataService {
 
     @Autowired ErpEmployeeMenuRepository erpEmployeeMenuRepository;
 
+    @Autowired ErpBaseCategoryRepository categoryRepository;
+
     @Value("${yintong.erp.model.debug}")
     private boolean debug;
 
     @PostConstruct
     void init(){
         if(!debug) return;
-        initMenus();
-        initEmployees();
+//        initMenus();
+//        initEmployees();
+        initCategories();
     }
 
 
@@ -89,5 +98,98 @@ public class PreDataService {
                         , ErpEmployeeMenu.builder().employeeId(employee.getId()).menuCode("2004").build()
                 )
         );
+    }
+
+    /**
+     * 初始化类别
+     */
+    private void initCategories(){
+        categoryRepository.deleteAll();
+
+
+        LinkedHashMap<String, ErpBaseCategory> map = new LinkedHashMap<>();
+
+        for (BAR_CODE_PREFIX prefix : BAR_CODE_PREFIX.values()){
+            KeyValue<String, String> first = prefix.first();
+            KeyValue<String, String> second = prefix.second();
+            KeyValue<String, String> third = prefix.third();
+            KeyValue<String, String> fourth = prefix.fourth();
+
+            //一级分类
+            ErpBaseCategory _1 = ErpBaseCategory.builder()
+                    .code("0".equals(second.getKey()) ? first.getKey() + "000" : first.getKey())
+                    .name(first.getValue())
+                    .fullName(first.getValue()).build();
+            map.putIfAbsent(_1.getCode(), _1);
+            //categoryRepository.save(ErpBaseCategory.builder().code(first.getKey()).name(first.getValue()).build());
+
+            //二级分类
+            if(!"0".equals(second.getKey())){
+                String code = first.getKey() + second.getKey();
+                //没有三级的情况
+                if("0".equals(third.getKey()))
+                    code = code + "00";
+                ErpBaseCategory _2 = ErpBaseCategory.builder()
+                                .name(second.getValue())
+                                .code(code)
+                                .fullName(first.getValue() + "-" + second.getValue())
+                                .parentCode(first.getKey())
+                                .build();
+                map.putIfAbsent(_2.getCode(), _2);
+//                categoryRepository.save(
+//                        ErpBaseCategory.builder()
+//                                .name(second.getValue())
+//                                .code(code)
+//                                .fullName(first.getValue() + "-" + second.getValue())
+//                                .parentCode(first.getKey())
+//                                .build()
+//                );
+            }
+            //三级分类
+            if(!"0".equals(third.getKey())){
+                String code = first.getKey() + second.getKey() + third.getKey();
+                //没有四级的情况
+                if("0".equals(fourth.getKey()))
+                    code = code + "0";
+                ErpBaseCategory _3 = ErpBaseCategory.builder()
+                        .name(third.getValue())
+                        .code(code)
+                        .fullName(first.getValue() + "-" + second.getValue() + "-" + third.getValue())
+                        .parentCode(first.getKey() + second.getKey())
+                        .build();
+                map.putIfAbsent(_3.getCode(), _3);
+//                categoryRepository.save(
+//                        ErpBaseCategory.builder()
+//                                .name(third.getValue())
+//                                .code(code)
+//                                .fullName(first.getValue() + "-" + second.getValue() + "-" + third.getValue())
+//                                .parentCode(first.getKey() + second.getKey())
+//                                .build()
+//                );
+            }
+
+            //四级分类
+            if(!"0".equals(fourth.getKey())){
+                ErpBaseCategory _4 = ErpBaseCategory.builder()
+                        .name(fourth.getValue())
+                        .code(prefix.name())
+                        .fullName(prefix.description())
+                        .parentCode(first.getKey() + second.getKey() + third.getKey())
+                        .build();
+                map.putIfAbsent(_4.getCode(), _4);
+//                categoryRepository.save(
+//                        ErpBaseCategory.builder()
+//                                .name(fourth.getValue())
+//                                .code(prefix.name())
+//                                .fullName(prefix.description())
+//                                .parentCode(first.getKey() + second.getKey() + third.getKey())
+//                                .build()
+//                );
+            }
+
+
+            categoryRepository.saveAll(map.values());
+
+        }
     }
 }
