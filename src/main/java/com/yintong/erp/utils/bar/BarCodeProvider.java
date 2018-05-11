@@ -5,6 +5,7 @@ import lombok.NonNull;
 import org.hibernate.event.spi.*;
 import org.jooq.lambda.Unchecked;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -55,6 +56,8 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
 
     private void onPreCommit(AbstractPreDatabaseOperationEvent event, Object[] state){
         Object entity = event.getEntity();
+        //id
+        String id = wrapperAttribute(event.getId(), ID_LENGTH);
         //前缀
         BAR_CODE_PREFIX prefix;
         Class<?> clazz = ReflectUtil.getClassesUntilRoot(entity).stream()
@@ -62,12 +65,15 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
                 .findFirst().orElse(null);
         //注解在类上的前缀
         if(Objects.nonNull(clazz)) {
-            BAR_CODE_PREFIX [] prefixes = clazz.getAnnotation(BarCode.class).value();
+            BarCode barCode = clazz.getAnnotation(BarCode.class);
+            BAR_CODE_PREFIX [] prefixes = barCode.prefix();
             Assert.isTrue(prefixes.length > 0, "@BarCode注解在实体类上时，必须有value属性值！");
             prefix = prefixes[0];
+            id = barCode.excludeId() ? "" : id;
         } else {
             //注解在属性上的前缀-取属性值
             List<Field> prefixes = ReflectUtil.getFieldsByAnnotation(entity, BarCode.class);
+            if(CollectionUtils.isEmpty(prefixes)) return;
             Assert.isTrue(prefixes.size() == 1, "实体类必须有且只有一个拥有@BarCode的字段！");
             //供提取前缀的字段
             Field prefixField = prefixes.get(0);
@@ -75,10 +81,9 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
             Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(prefixField, entity);
             Assert.isTrue(Objects.nonNull(value) && StringUtils.hasLength(value.toString()), "@BarCode标注的字段必须有值");
             prefix = BAR_CODE_PREFIX.valueOf(value.toString());
+            id = prefixField.getAnnotation(BarCode.class).excludeId() ? "" : id;
         }
 
-        //id
-        String id = wrapperAttribute(event.getId(), ID_LENGTH);
         List<Field> columns = ReflectUtil.getFieldsByAnnotation(entity, BarCodeColumn.class);
         Assert.isTrue(columns.size() == 1, "实体类必须有且只有一个拥有@BarCodeColumn的字段！");
         //供存储的字段

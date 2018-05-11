@@ -19,6 +19,13 @@ public @interface BarCode {
      * 条码前缀
      * @return
      */
-    BAR_CODE_PREFIX [] value() default {};
+    BAR_CODE_PREFIX [] prefix() default {};
+
+    /**
+     * 是否忽略id
+     *  true-以""替代真实的id值
+     * @return
+     */
+    boolean excludeId() default  false;
 
 }
