@@ -15,7 +15,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
  * 员工实体类
  **/
 @Entity
-@BarCode(UE00)
+@BarCode(prefix = UE00)
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class ErpEmployee extends BaseEntityWithBarCode {
     @Id
