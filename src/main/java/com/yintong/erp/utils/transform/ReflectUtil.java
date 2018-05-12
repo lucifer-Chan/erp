@@ -88,7 +88,7 @@ public class ReflectUtil {
         List<Class<?>> ret = new LinkedList<>();
         if(Objects.isNull(o))
             return ret;
-        Class<?> clazz = o.getClass();
+        Class<?> clazz = o instanceof Class ? (Class)o : o.getClass();
         while(clazz != Object.class){
             ret.add(clazz);
             clazz = clazz.getSuperclass();

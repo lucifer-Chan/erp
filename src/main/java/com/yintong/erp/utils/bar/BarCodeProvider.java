@@ -1,6 +1,8 @@
 package com.yintong.erp.utils.bar;
 
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.transform.ReflectUtil;
+import lombok.Getter;
 import lombok.NonNull;
 import org.hibernate.event.spi.*;
 import org.jooq.lambda.Unchecked;
@@ -8,11 +10,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.ManagedType;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yintong.erp.utils.bar.BarCodeConstants.*;
@@ -24,23 +26,6 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.*;
  **/
 public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventListener {
 
-    /**
-     * 属性补位
-     *  1：不足9位-前补0
-     *  2：大于9位报错
-     *
-     * @param attribute -要包装的属性
-     * @param maxLength -最大位数
-     * @return
-     */
-    private String wrapperAttribute(@NonNull Serializable attribute, int maxLength){
-        StringBuilder ret = new StringBuilder(attribute.toString());
-        int length = ret.length();
-        Assert.isTrue(length <= maxLength, "@Id不能大于"+ maxLength +"位");
-        for (int i = 0; i < maxLength - length; i ++)
-            ret.insert(0, "0");
-        return ret.toString();
-    }
 
     @Override
     public boolean onPreInsert(PreInsertEvent event) {
@@ -55,71 +40,148 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
     }
 
     private void onPreCommit(AbstractPreDatabaseOperationEvent event, Object[] state){
-        Object entity = event.getEntity();
-        //id
-        String id = wrapperAttribute(event.getId(), ID_LENGTH);
-        //前缀
-        BAR_CODE_PREFIX prefix;
-        Class<?> clazz = ReflectUtil.getClassesUntilRoot(entity).stream()
-                .filter(c -> c.isAnnotationPresent(BarCode.class))
-                .findFirst().orElse(null);
-        //注解在类上的前缀
-        if(Objects.nonNull(clazz)) {
-            BarCode barCode = clazz.getAnnotation(BarCode.class);
-            BAR_CODE_PREFIX [] prefixes = barCode.prefix();
-            Assert.isTrue(prefixes.length > 0, "@BarCode注解在实体类上时，必须有value属性值！");
-            prefix = prefixes[0];
-            id = barCode.excludeId() ? "" : id;
-        } else {
-            //注解在属性上的前缀-取属性值
-            List<Field> prefixes = ReflectUtil.getFieldsByAnnotation(entity, BarCode.class);
-            if(CollectionUtils.isEmpty(prefixes)) return;
-            Assert.isTrue(prefixes.size() == 1, "实体类必须有且只有一个拥有@BarCode的字段！");
-            //供提取前缀的字段
-            Field prefixField = prefixes.get(0);
-            Assert.isTrue(prefixField.getGenericType().equals(String.class), "@BarCode标注的字段必须为String类型");
-            Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(prefixField, entity);
-            Assert.isTrue(Objects.nonNull(value) && StringUtils.hasLength(value.toString()), "@BarCode标注的字段必须有值");
-            prefix = BAR_CODE_PREFIX.valueOf(value.toString());
-            id = prefixField.getAnnotation(BarCode.class).excludeId() ? "" : id;
-        }
-
-        List<Field> columns = ReflectUtil.getFieldsByAnnotation(entity, BarCodeColumn.class);
-        Assert.isTrue(columns.size() == 1, "实体类必须有且只有一个拥有@BarCodeColumn的字段！");
-        //供存储的字段
-        Field targetField = columns.get(0);
-        Assert.isTrue(targetField.getGenericType().equals(String.class), "@BarCodeColumn标注的字段必须为String类型");
-
+        Class<?> entityClass = event.getClass();
+        if(! cache.containsKey(entityClass)) return;
+        BarCodeEntity bar = cache.get(entityClass);
+        String val = bar.val(event);
         String[] propertyNames = event.getPersister().getEntityMetamodel().getPropertyNames();
-        //1-前缀+id
-        StringBuilder barCode = new StringBuilder(prefix.name()).append(id);
-        //拥有@BarCodeIndex的字段，排序
-        List<Field> indexes = ReflectUtil.getFieldsByAnnotation(entity, BarCodeIndex.class).stream()
-                .sorted(Comparator.comparingInt(f -> f.getAnnotation(BarCodeIndex.class).value()))
-                .collect(Collectors.toList());
-
-        //2-预条码+indexes
-        for (Field field : indexes){
-            //2-1 获取属性的真实值
-            Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(field, entity);
-            //2-2 构造出属性的计算值
-            if(Objects.isNull(value) || !StringUtils.hasLength(value.toString())) {
-                barCode.append(EMPTY_REPLACE);
-            } else {
-                BarCodeIndex barCodeIndex = field.getAnnotation(BarCodeIndex.class);
-                barCode.append(wrapperAttribute(value.toString(), barCodeIndex.holder() ? 1 : barCodeIndex.length()));
-            }
-        }
-
         for (int i = 0; i < propertyNames.length ; i ++) {
-            if (targetField.getName().equals(propertyNames[i])){
-                state[i] = barCode.toString();
+            if (bar.getTargetField().getName().equals(propertyNames[i])){
+                state[i] = val;
             }
         }
         try{
-            ReflectUtil.setValue(targetField, entity, barCode.toString());
+            ReflectUtil.setValue(bar.getTargetField(), event.getEntity(), val);
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private boolean collected;
+
+    public void collect(Set<ManagedType<?>> managedTypeSet){
+        if(collected) return;
+        managedTypeSet.forEach(
+                managedType -> {
+                    Class<?> clazz = managedType.getJavaType();
+                    if(managedType instanceof EntityType && BaseEntityWithBarCode.class.isAssignableFrom(clazz))
+                        cache.put(clazz, new BarCodeEntity(clazz));
+                }
+        );
+        collected = true;
+    }
+
+    private static Map<Class<?>, BarCodeEntity> cache = new HashMap<>();
+
+    @Getter
+    private static class BarCodeEntity{
+        //类名
+        private Class<?> entityClass;
+        //@BarCode 是否作用在类上
+        private boolean prefixOnClass;
+        //@BarCode作用在具体的Field上
+        private Field prefixField;
+        //@BarCode
+        private BarCode barCode;
+        //barCodeIndex列表
+        private List<Field> indexes;
+        //最终存条码的Field
+        private Field targetField;
+
+        private BarCodeEntity(Class<?> entityClass){
+            this.entityClass = entityClass;
+            //1-初始化barCode属性和prefixOnClass属性
+            Class<?> classWithBarCode = ReflectUtil.getClassesUntilRoot(entityClass).stream()
+                    .filter(c -> c.isAnnotationPresent(BarCode.class))
+                    .findFirst().orElse(null);
+            if(Objects.nonNull(classWithBarCode)){
+                prefixOnClass = true;
+                barCode = classWithBarCode.getAnnotation(BarCode.class);
+                Assert.notEmpty(barCode.prefix(), "@BarCode注解在类上时，必须要有value属性值！");
+            } else {
+                prefixOnClass = false;
+                List<Field> prefixes = ReflectUtil.getFieldsByAnnotation(entityClass, BarCode.class);
+                Assert.isTrue(prefixes.size() == 1, "实体类必须有且只有一个拥有@BarCode的字段！");
+                prefixField = prefixes.get(0);
+                Assert.isTrue(prefixField.getGenericType().equals(String.class), "@BarCode标注的字段必须为String类型");
+                barCode = prefixField.getAnnotation(BarCode.class);
+            }
+            //2-初始化indexes
+            indexes = ReflectUtil.getFieldsByAnnotation(entityClass, BarCodeIndex.class).stream()
+                    .sorted(Comparator.comparingInt(f -> f.getAnnotation(BarCodeIndex.class).value()))
+                    .collect(Collectors.toList());
+            //3-初始化target
+            List<Field> columns = ReflectUtil.getFieldsByAnnotation(entityClass, BarCodeColumn.class);
+            Assert.isTrue(columns.size() == 1, "实体类必须有且只有一个拥有@BarCodeColumn的字段！");
+            targetField = columns.get(0);
+            Assert.isTrue(targetField.getGenericType().equals(String.class), "@BarCodeColumn标注的字段必须为String类型");
+        }
+
+        /**
+         * 计算条码
+         * @param event
+         * @return
+         */
+        public String val(AbstractPreDatabaseOperationEvent event){
+            return prefix(event.getEntity()) + id(event.getId()) + indexes(event.getEntity());
+        }
+
+        /**
+         * 计算前缀
+         * @return
+         */
+        public BAR_CODE_PREFIX prefix(Object entity){
+            if(prefixOnClass)
+                return barCode.prefix()[0];
+            Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(prefixField, entity);
+            Assert.isTrue(Objects.nonNull(value) && StringUtils.hasLength(value.toString()), "@BarCode标注的Field必须有值");
+            return BAR_CODE_PREFIX.valueOf(value.toString());
+        }
+
+        /**
+         * 计算id
+         * @param id
+         * @return
+         */
+        public String id(Serializable id){
+            return barCode.excludeId() ? "" : wrapperAttribute(id, ID_LENGTH);
+        }
+
+        /**
+         * 计算index
+         * @param entity
+         * @return
+         */
+        public String indexes(Object entity){
+            StringBuilder ret = new StringBuilder();
+            for (Field index : indexes){
+                BarCodeIndex barCodeIndex = index.getAnnotation(BarCodeIndex.class);
+                //2-1 获取属性的真实值
+                Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(index, entity);
+                //2-2 构造出属性的计算值
+                ret.append(Objects.isNull(value) || !StringUtils.hasLength(value.toString()) ?
+                        EMPTY_REPLACE : wrapperAttribute(value.toString(), barCodeIndex.holder() ? 1 : barCodeIndex.length())
+                );
+            }
+            return ret.toString();
+        }
+
+        /**
+         * 属性补位
+         *  1：不足9位-前补0
+         *  2：大于9位报错
+         *
+         * @param attribute -要包装的属性
+         * @param maxLength -最大位数
+         * @return
+         */
+        private String wrapperAttribute(@NonNull Serializable attribute, int maxLength){
+            StringBuilder ret = new StringBuilder(attribute.toString());
+            int length = ret.length();
+            Assert.isTrue(length <= maxLength, "@Id不能大于"+ maxLength +"位");
+            for (int i = 0; i < maxLength - length; i ++)
+                ret.insert(0, "0");
+            return ret.toString();
         }
     }
 }

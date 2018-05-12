@@ -5,7 +5,6 @@ import com.yintong.erp.utils.common.SimpleCache;
 import com.yintong.erp.utils.common.SpringUtil;
 import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
-import org.hibernate.event.spi.PreInsertEventListener;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +38,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public EventListenerRegistry eventListenerRegistry(EntityManagerFactory emf) {
         BarCodeProvider barCodeProvider = barCodeProvider();
+        barCodeProvider.collect(emf.getMetamodel().getManagedTypes());
         EventListenerRegistry registry = emf.unwrap(SessionFactoryImpl.class).getServiceRegistry().getService(EventListenerRegistry.class);
         registry.getEventListenerGroup(EventType.PRE_INSERT).appendListener(barCodeProvider);
         registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(barCodeProvider);
