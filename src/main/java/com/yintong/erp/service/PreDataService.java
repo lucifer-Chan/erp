@@ -2,6 +2,8 @@ package com.yintong.erp.service;
 
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseCategoryRepository;
+import com.yintong.erp.domain.basis.ErpBaseDepartment;
+import com.yintong.erp.domain.basis.ErpBaseDepartmentRepository;
 import com.yintong.erp.domain.basis.security.*;
 import com.yintong.erp.utils.bar.BarCodeConstants.*;
 import org.apache.commons.collections4.KeyValue;
@@ -32,15 +34,18 @@ public class PreDataService {
 
     @Autowired ErpBaseCategoryRepository categoryRepository;
 
+    @Autowired ErpBaseDepartmentRepository departmentRepository;
+
     @Value("${yintong.erp.model.debug}")
     private boolean debug;
 
     @PostConstruct
     void init(){
         if(!debug) return;
-//        initMenus();
-//        initEmployees();
+        initMenus();
+        initEmployees();
         initCategories();
+        initDepartments();
     }
 
 
@@ -159,10 +164,30 @@ public class PreDataService {
                         .build();
                 map.putIfAbsent(_4.getCode(), _4);
             }
-
-
             categoryRepository.saveAll(map.values());
-
         }
+    }
+
+    /**
+     * 初始化部门
+     */
+    private void initDepartments(){
+        departmentRepository.deleteAll();
+        departmentRepository.saveAll(
+                Arrays.asList(
+                        ErpBaseDepartment.builder().code("D001").name("综合办公室").build()
+                        , ErpBaseDepartment.builder().code("D002").name("销售部").build()
+                        , ErpBaseDepartment.builder().code("D003").name("采购部").build()
+                        , ErpBaseDepartment.builder().code("D004").name("原材料仓储部").description("仓储部").build()
+                        , ErpBaseDepartment.builder().code("D005").name("成品仓储部").description("仓储部").build()
+                        , ErpBaseDepartment.builder().code("D006").name("运输部").description("仓储部").build()
+                        , ErpBaseDepartment.builder().code("D007").name("废品仓储部").description("仓储部").build()
+                        , ErpBaseDepartment.builder().code("D008").name("生产部(一号车间)").description("生产部").build()
+                        , ErpBaseDepartment.builder().code("D009").name("生产部(一号车间)").description("生产部").build()
+                        , ErpBaseDepartment.builder().code("D010").name("技术部(开发部)").build()
+                        , ErpBaseDepartment.builder().code("D011").name("技术部(理化室)").build()
+                        , ErpBaseDepartment.builder().code("D012").name("总经理室").build()
+                )
+        );
     }
 }
