@@ -39,7 +39,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
     }
 
     private void onPreCommit(AbstractPreDatabaseOperationEvent event, Object[] state){
-        Class<?> entityClass = event.getClass();
+        Class<?> entityClass = event.getEntity().getClass();
         if(! cache.containsKey(entityClass)) return;
         BarCodeEntity bar = cache.get(entityClass);
         String val = bar.val(event);
