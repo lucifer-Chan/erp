@@ -183,9 +183,9 @@ public class PreDataService {
                         , ErpBaseDepartment.builder().code("D006").name("运输部").description("仓储部").build()
                         , ErpBaseDepartment.builder().code("D007").name("废品仓储部").description("仓储部").build()
                         , ErpBaseDepartment.builder().code("D008").name("生产部(一号车间)").description("生产部").build()
-                        , ErpBaseDepartment.builder().code("D009").name("生产部(一号车间)").description("生产部").build()
-                        , ErpBaseDepartment.builder().code("D010").name("技术部(开发部)").build()
-                        , ErpBaseDepartment.builder().code("D011").name("技术部(理化室)").build()
+                        , ErpBaseDepartment.builder().code("D009").name("生产部(二号车间)").description("生产部").build()
+                        , ErpBaseDepartment.builder().code("D010").name("开发部").description("技术部").build()
+                        , ErpBaseDepartment.builder().code("D011").name("理化室").description("技术部").build()
                         , ErpBaseDepartment.builder().code("D012").name("总经理室").build()
                 )
         );
