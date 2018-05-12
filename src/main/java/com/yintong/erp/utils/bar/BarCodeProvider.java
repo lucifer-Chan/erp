@@ -96,13 +96,13 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
             if(Objects.nonNull(classWithBarCode)){
                 prefixOnClass = true;
                 barCode = classWithBarCode.getAnnotation(BarCode.class);
-                Assert.notEmpty(barCode.prefix(), "@BarCode注解在类上时，必须要有value属性值！");
+                Assert.notEmpty(barCode.prefix(), "@BarCode标注在" + entityClass.getName() + "上时，必须要有value属性值！");
             } else {
                 prefixOnClass = false;
                 List<Field> prefixes = ReflectUtil.getFieldsByAnnotation(entityClass, BarCode.class);
-                Assert.isTrue(prefixes.size() == 1, "实体类必须有且只有一个拥有@BarCode的字段！");
+                Assert.isTrue(prefixes.size() == 1, "实体类" + entityClass.getName() + "必须有且只有一个拥有@BarCode的字段！");
                 prefixField = prefixes.get(0);
-                Assert.isTrue(prefixField.getGenericType().equals(String.class), "@BarCode标注的字段必须为String类型");
+                Assert.isTrue(prefixField.getGenericType().equals(String.class), "@BarCode标注在" + entityClass.getName() + "的字段" + prefixField.getName() + "必须为String类型");
                 barCode = prefixField.getAnnotation(BarCode.class);
             }
             //2-初始化indexes
@@ -111,7 +111,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
                     .collect(Collectors.toList());
             //3-初始化target
             List<Field> columns = ReflectUtil.getFieldsByAnnotation(entityClass, BarCodeColumn.class);
-            Assert.isTrue(columns.size() == 1, "实体类必须有且只有一个拥有@BarCodeColumn的字段！");
+            Assert.isTrue(columns.size() == 1, "实体类" + entityClass.getName() + "必须有且只有一个拥有@BarCodeColumn的字段！");
             targetField = columns.get(0);
             Assert.isTrue(targetField.getGenericType().equals(String.class), "@BarCodeColumn标注的字段必须为String类型");
         }
