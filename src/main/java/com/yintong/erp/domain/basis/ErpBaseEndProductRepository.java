@@ -11,5 +11,5 @@ public interface ErpBaseEndProductRepository extends JpaRepository<ErpBaseEndPro
 
     List<ErpBaseEndProduct> findAll();
 
-//    ErpBaseEndProduct findByProductNo(String  productNo);
+    ErpBaseEndProduct findByEndProductNo(String  endProductNo);
 }

@@ -11,4 +11,5 @@ public interface ErpBaseSupplierRepository extends JpaRepository<ErpBaseSupplier
 
     List<ErpBaseSupplier> findAll();
 
+    ErpBaseSupplier findBySupplierNo(String supplierNo);
 }
