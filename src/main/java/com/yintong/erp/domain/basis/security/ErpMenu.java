@@ -1,6 +1,7 @@
 package com.yintong.erp.domain.basis.security;
 
 import com.yintong.erp.utils.base.BaseEntity;
+import com.yintong.erp.utils.transform.IgnoreIfNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +33,6 @@ public class ErpMenu extends BaseEntity{
     @Column(columnDefinition = "varchar(100) comment '页面uri'")
     private String uri;
 
-    @Transient
-    private List<ErpMenu> children = new ArrayList<>();
+    @Transient @IgnoreIfNull
+    private List<ErpMenu> children;
 }
