@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.endProduct;
+package com.yintong.erp.domain.basis.endproduct;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

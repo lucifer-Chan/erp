@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.security;
+package com.yintong.erp.domain.basis.user;
 
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
@@ -13,24 +13,24 @@ import javax.persistence.Id;
 
 /**
  * Created by jianqiang on 2018/5/11 0011.
- * 人员-供应商
+ * 人员-客户
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseSupplier extends BaseEntityWithBarCode {
+public class ErpBaseCustomer extends BaseEntityWithBarCode {
 
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '供应商编号'")
-    private String supplierNo;
-    @Column(columnDefinition = "varchar(20) comment '供应商名称'")
-    private String supplierName;
-    @Column(columnDefinition = "varchar(20) comment '供应商类别编码'")
-    private String supplierTypeCode;
+    @Column(columnDefinition = "varchar(64) comment '客户编号'")
+    private String customerNo;
+    @Column(columnDefinition = "varchar(20) comment '客户名称'")
+    private String customerName;
+    @Column(columnDefinition = "varchar(20) comment '客户类别编码'")
+    private String customerTypeCode;
     @Column(columnDefinition = "varchar(64) comment '地址'")
     private String address;
     @Column(columnDefinition = "varchar(20) comment '联系人'")

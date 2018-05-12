@@ -1,6 +1,6 @@
-package com.yintong.erp.domain.basis.rawMaterial;
+package com.yintong.erp.domain.basis.molds;
 
-import com.yintong.erp.utils.base.BaseEntity;
+
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,28 +13,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * Created by jianqiang on 2018/5/9 0009.
- * 原材料信息表
+ * Created by jianqiang on 2018/5/10 0010.
+ * 模具表
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseRawMaterial extends BaseEntityWithBarCode {
-
+public class ErpBaseModelTool extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '原材料编号'")
-    private String rawNo;
-    @Column(columnDefinition = "varchar(20) comment '原材料名称'")
-    private String rawName;
-    @Column(columnDefinition = "varchar(20) comment '原材料类别编码'")
-    private String rawTypeCode;
+    @Column(columnDefinition = "varchar(64) comment '模具编号'")
+    private String modelToolNo;
+    @Column(columnDefinition = "varchar(20) comment '模具名称'")
+    private String modelToolName;
+    @Column(columnDefinition = "varchar(20) comment '模具类别编码'")
+    private String modelToolTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
-
 }

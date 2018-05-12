@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.rawMaterial;
+package com.yintong.erp.domain.basis.rawmaterial;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

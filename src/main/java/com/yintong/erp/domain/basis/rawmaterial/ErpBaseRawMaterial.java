@@ -1,5 +1,4 @@
-package com.yintong.erp.domain.basis.endProduct;
-
+package com.yintong.erp.domain.basis.rawmaterial;
 
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
@@ -14,30 +13,26 @@ import javax.persistence.Id;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
- * 成品表
+ * 原材料信息表
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
+public class ErpBaseRawMaterial extends BaseEntityWithBarCode {
 
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '成品表编号'")
-    private String endProductNo;
-    @Column(columnDefinition = "varchar(20) comment '成品表名称'")
-    private String endProductName;
-    @Column(columnDefinition = "varchar(20) comment '成品表类别编码'")
-    private String endProductTypeCode;
+    @Column(columnDefinition = "varchar(64) comment '原材料编号'")
+    private String rawNo;
+    @Column(columnDefinition = "varchar(20) comment '原材料名称'")
+    private String rawName;
+    @Column(columnDefinition = "varchar(20) comment '原材料类别编码'")
+    private String rawTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
-    @Column(columnDefinition = "varchar(64) comment '图纸编号'")
-    private String drawingNo;
-    @Column(columnDefinition = "varchar(20) comment '模具位'")
-    private String ModelLocation;
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
 
