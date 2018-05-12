@@ -27,19 +27,33 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '成品表编号'")
+    @Column(columnDefinition = "varchar(64) comment '成品编号'")
     private String endProductNo;
-    @Column(columnDefinition = "varchar(20) comment '成品表名称'")
+    @Column(columnDefinition = "varchar(20) comment '成品名称'")
     private String endProductName;
     @BarCode
-    @Column(columnDefinition = "varchar(20) comment '成品表类别编码[触点-T:{三复合银点-T:PTT0,二复合银点-D:PTD0,整体银点-W:PTW0,铜触点-U:PTU0}柳钉-N:{紫铜柳钉-R:PNR0,黄铜柳钉-Y:PNY0,铝柳钉-M:PNM0,铁柳钉-F:PNF0}废品-R:{三复合银点-T:PRT0,二复合银点-D:PRD0,整体银点-W:PRW0,铜触点-U:PRU0,紫铜柳钉-R:PRR0,黄铜柳钉-Y:PRY0,铝柳钉-M:PRM0,铁柳钉-F:PRF0)]'")
+    @Column(columnDefinition = "varchar(20) comment '成品类别编码[触点-T:{三复合银点-T:PTT0,二复合银点-D:PTD0,整体银点-W:PTW0,铜触点-U:PTU0}柳钉-N:{紫铜柳钉-R:PNR0,黄铜柳钉-Y:PNY0,铝柳钉-M:PNM0,铁柳钉-F:PNF0}废品-R:{三复合银点-T:PRT0,二复合银点-D:PRD0,整体银点-W:PRW0,铜触点-U:PRU0,紫铜柳钉-R:PRR0,黄铜柳钉-Y:PRY0,铝柳钉-M:PRM0,铁柳钉-F:PRF0)]'")
     private String endProductTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
+    @Column(columnDefinition = "varchar(64) comment '客户图号'")
+    private String custDrawingNo;
     @Column(columnDefinition = "varchar(64) comment '图纸编号'")
     private String drawingNo;
     @Column(columnDefinition = "varchar(20) comment '模具位'")
-    private String ModelLocation;
+    private String modelLocation;
+    @Column(columnDefinition = "varchar(20) comment '单粒银耗(g)'")
+    private String unitSilverLoss;
+    @Column(columnDefinition = "varchar(20) comment '单粒银铜(g)'")
+    private String unitSilverCopper;
+    @Column(columnDefinition = "varchar(64) comment '技术要求'")
+    private String technicalRequirements;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性1'")
+    private String userDefinedOne;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性2'")
+    private String userDefinedTwo;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性3'")
+    private String userDefinedThree;
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
 
