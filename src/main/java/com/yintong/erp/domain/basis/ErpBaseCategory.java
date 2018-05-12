@@ -1,14 +1,12 @@
 package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.base.BaseEntity;
+import com.yintong.erp.utils.transform.IgnoreIfNull;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author lucifer.chan
@@ -33,4 +31,20 @@ public class ErpBaseCategory extends BaseEntity {
     @Column(columnDefinition = "varchar(10) comment '父节点编号'")
     private String parentCode;
 
+    @Transient @IgnoreIfNull
+    private List<ErpBaseCategory> children;
+
+    @Transient
+    private boolean leaf;
+
+    @Transient
+    private boolean root;
+
+    public boolean isLeaf(){
+        return code.length() == 4;
+    }
+
+    public boolean isRoot(){
+        return StringUtils.isEmpty(parentCode);
+    }
 }
