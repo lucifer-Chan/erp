@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.warehouse;
+package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
@@ -32,8 +32,8 @@ public class ErpBaseWarehouse extends BaseEntityWithBarCode {
     private String warehouseName;
     @Column(columnDefinition = "varchar(20) comment '仓位类别编码'")
     private String warehouseTypeCode;
-    @Column(columnDefinition = "varchar(12) comment '库存量'")
-    private String stock;
+    @Column(columnDefinition = "varchar(12) comment '库存最大量'")
+    private String stockMaximum;
     @Column(columnDefinition = "varchar(12) comment '单位'")
     private String unit;
     @Column(columnDefinition = "varchar(12) comment '库存量报警上限'")
