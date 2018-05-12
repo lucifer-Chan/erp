@@ -1,10 +1,7 @@
 package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.base.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +13,8 @@ import javax.persistence.Id;
  *
  *规格表
  */
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
