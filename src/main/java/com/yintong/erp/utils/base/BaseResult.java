@@ -1,5 +1,7 @@
 package com.yintong.erp.utils.base;
 
+import com.yintong.erp.sandbox.Table1;
+import com.yintong.erp.utils.transform.IgnoreIfNull;
 import com.yintong.erp.utils.transform.ReflectUtil;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -81,11 +83,13 @@ public class BaseResult{
             if(!field.isAnnotationPresent(JsonIgnore.class)){
                 Object value = ReflectUtil.getValueByGetter(field, pojo);
                 String fieldName = field.getName();
-                if(null == value){
+                if(null == value && !field.isAnnotationPresent(IgnoreIfNull.class)){
                     map.put(fieldName, "");
-                }else if(value instanceof Date && StringUtils.hasLength(dateFormat))
+                } else if(null == value && field.isAnnotationPresent(IgnoreIfNull.class)){
+
+                } else if(value instanceof Date && StringUtils.hasLength(dateFormat)) {
                     map.put(fieldName, new SimpleDateFormat(dateFormat).format((Date) value));
-                else if(value instanceof Iterable){
+                } else if(value instanceof Iterable){
                     List list = new ArrayList();
                     ((Iterable) value).forEach(obj->list.add(pojo2Map(obj, dateFormat)));
                     map.put(fieldName, list);
@@ -181,8 +185,7 @@ public class BaseResult{
     }
 
     public static void main(String[] ags){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("long", (Long)null);
-        System.out.println(jsonObject);
+        Table1 table1 = Table1.builder().build();
+        System.out.println(new BaseResult().addPojo(table1));
     }
 }
