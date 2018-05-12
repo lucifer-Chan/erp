@@ -101,7 +101,7 @@ public interface BarCodeConstants {
             return new KeyValue<String, String>() {
                 @Override
                 public String getKey() {
-                    return name.substring(at, at+1);
+                    return name.substring(0, at+1);
                 }
 
                 @Override
@@ -124,6 +124,4 @@ public interface BarCodeConstants {
      */
     String EMPTY_REPLACE = "K";
 
-
-    
 }

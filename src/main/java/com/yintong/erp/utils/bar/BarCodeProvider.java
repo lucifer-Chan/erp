@@ -7,7 +7,6 @@ import lombok.NonNull;
 import org.hibernate.event.spi.*;
 import org.jooq.lambda.Unchecked;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.EntityType;
