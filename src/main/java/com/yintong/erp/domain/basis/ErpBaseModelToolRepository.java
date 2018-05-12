@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.molds;
+package com.yintong.erp.domain.basis;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

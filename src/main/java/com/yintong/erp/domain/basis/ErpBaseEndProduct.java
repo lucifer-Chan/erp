@@ -1,4 +1,4 @@
-package com.yintong.erp.domain.basis.endproduct;
+package com.yintong.erp.domain.basis;
 
 
 import com.yintong.erp.utils.bar.BarCode;
