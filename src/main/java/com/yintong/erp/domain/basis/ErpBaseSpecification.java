@@ -13,6 +13,8 @@ import javax.persistence.Id;
 
 /**
  * Created by jianqiang on 2018/5/12.
+ *
+ *规格表
  */
 @Data
 @NoArgsConstructor
