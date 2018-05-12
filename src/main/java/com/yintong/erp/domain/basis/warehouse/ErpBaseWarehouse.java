@@ -26,18 +26,16 @@ public class ErpBaseWarehouse extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(20) comment '仓位号'")
+    @Column(columnDefinition = "varchar(20) comment '仓库编号'")
     private String warehouseNo;
-    @Column(columnDefinition = "varchar(20) comment '仓位名'")
+    @Column(columnDefinition = "varchar(20) comment '仓库名'")
     private String warehouseName;
-    @Column(columnDefinition = "varchar(64) comment '资产编号'")
-    private String assetNo;
-    @Column(columnDefinition = "varchar(20) comment '货架'")
-    private String rack;
-    @Column(columnDefinition = "varchar(12) comment '单位'")
-    private String unit;
+    @Column(columnDefinition = "varchar(20) comment '仓位类别编码'")
+    private String warehouseTypeCode;
     @Column(columnDefinition = "varchar(12) comment '库存量'")
     private String stock;
+    @Column(columnDefinition = "varchar(12) comment '单位'")
+    private String unit;
     @Column(columnDefinition = "varchar(12) comment '库存量报警上限'")
     private String callUpperLimit;
     @Column(columnDefinition = "varchar(12) comment '库存量报警下'")
