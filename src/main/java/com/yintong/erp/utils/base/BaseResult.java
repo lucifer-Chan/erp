@@ -1,12 +1,10 @@
 package com.yintong.erp.utils.base;
 
-import com.yintong.erp.sandbox.Table1;
-import com.yintong.erp.utils.transform.IgnoreIfNull;
-import com.yintong.erp.utils.transform.ReflectUtil;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.yintong.erp.utils.transform.IgnoreIfNull;
+import com.yintong.erp.utils.transform.ReflectUtil;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import org.springframework.util.StringUtils;
@@ -182,10 +180,5 @@ public class BaseResult{
     public BaseResult setRet(JSONObject ret){
         this.ret = ret;
         return this;
-    }
-
-    public static void main(String[] ags){
-        Table1 table1 = Table1.builder().build();
-        System.out.println(new BaseResult().addPojo(table1));
     }
 }

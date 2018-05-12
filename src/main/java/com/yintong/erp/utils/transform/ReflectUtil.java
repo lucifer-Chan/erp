@@ -131,13 +131,13 @@ public class ReflectUtil {
     public static Object getValueByGetter(Field field, Object holder){
         try {
             String fieldName = field.getName();
-            Method method = holder.getClass().getMethod("get" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1,fieldName.length()));
+            String methodPrefix = field.getGenericType().equals(boolean.class) ? "is" : "get";
+            Method method = holder.getClass().getMethod(methodPrefix + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1,fieldName.length()));
             method.setAccessible(true);
             return method.invoke(holder);
         } catch(Exception e){
             return null;
         }
-
     }
 
     public static void main(String[] args) {
