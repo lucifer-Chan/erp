@@ -1,5 +1,6 @@
 package com.yintong.erp.domain.basis.equipment;
 
+import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,8 @@ public class ErpBaseEquipment extends BaseEntityWithBarCode {
     private String equipmentNo;
     @Column(columnDefinition = "varchar(20) comment '设备名称'")
     private String equipmentName;
-    @Column(columnDefinition = "varchar(20) comment '设备类别编码'")
+    @BarCode
+    @Column(columnDefinition = "varchar(20) comment '设备类别编码[三复合机-J:EJ10,柳州机-L:EL10,上海机-H:EH20,半空心机-Q:EQ20]'")
     private String equipmentTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;

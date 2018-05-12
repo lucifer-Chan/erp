@@ -1,5 +1,6 @@
 package com.yintong.erp.domain.basis.rawmaterial;
 
+import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,8 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode {
     private String rawNo;
     @Column(columnDefinition = "varchar(20) comment '原材料名称'")
     private String rawName;
-    @Column(columnDefinition = "varchar(20) comment '原材料类别编码'")
+    @BarCode
+    @Column(columnDefinition = "varchar(20) comment '原材料类别编码[银丝-A:MA00,铜丝-Z:{紫铜丝-R:MZR0,黄铜丝-Y:MZY0,铜基丝-B:MZB0,铜镍丝-N:MZN0,白铜丝-Q:MZQ0},铝丝-M:MM00,铁丝-F:MF00,废品-R:{银丝-A:MRA0,铜丝-Z:[0|R|Y|B|N|Q]-MRZ0MZZR}]'")
     private String rawTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;

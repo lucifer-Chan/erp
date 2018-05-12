@@ -1,5 +1,7 @@
 package com.yintong.erp.domain.basis.user;
 
+import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.bar.BarCodeColumn;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,7 @@ import javax.persistence.Id;
 @Entity
 public class ErpBaseCustomer extends BaseEntityWithBarCode {
 
+
     @Id
     @GeneratedValue
     private Long id;
@@ -29,7 +32,8 @@ public class ErpBaseCustomer extends BaseEntityWithBarCode {
     private String customerNo;
     @Column(columnDefinition = "varchar(20) comment '客户名称'")
     private String customerName;
-    @Column(columnDefinition = "varchar(20) comment '客户类别编码'")
+    @BarCode
+    @Column(columnDefinition = "varchar(20) comment '客户类别编码[公司部-C:UCC0,散户-S:UCS0]'")
     private String customerTypeCode;
     @Column(columnDefinition = "varchar(64) comment '地址'")
     private String address;

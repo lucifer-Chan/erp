@@ -1,5 +1,6 @@
 package com.yintong.erp.domain.basis.user;
 
+import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,8 @@ public class ErpBaseSupplier extends BaseEntityWithBarCode {
     private String supplierNo;
     @Column(columnDefinition = "varchar(20) comment '供应商名称'")
     private String supplierName;
-    @Column(columnDefinition = "varchar(20) comment '供应商类别编码'")
+    @BarCode
+    @Column(columnDefinition = "varchar(20) comment '供应商类别编码[企业-C:USC0,个体-S:USS0，外协-E：USE0]'")
     private String supplierTypeCode;
     @Column(columnDefinition = "varchar(64) comment '地址'")
     private String address;

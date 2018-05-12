@@ -1,6 +1,8 @@
 package com.yintong.erp.domain.basis.molds;
 
 
+import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +31,7 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode {
     private String modelToolNo;
     @Column(columnDefinition = "varchar(20) comment '模具名称'")
     private String modelToolName;
+    @BarCode
     @Column(columnDefinition = "varchar(20) comment '模具类别编码'")
     private String modelToolTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
