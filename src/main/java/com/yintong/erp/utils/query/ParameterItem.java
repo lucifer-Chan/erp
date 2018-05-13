@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ParameterItem {
-    String mappingTo();
+    String mappingTo() default "";
     COMPARES compare();
     TRANSFORMER transformer() default TRANSFORMER.NULL;
     enum COMPARES {

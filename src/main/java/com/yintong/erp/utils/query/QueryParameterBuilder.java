@@ -5,6 +5,7 @@ import com.yintong.erp.utils.query.ParameterItem.TRANSFORMER;
 import com.yintong.erp.utils.transform.ReflectUtil;
 import lombok.Data;
 import org.jooq.lambda.Unchecked;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -74,9 +75,11 @@ public class QueryParameterBuilder {
             clazz = Object.class;
         }
 
+        String fieldName = StringUtils.hasLength(parameterItem.mappingTo()) ? parameterItem.mappingTo() : field.getName();
+
         return  (Predicate)criteriaBuilder.getClass()
                 .getMethod(parameterItem.compare().name(), Expression.class, clazz)
-                .invoke(criteriaBuilder, root.get(parameterItem.mappingTo()), value) ;
+                .invoke(criteriaBuilder, root.get(fieldName), value) ;
     }
 
     /**
