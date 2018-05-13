@@ -1,6 +1,6 @@
-package com.yintong.erp.web;
+package com.yintong.erp.web.basis;
 
-import com.yintong.erp.service.MenuService;
+import com.yintong.erp.service.basis.MenuService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,20 +10,20 @@ import java.util.List;
 /**
  * @author lucifer.chan
  * @create 2018-05-05 下午11:42
- * 人员管理
+ * 菜单管理
  **/
 @RestController
-@RequestMapping("employee")
-public class EmployeeController {
+@RequestMapping("menus")
+public class MenuController {
     @Autowired MenuService menuService;
 
     /**
-     * 获取所有菜单
+     * 获取所有菜单-tree
      * @return
      */
-    @GetMapping("menus")
-    public BaseResult getAllMenus(){
-        return new BaseResult().addList("menus", menuService.allMenus());
+    @GetMapping("all/tree")
+    public BaseResult getAllMenusTree(){
+        return new BaseResult().addList("menus", menuService.allMenusTree());
     }
 
     /**
@@ -31,22 +31,30 @@ public class EmployeeController {
      * @param employeeId
      * @return
      */
-    @GetMapping("{employeeId}/menus")
+    @GetMapping("employee/{employeeId}")
     public BaseResult getMenusByEmployee(@PathVariable("employeeId") Long employeeId){
         return new BaseResult().addList("menus", menuService.getMenusByEmployeeId(employeeId));
     }
 
     /**
-     * 修改用户权限
+     * 修改用户菜单关联
      * @param employeeId
      * @param menus
      * @return
      */
-    @PostMapping("{employeeId}/menus")
+    @PostMapping("employee/{employeeId}")
     public BaseResult saveMenus(@PathVariable("employeeId") Long employeeId, @RequestBody List<String> menus){
         menuService.updateMenusOfEmployee(employeeId, menus);
-        return new BaseResult();
+        return new BaseResult().setErrmsg("修改用户菜单成功！");
     }
 
+    /**
+     * 获取当前登陆用户的菜单
+     * @return
+     */
+    @GetMapping("current/tree")
+    public BaseResult getCurrentMenusTree(){
+        return new BaseResult().addList("menus", menuService.getMenusOfCurrentUser());
+    }
 
 }

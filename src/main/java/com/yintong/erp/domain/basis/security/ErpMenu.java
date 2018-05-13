@@ -26,7 +26,7 @@ public class ErpMenu extends BaseEntity{
     private String code;
     @Column(columnDefinition = "varchar(40) comment '菜单名称'")
     private String name;
-    @Column(columnDefinition = "varchar(100) comment '可访问的api，英文逗号隔开，支持通配符'")
+    @Column(columnDefinition = "varchar(2000) comment '可访问的api，英文逗号隔开，支持通配符'")
     private String matches;
     @Column(columnDefinition = "varchar(10) comment '父节点编码'")
     private String parentCode;

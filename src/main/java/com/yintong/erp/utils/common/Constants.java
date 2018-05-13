@@ -18,9 +18,12 @@ public interface Constants {
         /**
          * 任何登陆用户的权限匹配
          */
-        String ANY_ROLE_MATCHES = "/any/**";
+        String ANY_ROLE_MATCHES = "/any/**," +
+                "/menus/current/tree"//当前菜单树
+                ;
 
         //不登陆也可以访问
-        String OPEN_MATCHES = "/open/**,/js/**";
+        String OPEN_MATCHES = "/open/**,/js/**" +
+                ",/**";
     }
 }
