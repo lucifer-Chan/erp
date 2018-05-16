@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yintong.erp.utils.transform.IgnoreIfNull;
 import com.yintong.erp.utils.transform.ReflectUtil;
-import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -50,7 +50,8 @@ public class BaseResult{
 
 
     public BaseResult put(String key, Object value){
-        ret.put(key, Objects.isNull(value) || value instanceof JSONNull ? "" : value);
+//        ret.put(key, Objects.isNull(value) || value instanceof JSONNull ? "" : value);
+        ret.put(key, JSONUtils.isNull(value) ? "" : value);
         return this;
     }
 
@@ -89,7 +90,12 @@ public class BaseResult{
                     map.put(fieldName, new SimpleDateFormat(dateFormat).format((Date) value));
                 } else if(value instanceof Iterable){
                     List list = new ArrayList();
-                    ((Iterable) value).forEach(obj->list.add(pojo2Map(obj, dateFormat)));
+                    ((Iterable) value).forEach(obj->{
+                        if(!JSONUtils.isNumber(obj) && !JSONUtils.isBoolean(obj) && !JSONUtils.isString(obj))
+                            list.add(pojo2Map(obj, dateFormat));
+                        else
+                            list.add(obj);
+                    });
                     map.put(fieldName, list);
                 } else if(value instanceof JSONable){
                     map.put(fieldName, pojo2Map(value, dateFormat));
