@@ -1,6 +1,6 @@
 package com.yintong.erp.web;
 
-import com.yintong.erp.service.basis.MenuService;
+import com.yintong.erp.service.MenuService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

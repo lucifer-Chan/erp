@@ -1,4 +1,4 @@
-package com.yintong.erp.service;
+package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseCategoryRepository;
@@ -39,7 +39,7 @@ public class CategoryService {
         return cache.getDataFromCache(KEY_PREFIX + "_first", ret -> all().stream().filter(ErpBaseCategory::isRoot).collect(toList()));
     }
     /**
-     * 根据父节点code获取子节点列表
+     * 根据父节点code获取直属子节点列表
      * @param parentCode
      * @return
      */

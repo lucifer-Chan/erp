@@ -51,7 +51,7 @@ public class MenuService {
      */
     public List<ErpMenu> getMenusOfCurrentUser(){
         if(SessionUtil.getEmployeeDetails().isAdmin())
-            return allMenus();
+            return allMenusTree();
         Map<String, List<ErpMenu>> menuMap =
                 getMenusByEmployeeId(SessionUtil.getCurrentUserId()).stream()
                     .collect(groupingBy(ErpMenu::getParentCode));
@@ -64,7 +64,7 @@ public class MenuService {
      * 获取全部菜单-tree
      * @return
      */
-    public List<ErpMenu> allMenus(){
+    public List<ErpMenu> allMenusTree(){
         List<ErpMenu> ret = menuRepository.findByParentCodeIsNullOrderByCode();
         ret.forEach(menu-> menu.setChildren(menuRepository.findByParentCodeOrderByCode(menu.getCode())));
         return ret;

@@ -178,15 +178,35 @@ public class PreDataService {
                         ErpBaseDepartment.builder().code("D001").name("综合办公室").build()
                         , ErpBaseDepartment.builder().code("D002").name("销售部").build()
                         , ErpBaseDepartment.builder().code("D003").name("采购部").build()
-                        , ErpBaseDepartment.builder().code("D004").name("原材料仓储部").description("仓储部").build()
-                        , ErpBaseDepartment.builder().code("D005").name("成品仓储部").description("仓储部").build()
-                        , ErpBaseDepartment.builder().code("D006").name("运输部").description("仓储部").build()
-                        , ErpBaseDepartment.builder().code("D007").name("废品仓储部").description("仓储部").build()
-                        , ErpBaseDepartment.builder().code("D008").name("生产部(一号车间)").description("生产部").build()
-                        , ErpBaseDepartment.builder().code("D009").name("生产部(二号车间)").description("生产部").build()
-                        , ErpBaseDepartment.builder().code("D010").name("开发部").description("技术部").build()
-                        , ErpBaseDepartment.builder().code("D011").name("理化室").description("技术部").build()
                         , ErpBaseDepartment.builder().code("D012").name("总经理室").build()
+                )
+        );
+
+        //仓储部
+        ErpBaseDepartment _1 = departmentRepository.save(ErpBaseDepartment.builder().code("D004").name("仓储部").build());
+        departmentRepository.saveAll(
+                Arrays.asList(
+                        ErpBaseDepartment.builder().code("D00401").name("原材料仓储部").parentId(_1.getId()).build()
+                        , ErpBaseDepartment.builder().code("D00402").name("成品仓储部").parentId(_1.getId()).build()
+                        , ErpBaseDepartment.builder().code("D00403").name("运输部").parentId(_1.getId()).build()
+                        , ErpBaseDepartment.builder().code("D00404").name("废品仓储部").parentId(_1.getId()).build()
+                )
+        );
+        //生产部
+        ErpBaseDepartment _2 = departmentRepository.save(ErpBaseDepartment.builder().code("D005").name("生产部").build());
+        departmentRepository.saveAll(
+                Arrays.asList(
+                        ErpBaseDepartment.builder().code("D00501").name("一号车间").parentId(_2.getId()).build()
+                        , ErpBaseDepartment.builder().code("D00502").name("二号车间").parentId(_2.getId()).build()
+                )
+        );
+
+        //技术部
+        ErpBaseDepartment _3 = departmentRepository.save(ErpBaseDepartment.builder().code("D006").name("技术部").build());
+        departmentRepository.saveAll(
+                Arrays.asList(
+                        ErpBaseDepartment.builder().code("D00601").name("开发部").parentId(_3.getId()).build()
+                        , ErpBaseDepartment.builder().code("D00602").name("理化室").parentId(_3.getId()).build()
                 )
         );
     }
