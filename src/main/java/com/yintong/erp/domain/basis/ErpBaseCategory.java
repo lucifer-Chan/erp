@@ -47,4 +47,6 @@ public class ErpBaseCategory extends BaseEntity {
     public boolean isRoot(){
         return StringUtils.isEmpty(parentCode);
     }
+
+
 }

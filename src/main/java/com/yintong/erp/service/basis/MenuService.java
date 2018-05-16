@@ -1,4 +1,4 @@
-package com.yintong.erp.service;
+package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.security.*;
 

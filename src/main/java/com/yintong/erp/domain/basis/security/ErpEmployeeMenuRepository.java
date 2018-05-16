@@ -11,4 +11,5 @@ public interface ErpEmployeeMenuRepository extends JpaRepository<ErpEmployeeMenu
     ErpEmployeeMenu findByEmployeeIdAndMenuCode(Long employeeId, String menuCode);
 
     void deleteByEmployeeId(Long employeeId);
+
 }
