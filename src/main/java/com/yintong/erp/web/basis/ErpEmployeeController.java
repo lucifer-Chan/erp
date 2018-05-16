@@ -44,7 +44,7 @@ public class ErpEmployeeController {
 
     @RequestMapping("allMenus")
     public BaseResult getMenus(){
-        List<ErpMenu> menuList = menuService.allMenus();
+        List<ErpMenu> menuList = menuService.allMenusTree();
         return new BaseResult().addList(menuList);
     }
 
