@@ -50,7 +50,6 @@ public class BaseResult{
 
 
     public BaseResult put(String key, Object value){
-//        ret.put(key, Objects.isNull(value) || value instanceof JSONNull ? "" : value);
         ret.put(key, JSONUtils.isNull(value) ? "" : value);
         return this;
     }
@@ -83,7 +82,7 @@ public class BaseResult{
                 Object value = ReflectUtil.getValueByGetter(field, pojo);
                 String fieldName = field.getName();
                 if(null == value && !field.isAnnotationPresent(IgnoreIfNull.class)){
-                    map.put(fieldName, "");
+                    map.put(fieldName, JSONUtils.isArray(field.getType()) ? new ArrayList<>() : "");
                 } else if(null == value && field.isAnnotationPresent(IgnoreIfNull.class)){
 
                 } else if(value instanceof Date && StringUtils.hasLength(dateFormat)) {
