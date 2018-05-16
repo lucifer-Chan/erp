@@ -9,4 +9,6 @@ public interface ErpEmployeeDepartmentRepository extends JpaRepository<ErpEmploy
     void deleteByEmployeeId(Long employeeId);
 
     List<ErpEmployeeDepartment> findByEmployeeId(Long employeeId);
+
+    void deleteByDepartmentIdIn(Iterable<Long> departmentIds);
 }
