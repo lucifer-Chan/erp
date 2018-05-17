@@ -27,36 +27,6 @@ public class DepartmentService {
 
     @Autowired ErpEmployeeDepartmentRepository employeeDepartmentRepository;
 
-
-    /**
-     * 树型结构
-     * @return
-     */
-    public List<ErpBaseDepartment> tree(Long rootId){
-        ErpBaseDepartment root = departmentRepository.findById(rootId).orElse(null);
-        if(Objects.isNull(root))
-            return new ArrayList<>();
-        List<ErpBaseDepartment> children = children(root.getId());
-        if(!CollectionUtils.isEmpty(children)){
-            for (ErpBaseDepartment child : children)
-                child.setChildren(tree(child.getId()));
-            root.setChildren(children);
-        }
-        return root.getChildren();
-    }
-
-    /**
-     * 树型结构
-     * @return
-     */
-    public List<ErpBaseDepartment> tree(){
-        List<ErpBaseDepartment> roots = departmentRepository.findByParentIdIsNull();
-        for (ErpBaseDepartment department : roots){
-            department.setChildren(tree(department.getId()));
-        }
-        return roots;
-    }
-
     /**
      * 新建部门
      * @param department
@@ -67,7 +37,11 @@ public class DepartmentService {
         ErpBaseDepartment parent = Objects.isNull(department.getParentId()) ? null :
                 departmentRepository.findById(department.getParentId()).orElse(null);
         if(Objects.isNull(parent))
-            department.setParentId(null);
+            department.setParentId(-1L);
+        String name = department.getName();
+        Assert.hasLength(name, "部门名称不能为空！");
+        List<ErpBaseDepartment> departments = departmentRepository.findByParentIdAndName(department.getParentId(), name);
+        Assert.isTrue(CollectionUtils.isEmpty(departments), "同级部门下已有名称为'" + name + "'的部门，请重新命名！");
         return departmentRepository.save(department);
     }
 
@@ -117,7 +91,7 @@ public class DepartmentService {
         return ret;
     }
 
-    /**
+        /**
      * 直属children
      * @param parentId
      * @return
@@ -127,4 +101,5 @@ public class DepartmentService {
                 .filter(department -> parentId.equals(department.getParentId()))
                 .collect(toList());
     }
+
 }
