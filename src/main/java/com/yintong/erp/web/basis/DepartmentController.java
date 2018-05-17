@@ -1,10 +1,16 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseDepartment;
+import com.yintong.erp.domain.basis.ErpBaseDepartmentRepository;
 import com.yintong.erp.service.basis.DepartmentService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lucifer.chan
@@ -15,23 +21,18 @@ import org.springframework.web.bind.annotation.*;
 public class DepartmentController {
     @Autowired DepartmentService departmentService;
 
-    /**
-     * 获取部门树
-     * @return
-     */
-    @GetMapping("department/all/tree")
-    public BaseResult getAllDepartmentsTree(){
-        return new BaseResult().addList("tree", departmentService.tree());
-    }
+    @Autowired ErpBaseDepartmentRepository departmentRepository;
 
     /**
-     * 获取某个节点下的部门树
-     * @param id
+     * 获取全部部门
      * @return
      */
-    @GetMapping("department/{id}/tree")
-    public BaseResult getDepartmentsTreeById(@PathVariable Long id){
-        return new BaseResult().addList("tree",departmentService.tree(id));
+    @GetMapping("department/all")
+    public BaseResult getAllDepartments(){
+        List<ErpBaseDepartment> all = departmentRepository.findAll().stream()
+                .sorted(Comparator.comparing(ErpBaseDepartment::getId))
+                .collect(Collectors.toList());
+        return new BaseResult().addList("all", all);
     }
 
     /**
@@ -54,6 +55,7 @@ public class DepartmentController {
      */
     @PatchMapping("department/{id}")
     public BaseResult modifyDepartmentName(@PathVariable Long id, String name){
+        Assert.hasLength(name, "部门名称不能为空");
         return new BaseResult()
                 .addPojo(departmentService.updateDepartment(id, name))
                 .setErrmsg("成功修改部门名称为：" + name);
