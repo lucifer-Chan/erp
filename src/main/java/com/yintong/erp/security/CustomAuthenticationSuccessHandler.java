@@ -22,7 +22,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         BaseResult ret = new BaseResult();
         Object employeeDetail = authentication.getPrincipal();
         if(employeeDetail instanceof EmployeeDetails){
-            ret.addPojo(((EmployeeDetails) employeeDetail).getEmployee().exclude("password", "createdAt", "createdBy", "isDel", "lastUpdatedAt"));
+            ret.addPojo(((EmployeeDetails) employeeDetail).getEmployee().exclude("id", "password", "createdAt", "createdBy", "isDel", "lastUpdatedAt"));
         }
 
         response.getWriter().write(ret.toString());
