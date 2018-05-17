@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ErpBaseDepartmentRepository extends JpaRepository<ErpBaseDepartment, Long>{
 
-    List<ErpBaseDepartment> findByParentIdIsNull();
+    List<ErpBaseDepartment> findByParentIdAndName(Long parentId, String name);
 }
