@@ -1,0 +1,5836 @@
+.done .navbar-static-side,
+.done .create-project i,
+.done .projectClassList {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+/**
+* ÎÄ×Ö³¬³öÒþ²Ø
+*/
+.done .textOverHiden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+    max-width: 100px;
+    display: inline-block;
+}
+
+/* header */
+.site-header {
+    position: relative;
+    height: 50px;
+    background-color: #0394cb;
+    min-width: 1250px;
+    z-index: 1000;
+}
+.site-header span.name {
+    display: inline-block;
+    line-height: 50px;
+    text-align: center;
+    width: 220px;
+    background-color: #0394cb;
+    vertical-align: top;
+    transition: all 0.5s;
+}
+.site-header span.name .logomini {
+    display: none;
+}
+.site-header .projectClassBtn {
+    cursor: pointer;
+}
+.site-header .projectClassBtn:hover {
+    color:#e2e3e3;
+}
+.site-header .projectClassBtn i {
+    margin: 0px;
+}
+.site-header .projectClassList {
+    position: absolute;
+    left: 333px;
+    top: 50px;
+    padding: 10px 0;
+    background-color: #FFFFFF;
+    border: solid 1px #e5e5e5;
+    border-top: none;
+    z-index: 999;
+    display: none;
+}
+.site-header .projectClassList ul li {
+    padding: 10px;
+    font-size: 14px;
+    width: 130px;
+    cursor: pointer;
+}
+.site-header .projectClassList ul li.actived,
+.site-header .projectClassList ul li:hover {
+    background-color: #f2f2f2;
+}
+.site-header .projectClassList ul li:hover {
+    background-color: #00aeef;
+    color: #FFFFFF;
+}
+.site-header .setting {
+    padding-right: 20px;
+    padding-left: 10px;
+    color: #000;
+    display: inline-block;
+    vertical-align: middle;
+    /*    position: absolute;
+        right: 0px;
+        top: 0px;
+        z-index: 9999;*/
+}
+.site-header .setting span {
+    cursor: pointer;
+}
+.site-header .userSetFace {
+    background-color: #00aeef;
+    text-align: center;
+    position: relative;
+}
+.site-header .setting span.username {
+    position: relative;
+}
+.site-header .setting span.face,
+.site-header .setting span.email,
+.site-header .setting span.username {
+    display: inline-block;
+    vertical-align: top;
+    color: #FFFFFF;
+}
+.site-header .setting span.face {
+    padding: 10px 0 0 0;
+    position: relative;
+}
+.site-header .setting span.email {
+    padding: 0 20px;
+    line-height: 35px;
+    max-width: 250px;
+}
+.site-header .setting span.username span {
+    display: inline-block;
+}
+.site-header .setting span.face img {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    vertical-align: middle;
+    border: solid 2px #FFFFFF;
+    display: inline-block;
+}
+.site-header .setting span.face span.changeBj {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    vertical-align: middle;
+    background: #000;
+    opacity: 0;
+    left: 0px;
+    bottom:0px;
+}
+.site-header .setting span.face span.changeTxt {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    left: 0px;
+    bottom:0px;
+    line-height: 60px;
+    opacity: 0;
+}
+.site-header .setting span.face:hover .changeBj {
+    opacity: 0.4;
+}
+.site-header .setting span.face:hover .changeTxt {
+    opacity: 1;
+}
+.site-header .setting span.username i {
+    vertical-align: middle;
+}
+.site-header .setting span.username .username-txt {
+    line-height: 50px;
+    padding: 0 5px 0 10px;
+    max-width: 80px;
+}
+.site-header .setting span.username .username-warp:hover {
+    color: #e2e3e3;
+}
+.site-header .setting span.username .user-setting {
+    position: absolute;
+    right: -20px;
+    background-color: #FFFFFF;
+    z-index: 999;
+    min-width: 160px;
+    max-width: 250px;
+    display: none;
+}
+.site-header .setting span.username.actived .user-setting,
+.site-header .setting span.username:focus .user-setting {
+    display: inline-block;
+}
+.site-header .setting span.username .user-setting ul {
+    float: left;
+    border-bottom: solid 1px #c8c8c8;
+    padding: 10px 0;
+}
+.site-header .setting span.username .user-setting ul li {
+    width: 100%;
+    float: left;
+    color: #000;
+    line-height: 30px;
+    text-indent: 1em;
+}
+.site-header .setting span.username .user-setting ul li i {
+    text-indent: 0em;
+    margin-right: 10px;
+}
+.site-header .setting span.username .user-setting ul li:hover {
+    background-color: #00aeef;
+    color: #FFFFFF;
+}
+.site-header .setting span.username .user-setting ul li i.fa-mobile-phone {
+    margin-left: 3px;
+    margin-right: 11px;
+}
+.site-header .setting span.message {
+    margin: 0 0 0 10px;
+    position: relative;
+}
+.site-header .setting span.message .badge {
+    position: absolute;
+    left: 7px;
+    top: -7px;
+    background-color: red;
+}
+.site-header .setting .userSetLogout {
+    width: 100%;
+    float: left;
+    padding-bottom: 10px;
+}
+.site-header .setting .userSetLogout .exit {
+    margin-top: 10px;
+    color: #000000;
+    line-height: 30px;
+}
+.site-header .setting .userSetLogout .exit:hover {
+    color:#FFFFFF ;
+    background-color: #00aeef;
+}
+.site-header .setting .userSetLogout span.logout {
+    display: inline-block;
+    text-indent: 1em;
+}
+.site-header .setting .userSetLogout span.logout i {
+    text-indent: 0;
+    margin-right: 10px;
+}
+.wrapper-header {
+    z-index: 2;
+    position: relative;
+}
+.wrapper-header-right {
+    height: 50px;
+    background-color: #0394cb;
+    margin-left: 220px;
+    vertical-align: top;
+    margin-top: -50px;
+}
+.wrapper-header-left-bg {
+    position: absolute;
+    height: 50px;
+    width: 50%;
+    left: 0px;
+    z-index: 1;
+    background-color: #0394cb;
+}
+
+.systemHeadImage > div a {
+    position: relative;
+}
+.systemHeadImage > div a i {
+    position: absolute;
+    z-index: 100;
+    right: 10px;
+    bottom: 10px;
+    font-size: 20px;
+}
+.systemHeadImage a:hover {
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+}
+.uploadImage-curr {
+    padding: 10px 50px;
+}
+.dropdown-menu {
+    min-width: 128px;
+    border: none;
+    border-radius: 0px;
+}
+#menuHelp .dropdown-menu>li>a {
+    color: #000;
+}
+#menuHelp .dropdown-menu>li>a:hover {
+    background-color: #00aeef;
+    color: #fff;
+}
+
+#menuQr ul {
+    width: 380px;
+}
+#menuQr li {
+    padding: 5px 10px;
+    color: #000;
+    font-size: 12px;
+    text-align: center;
+    display: inline-block;
+}
+#menuQr li .qrWeb .icon,
+#menuQr li .qrService .icon,
+#menuQr li .qrAndroid .icon,
+#appPhoneWeb .qrWeb .icon,
+#appWXService .qrService .icon,
+#appAndroidApp .qrAndroid .icon {
+    position: absolute;
+    z-index: 99999;
+    max-width: 36px;
+    left: 50%;
+    margin-left: -18px;
+    top: 50%;
+    margin-top: -18px;
+}
+#menuQr li .qrService img {
+    display: inline-block;
+    vertical-align: baseline;
+}
+#menuQr span.dropdown-toggle i,
+#menuQr i,
+#myProjectPhoneQr .modal-header h4 i {
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.batchButtons .dropdown-menu {
+    width: auto;
+    min-width: auto;
+    background: none;
+    box-shadow: none;
+    margin: 0px;
+    padding:0px;
+}
+.batchButtons .dropdown-menu li {
+    margin-top: 5px;
+}
+
+.answerList .cell {
+    padding-left: 106px;
+    padding-right: 120px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-right: 20px;
+}
+.answerList .cell span {
+    width: 63px;
+    position: absolute;
+    top:5px;
+    left: 0px;
+    text-align: center;
+    font-weight:600;
+}
+.answerList .cell p {
+    width: 120px;
+    position: absolute;
+    top:5px;
+    right: 0px;
+    text-align: right;
+    color: #8b8b8b;
+    font-size: 12px;
+}
+#helpOrderSubmitForm .title {
+    vertical-align: middle;
+}
+#helpOrderSubmitForm .nr {
+    width: 90%;
+    margin-left: 26px;
+    vertical-align: middle;
+}
+
+/* footer */
+.site-footer {
+    height: 50px;
+    background-color: #FFFFFF;
+    line-height: 50px;
+    font-size: 13px;
+}
+.site-footer .fleft {
+    float: left;
+    padding-left: 30px;
+}
+.site-footer .fright {
+    float: right;
+    padding-right: 30px;
+}
+.fixed-footer {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 100;
+    background: #ebebeb;
+}
+
+/* apps Ò³Ãæ */
+.apps {
+    background-color: #f0f0f0;
+}
+.wrapper {
+    min-width: 1250px;
+}
+
+/* ÏîÄ¿Í¼±ê */
+.project-img {
+    text-align: center;
+    padding: 5px 0px 0px 0px;
+}
+.project-img p {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+}
+.project-img p span.bg,
+.project-img p span.btn {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background-color: #000000;
+    opacity: 0.6;
+    display: none;
+}
+.project-img p span.btn {
+    background: none;
+    opacity: 1;
+    color: #FFFFFF;
+    padding-top: 20px;
+}
+.project-img p span.btn i {
+    font-size: 20px;
+}
+.project-img p:hover span {
+    display: block;
+}
+.project-img img {
+    width: 90px;
+    height: 90px;
+    border: none;
+    border: 0;
+}
+.project-img .projectName {
+    line-height: 35px;
+    max-width: 180px;
+}
+
+/* ËÑË÷ */
+.sidebar-search,
+.company-search {
+    width: 270px;
+    display: inline-block;
+    margin: 0px 20px 0px 20px;
+    vertical-align: middle;
+}
+.company-search {
+    width: auto;
+    margin: 0px;
+}
+.sidebar-search input,
+.sidebar-search .input-group-btn>.btn,
+.sidebar-search .input-group-btn>.btn:hover,
+.sidebar-search .input-group-btn>.btn:visited,
+.sidebar-search .input-group-btn>.btn:active {
+    background: none;
+    color: #FFFFFF;
+    border-color: #fff;
+}
+.company-search input,
+.company-search .input-group-btn>.btn,
+.company-search .input-group-btn>.btn:hover,
+.company-search .input-group-btn>.btn:visited,
+.company-search .input-group-btn>.btn:active {
+    background: none;
+    color: #000;
+    border-color: #000;
+}
+.sidebar-search input,
+.company-search input {
+    border-right: none;
+    border-left: none;
+    padding-left: 0px;
+    padding-right: 0px;
+    height: 28px;
+    font-size: 12px;
+    padding: 0px 12px 0px;
+}
+.sidebar-search .input-group-btn>.btn {
+    border-left: none;
+    border-radius: 0px 17px 17px 0px;
+    -webkit-border-radius: 0px 17px 17px 0px;
+    -moz-border-radius: 0px 17px 17px 0px;
+    height: 28px;
+    padding: 0px 12px;
+}
+.company-search .input-group-btn>.btn {
+    border-right: none;
+    border-radius: 17px 0px 0px 17px;
+    -webkit-border-radius: 17px 0px 0px 17px;
+    -moz-border-radius: 17px 0px 0px 17px;
+    height: 28px;
+    padding: 0px 12px;
+}
+.sidebar-search .form-control,
+.sidebar-search .form-control:focus  {
+    border-color: #fff;
+    webkit-box-shadow:none;
+    box-shadow: none;
+    /*-webkit-box-shadow: inset 0 1px 1px rgba(255,255,255,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.075),0 0 8px rgba(102,175,233,.6);*/
+}
+.company-search .form-control,
+.company-search .form-control:focus  {
+    border-color: #000;
+    webkit-box-shadow:none;
+    box-shadow: none;
+}
+.sidebar-search .input-group input {
+    border-radius: 17px 0px 0px 17px;
+    -webkit-border-radius: 17px 0px 0px 17px;
+    -moz-border-radius: 17px 0px 0px 17px;
+    border:solid 1px #fff;
+    border-right: none;
+}
+.company-search .input-group input {
+    border-radius: 0px 17px 17px 0px;
+    -webkit-border-radius: 0px 17px 17px 0px;
+    -moz-border-radius: 0px 17px 17px 0px;
+    border:solid 1px #000;
+    border-left: none;
+}
+.sidebar-search input::-webkit-input-placeholder {
+    color: #e2e3e3;
+}
+.sidebar-search input:-moz-placeholder {
+    color: #e2e3e3;
+}
+.sidebar-search input::-moz-placeholder {
+    color: #e2e3e3;
+}
+.sidebar-search input:-ms-input-placeholder {
+    color: #e2e3e3;
+}
+
+/* Ñ¡Ôñµ¼º½´¦µÄselect */
+.sidebar-select {
+    /*padding: 15px 10px;*/
+    margin: 15px 10px;
+}
+.sidebar-select .dk_container {
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    outline: none; }
+.sidebar-select .dk_toggle {
+    background-color: #FFFFFF;
+    color: #000000;
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 6px 45px 6px 13px;
+    text-decoration: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -webkit-transition: 0.25s;
+    -moz-transition: 0.25s;
+    -o-transition: 0.25s;
+    transition: 0.25s;
+    -webkit-backface-visibility: hidden; }
+.sidebar-select .dk_toggle:hover, .sidebar-select .dk_toggle:focus, .sidebar-select .dk_focus .dk_toggle {
+    background-color: #FFFFFF;
+    color: #000000;
+    outline: none; }
+.sidebar-select .dk_toggle:active {
+    background-color: #FFFFFF;
+    outline: none; }
+.sidebar-select .dk_toggle:active .select-icon {
+    border-left-color: transparent; }
+
+.sidebar-select .select-icon {
+    background: #FFFFFF url("../img/toggle.png") no-repeat right center;
+    border-left: 1px solid #ccc;
+    border-radius: 0 4px 4px 0;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 38px;
+    -webkit-transition: 0.25s;
+    -moz-transition: 0.25s;
+    -o-transition: 0.25s;
+    transition: 0.25s;
+    -webkit-backface-visibility: hidden; }
+.sidebar-select .select-icon i {display: none}
+.sidebar-select .select-icon:hover {
+    background-color: #e8e8e8;
+}
+.sidebar-select .dk_open {
+    z-index: 10; }
+.sidebar-select .dk_open .dk_toggle {
+    background-color: #FFFFFF; }
+.sidebar-select .dk_open .dk_toggle .select-icon {
+    background-color: #e8e8e8;
+    border-left-color: transparent; }
+
+.sidebar-select .dk_options:before {
+    content: "";
+    border-style: solid;
+    border-width: 0 9px 9px 9px;
+    border-color: transparent transparent #e8e8e8 transparent;
+    height: 0px;
+    position: absolute;
+    left: 15px;
+    top: 5px;
+    width: 0px;
+    -webkit-transform: rotate(360deg); }
+.sidebar-select .dk_options:before {
+    left: auto;
+    right: 12px; }
+.sidebar-select .dk_options li {
+    padding-bottom: 3px; }
+.sidebar-select .dk_options a {
+    border-radius: 3px;
+    color: #606060;
+    display: block;
+    padding: 5px 9px;
+    text-decoration: none;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.sidebar-select .dk_options a:hover {
+    background-color: #c5c5c5; }
+
+.sidebar-select .dk_option_current a {
+    background-color: #c5c5c5;
+    color: #000}
+
+.sidebar-select .dk_options_inner {
+    background-color: #e8e8e8;
+    border-radius: 4px;
+    margin: 0;
+    max-height: 244px;
+    padding: 3px 3px 0; }
+
+.sidebar-select .dk_touch .dk_options {
+    max-height: 250px; }
+
+.sidebar-select .dk_container {
+    display: none;
+    position: relative;
+    vertical-align: middle; }
+.sidebar-select .dk_container.dk_shown {
+    background: #FFFFFF;
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+    border: solid 1px #ccc;
+    border-radius: 4px;
+    -webkit-border-radius:4px;
+    -moz-border-radius: 4px;
+}
+.sidebar-select .dk_container[class*="span"] {
+    float: none;
+    margin-left: 0; }
+
+.sidebar-select .dk_toggle {
+    display: block;
+    position: relative; }
+
+.sidebar-select .dk_open {
+    position: relative; }
+.sidebar-select .dk_open .dk_options {
+    margin-top: -1px;
+    opacity: 1;
+    z-index: 900;
+    display: block\9; }
+.sidebar-select .dk_open .dk_label {
+    color: inherit; }
+
+.sidebar-select .dk_options {
+    padding-top: 13px;
+    margin-top: -21px;
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -100;
+    display: none\9;
+    -webkit-transition: 0.3s ease-out;
+    -moz-transition: 0.3s ease-out;
+    -o-transition: 0.3s ease-out;
+    transition: 0.3s ease-out;
+    -webkit-backface-visibility: hidden; }
+.sidebar-select .select-right .dk_options {
+    left: auto;
+    right: 0; }
+.sidebar-select .dk_options a {
+    display: block; }
+
+.sidebar-select .dk_options_inner {
+    overflow: auto;
+    outline: none;
+    position: relative; }
+
+.sidebar-select .dk_touch .dk_options {
+    overflow: hidden; }
+.sidebar-select .dk_touch .dk_options_inner {
+    max-height: none;
+    overflow: visible; }
+
+.sidebar-select .dk_fouc select {
+    position: relative;
+    top: -99999em;
+    visibility: hidden; }
+.projectClassList {
+    padding: 0px;
+    margin: 0px;
+}
+#console-sidebar-select.sidebar-select .dk_options li {
+    position: relative;
+}
+#console-sidebar-select.sidebar-select .dk_options li a {
+    padding-left: 45px;
+    padding-right: 40px;
+}
+#console-sidebar-select.sidebar-select .dk_options li label {
+    position:absolute;
+    right:10px;
+    top:50%;
+    margin-top:-9px;
+    font-weight:normal;
+}
+#console-sidebar-select.sidebar-select .dk_options li img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    margin-top: -15px;
+}
+
+/* ÐÂ°æ¿ØÖÆÌ¨ Ñ¡ÔñÏîÄ¿ */
+#console-sidebar-select {
+    margin: 0px;
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+#console-sidebar-select .dk_container.dk_shown ,
+#console-sidebar-select .dk_toggle,
+#console-sidebar-select .select-icon{
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 0px;
+    line-height: 51px;
+}
+#console-sidebar-select .dk_options {
+    display: none;
+}
+#console-sidebar-select .dk_toggle {
+    padding-right: 15px;
+    transition: color 0s;
+}
+#console-sidebar-select .dk_toggle:hover,
+#console-sidebar-select .dk_toggle:hover i {
+    color: #e2e3e3;
+}
+@-moz-document url-prefix() {
+    #console-sidebar-select .dk_toggle {
+        padding-bottom: 1px;
+    }
+}
+#console-sidebar-select .dk_toggle .dk_label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+    max-width: 100px;
+    min-width: 50px;
+    display: inline-block;
+}
+#console-sidebar-select .select-icon {
+    text-align: right;
+    font-size: 16px;
+}
+#console-sidebar-select .select-icon i {
+    display: inline-block;
+}
+#console-sidebar-select .dk_options {
+    width: 260px;
+    top: 50px;
+    padding-top: 0px;
+    transition: all 0s;
+    margin-top: 0px;
+}
+#console-sidebar-select .dk_options_inner {
+    background-color: #FFFFFF;
+    border-radius: 0px;
+    padding: 0px;
+    border: solid 1px #e5e5e5;
+    border-top: none;
+}
+#console-sidebar-select .dk_options:before {
+    display: none;
+}
+#console-sidebar-select .dk_open .dk_options {
+    top: 50px;
+}
+#console-sidebar-select .dk_open .dk_options{
+    display: inline-block;
+}
+#console-sidebar-select .dk_options a {
+    color: #000000;
+    border-radius: 0px;
+    padding: 10px;
+    line-height: 25px;
+}
+#console-sidebar-select .dk_option_current a,
+#console-sidebar-select .dk_options a:hover {
+    background-color: #f2f2f2;
+}
+#console-sidebar-select .dk_options a:hover {
+    background-color: #00aeef;
+    color: #FFFFFF;
+}
+
+/* ×ó²àµ¼º½  */
+.navbar-default {
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+}
+.navbar-default .sidebar-menus-icon {
+    display: block;
+    color: #00aeef;
+    /*height: 40px;*/
+    padding: 15px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: right;
+}
+.navbar-default .nav > li > a {
+    color: #000000;
+    padding: 10px 20px 10px 25px;
+}
+.navbar-default .nav > li > a i {
+    margin-right: 6px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+.navbar-default .nav > li.active {
+    border-left: 4px solid #00adef;
+    background: #f0f0f0;
+}
+.navbar-default .nav > li > span.fa {
+    display: none;
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    margin-top: -14px;
+    color: #00aeef;
+    font-size: 28px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+.navbar-default .nav > li.active > span.fa {
+    display: inline-block;
+    margin-top: -19px;
+}
+.navbar-default .nav > li.active > a {
+    background: #e8e8e8;
+    font-weight: 600;
+}
+.navbar-default .nav > li > a:hover,
+.navbar-default .nav > li > a:focus,
+.navbar-default .nav > li.active a {
+    background: #e8e8e8;
+    color: #00adef;
+}
+.nav.nav-second-level > li.active {
+    border: none;
+}
+.navbar-default .nav > li.active a {
+    background: #f0f0f0;
+    padding-left: 21px;
+}
+.nav.nav-second-level.collapse[style] {
+    height: auto !important;
+}
+
+.arrow {
+    float: right;
+}
+.fa.arrow:before {
+    content: "\f104";
+}
+.active > a > .fa.arrow:before {
+    content: "\f107";
+}
+
+.nav>li>span {
+    cursor: pointer;
+    display: block;
+    padding: 5px 12px;
+}
+
+.nav-second-level li,
+.nav-third-level li {
+    border-bottom: none !important;
+}
+.nav-second-level li a {
+    /*padding: 7px 10px 7px 10px;*/
+    padding-left: 52px!important;;
+}
+
+.nav-third-level li a {
+    padding-left: 62px;
+}
+.nav-second-level li:last-child {
+    margin-bottom: 10px;
+}
+body:not(.fixed-sidebar).mini-navbar .nav li:hover > .nav-second-level,
+.mini-navbar .nav li:focus > .nav-second-level {
+    display: block;
+    border-radius: 0 2px 2px 0;
+    min-width: 140px;
+    height: auto;
+}
+body.fixed-sidebar .navbar-static-side {
+    position: absolute;
+    width: 220px;
+    z-index: 101;
+    left: 0px;
+    bottom: 0px;
+    top: 50px;
+    background-color: #f0f0f0;
+}
+body.fluid-sidebar .navbar-static-side {
+    width: 220px;
+    float: left;
+}
+.sidebar-collapse {
+    margin-left: 10px;
+    background-color: #fff;
+}
+
+body.mini-navbar .main-content {
+    margin-left: 50px;
+}
+
+body.mini-navbar .nav-label,
+body.mini-navbar .navbar-default .nav li a span {
+    display: none;
+}
+body:not(.fixed-sidebar).mini-navbar .nav-second-level {
+    display: none;
+}
+body.fixed-sidebar.mini-navbar .navbar-static-side {
+    width: 50px;
+}
+body.fixed-sidebar.mini-navbar .nav li:focus > .nav-second-level {
+    display: block;
+    height: auto;
+}
+body.fixed-sidebar.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
+    font-size: 12px;
+    border-radius: 3px;
+}
+body.mini-navbar .navbar-default .nav > li > a {
+    padding-left: 9px;
+}
+body.mini-navbar .navbar-default .nav > li.active a {
+    padding-left: 7px;
+}
+body.mini-navbar .navbar-default .nav > li.active > span.fa {
+    display: none;
+}
+body.mini-navbar .erp-content {
+    margin-left: 50px;
+}
+body.mini-navbar .sidebar-select {
+    display: none;
+}
+body.mini-navbar .sidebar-menus-icon {
+    display: block;
+    color: #00aeef;
+    height: 64px;
+    padding: 15px 8px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+body.mini-navbar .sidebar-menus-icon span:hover {
+    color: #0484b4;
+}
+body.mini-navbar .project-img {
+    display: none;
+}
+body.mini-navbar .site-header span.name {
+    width: 50px;
+}
+body.mini-navbar .site-header span.name .btn-group {
+    display: none;
+}
+body.mini-navbar .site-header .wrapper-header-right {
+    margin-left: 50px;
+}
+body.mini-navbar .site-header span.name a {display: none}
+body.mini-navbar .site-header span.name .logomini {
+    display: inline-block;
+}
+
+
+/* ÏîÄ¿ÁÐ±íÒ³ */
+.page-header {
+    border-bottom: none;
+}
+.page-header h3 {
+    padding: 0px;
+    margin: 0px;
+    font-size: 18px;
+    font-weight: normal;
+}
+.project-list {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding:5px 25px 15px 25px;
+}
+.project-list .default_project {
+    display: none;
+}
+.project-list .row .thumbnail {
+    position: relative;
+    overflow: hidden;
+    background: #FFFFFF;
+    border: none;
+    border-radius: inherit;
+    border-radius: 0px;
+    padding: 0px;
+    text-align: center;
+    margin-bottom: 0px;
+    min-height: 295px;
+}
+.project-list .row .thumbnail h4,
+.project-list .row .thumbnail h4 span {
+    max-width: 100%;
+    line-height: 45px;
+    display: inline-block;
+    width: 100%;
+    padding: 0 10px;
+    cursor: auto;
+}
+.project-list .row .thumbnail h4 i {
+    /*visibility: hidden;*/
+    padding: 0 5px;
+    display: none;
+}
+.project-list .row .thumbnail h4 span {
+    max-width: 80%;
+    padding: 0px;
+    width: auto;
+}
+.project-list .row .thumbnail .data-pencil .fa-pencil,
+.project-list .row .thumbnail .data-pencil .pName {
+    cursor: pointer;
+}
+.project-list .row .thumbnail .data-pencil .fa-pencil {
+    color:#00aeef;
+}
+.project-list .row .thumbnail:hover {
+    cursor: pointer;
+}
+.project-list .row .thumbnail h4 .projectTitle {
+    display: inline-block;
+    width: 100%;
+}
+.project-list .row .thumbnail h4 .projectTitle:hover i {
+    /*visibility: visible;*/
+    display: inline-block;
+}
+.project-list .row .thumbnail img {
+    width: 140px;
+    height: 140px;
+}
+.project-list .row .Closed img ,
+.project-list .row .Hidden img {
+    cursor: auto;
+}
+.project-list .row .list-group {
+    margin: 0px;
+}
+.project-list .row .list-group-number {
+    height: 45px;
+}
+.project-list .row .list-group-info {
+    height: 35px;
+}
+.project-list .row .list-group-btns {
+    height: 80px;
+}
+.project-list .row .smallCell .list-group-number,
+.project-list .row .smallCell .list-group-info,
+.project-list .row .smallCell .list-group-btns {
+    height: auto;
+}
+.project-list .row .thumbnail .btns {
+    font-size: 20px;
+    text-align: center;
+}
+.project-list .row .thumbnail .btns i {
+    padding: 5px;
+    font-size: 30px;
+    color: #a2a2a2 !important;
+}
+.project-list .row .thumbnail .btns p i.projectCloseColor:hover {
+    color: #f0ad4e !important;
+}
+.project-list .row .thumbnail .btns i span {
+    font-size: 14px;
+}
+.project-list .row .thumbnail .btns i:hover {
+    color: #00aeef !important;
+}
+.project-list .row .thumbnail .btns i.fa-key:hover {
+    color: #5cb85c !important;
+}
+.project-list .row .thumbnail .btns p i.fa-trash-o:hover {
+    color: #d9534f !important;
+}
+.project-list .row .thumbnail .btns i.fa-copy {
+    font-size: 28px;
+}
+.project-list .row .thumbnail:hover .btns {
+    display: block;
+}
+.project-list .row .Join h4 {
+    max-width: 100%;
+    line-height: 30px;
+    display: inline-block;
+    width: 100%;
+    padding: 0 10px;
+    cursor: auto;
+    position: relative;
+    height: 45px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+.project-list .row .Join h4 p {
+    position: absolute;
+    top: 40px;
+    text-align: center;
+    font-size: 12px;
+    left: 0px;
+    right: 0px;
+    color: #a2a2a2;
+}
+.project-list .row .Join h4 p span {
+    line-height: normal;
+    height: initial;
+    padding: 0 10px;
+    font-weight: normal;
+}
+.project-list .row .Join h4 p span label {
+    margin: 0 5px;
+    vertical-align: initial;
+    font-weight: normal;
+    padding: 3px 6px;
+
+}
+.project-list .row .Join h4 p span:last-child label {
+    margin: 0 7px;
+}
+.project-list .row .Join img {
+    margin-top: 10px;
+}
+.project-list .row .Join .caption ul li {
+    padding-bottom: 0px;
+}
+.project-list .row .Join .caption ul li p.bugNumber {
+    text-align: center;
+    font-size: 12px;
+    color: #a2a2a2;
+    height: 35px;
+}
+.project-list .row .Join .caption ul li p.bugNumber label{
+    margin: 0 5px;
+    vertical-align: initial;
+    font-weight: normal;
+    padding: 3px 6px;
+}
+.project-list .row .smallCell .thumbnail {
+    min-height: auto;
+}
+.project-list .row .smallCell .thumbnail h4 {
+    width: auto;
+    position: absolute;
+    left: 90px;
+    right: 0px;
+    bottom: 55px;
+    text-align: left;
+    z-index: 4;
+    height: auto;
+    bottom: 0px;
+    top: 0px;
+    margin-top: 0px;
+}
+.project-list .row .smallCell .thumbnail .caption ul li {
+    padding: 0 0 5px 0;
+    text-align: left;
+}
+.project-list .row .smallCell .thumbnail .caption ul li > div,
+.project-list .row .smallCell .thumbnail .caption ul li > p.bugNumber {
+    text-align: left;
+}
+.project-list .row .smallCell .thumbnail .caption ul li div.btns i {
+    text-align: center;
+    font-size: 20px;
+    padding-left: 0px;
+}
+.project-list .row .smallCell .thumbnail .caption ul li div.btns span {
+    font-size: 12px;
+}
+.project-list .row .smallCell .thumbnail h4 p {
+    right: initial;
+}
+.project-list .row .smallCell .thumbnail h4 p span {
+    padding: 10px 10px;
+}
+.project-list .row .smallCell .thumbnail h4 span {
+    max-width: 95%;
+}
+.project-list .row .smallCell .thumbnail img {
+    margin: 10px;
+    width: 80px;
+    height: 80px;
+}
+.project-list .row .smallCell .thumbnail .caption {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    left: 90px;
+    top: 40px;
+    z-index: 5;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.project-list .row .smallCell .thumbnail .caption .bugNumber {
+    height: 20px;
+}
+.project-list .row .smallCell .thumbnail .btns i {
+    font-size: 22px;
+}
+.project-list .row .smallCell .thumbnail .btns i.fa-copy {
+    font-size: 20px;
+}
+.project-list .row .smallCell .defaultCol p {
+    float: left;
+    padding: 10px 10px 0px;
+}
+.project-list .row .smallCell .defaultCol p i {
+    font-size: 90px;
+}
+.project-list .row .smallCell .defaultCol p span {
+    position: absolute;
+    left: 90px;
+    top: 28px;
+}
+.project-list .row .smallCell#projectList > div {
+    height: 110px;
+}
+.project-list .row .changeBtnGroup,
+.project-list .row .changeStatBtnGroup {
+    padding:5px 15px 0px;
+    text-align: center;
+    position: relative;
+}
+.project-list .row .changeBtnGroup .addProjectBtn {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.project-list .row .caption ul li:last-child {
+    padding-bottom:7px;
+    font-size: 12px;
+    cursor: auto;
+}
+.project-list .row .Owner ,
+.project-list .row .Hidden ,
+.project-list .row .Closed  {
+    min-height: 327px;
+}
+.project-list .row .Owner .caption ul li:last-child,
+.project-list .row .Hidden .caption ul li:last-child,
+.project-list .row .Closed .caption ul li:last-child {
+    padding-bottom: 42px;
+}
+.defaultCol p {
+    font-size: 18px;
+    color:#a2a2a2;
+    padding-top:40px
+}
+.defaultCol p i {
+    font-size: 140px;color:#a2a2a2
+}
+.defaultCol p span {
+    display: inline-block;
+    padding-top: 10px;
+}
+#projectList > div ,
+#storeList > div {
+    overflow: hidden;
+    padding: 5px;
+}
+
+.create-project i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -28px 0 0 -24px;
+}
+.create-project p {
+    padding: 5px 0;
+}
+.create-project img {
+    opacity: 0.3;
+}
+.create-project i {
+    opacity: 0.5;
+}
+.create-project:hover {
+    cursor: pointer;
+}
+.create-project:hover i {
+    opacity: 1;
+}
+.myProjectModel .modal-header button {
+    position: absolute;
+    right: 20px;
+}
+.myProjectModel .modal-header h4 {
+    overflow: hidden;
+    text-align: center;
+    width: 140px;
+    margin: 0 auto;
+    position: relative;
+}
+.myProjectModel .modal-header h4 .projectHeadImageGray ,
+.myProjectModel .modal-header h4 img,
+.myProjectModel .modal-header h4 .default,
+.myProjectModel .modal-header h4 .ui-image {
+    width: 140px;
+    height: 140px;
+    cursor: pointer;
+}
+.myProjectModel .modal-header h4 .projectHeadImageGray {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 0.6;
+    background-color: #000;
+    display: none;
+}
+.myProjectModel .modal-header h4 .projectHeadImageGray-text {
+    opacity: 1;
+    background: none;
+    color: #FFFFFF;
+    padding-top: 40px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 30px;
+}
+.myProjectModel .modal-header h4 .projectHeadImageGray-text i {
+    font-size: 20px;
+}
+.myProjectModel .modal-header h4:hover .projectHeadImageGray {
+    display: inline-block;
+}
+.myProjectModel .modal-header h4 .projectHeadImage {
+    display: inline-block;
+}
+.myProjectModel .modal-header h4 .upload-img {
+    width: auto;
+    height: auto;
+    margin: 0px;
+    float: none;
+}
+.myProjectModel .modal-header h4 .ui-image {
+    width: 140px;
+    height: 140px;
+}
+.myProjectModel .modal-header h4 .ui-image img {
+    max-width: none;
+    max-height: none;
+}
+.myProjectModel .modal-body {
+    margin: 0px;
+    padding: 0px;
+}
+.myProjectModel .modal-body ul.nav-tabs li {
+    width: 25%;
+    background: #eee;
+    text-align: center;
+}
+.myProjectModel .modal-body ul.nav-tabs li.active span {
+    border: none;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    margin-right: 0px;
+}
+.myProjectModel .modal-body .tab-content {
+    padding: 15px;
+}
+.myProjectModel .modal-body .tab-content .row,
+.myProjectSubscirbeModal .row {
+    padding: 0 45px;
+}
+.myProjectModel .modal-body .tab-content .projectUser,
+.myProjectModel .modal-body .tab-content .projectProject{
+    padding: 0 30px;
+}
+.myProjectProductModule h5:before,
+.myProjectProductModule h5:after,
+.myProjectModel .modal-body .tab-content .projectUser h5:before,
+.myProjectModel .modal-body .tab-content .projectUser h5:after,
+.myProjectModel .modal-body .tab-content .projectProject h5:before,
+.myProjectModel .modal-body .tab-content .projectProject h5:after
+{
+    content: ' ';
+    display: inline-block;
+    vertical-align: middle;
+    width: 2%;
+    height: 1px;
+    background-color: #BABFC3;
+    opacity: 0.25;
+    margin: 0 1% 0 -2%;
+}
+.myProjectProductModule h5:after,
+.myProjectModel .modal-body .tab-content .projectUser h5:after,
+.myProjectModel .modal-body .tab-content .projectProject h5:after{
+    width: 90%;
+    margin: 0 -90% 0 1%;
+}
+.myProjectModel .modal-body .tab-content .projectUser h5,
+.myProjectModel .modal-body .tab-content .projectProject h5 {
+    overflow: hidden;
+    margin: 10px -3%;
+    padding-left: 3%;
+}
+.myProjectModel .modal-body .tab-content .projectUser .projectUserList,
+.myProjectModel .modal-body .tab-content .projectProject .projectProjectList,
+.myProjectModel .modal-body .tab-content .projectProject .projectProductList {
+    max-height: 240px;
+}
+.myProjectModel .modal-body .tab-content .projectUser .list-group,
+.myProjectModel .modal-body .tab-content .projectProject .list-group{
+    margin-bottom: 0px;
+}
+#myProjectMyInvite .myInviteList{
+    padding: 0 30px;
+}
+.productModuleList li,
+.sprintList ul li,
+.customList ul li,
+.testPlanList ul li,
+.myProjectModel .modal-body .tab-content .projectUser ul li,
+.myProjectModel .modal-body .tab-content .projectProject ul li,
+#myProjectMyInvite .myInviteList .row:first-child {
+    border: none;
+    padding: 10px 9px 10px 5px;
+}
+.productModuleList li.list-group-item,
+.sprintList ul li.list-group-item,
+.customList ul li.list-group-item,
+.testPlanList ul li.list-group-item,
+.myProjectModel .modal-body .tab-content .projectUser ul li.list-group-item,
+.myProjectModel .modal-body .tab-content .projectProject ul li.list-group-item,
+#myProjectMyInvite .myInviteList .row {
+    background-color: rgba(200,200,200,0.1);
+    padding: 10px 9px 10px 5px;
+}
+.productModuleList li.list-group-item:nth-child(2n),
+.sprintList ul li.list-group-item:nth-child(2n),
+.customList ul li.list-group-item:nth-child(2n),
+.testPlanList ul li.list-group-item:nth-child(2n),
+.myProjectModel .modal-body .tab-content .projectUser ul li.list-group-item:nth-child(2n),
+.myProjectModel .modal-body .tab-content .projectProject ul li.list-group-item:nth-child(2n),
+#myProjectMyInvite .myInviteList .row:nth-child(2n){
+    background: none;
+}
+.sprintList ul li,
+.customList ul li,
+.testPlanList ul li,
+.myProjectModel .modal-body .tab-content .projectUser ul li {
+    width: 100%;
+    float: left;
+}
+.productModuleList li span.opt,
+.sprintList ul li span.opt,
+.customList ul li span.opt,
+.testPlanList ul li span.opt,
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt,
+.myProjectModel .modal-body .tab-content .projectProject ul li span.opt{
+    float: right;
+    cursor: pointer;
+    display: none;
+}
+.sprintList ul li span.opt,
+.testPlanList ul li span.opt {
+    margin-top: -10px;
+}
+.customList ul li span.customName {
+    display: inline-block;
+    max-width: 350px;
+}
+.myProjectModel .modal-body .tab-content .projectProject ul li span.projectName {
+    max-width: 280px;
+    display: inline-block;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.owner {
+    padding-left: 30px;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail {
+    padding-right: 10px;
+    display: none;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a {
+    color: #00aeef;
+    font-size: 13px;
+}
+.productModuleList li:hover span.opt,
+.sprintList ul li:hover span.opt,
+.customList ul li:hover span.opt,
+.testPlanList ul li:hover span.opt,
+.myProjectModel .modal-body .tab-content .projectUser ul li:hover span.opt,
+.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt,
+.myProjectModel .modal-body .tab-content .projectUser ul li:hover span.setEmail {
+    display: inline-block;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i {
+    font-size: 12px;
+    color: #00aeef;
+}
+.sprintList ul li span.opt i.edit {
+    margin-right: 10px;
+}
+.customList ul li span.opt i,
+.testPlanList ul li span.opt i {
+    margin-left:10px;
+    font-style:normal;
+}
+.customList ul li span.opt i.customClose {
+    font-size: 12px;
+}
+.customList ul li span.opt i.customUpHidden,
+.customList ul li span.opt i.customDownHidden {
+    display: none;
+}
+.testPlanList ul li span.opt i.true {
+    color: #5cb85c;
+}
+.testPlanList ul li span.opt i.false {
+    color: #f0ad4e;
+}
+.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt i {
+    vertical-align: middle;
+}
+.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct{
+    margin-right: 0px;
+}
+.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct.true {
+    color: #5cb85c;
+}
+.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct.false {
+    color: #f0ad4e;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i.removeUser {
+    color: red !important;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i.disabled.false {
+    color: #f0ad4e;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i.disabled.true {
+    color: #5cb85c;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.userType {
+    padding-left: 30px;
+    color: #999999;
+}
+.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash {
+    color: #00aeef;
+}
+.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-trash-o {
+    color: red;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt ul.dropdown-menu,
+.myProjectModel .modal-body .tab-content .projectProject ul li span.opt ul.dropdown-menu{
+    right: 0px;
+    left: auto;
+    transition: all 0.5s;
+    min-width: 120px;
+    z-index: 200;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.opt ul.dropdown-menu li,
+.myProjectModel .modal-body .tab-content .projectProject ul li span.opt ul.dropdown-menu li{
+    padding: 0px;
+}
+.myProjectModel .modal-body .tab-content .projectUser ul li span.face img {
+    width: 35px;
+    height: 35px;
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    vertical-align: middle;
+}
+#myProjectMyInvite .myInviteList span.face img {
+    width: 45px;
+    height: 45px;
+    border-radius: 23px;
+    -moz-border-radius: 23px;
+    -webkit-border-radius: 23px;
+    vertical-align: middle;
+}
+#myProjectMyInvite .myInviteList span.userType{
+    padding-top: 5px;
+    color: #00aeef;
+}
+#myProjectMyInvite .btns {
+    padding-top: 10px;
+    text-align: right;
+    padding-right: 15px;
+}
+
+.myProjectModel .modal-body .tab-content .storeUserList span.username,
+#myProjectMyInvite .myInviteList span.username {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 380px;
+    word-break: break-all;
+    word-wrap: break-word;
+    font-size: 12px;
+}
+
+#myProjectMyInvite .myInviteList span.username {
+    max-width: 340px;
+}
+.myProjectModel .modal-body .tab-content .projectUserList span.username em,
+#myProjectMyInvite .myInviteList span.username em {
+    font-style: normal;
+    font-size: 14px;
+}
+.myProjectModel .modal-body .tab-content .projectProjectList ul li span.projectName {
+    display: inline-block;
+    max-width: 400px;
+}
+.projectProjectList ul li span.opt i {
+    margin: 0 10px;
+}
+.productModuleList li span.opt .fa-edit,
+.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit {
+    margin: 0 10px;
+}
+.productModuleList li span.opt i {
+    font-size: 14px;
+    color: #00aeef;
+}
+.productModuleList li span.opt i.red {
+    color: red
+}
+
+.userListSearch .search {
+    width: 100%;
+}
+
+
+.myProjectModel .modal-body.editModuleName,
+.myProjectModel .modal-body.editDisplayName {
+    padding: 25px 50px 40px;
+}
+.editModuleName h4,
+.editDisplayName h4 {
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+.editModuleName h4 {
+    color: #00aeef;
+}
+#CopyBugModelForm .radio {
+    vertical-align: top;
+}
+#CopyBugModelForm .row {
+    padding: 10px 0;
+}
+.focusUserNameListDiv {
+    padding: 10px 10px 10px 0;
+    margin: 10px 20px;
+}
+.focusUserNameListDiv .inviteFocusBtn {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+.focusUserNameListDiv .inviteFocusBtn > span {
+    background-color: #f3f3f3;
+    padding: 0px 5px;
+    display: inline-block;
+    color: #00aeef;
+    cursor: pointer;
+}
+.focusUserNameListDiv .inviteFocusBtn > span:hover {
+    background-color: #00aeef;
+    color: #fff;
+}
+.focusUserNameListDiv .inviteFocusBtn span {
+    height: 26px;
+    line-height: 26px;
+    overflow: hidden;
+}
+.focusUserNameListDiv .inviteFocusBtn i {
+    font-size: 26px;
+    /*    vertical-align: middle;
+        line-height: 26px;*/
+}
+.focusUserNameListDiv .focusUsersNameList {
+    position: absolute;
+    left: 0px;
+    top: 22px;
+    min-width: 150px;
+    max-width: 300px;
+    padding: 5px;
+    border: solid 1px #ccc;
+    background-color: #fff;
+    display: none;
+    overflow: hidden;
+}
+.focusUserNameListDiv .focusUsersNameList .searchFocusUserDiv input {
+    padding-right: 25px;
+}
+.focusUserNameListDiv .focusUsersNameList .searchFocusUserDiv i {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    font-size: 18px;
+    color: #606060;
+    display: none;
+}
+.focusUserNameListDiv .focusUsersNameList .slimScrollDiv .focusUsersList {
+    max-height: 200px;
+}
+.focusUserNameListDiv .focusUsersNameList ul li {
+    padding: 5px;
+    cursor: pointer;
+    word-wrap: break-word;
+    word-break: normal;
+}
+.focusUserNameListDiv .focusUsersNameList ul li:hover {
+    background-color: #00aeef;
+    color: #FFFFFF;
+}
+.focusUsersNameDiv span {
+    background-color: #f3f3f3;
+    padding: 3px 5px;
+    margin: 0 5px 5px 0;
+    display: inline-block;
+}
+.focusUsersNameDiv span.initial {
+    background: none;
+    font-size: 12px;
+    padding: 0px 10px 0 0;
+    margin: 0px;
+    color: #ccc;
+    display: none;
+}
+
+#editProjectUserForm,
+#addProjectUserForm {
+    width: 100%;
+    display: inline-block;
+}
+.copyUsers {
+    vertical-align: top;
+}
+.copyUsersFormProject,
+.copyTagsFormProject,
+.copyProductFormProject,
+.copyRoleFormProject,
+.copyCustomFormProject,
+.copyTemplateFormProject {
+    padding: 0px 40px 10px;
+    width: 100%;
+}
+.copyProductModule {
+    cursor: pointer;
+}
+.copyProductModule i.fa-circle-o,
+.copyProductModule i.fa-dot-circle-o {
+    font-size: 22px;
+    vertical-align: middle;
+    color: #bbb;
+}
+.copyProductModule i.fa-dot-circle-o {
+    color: #00aeef;
+}
+.copyUsersFormProject .dk_open .dk_options {
+    z-index: 10000;
+}
+.copyUsersList,
+.copyProductsList {
+    margin: 0 40px 10px;
+    padding: 10px;
+    border: solid 1px #EEEEEE;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+.copyUsersListDiv,
+.copyProductsListDiv {
+    min-height: 100px;
+    max-height: 200px;
+}
+.copyUsersListDiv .animated,
+.copyProductsListDiv .animated {
+    z-index: 0;
+}
+.copyUsersListDiv li,
+.copyProductsListDiv li {
+    border: none;
+    padding: 10px 9px 10px 5px;
+    background-color: rgba(200,200,200,0.1);
+}
+.copyUsersListDiv li:nth-child(2n+1),
+.copyProductsListDiv li:nth-child(2n+1) {
+    background-color: #FFFFFF;
+}
+.copyUsersListDiv li em {
+    font-style: normal;
+    font-size: 14px;
+}
+.copyUsersListDiv li .username,
+.copyProductsListDiv li .username {
+    display: inline-block;
+    vertical-align: middle;
+    word-break: break-all;
+    word-wrap: break-word;
+    max-width: 380px;
+}
+.copyUsersListDiv li .username {
+    font-size: 12px;
+}
+.copyUsersListDiv li .check i,
+.copyProductsListDiv li .check i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    margin-top: -9px;
+    font-size: 18px;
+    color: #00aeef;
+}
+.copyUsersListDiv img {
+    width: 35px;
+    height: 35px;
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    vertical-align: middle;
+}
+.myProjectModel .modal-body .tab-content .projectSetting {
+    padding-bottom: 20px;
+}
+.myProjectModel .modal-body .tab-content .projectSetting .row,
+.myProjectSubscirbeModal .row  {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.tabPersonality .row {
+    margin-bottom: 15px;
+}
+.projectSetting span,
+.tabPersonality span,
+.myProjectSubscirbeModal .row span {
+    cursor: pointer;
+    margin-right: 20px;
+}
+.appDefaultMenu span {
+    margin-right: 0px;
+}
+.projectSetting .bugTemplate p a,
+.projectSetting .bugTemplate p a:hover,
+.projectSetting .bugBeizhuTemplate p a,
+.projectSetting .bugBeizhuTemplate p a:hover,
+#BCTemplate .bugTemplate p a,
+#BCTemplate .bugTemplate p a:hover,
+#BCTemplate .bugBeizhuTemplate p a,
+#BCTemplate .bugBeizhuTemplate p a:hover,
+#BCTemplate .bugZiyouTemplate p a,
+#BCTemplate .bugZiyouTemplate p a:hover {
+    color: #00aeef;
+    font-size: 18px;
+    vertical-align: middle;
+}
+#BCTemplate .bugTemplate p a,
+#BCTemplate .bugBeizhuTemplate p a,
+#BCTemplate .bugZiyouTemplate p a {
+    float: right;
+}
+#BCTemplate .bugTemplate p,
+#BCTemplate .bugBeizhuTemplate p {
+    height: 35px;
+}
+#BCTemplate .bugZiyouTemplate p {
+    position: relative;
+    padding-right: 25px;
+    padding-bottom: 15px;
+}
+#BCTemplate .bugZiyouTemplate p .options {
+    position: absolute;
+    right: -44px;
+    top: 0px;
+}
+#BCTemplate .bugZiyouTemplate p .options a {
+    float: none;
+    display: inline-block;
+    margin-right: 10px;
+}
+#BCTemplate .bugZiyouTemplate p .options a i {
+    font-size: 18px;
+}
+.copylabel,
+.projectSetting .bugTemplate span,
+.projectSetting .bugBeizhuTemplate span,
+#BCTemplate .bugTemplate span,
+#BCTemplate .bugBeizhuTemplate span,
+#BCTemplate .bugZiyouTemplate span {
+    cursor: auto;
+    margin-right: 5px;
+}
+.copylabel {
+    cursor: pointer;
+}
+.copylabel span i,
+.projectSetting span i,
+#BCTemplate span i,
+.tabPersonality span i,
+.myProjectSubscirbeModal .row span i {
+    font-size: 22px;
+    vertical-align: middle;
+}
+.copylabel span i.fa-circle-o,
+.projectSetting span i.fa-circle-o,
+#BCTemplate span i.fa-circle-o,
+.tabPersonality span i.fa-circle-o,
+.myProjectSubscirbeModal .row span i.fa-circle-o {
+    color: #bbb;
+}
+.copylabel span i.fa-dot-circle-o,
+.projectSetting span i.fa-dot-circle-o,
+#BCTemplate span i.fa-dot-circle-o,
+.tabPersonality span i.fa-dot-circle-o,
+.myProjectSubscirbeModal .row span i.fa-dot-circle-o {
+    color: #00aeef;
+}
+label.priority {
+    margin: 0 6px 0 0;
+    cursor: pointer;
+}
+#settingUserRightForm label.rad,
+#emailSettingForm label.rad,
+#alertSettingForm label.rad,
+#projectTab label.rad,
+#projectRolesForm p.rad,
+#bowersTab label.rad {
+    margin: 0 20px 0 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+label.priority span i,
+#settingUserRightForm label span i,
+#emailSettingForm label span i,
+#alertSettingForm label span i,
+#projectTab label span i,
+#projectRolesForm p span i,
+#bowersTab label span i {
+    font-size: 22px;
+    vertical-align: middle;
+}
+label.priority span i.fa-circle-o,
+#settingUserRightForm label span i.fa-circle-o,
+#emailSettingForm label span i.fa-circle-o,
+#alertSettingForm label span i.fa-circle-o,
+#projectTab label span i.fa-circle-o,
+#projectRolesForm p span i.fa-circle-o,
+#bowersTab label span i.fa-circle-o {
+    color: #bbb;
+}
+label.priority span i.fa-dot-circle-o,
+#settingUserRightForm label span i.fa-dot-circle-o,
+#emailSettingForm label span i.fa-dot-circle-o,
+#alertSettingForm label span i.fa-dot-circle-o,
+#projectTab label span i.fa-dot-circle-o,
+#projectRolesForm p span i.fa-dot-circle-o,
+#bowersTab label span i.fa-dot-circle-o {
+    color: #00aeef
+}
+
+.rightsTitle {
+
+}
+.rightsTitle p.title {
+    position: absolute;
+    left: 0px;
+    top: -10px;
+    padding-right: 10px;
+    background: #fff;
+}
+.rightsTitle p.anniu {
+    position: absolute;
+    right: 0px;
+    top: -10px;
+    padding-left: 10px;
+    background: #fff;
+}
+.rightsTitle p.ApplyToAll {
+    top:22px;
+}
+.rightsTitle .ApplyToAll span {
+    font-size: 18px;
+    vertical-align: middle;
+    color: #bbb;
+}
+.rightsTitle .ApplyToAll span.defaultColor {
+    color:#00aeef;
+}
+.div_right_block.actived {
+    display: none;
+}
+
+.addModifyRights p {
+    display: inline-block;
+}
+#myProjectRoles .roleList p {
+    background-color: rgba(200,200,200,0.1);
+    padding: 10px 9px 10px 5px;
+}
+#myProjectRoles .roleList p:nth-child(2n){
+    background: none;
+}
+#myProjectRoles .roleList p span.name {
+    display: inline-block;
+    max-width: 450px;
+}
+#myProjectRoles .roleList p i{
+    display: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+#myProjectRoles .roleList p:hover i {
+    display: inline-block;
+}
+
+.functionType,
+.functionList {
+    padding: 15px;
+}
+.functionList hr {
+    margin: 10px 0;
+}
+.functionType {
+    padding: 0 15px;
+}
+.functionType p.icon,
+.functionList p.icon {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    margin-top:-31px;
+    font-size: 32px;
+    border-radius: 21px;
+    -moz-border-radius : 21px;
+    -webkit-border-radius : 21px;
+    line-height: 42px;
+    width: 42px;
+    height: 42px;
+    text-align: center;
+}
+.functionType p.icon-green,
+.functionList p.icon-green {
+    color: #5cb85c;
+    border : solid 1px #5cb85c;
+}
+.functionType p.icon-yellow,
+.functionList p.icon-yellow {
+    color: #f0ad4e;
+    border : solid 1px #f0ad4e;
+}
+.functionType p.icon-gray,
+.functionList p.icon-gray {
+    color: #bbb;
+    border : solid 1px #bbb;
+}
+.functionType .nr,
+.functionList .nr {
+    padding-left: 55px;
+    padding-right: 110px;
+    position: relative;
+}
+.functionType .nr {
+    padding-right: 50px;
+}
+.functionType .nr span.name,
+.functionList .nr span.name {
+    font-size: 16px;
+    font-weight: 600;
+}
+.functionType .nr p.lock,
+.functionType .nr p.des,
+.functionList .nr p.lock,
+.functionList .nr p.des {
+    font-size: 14px;
+    padding-bottom: 5px;
+}
+.functionType .nr p.des,
+.functionList .nr p.des {
+    font-size: 12px;
+    padding-top: 5px;
+}
+.functionList .nr .button1 {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    margin-top:-16px;
+}
+.functionList .nr .button2 {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    margin-top:-34px;
+}
+.noticeExpiredRadio label,
+.noticeTopRadio label,
+.noticeNotifyRadio label,
+.customTxtRadio label {
+    padding-right: 20px;
+    cursor: pointer;
+}
+.noticeExpiredRadio label span,
+.noticeTopRadio label span,
+.noticeNotifyRadio label span,
+.customTxtRadio label span {
+    font-size: 22px;
+    vertical-align: sub;
+    color: #bbbbbb;
+}
+.noticeExpiredRadio label.checked span,
+.noticeTopRadio label.checked span,
+.noticeNotifyRadio label.checked span,
+.customTxtRadio label.checked span {
+    color: #00aeef;
+}
+
+#subTaskList {
+    display: none;
+}
+#subTaskList hr {
+    margin: 5px 0;
+}
+.parentTask,
+.subTask {
+    display: none;
+}
+.parentTask b {
+    display: block;
+}
+.bugListFindVersion,
+#bugInfoPage .Version,
+#historyInfoModal .Version,
+#bugInfoPage .bugInfoVerifyVersion span {
+    border: solid 1px #d9534f;
+    color: #d9534f;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    text-align: left;
+}
+.versionInfoBugs .vBugTitle,
+.subTask .subTaskTitle,
+.relatedBugsDiv .relatedBugsTitle,
+.preTaskBugsDiv .preTaskBugsTitle,
+.postTaskBugsDiv .postTaskBugsTitle,
+.parentTask .parentTaskTitle {
+    display: inline-block;
+    max-width: 400px;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.versionInfoBugs .vBugUser,
+.subTask .subTaskUser,
+.relatedBugsDiv .relatedBugsUser,
+.preTaskBugsDiv .preTaskBugsUser,
+.postTaskBugsDiv .postTaskBugsUser,
+.parentTask .parentTaskUser {
+    max-width: 75px;
+    padding-right: 20px;
+}
+.versionInfoBugs {
+    border-top: solid 1px #e9e9e9;
+    padding-top: 10px;
+}
+.versionInfoBugs,
+.parentTask,
+.subTask,
+.relatedBugsDiv {
+    position: relative;
+}
+.relatedBugsDiv {
+    /*margin-bottom: 10px;*/
+}
+.versionInfoBugs ul li,
+.subTask ul li,
+.relatedBugsDiv .relatedBugsDivList p,
+.preTaskBugsDiv .preTaskBugsDivList p,
+.postTaskBugsDiv .postTaskBugsDivList p,
+.subTask .subTaskDivList p,
+.parentTask .parentSpan {
+    padding: 10px 5px;
+    cursor: pointer;
+}
+.relatedBugsDiv .relatedBugsDivList p,
+.preTaskBugsDiv .preTaskBugsDivList p,
+.postTaskBugsDiv .postTaskBugsDivList p,
+.subTask .subTaskDivList p,
+.parentTask .parentSpan {
+    margin-left:25px;
+}
+.relatedBugsDiv .relatedBugsDivList.btn_chain_related_class p,
+.preTaskBugsDiv .preTaskBugsDivList.btn_chain_preTask_class p,
+.postTaskBugsDiv .postTaskBugsDivList.btn_chain_postTask_class p,
+.subTask .subTaskDivList.btn_chain_subTask_class p,
+.parentTask .parentSpan.btn_chain_class {
+    margin-left: 0px;
+}
+.versionInfoBugs ul li:hover,
+.subTask ul li:hover,
+.relatedBugsDiv .relatedBugsDivList p:hover,
+.preTaskBugsDiv .preTaskBugsDivList p:hover,
+.postTaskBugsDiv .postTaskBugsDivList p:hover,
+.subTask .subTaskDivList p:hover,
+.parentTask .parentSpan:hover {
+    background-color: #f5f5f5;
+}
+.relatedBugsDiv .relatedBugsDivList .disconnect,
+.preTaskBugsDiv .preTaskBugsDivList .disconnect,
+.postTaskBugsDiv .postTaskBugsDivList .disconnect,
+.subTask .subTaskDivList .disconnect,
+.relatedBugsDiv .relatedBugsDivList .disconnect2,
+.preTaskBugsDiv .preTaskBugsDivList .disconnect2,
+.postTaskBugsDiv .postTaskBugsDivList .disconnect2,
+.subTask .subTaskDivList .disconnect2,
+.parentTaskChain {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    margin-top: -10px;
+}
+
+.functionTryBtn {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.exportBug span,
+.exportCase span,
+.exportTask span,
+.copyBugType,
+.copyBugTestType,
+.subTaskType,
+.subTaskType2 {
+    cursor: pointer;
+    padding-right: 10px;
+}
+.exportBug i,
+.exportCase i,
+.exportTask i,
+.copyBugType i,
+.copyBugTestType i,
+.subTaskType i,
+.subTaskType2 i {
+    font-size: 22px;
+    vertical-align: middle;
+}
+.exportBug i.fa-circle-o,
+.exportCase i.fa-circle-o,
+.exportTask i.fa-circle-o,
+.copyBugType i.fa-circle-o,
+.copyBugTestType i.fa-circle-o,
+.subTaskType i.fa-circle-o,
+.subTaskType2 i.fa-circle-o {
+    color: #bbb;
+    vertical-align:top;
+}
+.exportBug i.fa-dot-circle-o,
+.exportCase i.fa-dot-circle-o,
+.exportTask i.fa-dot-circle-o,
+.copyBugType i.fa-dot-circle-o,
+.copyBugTestType i.fa-dot-circle-o,
+.subTaskType i.fa-dot-circle-o,
+.subTaskType2 i.fa-dot-circle-o {
+    color: #00aeef;
+}
+.glBugList {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    background: #fff;
+    border: solid 1px #ccc;
+    padding: 5px 0;
+    margin-top: 1px;
+    border-radius: 3px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    z-index: 9999;
+    display: none;
+}
+.glBugList li {
+    padding:5px;
+    word-wrap: break-word;
+    word-break: break-all;
+    cursor: pointer;
+}
+.glBugList li:hover {
+    background-color: #f0f0f0;
+}
+.glBugList .glBugListScroll {
+    max-height:200px;
+}
+
+.copyUrl {
+    display: inline-block;
+    width: 60%;
+    vertical-align: middle;
+}
+
+.myProjectProductModule {
+    margin: 15px;
+    padding: 0px 10px;
+}
+.myProjectProductModule .modulename {
+    max-width: 435px;
+    display: inline-block;
+}
+
+#copyInviteUrl {
+    cursor: pointer;
+}
+
+#bugStatMenu,
+#bugFocusMenu {
+    display: none;
+}
+
+.editBugPriorityDiv {
+    margin-left: 10px;
+}
+.editBugPriorityDiv .editBug {
+    padding-left: 30px;
+    padding-right: 0px;
+}
+.bugEvaDivHour {
+    position: absolute;
+    right: -18px;
+    top: 7px;
+}
+.progress-bar-info {
+    background:#00aeef;
+}
+.progress,
+.progress-bar {
+    box-shadow:none;
+    -webkit-box-shadow:none;
+}
+
+.bugValueDiv span,
+.bugWorkloadDiv span {
+    cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+
+.tabBug,
+.editTabBug,
+.tabPersonality,
+.tabBugConnect,
+.tabEmoji {
+    margin-top: -15px;
+}
+.tabBug .nav-tabs,
+.editTabBug .nav-tabs,
+.tabPersonality .nav-tabs,
+.myEmailSettingDiv .nav-tabs,
+.tabBugConnect .nav-tabs,
+.tabEmoji .nav-tabs {
+    margin:0 -15px;
+}
+.tabBug .nav-tabs > li,
+.editTabBug .nav-tabs > li,
+.tabPersonality .nav-tabs > li,
+.myEmailSettingDiv .nav-tabs > li,
+.tabBugConnect .nav-tabs > li,
+.tabEmoji .nav-tabs > li {
+    width: 33.33333%;
+    background-color: #eee;
+    text-align: center;
+}
+.tabPersonality .nav-tabs > li {
+    width: 50%;
+}
+.tabBug .nav-tabs > li,
+.editTabBug .nav-tabs > li,
+.myEmailSettingDiv .nav-tabs > li {
+    width: 25%;
+}
+.editTabBug .nav-tabs > li > span:focus,
+.editTabBug .nav-tabs > li > span:hover,
+.editTabBug .nav-tabs > li > span,
+.tabBug .nav-tabs > li > span:focus,
+.tabBug .nav-tabs > li > span:hover,
+.tabBug .nav-tabs > li > span,
+.tabPersonality .nav-tabs > li > span:focus,
+.tabPersonality .nav-tabs > li > span:hover,
+.tabPersonality .nav-tabs > li > span,
+.myEmailSettingDiv .nav-tabs > li > span:focus,
+.myEmailSettingDiv .nav-tabs > li > span:hover,
+.myEmailSettingDiv .nav-tabs > li > span,
+.tabBugConnect .nav-tabs > li > span,
+.tabBugConnect .nav-tabs > li span:focus,
+.tabBugConnect .nav-tabs > li span:hover,
+.tabEmoji .nav-tabs > li > span:focus,
+.tabEmoji .nav-tabs > li > span:hover,
+.tabEmoji .nav-tabs > li > span {
+    border:none;
+}
+.tabBug .nav-tabs,
+.editTabBug .nav-tabs,
+.tabPersonality .nav-tabs,
+.myEmailSettingDiv .nav-tabs,
+.tabBugConnect .nav-tabs,
+.tabEmoji .nav-tabs {
+    border:none;
+}
+.tabBug .nav-tabs li.active,
+.editTabBug .nav-tabs li.active,
+.tabPersonality .nav-tabs li.active,
+.myEmailSettingDiv .nav-tabs li.active,
+.tabBugConnect .nav-tabs li.active,
+.tabEmoji .nav-tabs li.active {
+    background-color: #fff
+}
+.tabBug .nav-tabs li.active span,
+.editTabBug .nav-tabs li.active span,
+.tabPersonality .nav-tabs li.active span,
+.myEmailSettingDiv .nav-tabs li.active span,
+.tabBugConnect .nav-tabs li.active span,
+.tabEmoji .nav-tabs li.active span {
+    color: #000;
+}
+.tabBug .tab-content,
+.editTabBug .tab-content,
+.tabPersonality .tab-content,
+.myEmailSettingDiv .tab-content,
+.tabBugConnect .tab-content,
+.tabEmoji .tab-content {
+    padding-top: 15px;
+}
+
+.tabBug .tab-content .form-group,
+.editTabBug .tab-content .form-group,
+.tabPersonality .tab-content .form-group {
+    margin-bottom: 0px;
+}
+.tabBug .tab-content .form-group > div,
+.editTabBug .tab-content .form-group > div,
+.tabPersonality .tab-content .form-group > div {
+    margin-bottom: 15px;
+}
+.tabBug .tab-content .bugTagsList h5,
+.editTabBug .tab-content .editBugTagsList h5 {
+    font-weight: 600;
+}
+
+.subTaskSelectProjectDiv {
+    height: 35px;
+    margin:0 40px
+}
+.subTaskSelectProjectDiv .subTaskSelectProject {
+    width: 100%;
+}
+
+.emojiTable {
+    border-spacing: 15px;
+    border-collapse: separate;
+    font-size: 18px;
+    width: 100%;
+}
+.emojiTable td {
+    text-align: center;
+    cursor: pointer;
+}
+
+.dragEditImageDiv,
+.dragImageDiv,
+.dragEditDescriptionDiv,
+.dragDescriptionDiv,
+.dragFocusDescriptionDiv,
+.dragEditNoticeDescriptionDiv,
+.dragNoticeDescriptionDiv,
+.dragEditNoticeImageDiv,
+.dragNoticeImageDiv,
+.dragEditVersionDescriptionDiv,
+.dragVersionDescriptionDiv,
+.dragEditTestCaseDiv,
+.dragTestCaseDiv,
+.dragTestCaseEditImageDiv,
+.dragTestCaseImageDiv,
+.dragReopenDescDiv,
+.dragReopenImagesDiv,
+.dragAssignToDescDiv,
+.dragAssignToImageDiv,
+.dragDisapproveDescDiv,
+.dragDisapproveImageDiv,
+.dragApproveDescDiv,
+.dragApproveImageDiv,
+.dragRejectDescDiv,
+.dragRejectImageDiv,
+.dragCommentDescDiv,
+.dragCommentImageDiv,
+.dragEditCommentDescDiv,
+.dragEditCommentImageDiv,
+.dragNoticeCommentDiv,
+.dragEditNoticeCommentDiv,
+.dragBugTemplateBugDiv,
+.dragBugTemplateTaskDiv,
+.dragBugTemplateReqDiv,
+.dragBugTemplateCaseDiv,
+.dragBugTemplateBeizhuDiv,
+.dragVersionCommentDiv,
+.dragEditVersionCommentDiv,
+.dragCommentVersionImageDiv,
+.dragEditCommentVersionImageDiv,
+.dragCommentNoticeImageDiv,
+.dragEditCommentNoticeImageDiv {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 10px;
+    bottom: -5px;
+    cursor: ns-resize;
+}
+.dragEditImageDiv,
+.dragImageDiv,
+.dragEditNoticeImageDiv,
+.dragNoticeImageDiv,
+.dragTestCaseEditImageDiv,
+.dragTestCaseImageDiv,
+.dragReopenImagesDiv,
+.dragAssignToImageDiv,
+.dragDisapproveImageDiv,
+.dragApproveImageDiv,
+.dragRejectImageDiv,
+.dragCommentImageDiv,
+.dragEditCommentImageDiv,
+.dragCommentVersionImageDiv,
+.dragEditCommentVersionImageDiv,
+.dragCommentNoticeImageDiv,
+.dragEditCommentNoticeImageDiv {
+    bottom: 35px;
+}
+
+.showAndHideImageFujian:focus,
+.showAndHideImageFujian:hover,
+.showAndHideImageFujian,
+.showEmoji:focus,
+.showEmoji:hover,
+.showEmoji {
+    color: #00aeef;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: normal;
+}
+.showAndHideImageFujian:focus,
+.showAndHideImageFujian:hover,
+.showAndHideImageFujian {
+    width: 80px;
+    display: inline-block;
+}
+.showEmoji2:focus,
+.showEmoji2:hover,
+.showEmoji2 {
+    padding-right: 10px;
+}
+.bigModal .showEmoji:focus,
+.bigModal .showEmoji:hover,
+.bigModal .showEmoji {
+    left: 127px;
+}
+.bigModal .showEmoji2:focus,
+.bigModal .showEmoji2:hover,
+.bigModal .showEmoji2 {
+    left: 0px;
+}
+.selectZiyouTemplate {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: normal;
+    display: none;
+}
+.ziyouTemplateList ul li {
+    cursor: pointer;
+    border: none;
+    background-color: rgba(200,200,200,0.1);
+    padding: 10px 9px 10px 5px;
+}
+.ziyouTemplateList ul li:nth-child(2n) {
+    background: none;
+}
+.ziyouTemplateList ul li:hover {
+    color: #00aeef
+}
+.bigModal textarea {
+    height:200px;
+}
+.sprintEnabledBtn,
+.tagEnabledBtn,
+.customEnabledBtn {
+    position: absolute;
+    top: 50%;
+    margin-top: -17px;
+}
+.bugCustomDiv .text-left,
+.editBugCustomDiv .text-left {
+    text-align: left
+}
+.input-group input.tagName {
+    width: 345px;
+    border-radius:4px 0px 0px 4px !important;
+    -webkit-border-radius:4px 0px 0px 4px !important;
+    -moz-border-radius:4px 0px 0px 4px !important;
+    border-right: none;
+}
+.input-group input.tagGroup {
+    width: 308px;
+    border-right: none;
+}
+.selectTagsName {
+    margin-left: 35px;
+    display: inline-block;
+    vertical-align: top;
+}
+.selectTagsName2 {
+    margin: 5px 0px 0px 35px;
+    width:348px;
+    display: inline-block;
+}
+.selectTagsColor {
+    width: 153px;
+    display: inline-block;
+    vertical-align: top;
+    border-left: none;
+    margin-bottom: 0px;
+}
+.selectTagsColorBtn {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 5px;
+}
+.selectTagsColorBtn p {
+    width: 147px;
+}
+.selectTagsColor .minicolors-input {
+    border-radius: 0px 4px 4px 0px !important;
+    -webkit-border-radius:0px 4px 4px 0px !important;
+    -moz-border-radius:0px 4px 4px 0px !important;
+}
+.tagSelect p.btn {
+    border-radius: 0px 4px 4px 0px !important;
+    -moz-border-radius: 0px 4px 4px 0px !important;
+    -webkit-border-radius: 0px 4px 4px 0px !important;
+}
+.tagSelect ul {
+    width: 348px;
+}
+.editBugTagsList,
+.bugTestTagsEditList {
+    padding-bottom: 10px;
+}
+.editBugTagsList,
+.bugTagsList,
+.bugTestTagsList,
+.bugTestTagsEditList,
+.tagsList {
+    padding-top: 10px;
+    padding-left: 20px;
+}
+.sprintList,
+.customList,
+.testPlanList {
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.bigModal .editBugTagsList {
+    padding-left: 110px;
+}
+.editBugTagsList h5,
+.bugTagsList h5,
+.bugTestTagsList h5,
+.bugTestTagsEditList h5,
+.tagsList h5 {
+    font-weight: 600;
+}
+.editBugTagsList .cell,
+.bugTagsList .cell,
+.bugTestTagsList .cell,
+.bugTestTagsEditList .cell,
+.tagsList .cell {
+    margin:5px 0;
+}
+.editBugTagsList .cell ul li,
+.bugTagsList .cell ul li,
+.bugTestTagsList .cell ul li,
+.bugTestTagsEditList .cell ul li,
+.tagsList .cell ul li {
+    display: inline-block;
+    padding: .3em .4em .3em;
+    border: solid 1px #ccc;
+    margin: 5px 10px 5px 0px;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    position: relative;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.tagsList .cell ul li i {
+    position: absolute;
+    right: -5px;
+    bottom: -7px;
+    font-size: 18px;
+    color: #00aeef;
+    display: none;
+    cursor: pointer;
+}
+.tagsList .cell ul li:hover i {
+    display: inline-block;
+}
+.tagsList .cell ul li i.fa-times-circle-o {
+    bottom: -5px;
+    font-size: 21px;
+    color: #d9534f;
+    top: -7px;
+    bottom: auto;
+}
+.bugInfoTags span:hover,
+.editBugTagsList .cell ul li:hover,
+.bugTagsList .cell ul li:hover,
+.bugTestTagsList .cell ul li:hover,
+.bugTestTagsEditList .cell ul li:hover {
+    cursor: pointer;
+    box-shadow: 0 4px 13px 5px rgba(0,0,0,.2),0 2px 6px rgba(0,0,0,.15);
+}
+
+.tagSelect.color ul {
+    width: 64px;
+    min-width: 50px;
+}
+.tagSelect.color ul a {
+    padding-left: 7px;
+    padding-right: 0px;
+}
+.tagSelect.color ul a span {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    border: solid 1px #fff;
+}
+.tagTitle,
+.customTitle,
+.templateTitle,
+.sprintTitle,
+.testPlanTitle {
+    margin: 9px 12px 0px;
+}
+.templateTitle2,
+.tagTitle2,
+.customTitle2 {
+    margin: 10px 12px 0px;
+}
+.templateTitle:before,
+.templateTitle:after,
+.sprintTitle:before,
+.sprintTitle:after,
+.tagTitle:before,
+.tagTitle:after,
+.customTitle:before,
+.customTitle:after,
+.testPlanTitle:before,
+.testPlanTitle:after {
+    content: ' ';
+    display: inline-block;
+    vertical-align: middle;
+    width: 2%;
+    height: 1px;
+    background-color: #BABFC3;
+    opacity: 0.25;
+    margin: 0 1% 0 -2%;
+}
+.templateTitle:after,
+.sprintTitle:after,
+.tagTitle:after,
+.customTitle:after,
+.testPlanTitle:after {
+    width: 90%;
+    margin: 0 -90% 0 1%;
+}
+.tagSelect i {
+    font-size: 22px;
+    color: #00aeef;
+    line-height: 10px;
+    vertical-align: middle;
+}
+
+.bugTags,
+.bugInfoTags span,
+.bugTestInfoTagsList span {
+    margin: 5px 5px 0px 0px;
+    display: inline-block;
+    border-radius: 15px;
+    color: #00aeef;
+    border:solid 1px #00aeef;
+}
+.bugInfoTagsList,
+.bugTestInfoTagsList {
+    margin-top: -3px;
+}
+.bugTestInfoDescription {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.sprintList,
+.customList,
+.testPlanList {
+    max-height: 240px;
+}
+
+.projectProjectListTips,
+.projectUserListTips,
+.projectTagsListTips {
+    color: #bbb;
+    font-size: 12px !important;
+    padding: 0px !important;
+}
+
+.project_captcha {
+    width: 200px;
+}
+.project_captcha_img {
+    position: absolute;
+    top: 0px;
+    right: 60px;
+}
+.project_captcha_img img {
+    height: 44px;
+    margin-top: -5px;
+    cursor: pointer;
+}
+
+/* Ö§¸¶Ò³Ãæ */
+
+.userProProjectName span,
+.proProjectName span {
+    padding-left: 10px;
+}
+.userProProjectName em,
+.proProjectName em {
+    font-style: normal;
+}
+.userProProjectPrice ul li,
+.proProjectPrice ul li {
+    width: 33.3333%;
+    display: inline-block;
+    font-size: 0px;
+    padding: 17px 0px;
+    margin-top: -1px;
+    position: relative;
+    cursor: pointer;
+}
+.userProProjectPrice ul li .youhui,
+.proProjectPrice ul li .youhui {
+    padding: 5px 0px;
+}
+.userProProjectPrice ul li img,
+.proProjectPrice ul li img {
+    width: 100px;
+}
+.userProProjectPrice ul li.checked em,
+.proProjectPrice ul li.checked em {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    border: solid 1px #00aeef;
+    /*background: url('../img/payli.png') center top no-repeat;*/
+    /*background-size: contain;*/
+}
+
+.userProProjectPrice ul li p,
+.proProjectPrice ul li p {
+    font-size: 14px;
+}
+.userProProjectPrice ul li p.yuanjia,
+.proProjectPrice ul li p.yuanjia {
+    position: relative;
+    color: #c0c0c0;
+}
+.userProProjectPrice ul li p.yuanjia img,
+.proProjectPrice ul li p.yuanjia img {
+    position: absolute;
+    left: 50%;
+    margin-left: -50px;
+    top: 6px;
+}
+.userProProjectPrice ul li p.xianjia span,
+.proProjectPrice ul li p.xianjia span {
+    font-size: 22px;
+    color: red;
+}
+.userProProjectPay .media,
+.proProjectPay .media {
+    cursor:pointer;
+}
+.userProProjectPay h4,
+.proProjectPay h4 {
+    font-size: 14px;
+}
+.userProProjectPay .media-body,
+.proProjectPay .media-body {
+    position: relative;
+    font-size: 12px;
+}
+.userProProjectPay .media-body span,
+.proProjectPay .media-body span {
+    position: absolute;
+    right: 10px;
+    font-size: 22px;
+    top: 0px;
+    color: #eeeeee;
+}
+.userProProjectPay .media-body span.checked,
+.proProjectPay .media-body span.checked {
+    color: #00aeef;
+}
+.userProProjectPay .media,
+.proProjectPay .media {
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 15px;
+}
+.userProProjectPay .media:last-child,
+.proProjectPay .media:last-child {
+    border-bottom: none;
+}
+.userProProjectPay .media img,
+.proProjectPay .media img {
+    width: 38px;
+    height: 38px;
+}
+.userProProjectPayBtn,
+.proProjectPayBtn {
+    padding: 15px 0px;
+}
+.userProProjectPayBtn button,
+.proProjectPayBtn button {
+    width: 100%;
+    line-height: 32px;
+}
+.userProProjectWaitBtn,
+.proProjectWaitBtn {
+    padding: 15px 0px;
+}
+
+.wxpay,
+.app-pay {
+    max-width: 950px;
+    margin: 0 auto;
+}
+.wxpay .title,
+.app-pay .title {
+    padding: 15px 0;
+    font-size: 16px;
+}
+.wxpay .orderInfo,
+.app-pay .payInfo {
+    background: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius:5px 5px 0px 0px;
+    -moz-border-radius:5px 5px 0px 0px;
+    line-height: 35px;
+    position: relative;
+}
+.wxpay .orderInfo p {
+    padding-right:120px;
+}
+.wxpay .orderInfo p.money {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    padding-right: 0px;
+    margin-top: -17px;
+}
+.app-pay .payInfo {
+    background: #fff;
+    border-bottom: solid 1px #f0f0f0;
+    min-height: 75px;
+}
+.app-pay .payInfo span.goumai {
+    font-weight: 600;
+    font-size:22px;
+}
+.app-pay .payInfo ul {
+    font-size: 0px;
+    height: 35px;
+}
+.app-pay .payInfo ul li {
+    display: inline-block;
+    font-size: 14px;
+}
+.app-pay .payInfo ul li.active span{
+    background: #00aeef;
+    color: #fff;
+}
+.app-pay .payInfo ul li.active span:before {
+    border-left: 19px solid #00aeef;
+}
+.app-pay .payInfo ul li span {
+    display: block;
+    text-align: center;
+    padding: 0 10px 0px 30px;
+    position: relative;
+    margin: 0 10px 0 0;
+    text-decoration: none;
+    background: #f9f9f9;
+}
+.app-pay .payInfo ul li span:after {
+    content: "";
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-left: 18px solid #fff;
+    position: absolute;
+    left: 0px;
+    top: 0;
+}
+.app-pay .payInfo ul li span:before {
+    content: "";
+    position: absolute;
+    right: -18px;
+    top: 0;
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-left: 19px solid #f9f9f9;
+    z-index: 999;
+}
+.app-pay .payInfo ul li:first-child span {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding:0.6px 20px;
+}
+.app-pay .payInfo ul li:last-child span:before {
+    display: none;
+}
+.app-pay .payInfo ul li:last-child span {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding:0 20px;
+}
+.app-pay .payInfo ul li:first-child span:after {
+    display: none;
+}
+.app-pay .payInfo .tishi {
+    line-height: 25px;
+    background: #e0f3fa;
+    border: dashed 1px #4277a1;
+    color: #4277a1;
+    border-radius: 5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    margin-top:10px;
+    padding:10px 15px;
+}
+.app-pay ul.months li {
+    display: inline-block;
+    padding: 10px 0px;
+    border: solid 1px #999;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius:3px;
+    width: 140px;
+    cursor: pointer;
+    position: relative;
+    color: #999;
+    margin-right:15px;
+    text-align: center;
+}
+.app-pay ul.months li span {
+    display: none;
+    position: absolute;
+    left: -1px;
+    top: 0px;
+    color: #fff;
+    width: 0px;
+    height: 0px;
+    border-top: 30px solid #00aeef;
+    border-right: 30px solid transparent;
+}
+.app-pay ul.months li p {
+    position: absolute;
+    right: -5px;
+    top: -10px;
+    background: #f56e2e;
+    color: #fff;
+    padding: 0px 5px;
+    display: none;
+}
+.app-pay ul.months li.checked {
+    border-color: #00aeef;
+    color: #000;
+}
+.app-pay ul.months li.checked span {
+    display: inline-block;
+}
+.app-pay ul.months li.checked span i {
+    position: absolute;
+    left: 2px;
+    top: -27px;
+}
+.app-pay .price-select > p {
+    padding-left:80px;
+}
+.app-pay .price-select span.all {
+    font-size: 22px;
+    display: inline-block;
+    vertical-align: sub;
+}
+.payMenth {
+    margin:0 90px;
+    border-top: solid 1px #f0f0f0;
+}
+.payMenth li {
+    display: inline-block;
+    padding: 20px 0px;
+    border: solid 1px #999;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    width: 160px;
+    cursor: pointer;
+    position: relative;
+    margin-right: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+.payMenth li span {
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    color: #fff;
+    width: 0px;
+    height: 0px;
+    border-top: 40px solid #00aeef;
+    border-right: 40px solid transparent;
+}
+.payMenth li span i {
+    position: absolute;
+    left: 3px;
+    top: -35px;
+}
+.payMenth li img {
+    height: 20px;
+    vertical-align: middle;
+}
+.payMenth li.checked {
+    border-color: #00aeef;
+    background: #f2fbff;
+}
+.payMenth li.checked span {
+    display: inline-block;
+}
+.app-pay .allMoney {
+    font-size: 22px;
+    display: inline-block;
+    vertical-align: sub;
+}
+
+.consoleBtn {
+    padding-left: 22px;
+    color: #00aeef;
+    background-color: #fff;
+    border-color: #00aeef;
+    -webkit-transition-property: all;
+    transition-property: all;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+.consoleBtn i {
+    -webkit-transition-property: all;
+    transition-property: all;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+    visibility: hidden;
+    color: #fff;
+}
+.consoleBtn:hover {
+    background: #00aeef;
+    color: #fff;
+}
+.consoleBtn:hover i {
+    text-indent: 10px;
+    visibility: visible;
+}
+
+.userProProjectSuccessTips img,
+.proProjectSuccessTips img {
+    width: 76px;
+}
+.userProProjectSuccessTips .media-body,
+.proProjectSuccessTips .media-body {
+    padding-left: 25px;
+}
+.userProProjectSuccessTips p.jine,
+.proProjectSuccessTips p.jine {
+    padding: 10px 0 20px;
+    font-size: 16px;
+}
+.userProProjectSuccessTips p.jine span,
+.proProjectSuccessTips p.jine span {
+    color: red;
+}
+.userProProjectSuccessTips .beizhu,
+.proProjectSuccessTips .beizhu {
+    line-height: 30px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.userProProjectProfessional,
+.projectProfessional {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top:0px;
+    right: 0px;
+    z-index: 2000;
+    border-bottom: 50px solid transparent;
+    border-right: 50px solid #f0ad4e;
+    display: none;
+}
+.userProProjectProfessional.green,
+.projectProfessional.green {
+    border-right-color: #5cb85c;
+}
+.userProProjectProfessional.yellow,
+.projectProfessional.yellow {
+    border-right-color: #f0ad4e;
+}
+.userProProjectProfessional.red,
+.projectProfessional.red {
+    border-right-color: #d9534f;
+}
+.userProProjectProfessional.gray,
+.projectProfessional.gray {
+    border-right-color: #a2a2a2;
+}
+.userProProjectProfessional i,
+.projectProfessional i {
+    position: absolute;
+    right: -43px;
+    top: 6px;
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.bugListPlanVersion,
+.bugInfoPlanVersion span,
+.bugListVerifyVersion,
+.bugListVerifyVersion span {
+    border: solid 1px #f0ad4e;
+    color: #fff;
+    vertical-align: middle;
+    padding:.22em .6em .2em;
+}
+.bugListPlanVersion,
+.bugInfoPlanVersion span {
+    color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+
+.bugListSprints,
+.bugInfoSprints span,
+.bugTestTaskInfoTestPlan span {
+    color: #00aeef;
+    border: solid 1px #00aeef;
+    vertical-align: middle;
+    padding:.2em .6em .2em;
+}
+
+span.bugListVerifyVersion.red,
+#bugInfoPage .bugInfoVerifyVersion span.red {
+    color: #d9534f;
+    border-color: #d9534f;
+}
+span.bugListVerifyVersion.yellow,
+#bugInfoPage .bugInfoVerifyVersion span.yellow {
+    color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+span.bugListVerifyVersion.green,
+#bugInfoPage .bugInfoVerifyVersion span.green {
+    color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+
+.sprintDate,
+.testPlanDate {
+    font-size: 12px;
+}
+
+button.modalExpand,
+button.testCaseModalExpand,
+button.modalCompress {
+    padding-right: 10px;
+    font-size: 17px;
+    padding-top: 2px;
+}
+
+/* ²âÊÔÓÃÀý */
+.bugTest {
+    position: relative;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.tabTest .nav-tabs > li {
+    width: 50% !important;
+}
+.testGroup .domSelect.open ul {
+    max-height: none;
+}
+.testGroup p,
+.testGroupList p {
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+    cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+.testGroupList p {
+    display: inline-block;
+}
+.testGroup li ul,
+.testGroupList li ul {
+    padding-left: 15px;
+}
+.testGroup li,
+.testGroupList li {
+    padding-top: 5px;
+}
+.testGroup li p,
+.testGroupList li p {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.testGroup li p.actived,
+.testGroupList li p.actived {
+    color: #00aeef;
+}
+.testGroup li p span,
+.testGroupList li p span {
+    padding-right: 5px;
+}
+.optionBtns {
+    padding: 10px 0px;
+    text-align: right;
+    font-size: 22px;
+}
+.optionBtns > span {
+    margin: 0 10px;
+    cursor: pointer;
+    color: #00aeef;
+}
+.optionBtns > span i.fa-trash-o {
+    color: #d9534f;
+}
+.bugTestInfoBugCount,
+.bugTestTaskInfoBugCount,
+.bugTestTaskHistory {
+    padding-top: 10px;
+    border-top: solid 1px #e9e9e9;
+    padding: 0px;
+}
+.bugTestTaskInfoBugCount {
+    margin-bottom:5px;
+}
+.bugTestInfoBugCount li,
+.bugTestTaskInfoBugCount li {
+    padding: 10px 5px;
+    cursor: pointer;
+}
+.bugTestTaskHistory .list p {
+    padding-left:0px;
+}
+.bugTestInfoBugCount li:hover,
+.bugTestTaskInfoBugCount li:hover {
+    background-color: #f5f5f5;
+}
+.bugTestInfoBugCount span.label,
+.bugTestTaskInfoBugCount span.label {
+    font-weight: normal;
+}
+.bugTestInfoBugCount .tBugUser,
+.bugTestTaskInfoBugCount .tBugUser {
+    max-width: 75px;
+    padding-right: 20px;
+}
+.bugTestInfoBugCount .tBugTitle,
+.bugTestTaskInfoBugCount .tBugTitle {
+    display: inline-block;
+    max-width: 400px;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.testCaseListForTask table {
+    width: 100%;
+}
+
+.batchBugTestTbody {
+    min-height: 50px;
+    max-height: 280px;
+}
+.batchBugTestList .table,
+.batchBugTestTbody .table {
+    margin-bottom: 0px;
+}
+.batchBugTestTbody .table .delete {
+    display: none;
+    padding-top: 0px;
+}
+.batchBugTestTbody .table tr:hover .delete {
+    display: inline-block;
+}
+
+.bugInfoTagsColor {
+    border-color: #00aeef !important;
+    color: #00aeef !important;
+}
+.bugInfoTagsColor2 {
+    background: #00aeef !important;
+    border-color: #00aeef !important;
+    color: #fff !important;
+}
+
+.company-city span {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.company-city span.checked {
+    font-weight:bold;
+}
+
+.paySuccessCircle {
+    font-size: 90px;
+    color: #00aeef;
+}
+.payWaitCircle {
+    font-size: 55px;
+    color: #00aeef;
+}
+.themeCell {
+    width: 100px;
+    height: 30px;
+    display: inline-block;
+    margin-top: -3px;
+}
+
+.appGGDiv {
+    padding:20px 25px 50px;
+    border-radius: 0 0 5px 5px;
+    -webkit-border-radius:0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -o-border-radius:0 0 5px 5px;
+}
+.appGGDiv .ggTitle {
+    color: #888;
+    font-size: 16px;
+    padding: 10px 0;
+}
+.appGGDiv .ggDiv {
+    font-size: 14px;
+    color: #888;
+    padding:5px 0;
+}
+.appGGDiv p {
+    line-height: 20px;
+    font-size: 14px;
+    padding: 5px 0px;
+}
+.qrInfo {
+    width: 49%;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 25px;
+}
+span.openInfoPage {
+    position: absolute;
+    right: 20px;
+    top:0px;
+}
+span.openInfoPage ul {
+    text-align: center;
+    right: 0px;
+    left: auto;
+    top: 20px;
+    border: 1px solid rgba(0,0,0,.15);
+}
+span.openInfoPage ul li {
+    display: inline-block;
+}
+span.openInfoPage ul li a,
+span.openInfoPage ul li b {
+    padding: 0px 0px 0px 0px;
+    margin: 6px 0px 0px 0px;
+    float: left;
+    cursor: pointer;
+    font-size: 18px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}
+span.openInfoPage .dropdown-menu {
+    min-width: 40px;
+}
+span.openInfoPage ul li a i {
+    position: relative;
+    z-index: -1;
+}
+.openInfoPage .bdsharebuttonbox .bds_newPage {
+    background: none;
+}
+.openInfoPage .bdsharebuttonbox .bds_sqq {
+    background: none;
+}
+.openInfoPage .bdsharebuttonbox .bds_weixin {
+    background: none;
+}
+.openInfoPage .bdsharebuttonbox .bds_copyUrl {
+    background: none;
+}
+.bugInfoPageAd {
+    background: #f9f9f9;
+}
+#historyInfoModal .modal-body {
+    height: 550px;
+    margin-bottom: 60px;
+}
+#historyInfoModal .historyList_curr,
+#historyInfoModal .historyList_his {
+    min-width: 100%;
+    text-align: center;
+}
+#historyInfoModal .header {
+    border-bottom: solid 1px #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+#historyInfoModal .bugHistoryInfo_history,
+#historyInfoModal .bugHistoryInfo_curr {
+    padding-top: 3px;
+}
+#historyInfoModal .bugHistoryInfo_history .header,
+#historyInfoModal .bugHistoryInfo_curr .header {
+    padding-bottom: 7px;
+}
+
+#focusBugUserList .dk_options_inner,
+#bugFocusBugUserList .dk_options_inner {
+    border-radius: 0px 0px 5px 5px;
+}
+
+.dropleft .dropdown-menu {
+    left: auto;
+    right: 80%;
+    top: -50%;
+    min-width: 330px;
+    border: solid 1px #faebcc;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+.sprintsNameSelectOpt {
+    font-size: 16px;
+}
+.sprintInfo_desc .sprintDescription {
+    border-radius: 5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius: 5px;
+    width: 260px;
+    word-wrap: break-word;
+}
+.versionClass {
+    border:solid 1px #5cb85c;
+    color:#5cb85c;
+    display:inline-block;
+    font-weight:normal;
+}
+
+/* 曝光台 */
+.company-info .media-body {
+    line-height: 25px;
+}
+.company-info .about {
+    line-height: 25px;
+}
+.company-info .imgs ul {
+    font-size: 0px;
+}
+.company-info .imgs li {
+    width: 33.333%;
+    display: inline-block;
+    padding-bottom: 15px;
+    text-align: center;
+}
+.company-info .imgs li span {
+    font-size: 14px;
+    display: inline-block;
+    padding-top: 10px;
+}
+.company-info .address {
+    line-height: 30px;
+}
+/*lucifer at 20180515*/
+#searchFilter {
+    display: inline-block;
+    width: 100%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-bottom: -2px;
+    background-color: #0394cb;
+}
+
+/* 主题 */
+.theme1 .fc-event,
+.theme1 .bugDescFirstHistory > div,
+.theme1 .upload-file:focus,
+.theme1 input:focus,
+.theme1 textarea:focus,
+.theme1 .btn-info,
+.theme1 .btn-info:hover,
+.theme1 #changeBtnGroup .btn-info,
+.theme1 .noticeInfoImages img,
+.theme1 .bugInfoImages img,
+.theme1 .bugTestInfoImages img,
+.theme1 .bugInfoHistories .history-imgs-div img,
+.theme1 .bugTestInfoComments .history-imgs-div img,
+.theme1 .userProProjectPrice ul li.checked em,
+.theme1 .proProjectPrice ul li.checked em ,
+.theme1 .dataTables_paginate .pagination li.active a,
+.theme1 .file-caption:focus {
+    border-color: #333;
+}
+.theme1 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme1 .modal-header h4 i,
+.theme1 .project-list .row .thumbnail .btns i:hover,
+.theme1 .bugInfoHistories a ,
+.theme1 .bugInfoDescription a,
+.theme1 .bugTestInfoDescription a,
+.theme1 .noticeInfoDescription a,
+.theme1 .versionDownloadUrl a,
+.theme1 .versionInfoNotes a {
+    color: #444 !important;
+}
+.theme1 #console-sidebar-select .dk_options a:hover,
+.theme1 .wrapper-header-left-bg,
+.theme1 .wrapper-header .wrapper-header-right,
+.theme1 .wrapper-header .name,
+.theme1 .site-header {
+    background-color: #333;
+}
+.theme1 .navbar-default .nav > li.active {
+    border-left-color: #444;
+}
+.theme1 .bugTags,
+.theme1 .bugInfoTags span,
+.theme1 .bugTestInfoTagsList span,
+.theme1 ul.bugPlanNum li .cell .em-Today,
+.theme1 .button-border,
+.theme1 .bugListSprints,
+.theme1 .bugInfoSprints span,
+.theme1 .bugTestTaskInfoTestPlan span {
+    color: #444 ;
+    border-color: #444;
+}
+.theme1 .btn-grey,
+.theme1 .btn-primary,
+.theme1 .bugInfoTagsColor {
+    color: #444 !important;
+    border-color: #444 !important;
+}
+.theme1 .bugInfoTagsColor2,
+.theme1 .button-royal,
+.theme1 .button-royal-flat {
+    background: #444 !important;
+    border-color: #444 !important;
+    color: #fff !important;
+}
+.theme1 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme1 .btn-grey:hover,
+.theme1 .btn-primary:hover,
+.theme1 .btn-info:active,
+.theme1 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #444 !important;
+}
+.theme1 .button-border:hover {
+    color: #fff;
+    background-color: #444;
+}
+.theme1 body.fixed-sidebar .navbar-static-side {
+    background: #f0f0f0;
+}
+.theme1 .versionInfoTop span i:hover,
+.theme1 .noticeInfoTop span i:hover,
+.theme1 .bugInfoTop span.btn1 i:hover,
+.theme1 .bugTestInfoTop span.btn1 i:hover,
+.theme1 .versionInfoTop .versionInfoBack:hover,
+.theme1 .noticeInfoTop .noticeInfoBack:hover,
+.theme1 .bugInfoTop .bugInfoBack:hover,
+.theme1 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme1 .navbar-default .nav > li.active > span.fa:hover,
+.theme1 .setProjectBtn2:hover i,
+.theme1 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme1 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme1 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme1 .sidebar-menus-icon,
+.theme1 .openInfoPage ul li a:hover,
+.theme1 .openInfoPage ul li b:hover,
+.theme1 #showProjectForm .defaultColor:hover {
+    color: #333;
+}
+.theme1 .label-defaultColor,
+.theme1 #menuHelp .dropdown-menu>li>a:hover,
+.theme1 #searchFilter,
+.theme1 #searchFilter .nav>li>a,
+.theme1 #bugTestFilter .nav>li>a ,
+.theme1 #crossStatFilter .nav>li>a,
+.theme1 .testTaskBatchAddFilter .nav>li>a,
+.theme1 .site-header .setting span.username .user-setting ul li:hover,
+.theme1 .site-header .setting .userSetLogout .exit:hover,
+.theme1 .projectClassList ul li:hover,
+.theme1 .site-header .userSetFace,
+.theme1 #changeBtnGroup .btn-info,
+.theme1 .bgDefault,
+.theme1 .bugSearchDiv,
+.theme1 .bugSearchDiv input,
+.theme1 .bugSearchDiv button,
+.theme1 .btn-info,
+.theme1 .fc-header .fc-state-active,
+.theme1 .fc-header .fc-state-hover,
+.theme1 .erp-content .fc-header-right span.check:hover,
+.theme1 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme1 .dataTables_paginate .pagination li.active a,
+.theme1 .progress-bar-info,
+.theme1 ul.priorityCount li .projectDayNum,
+.theme1 ul.priorityCount li .projectProductNum,
+.theme1 ul.priorityCount li .projectUserNum,
+.theme1 ul.bugPlanNum li .Today,
+.theme1 ul.bugNum li .all,
+.theme1 .nav li>p:hover,
+.theme1 .ui-fail,
+.theme1 .ui-progress,
+.theme1 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme1 .btn-info.disabled.focus,
+.theme1 .btn-info.disabled:focus,
+.theme1 .btn-info.disabled:hover,
+.theme1 .btn-info[disabled].focus,
+.theme1 .btn-info[disabled]:focus,
+.theme1 .btn-info[disabled]:hover,
+.theme1 fieldset[disabled] .btn-info.focus,
+.theme1 fieldset[disabled] .btn-info:focus,
+.theme1 fieldset[disabled] .btn-info:hover,
+    /*.theme1 .glBugList li:hover,*/
+.theme1 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #444;
+}
+.theme1 #layui-layer-shade-photo-opt span i,
+.theme1 body.mini-navbar .sidebar-menus-icon,
+.theme1 .copyProductModule i.fa-dot-circle-o,
+.theme1 .copyUsersListDiv li .check i,
+.theme1 .copyProductsListDiv li .check i,
+.theme1 .paySuccessCircle,
+.theme1 .payWaitCircle,
+.theme1 .userProProjectPay .media-body span.checked,
+.theme1 .proProjectPay .media-body span.checked,
+.theme1 .bugInfoPageFile a,
+.theme1 .noticeInfoPageFile a,
+.theme1 .testCaseInfoPageFile a,
+.theme1 .bugInfoHistories p i,
+.theme1 .projectSetting .bugBeizhuTemplate p a,
+.theme1 .projectSetting .bugTemplate p a,
+.theme1 .projectSetting .bugTemplate p a:hover,
+.theme1 #BCTemplate .bugBeizhuTemplate p a,
+.theme1 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme1 #BCTemplate .bugTemplate p a,
+.theme1 #BCTemplate .bugTemplate p a:hover,
+.theme1 #BCTemplate .bugZiyouTemplate p .options a,
+.theme1 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme1 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme1 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme1 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme1 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme1 .selectInput .selectDownBtn,
+.theme1 .userInput .userDownBtn,
+.theme1 .table>tbody>tr>td span.testCaseTestGroup,
+.theme1 .testGroup li p.actived,
+.theme1 .testGroupList li p.actived,
+.theme1 .optionBtns > span,
+.theme1 i.iModule,
+.theme1 i.iVersion,
+.theme1 i.iProduct,
+.theme1 .showAndHideImageFujian:focus,
+.theme1 .showAndHideImageFujian:hover,
+.theme1 .showAndHideImageFujian,
+.theme1 .showEmoji:hover,
+.theme1 .showEmoji:focus,
+.theme1 .showEmoji,
+.theme1 .showEmoji2:hover,
+.theme1 .showEmoji2:focus,
+.theme1 .showEmoji2,
+.theme1 .exportBug i.fa-dot-circle-o,
+.theme1 .exportCase i.fa-dot-circle-o,
+.theme1 .exportTask i.fa-dot-circle-o,
+.theme1 .copyBugType i.fa-dot-circle-o,
+.theme1 .copyBugTestType i.fa-dot-circle-o,
+.theme1 .subTaskType i.fa-dot-circle-o,
+.theme1 .subTaskType2 i.fa-dot-circle-o,
+.theme1 .addImgFujian a,
+.theme1 #allCount,
+.theme1 .defaultColor:visited,
+.theme1 .defaultColor:hover,
+.theme1 .defaultColor,
+.theme1 .pTable-title h5 .more,
+.theme1 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme1 .versionInfoTop .versionInfoBack,
+.theme1 .noticeInfoTop .noticeInfoBack,
+.theme1 .bugInfoTop .bugInfoBack,
+.theme1 .bugTestInfoTop .bugTestInfoBack,
+.theme1 .versionInfoTop span i,
+.theme1 .noticeInfoTop span i,
+.theme1 .bugInfoTop span.btn1 i,
+.theme1 .bugTestInfoTop span.btn1 i,
+.theme1 .tagSelect i,
+.theme1 .copylabel span i.fa-dot-circle-o,
+.theme1 .projectSetting span i.fa-dot-circle-o,
+.theme1 .tabPersonality span i.fa-dot-circle-o,
+.theme1 label.priority span i.fa-dot-circle-o,
+.theme1 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme1 #emailSettingForm label span i.fa-dot-circle-o,
+.theme1 #alertSettingForm label span i.fa-dot-circle-o,
+.theme1 #projectTab label span i.fa-dot-circle-o,
+.theme1 #bowersTab label span i.fa-dot-circle-o,
+.theme1 #projectRolesForm p span i.fa-dot-circle-o,
+.theme1 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme1 .noticeExpiredRadio label.checked span,
+.theme1 .noticeTopRadio label.checked span,
+.theme1 .noticeNotifyRadio label.checked span,
+.theme1 .customTxtRadio label.checked span,
+.theme1 .modal-content h4 i,
+.theme1 .customDropkick .select-icon i,
+.theme1 .navbar-default .nav > li > span.fa,
+.theme1 .navbar-default .nav > li > a:hover,
+.theme1 .navbar-default .nav > li > a:focus,
+.theme1 .navbar-default .nav > li.active a,
+.theme1 .setProjectBtn2,
+.theme1 .erp-content .fc-header-right span.check,
+.theme1 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme1 .fc-header .fc-button-next,
+.theme1 .fc-header .fc-button-prev,
+.theme1 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme1 .projectProductList .pVersion,
+.theme1 .projectProductList .pModule,
+.theme1 .projectProductList .pSubscribe,
+.theme1 .ui-opts-edit,
+.theme1 .productModuleList li span.opt i,
+.theme1 .editModuleName h4,
+.theme1 .pagination>li>a,
+.theme1 .pagination>li>span,
+.theme1 #alertTables.table>tbody>tr p.title,
+.theme1 .projectHelp .us i,
+.theme1 .k-table thead th span,
+.theme1 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme1 .fujian p .edit,
+.theme1 #myProjectMyInvite .myInviteList span.userType,
+.theme1 .tagsList .cell ul li i.fa-edit,
+.theme1 .rememberPwd .fa-check-square-o,
+.theme1 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme1 .bugTestTaskInfoTop span.btn1 i,
+.theme1 .ziyouTemplateList ul li:hover,
+.theme1 .openInfoPage ul li a,
+.theme1 .openInfoPage ul li b,
+.theme1 .rightsTitle .ApplyToAll span.defaultColor,
+.theme1 .bugTestInfoComments p i {
+    color: #444;
+}
+.theme1 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #444;
+}
+.theme1 #alertTables.table>tbody>tr .label {
+    border: solid 1px #444;
+    color: #444;
+}
+
+.theme2 .fc-event,
+.theme2 .bugDescFirstHistory > div,
+.theme2 .upload-file:focus,
+.theme2 input:focus,
+.theme2 textarea:focus,
+.theme2 .btn-info,
+.theme2 .btn-info:hover,
+.theme2 #changeBtnGroup .btn-info,
+.theme2 .noticeInfoImages img,
+.theme2 .bugInfoImages img,
+.theme2 .bugTestInfoImages img,
+.theme2 .bugInfoHistories .history-imgs-div img,
+.theme2 .bugTestInfoComments .history-imgs-div img,
+.theme2 .userProProjectPrice ul li.checked em,
+.theme2 .proProjectPrice ul li.checked em,
+.theme2 .dataTables_paginate .pagination li.active a,
+.theme2 .file-caption:focus  {
+    border-color: #5466a4;
+}
+.theme2 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme2 .modal-header h4 i,
+.theme2 .project-list .row .thumbnail .btns i:hover,
+.theme2 .bugInfoHistories a,
+.theme2 .bugInfoDescription a,
+.theme2 .bugTestInfoDescription a,
+.theme2 .noticeInfoDescription a,
+.theme2 .versionDownloadUrl a,
+.theme2 .versionInfoNotes a {
+    color: #5e72b6 !important;
+}
+.theme2 #console-sidebar-select .dk_options a:hover,
+.theme2 .wrapper-header-left-bg,
+.theme2 .wrapper-header .wrapper-header-right,
+.theme2 .site-header,
+.theme2 .wrapper-header .name {
+    background-color: #5466a4;
+}
+.theme2 .navbar-default .nav > li.active {
+    border-left-color: #5e72b6;
+}
+.theme2 .bugTags,
+.theme2 .bugInfoTags span,
+.theme2 .bugTestInfoTagsList span,
+.theme2 ul.bugPlanNum li .cell .em-Today,
+.theme2 .button-border,
+.theme2 .bugListSprints,
+.theme2 .bugInfoSprints span,
+.theme2 .bugTestTaskInfoTestPlan span {
+    color: #5e72b6 ;
+    border-color: #5e72b6 ;
+}
+.theme2 .btn-grey,
+.theme2 .btn-primary,
+.theme2 .bugInfoTagsColor {
+    color: #5e72b6 !important;
+    border-color: #5e72b6 !important;
+}
+.theme2 .bugInfoTagsColor2,
+.theme2 .button-royal,
+.theme2 .button-royal-flat {
+    background: #5e72b6 !important;
+    border-color: #5e72b6 !important;
+    color: #fff !important;
+}
+.theme2 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme2 .btn-grey:hover,
+.theme2 .btn-primary:hover,
+.theme2 .btn-info:active,
+.theme2 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #5e72b6 !important;
+}
+.theme2 .button-border:hover {
+    color: #fff;
+    background-color: #5e72b6;
+}
+.theme2 .versionInfoTop span i:hover,
+.theme2 .noticeInfoTop span i:hover,
+.theme2 .bugInfoTop span.btn1 i:hover,
+.theme2 .bugTestInfoTop span.btn1 i:hover,
+.theme2 .versionInfoTop .versionInfoBack:hover,
+.theme2 .noticeInfoTop .noticeInfoBack:hover,
+.theme2 .bugInfoTop .bugInfoBack:hover,
+.theme2 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme2 .navbar-default .nav > li.active > span.fa:hover,
+.theme2 .setProjectBtn2:hover i,
+.theme2 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme2 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme2 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme2 .sidebar-menus-icon,
+.theme2 .openInfoPage ul li a:hover,
+.theme2 .openInfoPage ul li b:hover,
+.theme2 #showProjectForm .defaultColor:hover {
+    color: #5466a4;
+}
+.theme2 .label-defaultColor,
+.theme2 #menuHelp .dropdown-menu>li>a:hover,
+.theme2 #searchFilter,
+.theme2 #searchFilter .nav>li>a,
+.theme2 #bugTestFilter .nav>li>a ,
+.theme2 #crossStatFilter .nav>li>a,
+.theme2 .testTaskBatchAddFilter .nav>li>a,
+.theme2 .site-header .setting span.username .user-setting ul li:hover,
+.theme2 .site-header .setting .userSetLogout .exit:hover,
+.theme2 .projectClassList ul li:hover,
+.theme2 .site-header .userSetFace,
+.theme2 #changeBtnGroup .btn-info,
+.theme2 .bgDefault,
+.theme2 .bugSearchDiv,
+.theme2 .bugSearchDiv input,
+.theme2 .bugSearchDiv button,
+.theme2 .btn-info,
+.theme2 .fc-header .fc-state-active,
+.theme2 .fc-header .fc-state-hover,
+.theme2 .erp-content .fc-header-right span.check:hover,
+.theme2 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme2 .dataTables_paginate .pagination li.active a,
+.theme2 .progress-bar-info,
+.theme2 ul.priorityCount li .projectDayNum,
+.theme2 ul.priorityCount li .projectProductNum,
+.theme2 ul.priorityCount li .projectUserNum,
+.theme2 ul.bugPlanNum li .Today,
+.theme2 ul.bugNum li .all,
+.theme2 .nav li>p:hover,
+.theme2 .ui-fail,
+.theme2 .ui-progress,
+.theme2 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme2 .btn-info.disabled.focus,
+.theme2 .btn-info.disabled:focus,
+.theme2 .btn-info.disabled:hover,
+.theme2 .btn-info[disabled].focus,
+.theme2 .btn-info[disabled]:focus,
+.theme2 .btn-info[disabled]:hover,
+.theme2 fieldset[disabled] .btn-info.focus,
+.theme2 fieldset[disabled] .btn-info:focus,
+.theme2 fieldset[disabled] .btn-info:hover,
+    /*.theme2 .glBugList li:hover,*/
+.theme2 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #5e72b6;
+}
+.theme2 #layui-layer-shade-photo-opt span i,
+.theme2 body.mini-navbar .sidebar-menus-icon,
+.theme2 .copyProductModule i.fa-dot-circle-o,
+.theme2 .copyUsersListDiv li .check i,
+.theme2 .copyProductsListDiv li .check i,
+.theme2 .paySuccessCircle,
+.theme2 .payWaitCircle,
+.theme2 .userProProjectPay .media-body span.checked,
+.theme2 .proProjectPay .media-body span.checked,
+.theme2 .bugInfoPageFile a,
+.theme2 .noticeInfoPageFile a,
+.theme2 .testCaseInfoPageFile a,
+.theme2 .bugInfoHistories p i,
+.theme2 .projectSetting .bugBeizhuTemplate p a,
+.theme2 .projectSetting .bugTemplate p a,
+.theme2 .projectSetting .bugTemplate p a:hover,
+.theme2 #BCTemplate .bugBeizhuTemplate p a,
+.theme2 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme2 #BCTemplate .bugTemplate p a,
+.theme2 #BCTemplate .bugTemplate p a:hover,
+.theme2 #BCTemplate .bugZiyouTemplate p .options a,
+.theme2 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme2 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme2 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme2 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme2 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme2 .selectInput .selectDownBtn,
+.theme2 .userInput .userDownBtn,
+.theme2 .table>tbody>tr>td span.testCaseTestGroup,
+.theme2 .testGroup li p.actived,
+.theme2 .testGroupList li p.actived,
+.theme2 .optionBtns > span,
+.theme2 i.iModule,
+.theme2 i.iVersion,
+.theme2 i.iProduct,
+.theme2 .showAndHideImageFujian:focus,
+.theme2 .showAndHideImageFujian:hover,
+.theme2 .showAndHideImageFujian,
+.theme2 .showEmoji:hover,
+.theme2 .showEmoji:focus,
+.theme2 .showEmoji,
+.theme2 .showEmoji2:hover,
+.theme2 .showEmoji2:focus,
+.theme2 .showEmoji2,
+.theme2 .exportBug i.fa-dot-circle-o,
+.theme2 .exportCase i.fa-dot-circle-o,
+.theme2 .exportTask i.fa-dot-circle-o,
+.theme2 .copyBugType i.fa-dot-circle-o,
+.theme2 .copyBugTestType i.fa-dot-circle-o,
+.theme2 .subTaskType i.fa-dot-circle-o,
+.theme2 .subTaskType2 i.fa-dot-circle-o,
+.theme2 .addImgFujian a,
+.theme2 #allCount,
+.theme2 .defaultColor:visited,
+.theme2 .defaultColor:hover,
+.theme2 .defaultColor,
+.theme2 .pTable-title h5 .more,
+.theme2 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme2 .versionInfoTop .versionInfoBack,
+.theme2 .noticeInfoTop .noticeInfoBack,
+.theme2 .bugInfoTop .bugInfoBack,
+.theme2 .bugTestInfoTop .bugTestInfoBack,
+.theme2 .versionInfoTop span i,
+.theme2 .noticeInfoTop span i,
+.theme2 .bugInfoTop span.btn1 i,
+.theme2 .bugTestInfoTop span.btn1 i,
+.theme2 .tagSelect i,
+.theme2 .copylabel span i.fa-dot-circle-o,
+.theme2 .projectSetting span i.fa-dot-circle-o,
+.theme2 .tabPersonality span i.fa-dot-circle-o,
+.theme2 label.priority span i.fa-dot-circle-o,
+.theme2 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme2 #emailSettingForm label span i.fa-dot-circle-o,
+.theme2 #alertSettingForm label span i.fa-dot-circle-o,
+.theme2 #projectTab label span i.fa-dot-circle-o,
+.theme2 #bowersTab label span i.fa-dot-circle-o,
+.theme2 #projectRolesForm p span i.fa-dot-circle-o,
+.theme2 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme2 .noticeExpiredRadio label.checked span,
+.theme2 .noticeTopRadio label.checked span,
+.theme2 .noticeNotifyRadio label.checked span,
+.theme2 .customTxtRadio label.checked span,
+.theme2 .modal-content h4 i,
+.theme2 .customDropkick .select-icon i,
+.theme2 .navbar-default .nav > li > span.fa,
+.theme2 .navbar-default .nav > li > a:hover,
+.theme2 .navbar-default .nav > li > a:focus,
+.theme2 .navbar-default .nav > li.active a,
+.theme2 .setProjectBtn2,
+.theme2 .erp-content .fc-header-right span.check,
+.theme2 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme2 .fc-header .fc-button-next,
+.theme2 .fc-header .fc-button-prev,
+.theme2 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme2 .projectProductList .pVersion,
+.theme2 .projectProductList .pModule,
+.theme2 .projectProductList .pSubscribe,
+.theme2 .ui-opts-edit,
+.theme2 .productModuleList li span.opt i,
+.theme2 .editModuleName h4,
+.theme2 .pagination>li>a,
+.theme2 .pagination>li>span,
+.theme2 #alertTables.table>tbody>tr p.title,
+.theme2 .projectHelp .us i,
+.theme2 .k-table thead th span,
+.theme2 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme2 .fujian p .edit,
+.theme2 #myProjectMyInvite .myInviteList span.userType,
+.theme2 .tagsList .cell ul li i.fa-edit,
+.theme2 .rememberPwd .fa-check-square-o,
+.theme2 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme2 .bugTestTaskInfoTop span.btn1 i,
+.theme2 .ziyouTemplateList ul li:hover,
+.theme2 .openInfoPage ul li a,
+.theme2 .openInfoPage ul li b,
+.theme2 .rightsTitle .ApplyToAll span.defaultColor,
+.theme2 .bugTestInfoComments p i {
+    color: #5e72b6;
+}
+.theme2 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #5e72b6;
+}
+.theme2 #project-urgent-bug .last-notices,
+.theme2 #project-latest-bug .last-bugs,
+.theme2 .sidebar-collapse,
+.theme2 .table>thead>tr,
+.theme2 .table>tbody>tr,
+.theme2 ul.bugPlanNum li .cell em,
+.theme2 .fc-content,
+.theme2 .gantt,
+.theme2 .countAllWrap,
+.theme2 .k-table thead th,
+.theme2 .k-table tbody td {
+    background-color: #e6e8ea;
+}
+.theme2 .navbar-default .nav > li.active a,
+.theme2 .apps,
+.theme2 body.fixed-sidebar .navbar-static-side,
+.theme2 #menuBell ul,
+.theme2 .divider {
+    background-color: #f7f7f7;
+}
+.theme2 .k-table tbody td,
+.theme2 .k-table thead th {
+    border-color: #f7f7f7;
+}
+.theme2 .table>tbody>tr.hover,
+.theme2 .table>tbody>tr:hover {
+    background-color: #f5f5f5;
+}
+.theme2 .table>tbody>tr {
+    border-bottom: solid 1px #f7f7f7;
+}
+.theme2 #alertTables.table>tbody>tr .label {
+    border: solid 1px #5e72b6;
+    color: #5e72b6;
+}
+
+.theme3 .fc-event,
+.theme3 .bugDescFirstHistory > div,
+.theme3 .upload-file:focus,
+.theme3 input:focus,
+.theme3 textarea:focus,
+.theme3 .btn-info,
+.theme3 .btn-info:hover,
+.theme3 #changeBtnGroup .btn-info,
+.theme3 .noticeInfoImages img,
+.theme3 .bugInfoImages img,
+.theme3 .bugTestInfoImages img,
+.theme3 .bugInfoHistories .history-imgs-div img,
+.theme3 .bugTestInfoComments .history-imgs-div img,
+.theme3 .userProProjectPrice ul li.checked em,
+.theme3 .proProjectPrice ul li.checked em,
+.theme3 .dataTables_paginate .pagination li.active a,
+.theme3 .file-caption:focus  {
+    border-color: #3ea39e;
+}
+.theme3 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme3 .modal-header h4 i,
+.theme3 .project-list .row .thumbnail .btns i:hover,
+.theme3 .bugInfoHistories a,
+.theme3 .bugInfoDescription a,
+.theme3 .bugTestInfoDescription a,
+.theme3 .noticeInfoDescription a,
+.theme3 .versionDownloadUrl a,
+.theme3 .versionInfoNotes a {
+    color: #45b6b0 !important;
+}
+.theme3 #console-sidebar-select .dk_options a:hover,
+.theme3 .wrapper-header-left-bg,
+.theme3 .wrapper-header .wrapper-header-right,
+.theme3 .site-header,
+.theme3 .wrapper-header .name {
+    background-color: #3ea39e;
+}
+.theme3 .navbar-default .nav > li.active {
+    border-left-color: #45b6b0;
+}
+.theme3 .bugTags,
+.theme3 .bugInfoTags span,
+.theme3 .bugTestInfoTagsList span,
+.theme3 ul.bugPlanNum li .cell .em-Today,
+.theme3 .button-border,
+.theme3 .bugListSprints,
+.theme3 .bugInfoSprints span,
+.theme3 .bugTestTaskInfoTestPlan span {
+    color: #45b6b0;
+    border-color: #45b6b0;
+}
+.theme3 .btn-grey,
+.theme3 .btn-primary,
+.theme3 .bugInfoTagsColor {
+    color: #45b6b0 !important;
+    border-color: #45b6b0 !important;
+}
+.theme3 .bugInfoTagsColor2,
+.theme3 .button-royal,
+.theme3 .button-royal-flat {
+    background: #45b6b0 !important;
+    border-color: #45b6b0 !important;
+    color: #fff !important;
+}
+.theme3 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme3 .btn-grey:hover,
+.theme3 .btn-primary:hover,
+.theme3 .btn-info:active,
+.theme3 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #45b6b0 !important;
+}
+.theme3 .button-border:hover {
+    color: #fff;
+    background-color: #45b6b0;
+}
+.theme3 .versionInfoTop span i:hover,
+.theme3 .noticeInfoTop span i:hover,
+.theme3 .bugInfoTop span.btn1 i:hover,
+.theme3 .bugTestInfoTop span.btn1 i:hover,
+.theme3 .versionInfoTop .versionInfoBack:hover,
+.theme3 .noticeInfoTop .noticeInfoBack:hover,
+.theme3 .bugInfoTop .bugInfoBack:hover,
+.theme3 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme3 .navbar-default .nav > li.active > span.fa:hover,
+.theme3 .setProjectBtn2:hover i,
+.theme3 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme3 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme3 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme3 .sidebar-menus-icon,
+.theme3 .openInfoPage ul li a:hover,
+.theme3 .openInfoPage ul li b:hover,
+.theme3 #showProjectForm .defaultColor:hover {
+    color: #3ea39e;
+}
+
+.theme3 .label-defaultColor,
+.theme3 #menuHelp .dropdown-menu>li>a:hover,
+.theme3 #searchFilter,
+.theme3 #searchFilter .nav>li>a,
+.theme3 #bugTestFilter .nav>li>a ,
+.theme3 #crossStatFilter .nav>li>a,
+.theme3 .testTaskBatchAddFilter .nav>li>a,
+.theme3 .site-header .setting span.username .user-setting ul li:hover,
+.theme3 .site-header .setting .userSetLogout .exit:hover,
+.theme3 .projectClassList ul li:hover,
+.theme3 .site-header .userSetFace,
+.theme3 #changeBtnGroup .btn-info,
+.theme3 .bgDefault,
+.theme3 .bugSearchDiv,
+.theme3 .bugSearchDiv input,
+.theme3 .bugSearchDiv button,
+.theme3 .btn-info,
+.theme3 .fc-header .fc-state-active,
+.theme3 .fc-header .fc-state-hover,
+.theme3 .erp-content .fc-header-right span.check:hover,
+.theme3 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme3 .dataTables_paginate .pagination li.active a,
+.theme3 .progress-bar-info,
+.theme3 ul.priorityCount li .projectDayNum,
+.theme3 ul.priorityCount li .projectProductNum,
+.theme3 ul.priorityCount li .projectUserNum,
+.theme3 ul.bugPlanNum li .Today,
+.theme3 ul.bugNum li .all,
+.theme3 .nav li>p:hover,
+.theme3 .ui-fail,
+.theme3 .ui-progress,
+.theme3 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme3 .btn-info.disabled.focus,
+.theme3 .btn-info.disabled:focus,
+.theme3 .btn-info.disabled:hover,
+.theme3 .btn-info[disabled].focus,
+.theme3 .btn-info[disabled]:focus,
+.theme3 .btn-info[disabled]:hover,
+.theme3 fieldset[disabled] .btn-info.focus,
+.theme3 fieldset[disabled] .btn-info:focus,
+.theme3 fieldset[disabled] .btn-info:hover,
+    /*.theme3 .glBugList li:hover,*/
+.theme3 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #45b6b0;
+}
+.theme3 #layui-layer-shade-photo-opt span i,
+.theme3 body.mini-navbar .sidebar-menus-icon,
+.theme3 .copyUsersListDiv li .check i,
+.theme3 .copyProductsListDiv li .check i,
+.theme3 .copyProductModule i.fa-dot-circle-o,
+.theme3 .paySuccessCircle,
+.theme3 .payWaitCircle,
+.theme3 .userProProjectPay .media-body span.checked,
+.theme3 .proProjectPay .media-body span.checked,
+.theme3 .bugInfoPageFile a,
+.theme3 .noticeInfoPageFile a,
+.theme3 .testCaseInfoPageFile a,
+.theme3 .bugInfoHistories p i,
+.theme3 .projectSetting .bugBeizhuTemplate p a,
+.theme3 .projectSetting .bugTemplate p a,
+.theme3 .projectSetting .bugTemplate p a:hover,
+.theme3 #BCTemplate .bugBeizhuTemplate p a,
+.theme3 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme3 #BCTemplate .bugTemplate p a,
+.theme3 #BCTemplate .bugTemplate p a:hover,
+.theme3 #BCTemplate .bugZiyouTemplate p .options a,
+.theme3 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme3 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme3 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme3 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme3 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme3 .selectInput .selectDownBtn,
+.theme3 .userInput .userDownBtn,
+.theme3 .table>tbody>tr>td span.testCaseTestGroup,
+.theme3 .testGroup li p.actived,
+.theme3 .testGroupList li p.actived,
+.theme3 .optionBtns > span,
+.theme3 i.iModule,
+.theme3 i.iVersion,
+.theme3 i.iProduct,
+.theme3 .showAndHideImageFujian:focus,
+.theme3 .showAndHideImageFujian:hover,
+.theme3 .showAndHideImageFujian,
+.theme3 .showEmoji:hover,
+.theme3 .showEmoji:focus,
+.theme3 .showEmoji,
+.theme3 .showEmoji2:hover,
+.theme3 .showEmoji2:focus,
+.theme3 .showEmoji2,
+.theme3 .exportBug i.fa-dot-circle-o,
+.theme3 .exportCase i.fa-dot-circle-o,
+.theme3 .exportTask i.fa-dot-circle-o,
+.theme3 .copyBugType i.fa-dot-circle-o,
+.theme3 .copyBugTestType i.fa-dot-circle-o,
+.theme3 .subTaskType i.fa-dot-circle-o,
+.theme3 .subTaskType2 i.fa-dot-circle-o,
+.theme3 .addImgFujian a,
+.theme3 #allCount,
+.theme3 .defaultColor:visited,
+.theme3 .defaultColor:hover,
+.theme3 .defaultColor,
+.theme3 .pTable-title h5 .more,
+.theme3 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme3 .versionInfoTop .versionInfoBack,
+.theme3 .noticeInfoTop .noticeInfoBack,
+.theme3 .bugInfoTop .bugInfoBack,
+.theme3 .bugTestInfoTop .bugTestInfoBack,
+.theme3 .versionInfoTop span i,
+.theme3 .noticeInfoTop span i,
+.theme3 .bugInfoTop span.btn1 i,
+.theme3 .bugTestInfoTop span.btn1 i,
+.theme3 .tagSelect i,
+.theme3 .copylabel span i.fa-dot-circle-o,
+.theme3 .projectSetting span i.fa-dot-circle-o,
+.theme3 .tabPersonality span i.fa-dot-circle-o,
+.theme3 label.priority span i.fa-dot-circle-o,
+.theme3 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme3 #emailSettingForm label span i.fa-dot-circle-o,
+.theme3 #alertSettingForm label span i.fa-dot-circle-o,
+.theme3 #projectTab label span i.fa-dot-circle-o,
+.theme3 #bowersTab label span i.fa-dot-circle-o,
+.theme3 #projectRolesForm p span i.fa-dot-circle-o,
+.theme3 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme3 .noticeTopRadio label.checked span,
+.theme3 .noticeExpiredRadio label.checked span,
+.theme3 .noticeNotifyRadio label.checked span,
+.theme3 .customTxtRadio label.checked span,
+.theme3 .modal-content h4 i,
+.theme3 .customDropkick .select-icon i,
+.theme3 .navbar-default .nav > li > span.fa,
+.theme3 .navbar-default .nav > li > a:hover,
+.theme3 .navbar-default .nav > li > a:focus,
+.theme3 .navbar-default .nav > li.active a,
+.theme3 .setProjectBtn2,
+.theme3 .erp-content .fc-header-right span.check,
+.theme3 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme3 .fc-header .fc-button-next,
+.theme3 .fc-header .fc-button-prev,
+.theme3 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme3 .projectProductList .pVersion,
+.theme3 .projectProductList .pModule,
+.theme3 .projectProductList .pSubscribe,
+.theme3 .ui-opts-edit,
+.theme3 .productModuleList li span.opt i,
+.theme3 .editModuleName h4,
+.theme3 .pagination>li>a,
+.theme3 .pagination>li>span,
+.theme3 #alertTables.table>tbody>tr p.title,
+.theme3 .projectHelp .us i,
+.theme3 .k-table thead th span,
+.theme3 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme3 .fujian p .edit,
+.theme3 #myProjectMyInvite .myInviteList span.userType,
+.theme3 .tagsList .cell ul li i.fa-edit,
+.theme3 .rememberPwd .fa-check-square-o,
+.theme3 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme3 .bugTestTaskInfoTop span.btn1 i,
+.theme3 .ziyouTemplateList ul li:hover,
+.theme3 .openInfoPage ul li a,
+.theme3 .openInfoPage ul li b,
+.theme3 .rightsTitle .ApplyToAll span.defaultColor,
+.theme3 .bugTestInfoComments p i {
+    color: #45b6b0;
+}
+.theme3 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #45b6b0;
+}
+.theme3 .navbar-default .nav > li.active a,
+.theme3 .apps,
+.theme3 body.fixed-sidebar .navbar-static-side,
+.theme3 .divider,
+.theme3 #menuBell ul {
+    background-color: #ddd;
+}
+.theme3 .k-table tbody td,
+.theme3 .k-table thead th {
+    border-color: #ddd;
+}
+.theme3 .table>tbody>tr {
+    border-bottom: solid 1px #ddd;
+}
+.theme3 #alertTables.table>tbody>tr .label {
+    border: solid 1px #45b6b0;
+    color: #45b6b0;
+}
+
+.theme4 .fc-event,
+.theme4 .bugDescFirstHistory > div,
+.theme4 .upload-file:focus,
+.theme4 input:focus,
+.theme4 textarea:focus,
+.theme4 .btn-info,
+.theme4 .btn-info:hover,
+.theme4 #changeBtnGroup .btn-info,
+.theme4 .noticeInfoImages img,
+.theme4 .bugInfoImages img,
+.theme4 .bugTestInfoImages img,
+.theme4 .bugInfoHistories .history-imgs-div img,
+.theme4 .bugTestInfoComments .history-imgs-div img,
+.theme4 .userProProjectPrice ul li.checked em,
+.theme4 .proProjectPrice ul li.checked em,
+.theme4 .dataTables_paginate .pagination li.active a,
+.theme4 .file-caption:focus {
+    border-color: #7b7760;
+}
+.theme4 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme4 .modal-header h4 i,
+.theme4 .project-list .row .thumbnail .btns i:hover,
+.theme4 .bugInfoHistories a,
+.theme4 .bugInfoDescription a,
+.theme4 .bugTestInfoDescription a,
+.theme4 .noticeInfoDescription a,
+.theme4 .versionDownloadUrl a,
+.theme4 .versionInfoNotes a {
+    color: #878268 !important;
+}
+.theme4 #console-sidebar-select .dk_options a:hover,
+.theme4 .wrapper-header-left-bg,
+.theme4 .wrapper-header .wrapper-header-right,
+.theme4 .site-header,
+.theme4 .wrapper-header .name {
+    background-color: #7b7760;
+}
+.theme4 .navbar-default .nav > li.active {
+    border-left-color: #878268;
+}
+.theme4 .bugTags,
+.theme4 .bugInfoTags span,
+.theme4 .bugTestInfoTagsList span,
+.theme4 ul.bugPlanNum li .cell .em-Today,
+.theme4 .button-border,
+.theme4 .bugListSprints,
+.theme4 .bugInfoSprints span,
+.theme4 .bugTestTaskInfoTestPlan span {
+    color: #878268 ;
+    border-color: #878268 ;
+}
+.theme4 .btn-grey,
+.theme4 .btn-primary,
+.theme4 .bugInfoTagsColor {
+    color: #878268 !important;
+    border-color: #878268 !important;
+}
+.theme4 .bugInfoTagsColor2,
+.theme4 .button-royal,
+.theme4 .button-royal-flat {
+    background: #878268 !important;
+    border-color: #878268 !important;
+    color: #fff !important;
+}
+.theme4 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme4 .btn-grey:hover,
+.theme4 .btn-primary:hover,
+.theme4 .btn-info:active,
+.theme4 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #878268 !important;
+}
+.theme4 .button-border:hover {
+    color: #fff;
+    background-color: #878268;
+}
+.theme4 .versionInfoTop span i:hover,
+.theme4 .noticeInfoTop span i:hover,
+.theme4 .bugInfoTop span.btn1 i:hover,
+.theme4 .bugTestInfoTop span.btn1 i:hover,
+.theme4 .versionInfoTop .versionInfoBack:hover,
+.theme4 .noticeInfoTop .noticeInfoBack:hover,
+.theme4 .bugInfoTop .bugInfoBack:hover,
+.theme4 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme4 .navbar-default .nav > li.active > span.fa:hover,
+.theme4 .setProjectBtn2:hover i,
+.theme4 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme4 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme4 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme4 .sidebar-menus-icon,
+.theme4 .openInfoPage ul li a:hover,
+.theme4 .openInfoPage ul li b:hover,
+.theme4 #showProjectForm .defaultColor:hover {
+    color: #7b7760;
+}
+.theme4 .label-defaultColor,
+.theme4 #menuHelp .dropdown-menu>li>a:hover,
+.theme4 #searchFilter,
+.theme4 #searchFilter .nav>li>a,
+.theme4 #bugTestFilter .nav>li>a ,
+.theme4 #crossStatFilter .nav>li>a,
+.theme4 .testTaskBatchAddFilter .nav>li>a,
+.theme4 .site-header .setting span.username .user-setting ul li:hover,
+.theme4 .site-header .setting .userSetLogout .exit:hover,
+.theme4 .projectClassList ul li:hover,
+.theme4 .site-header .userSetFace,
+.theme4 #changeBtnGroup .btn-info,
+.theme4 .bgDefault,
+.theme4 .bugSearchDiv,
+.theme4 .bugSearchDiv input,
+.theme4 .bugSearchDiv button,
+.theme4 .btn-info,
+.theme4 .fc-header .fc-state-active,
+.theme4 .fc-header .fc-state-hover,
+.theme4 .erp-content .fc-header-right span.check:hover,
+.theme4 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme4 .dataTables_paginate .pagination li.active a,
+.theme4 .progress-bar-info,
+.theme4 ul.priorityCount li .projectDayNum,
+.theme4 ul.priorityCount li .projectProductNum,
+.theme4 ul.priorityCount li .projectUserNum,
+.theme4 ul.bugPlanNum li .Today,
+.theme4 ul.bugNum li .all,
+.theme4 .nav li>p:hover,
+.theme4 .ui-fail,
+.theme4 .ui-progress,
+.theme4 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme4 .btn-info.disabled.focus,
+.theme4 .btn-info.disabled:focus,
+.theme4 .btn-info.disabled:hover,
+.theme4 .btn-info[disabled].focus,
+.theme4 .btn-info[disabled]:focus,
+.theme4 .btn-info[disabled]:hover,
+.theme4 fieldset[disabled] .btn-info.focus,
+.theme4 fieldset[disabled] .btn-info:focus,
+.theme4 fieldset[disabled] .btn-info:hover,
+    /*.theme4 .glBugList li:hover,*/
+.theme4 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #878268;
+}
+.theme4 #layui-layer-shade-photo-opt span i,
+.theme4 body.mini-navbar .sidebar-menus-icon,
+.theme4 .copyUsersListDiv li .check i,
+.theme4 .copyProductsListDiv li .check i,
+.theme4 .copyProductModule i.fa-dot-circle-o,
+.theme4 .paySuccessCircle,
+.theme4 .payWaitCircle,
+.theme4 .userProProjectPay .media-body span.checked,
+.theme4 .proProjectPay .media-body span.checked,
+.theme4 .bugInfoPageFile a,
+.theme4 .noticeInfoPageFile a,
+.theme4 .testCaseInfoPageFile a,
+.theme4 .bugInfoHistories p i,
+.theme4 .projectSetting .bugBeizhuTemplate p a,
+.theme4 .projectSetting .bugTemplate p a,
+.theme4 .projectSetting .bugTemplate p a:hover,
+.theme4 #BCTemplate .bugBeizhuTemplate p a,
+.theme4 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme4 #BCTemplate .bugTemplate p a,
+.theme4 #BCTemplate .bugTemplate p a:hover,
+.theme4 #BCTemplate .bugZiyouTemplate p .options a,
+.theme4 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme4 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme4 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme4 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme4 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme4 .selectInput .selectDownBtn,
+.theme4 .userInput .userDownBtn,
+.theme4 .table>tbody>tr>td span.testCaseTestGroup,
+.theme4 .testGroup li p.actived,
+.theme4 .testGroupList li p.actived,
+.theme4 .optionBtns > span,
+.theme4 i.iModule,
+.theme4 i.iVersion,
+.theme4 i.iProduct,
+.theme4 .showAndHideImageFujian:focus,
+.theme4 .showAndHideImageFujian:hover,
+.theme4 .showAndHideImageFujian,
+.theme4 .showEmoji:hover,
+.theme4 .showEmoji:focus,
+.theme4 .showEmoji,
+.theme4 .showEmoji2:hover,
+.theme4 .showEmoji2:focus,
+.theme4 .showEmoji2,
+.theme4 .exportBug i.fa-dot-circle-o,
+.theme4 .exportCase i.fa-dot-circle-o,
+.theme4 .exportTask i.fa-dot-circle-o,
+.theme4 .copyBugType i.fa-dot-circle-o,
+.theme4 .copyBugTestType i.fa-dot-circle-o,
+.theme4 .subTaskType i.fa-dot-circle-o,
+.theme4 .subTaskType2 i.fa-dot-circle-o,
+.theme4 .addImgFujian a,
+.theme4 #allCount,
+.theme4 .defaultColor:visited,
+.theme4 .defaultColor:hover,
+.theme4 .defaultColor,
+.theme4 .pTable-title h5 .more,
+.theme4 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme4 .versionInfoTop .versionInfoBack,
+.theme4 .noticeInfoTop .noticeInfoBack,
+.theme4 .bugInfoTop .bugInfoBack,
+.theme4 .bugTestInfoTop .bugTestInfoBack,
+.theme4 .versionInfoTop span i,
+.theme4 .noticeInfoTop span i,
+.theme4 .bugInfoTop span.btn1 i,
+.theme4 .bugTestInfoTop span.btn1 i,
+.theme4 .tagSelect i,
+.theme4 .copylabel span i.fa-dot-circle-o,
+.theme4 .projectSetting span i.fa-dot-circle-o,
+.theme4 .tabPersonality span i.fa-dot-circle-o,
+.theme4 label.priority span i.fa-dot-circle-o,
+.theme4 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme4 #emailSettingForm label span i.fa-dot-circle-o,
+.theme4 #alertSettingForm label span i.fa-dot-circle-o,
+.theme4 #projectTab label span i.fa-dot-circle-o,
+.theme4 #bowersTab label span i.fa-dot-circle-o,
+.theme4 #projectRolesForm p span i.fa-dot-circle-o,
+.theme4 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme4 .noticeExpiredRadio label.checked span,
+.theme4 .noticeTopRadio label.checked span,
+.theme4 .noticeNotifyRadio label.checked span,
+.theme4 .customTxtRadio label.checked span,
+.theme4 .modal-content h4 i,
+.theme4 .customDropkick .select-icon i,
+.theme4 .navbar-default .nav > li > span.fa,
+.theme4 .navbar-default .nav > li > a:hover,
+.theme4 .navbar-default .nav > li > a:focus,
+.theme4 .navbar-default .nav > li.active a,
+.theme4 .setProjectBtn2,
+.theme4 .erp-content .fc-header-right span.check,
+.theme4 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme4 .fc-header .fc-button-next,
+.theme4 .fc-header .fc-button-prev,
+.theme4 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme4 .projectProductList .pVersion,
+.theme4 .projectProductList .pModule,
+.theme4 .projectProductList .pSubscribe,
+.theme4 .ui-opts-edit,
+.theme4 .productModuleList li span.opt i,
+.theme4 .editModuleName h4,
+.theme4 .pagination>li>a,
+.theme4 .pagination>li>span,
+.theme4 #alertTables.table>tbody>tr p.title,
+.theme4 .projectHelp .us i,
+.theme4 .k-table thead th span,
+.theme4 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme4 .fujian p .edit,
+.theme4 #myProjectMyInvite .myInviteList span.userType,
+.theme4 .tagsList .cell ul li i.fa-edit,
+.theme4 .rememberPwd .fa-check-square-o,
+.theme4 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme4 .bugTestTaskInfoTop span.btn1 i,
+.theme4 .ziyouTemplateList ul li:hover,
+.theme4 .openInfoPage ul li a,
+.theme4 .openInfoPage ul li b,
+.theme4 .rightsTitle .ApplyToAll span.defaultColor,
+.theme4 .bugTestInfoComments p i {
+    color: #878268;
+}
+.theme4 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #878268;
+}
+.theme4 #project-urgent-bug .last-notices,
+.theme4 #project-latest-bug .last-bugs,
+.theme4 .sidebar-collapse,
+.theme4 .table>thead>tr,
+.theme4 .table>tbody>tr,
+.theme4 ul.bugPlanNum li .cell em,
+.theme4 .fc-content,
+.theme4 .gantt,
+.theme4 .countAllWrap,
+.theme4 .k-table thead th,
+.theme4 .k-table tbody td {
+    background-color: #cbcbcb;
+}
+.theme4 .navbar-default .nav > li.active a,
+.theme4 .apps,
+.theme4 body.fixed-sidebar .navbar-static-side,
+.theme4 .divider,
+.theme4 #menuBell ul {
+    background-color: #d7d7d7;
+}
+.theme4 .k-table tbody td,
+.theme4 .k-table thead th {
+    border-color: #d7d7d7;
+}
+.theme4 .table>tbody>tr.hover,
+.theme4 .table>tbody>tr:hover {
+    background-color: #f5f5f5;
+}
+.theme4 .table>thead>tr,
+.theme4 .table>tbody>tr {
+    border-bottom-color: #d7d7d7
+}
+.theme4 .table>tbody>tr {
+    border-bottom: solid 1px #d7d7d7;
+}
+.theme4 #alertTables.table>tbody>tr .label {
+    border: solid 1px #878268;
+    color: #878268;
+}
+
+.theme5 .fc-event,
+.theme5 .bugDescFirstHistory > div,
+.theme5 .upload-file:focus,
+.theme5 input:focus,
+.theme5 textarea:focus,
+.theme5 .btn-info,
+.theme5 .btn-info:hover,
+.theme5 #changeBtnGroup .btn-info,
+.theme5 .noticeInfoImages img,
+.theme5 .bugInfoImages img,
+.theme5 .bugTestInfoImages img,
+.theme5 .bugInfoHistories .history-imgs-div img,
+.theme5 .bugTestInfoComments .history-imgs-div img,
+.theme5 .userProProjectPrice ul li.checked em,
+.theme5 .proProjectPrice ul li.checked em,
+.theme5 .dataTables_paginate .pagination li.active a,
+.theme5 .file-caption:focus  {
+    border-color: #149078;
+}
+.theme5 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme5 .modal-header h4 i,
+.theme5 .project-list .row .thumbnail .btns i:hover,
+.theme5 .bugInfoHistories a,
+.theme5 .bugInfoDescription a,
+.theme5 .bugTestInfoDescription a,
+.theme5 .noticeInfoDescription a,
+.theme5 .versionDownloadUrl a,
+.theme5 .versionInfoNotes a {
+    color: #16a085 !important;
+}
+.theme5 #console-sidebar-select .dk_options a:hover,
+.theme5 .wrapper-header-left-bg,
+.theme5 .wrapper-header .wrapper-header-right,
+.theme5 .site-header,
+.theme5 .wrapper-header .name {
+    background-color: #149078;
+}
+.theme5 .navbar-default .nav > li.active {
+    border-left-color: #16a085;
+}
+.theme5 .bugTags,
+.theme5 .bugInfoTags span,
+.theme5 .bugTestInfoTagsList span,
+.theme5 ul.bugPlanNum li .cell .em-Today,
+.theme5 .button-border,
+.theme5 .bugListSprints,
+.theme5 .bugInfoSprints span,
+.theme5 .bugTestTaskInfoTestPlan span {
+    color: #16a085 ;
+    border-color: #16a085;
+}
+.theme5 .btn-grey,
+.theme5 .btn-primary,
+.theme5 .bugInfoTagsColor {
+    color: #16a085 !important;
+    border-color: #16a085 !important;
+}
+.theme5 .bugInfoTagsColor2,
+.theme5 .button-royal,
+.theme5 .button-royal-flat {
+    background: #16a085 !important;
+    border-color: #16a085 !important;
+    color: #fff !important;
+}
+.theme5 .btn-info:active,
+.theme5 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme5 .btn-grey:hover,
+.theme5 .btn-primary:hover,
+.theme5 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #16a085 !important;
+}
+.theme5 .button-border:hover {
+    color: #fff;
+    background-color: #16a085;
+}
+.theme5 .versionInfoTop span i:hover,
+.theme5 .noticeInfoTop span i:hover,
+.theme5 .bugInfoTop span.btn1 i:hover,
+.theme5 .bugTestInfoTop span.btn1 i:hover,
+.theme5 .versionInfoTop .versionInfoBack:hover,
+.theme5 .noticeInfoTop .noticeInfoBack:hover,
+.theme5 .bugInfoTop .bugInfoBack:hover,
+.theme5 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme5 .navbar-default .nav > li.active > span.fa:hover,
+.theme5 .setProjectBtn2:hover i,
+.theme5 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme5 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme5 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme5 .sidebar-menus-icon,
+.theme5 .openInfoPage ul li a:hover,
+.theme5 .openInfoPage ul li b:hover,
+.theme5 #showProjectForm .defaultColor:hover {
+    color: #149078;
+}
+.theme5 .label-defaultColor,
+.theme5 #menuHelp .dropdown-menu>li>a:hover,
+.theme5 #searchFilter,
+.theme5 #searchFilter .nav>li>a,
+.theme5 #bugTestFilter .nav>li>a ,
+.theme5 #crossStatFilter .nav>li>a,
+.theme5 .testTaskBatchAddFilter .nav>li>a,
+.theme5 .site-header .setting span.username .user-setting ul li:hover,
+.theme5 .site-header .setting .userSetLogout .exit:hover,
+.theme5 .projectClassList ul li:hover,
+.theme5 .site-header .userSetFace,
+.theme5 #changeBtnGroup .btn-info,
+.theme5 .bgDefault,
+.theme5 .bugSearchDiv,
+.theme5 .bugSearchDiv input,
+.theme5 .bugSearchDiv button,
+.theme5 .btn-info,
+.theme5 .fc-header .fc-state-active,
+.theme5 .fc-header .fc-state-hover,
+.theme5 .erp-content .fc-header-right span.check:hover,
+.theme5 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme5 .dataTables_paginate .pagination li.active a,
+.theme5 .progress-bar-info,
+.theme5 ul.priorityCount li .projectDayNum,
+.theme5 ul.priorityCount li .projectProductNum,
+.theme5 ul.priorityCount li .projectUserNum,
+.theme5 ul.bugPlanNum li .Today,
+.theme5 ul.bugNum li .all,
+.theme5 .nav li>p:hover,
+.theme5 .ui-fail,
+.theme5 .ui-progress,
+.theme5 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme5 .btn-info.disabled.focus,
+.theme5 .btn-info.disabled:focus,
+.theme5 .btn-info.disabled:hover,
+.theme5 .btn-info[disabled].focus,
+.theme5 .btn-info[disabled]:focus,
+.theme5 .btn-info[disabled]:hover,
+.theme5 fieldset[disabled] .btn-info.focus,
+.theme5 fieldset[disabled] .btn-info:focus,
+.theme5 fieldset[disabled] .btn-info:hover,
+    /*.theme5 .glBugList li:hover,*/
+.theme5 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #16a085;
+}
+.theme5 #layui-layer-shade-photo-opt span i,
+.theme5 body.mini-navbar .sidebar-menus-icon,
+.theme5 .copyUsersListDiv li .check i,
+.theme5 .copyProductsListDiv li .check i,
+.theme5 .copyProductModule i.fa-dot-circle-o,
+.theme5 .paySuccessCircle,
+.theme5 .payWaitCircle,
+.theme5 .userProProjectPay .media-body span.checked,
+.theme5 .proProjectPay .media-body span.checked,
+.theme5 .bugInfoPageFile a,
+.theme5 .noticeInfoPageFile a,
+.theme5 .testCaseInfoPageFile a,
+.theme5 .bugInfoHistories p i,
+.theme5 .projectSetting .bugBeizhuTemplate p a,
+.theme5 .projectSetting .bugTemplate p a,
+.theme5 .projectSetting .bugTemplate p a:hover,
+.theme5 #BCTemplate .bugBeizhuTemplate p a,
+.theme5 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme5 #BCTemplate .bugTemplate p a,
+.theme5 #BCTemplate .bugTemplate p a:hover,
+.theme5 #BCTemplate .bugZiyouTemplate p .options a,
+.theme5 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme5 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme5 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme5 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme5 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme5 .selectInput .selectDownBtn,
+.theme5 .userInput .userDownBtn,
+.theme5 .table>tbody>tr>td span.testCaseTestGroup,
+.theme5 .testGroup li p.actived,
+.theme5 .testGroupList li p.actived,
+.theme5 .optionBtns > span,
+.theme5 i.iModule,
+.theme5 i.iVersion,
+.theme5 i.iProduct,
+.theme5 .showAndHideImageFujian:focus,
+.theme5 .showAndHideImageFujian:hover,
+.theme5 .showAndHideImageFujian,
+.theme5 .showEmoji:hover,
+.theme5 .showEmoji:focus,
+.theme5 .showEmoji,
+.theme5 .showEmoji2:hover,
+.theme5 .showEmoji2:focus,
+.theme5 .showEmoji2,
+.theme5 .exportBug i.fa-dot-circle-o,
+.theme5 .exportCase i.fa-dot-circle-o,
+.theme5 .exportTask i.fa-dot-circle-o,
+.theme5 .copyBugType i.fa-dot-circle-o,
+.theme5 .copyBugTestType i.fa-dot-circle-o,
+.theme5 .subTaskType i.fa-dot-circle-o,
+.theme5 .subTaskType2 i.fa-dot-circle-o,
+.theme5 .addImgFujian a,
+.theme5 #allCount,
+.theme5 .defaultColor:visited,
+.theme5 .defaultColor:hover,
+.theme5 .defaultColor,
+.theme5 .pTable-title h5 .more,
+.theme5 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme5 .versionInfoTop .versionInfoBack,
+.theme5 .noticeInfoTop .noticeInfoBack,
+.theme5 .bugInfoTop .bugInfoBack,
+.theme5 .bugTestInfoTop .bugTestInfoBack,
+.theme5 .versionInfoTop span i,
+.theme5 .noticeInfoTop span i,
+.theme5 .bugInfoTop span.btn1 i,
+.theme5 .bugTestInfoTop span.btn1 i,
+.theme5 .tagSelect i,
+.theme5 .copylabel span i.fa-dot-circle-o,
+.theme5 .projectSetting span i.fa-dot-circle-o,
+.theme5 .tabPersonality span i.fa-dot-circle-o,
+.theme5 label.priority span i.fa-dot-circle-o,
+.theme5 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme5 #emailSettingForm label span i.fa-dot-circle-o,
+.theme5 #alertSettingForm label span i.fa-dot-circle-o,
+.theme5 #projectTab label span i.fa-dot-circle-o,
+.theme5 #bowersTab label span i.fa-dot-circle-o,
+.theme5 #projectRolesForm p span i.fa-dot-circle-o,
+.theme5 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme5 .noticeExpiredRadio label.checked span,
+.theme5 .noticeTopRadio label.checked span,
+.theme5 .noticeNotifyRadio label.checked span,
+.theme5 .customTxtRadio label.checked span,
+.theme5 .modal-content h4 i,
+.theme5 .customDropkick .select-icon i,
+.theme5 .navbar-default .nav > li > span.fa,
+.theme5 .navbar-default .nav > li > a:hover,
+.theme5 .navbar-default .nav > li > a:focus,
+.theme5 .navbar-default .nav > li.active a,
+.theme5 .setProjectBtn2,
+.theme5 .erp-content .fc-header-right span.check,
+.theme5 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme5 .fc-header .fc-button-next,
+.theme5 .fc-header .fc-button-prev,
+.theme5 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme5 .projectProductList .pVersion,
+.theme5 .projectProductList .pModule,
+.theme5 .projectProductList .pSubscribe,
+.theme5 .ui-opts-edit,
+.theme5 .productModuleList li span.opt i,
+.theme5 .editModuleName h4,
+.theme5 .pagination>li>a,
+.theme5 .pagination>li>span,
+.theme5 #alertTables.table>tbody>tr p.title,
+.theme5 .projectHelp .us i,
+.theme5 .k-table thead th span,
+.theme5 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme5 .fujian p .edit,
+.theme5 #myProjectMyInvite .myInviteList span.userType,
+.theme5 .tagsList .cell ul li i.fa-edit,
+.theme5 .rememberPwd .fa-check-square-o,
+.theme5 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme5 .bugTestTaskInfoTop span.btn1 i,
+.theme5 .ziyouTemplateList ul li:hover,
+.theme5 .openInfoPage ul li a,
+.theme5 .openInfoPage ul li b,
+.theme5 .rightsTitle .ApplyToAll span.defaultColor,
+.theme5 .bugTestInfoComments p i {
+    color: #16a085;
+}
+.theme5 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #16a085;
+}
+.theme5 #project-urgent-bug .last-notices,
+.theme5 #project-latest-bug .last-bugs,
+.theme5 .sidebar-collapse,
+.theme5 .table>thead>tr,
+.theme5 .table>tbody>tr,
+.theme5 ul.bugPlanNum li .cell em,
+.theme5 .fc-content,
+.theme5 .gantt,
+.theme5 .countAllWrap,
+.theme5 .k-table thead th,
+.theme5 .k-table tbody td {
+    background-color: #eee;
+}
+.theme5 .navbar-default .nav > li.active a,
+.theme5 .apps,
+.theme5 body.fixed-sidebar .navbar-static-side,
+.theme5 .divider,
+.theme5 #menuBell ul {
+    background-color: #d7d7d7;
+}
+.theme5 .k-table tbody td,
+.theme5 .k-table thead th {
+    border-color: #d7d7d7;
+}
+.theme5 .table>tbody>tr.hover,
+.theme5 .table>tbody>tr:hover {
+    background-color: #f5f5f5
+}
+.theme5 .table>thead>tr,
+.theme5 .table>tbody>tr {
+    border-bottom-color: #d7d7d7
+}
+.theme5 .table>tbody>tr {
+    border-bottom: solid 1px #d7d7d7;
+}
+.theme5 #alertTables.table>tbody>tr .label {
+    border: solid 1px #16a085;
+    color: #16a085;
+}
+
+.theme6 .fc-event,
+.theme6 .bugDescFirstHistory > div,
+.theme6 .upload-file:focus,
+.theme6 input:focus,
+.theme6 textarea:focus,
+.theme6 .btn-info,
+.theme6 .btn-info:hover,
+.theme6 #changeBtnGroup .btn-info,
+.theme6 .noticeInfoImages img,
+.theme6 .bugInfoImages img,
+.theme6 .bugTestInfoImages img,
+.theme6 .bugInfoHistories .history-imgs-div img,
+.theme6 .bugTestInfoComments .history-imgs-div img,
+.theme6 .userProProjectPrice ul li.checked em,
+.theme6 .proProjectPrice ul li.checked em,
+.theme6 .dataTables_paginate .pagination li.active a,
+.theme6 .file-caption:focus  {
+    border-color: #f991a4;
+}
+.theme6 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme6 .modal-header h4 i,
+.theme6 .project-list .row .thumbnail .btns i:hover,
+.theme6 .bugInfoHistories a,
+.theme6 .bugInfoDescription a,
+.theme6 .bugTestInfoDescription a,
+.theme6 .noticeInfoDescription a,
+.theme6 .versionDownloadUrl a,
+.theme6 .versionInfoNotes a {
+    color: #fea5b5 !important;
+}
+.theme6 #console-sidebar-select .dk_options a:hover,
+.theme6 .wrapper-header-left-bg,
+.theme6 .wrapper-header .wrapper-header-right,
+.theme6 .site-header,
+.theme6 .wrapper-header .name {
+    background-color: #f991a4;
+}
+.theme6 .navbar-default .nav > li.active {
+    border-left-color: #fea5b5;
+}
+.theme6 .bugTags,
+.theme6 .bugInfoTags span,
+.theme6 .bugTestInfoTagsList span,
+.theme6 ul.bugPlanNum li .cell .em-Today,
+.theme6 .button-border,
+.theme6 .bugListSprints,
+.theme6 .bugInfoSprints span,
+.theme6 .bugTestTaskInfoTestPlan span {
+    color: #fea5b5;
+    border-color: #fea5b5;
+}
+.theme6 .btn-grey,
+.theme6 .btn-primary,
+.theme6 .bugInfoTagsColor {
+    color: #fea5b5 !important;
+    border-color: #fea5b5 !important;
+}
+.theme6 .bugInfoTagsColor2,
+.theme6 .button-royal,
+.theme6 .button-royal-flat {
+    background: #fea5b5 !important;
+    border-color: #fea5b5 !important;
+    color: #fff !important;
+}
+.theme6 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme6 .btn-grey:hover,
+.theme6 .btn-primary:hover,
+.theme6 .btn-info:active,
+.theme6 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #fea5b5 !important;
+}
+.theme6 .button-border:hover {
+    color: #fff;
+    background-color: #fea5b5;
+}
+.theme6 .versionInfoTop span i:hover,
+.theme6 .noticeInfoTop span i:hover,
+.theme6 .bugInfoTop span.btn1 i:hover,
+.theme6 .bugTestInfoTop span.btn1 i:hover,
+.theme6 .versionInfoTop .versionInfoBack:hover,
+.theme6 .noticeInfoTop .noticeInfoBack:hover,
+.theme6 .bugInfoTop .bugInfoBack:hover,
+.theme6 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme6 .navbar-default .nav > li.active > span.fa:hover,
+.theme6 .setProjectBtn2:hover i,
+.theme6 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme6 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme6 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme6 .sidebar-menus-icon,
+.theme6 .openInfoPage ul li a:hover,
+.theme6 .openInfoPage ul li b:hover,
+.theme6 #showProjectForm .defaultColor:hover {
+    color: #f991a4;
+}
+.theme6 .label-defaultColor,
+.theme6 #menuHelp .dropdown-menu>li>a:hover,
+.theme6 #searchFilter,
+.theme6 #searchFilter .nav>li>a,
+.theme6 #bugTestFilter .nav>li>a ,
+.theme6 #crossStatFilter .nav>li>a,
+.theme6 .testTaskBatchAddFilter .nav>li>a,
+.theme6 .site-header .setting span.username .user-setting ul li:hover,
+.theme6 .site-header .setting .userSetLogout .exit:hover,
+.theme6 .projectClassList ul li:hover,
+.theme6 .site-header .userSetFace,
+.theme6 #changeBtnGroup .btn-info,
+.theme6 .bgDefault,
+.theme6 .bugSearchDiv,
+.theme6 .bugSearchDiv input,
+.theme6 .bugSearchDiv button,
+.theme6 .btn-info,
+.theme6 .fc-header .fc-state-active,
+.theme6 .fc-header .fc-state-hover,
+.theme6 .erp-content .fc-header-right span.check:hover,
+.theme6 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme6 .dataTables_paginate .pagination li.active a,
+.theme6 .progress-bar-info,
+.theme6 ul.priorityCount li .projectDayNum,
+.theme6 ul.priorityCount li .projectProductNum,
+.theme6 ul.priorityCount li .projectUserNum,
+.theme6 ul.bugPlanNum li .Today,
+.theme6 ul.bugNum li .all,
+.theme6 .nav li>p:hover,
+.theme6 .ui-fail,
+.theme6 .ui-progress,
+.theme6 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme6 .btn-info.disabled.focus,
+.theme6 .btn-info.disabled:focus,
+.theme6 .btn-info.disabled:hover,
+.theme6 .btn-info[disabled].focus,
+.theme6 .btn-info[disabled]:focus,
+.theme6 .btn-info[disabled]:hover,
+.theme6 fieldset[disabled] .btn-info.focus,
+.theme6 fieldset[disabled] .btn-info:focus,
+.theme6 fieldset[disabled] .btn-info:hover,
+    /*.theme6 .glBugList li:hover,*/
+.theme6 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #fea5b5;
+}
+.theme6 #layui-layer-shade-photo-opt span i,
+.theme6 body.mini-navbar .sidebar-menus-icon,
+.theme6 .copyUsersListDiv li .check i,
+.theme6 .copyProductsListDiv li .check i,
+.theme6 .copyProductModule i.fa-dot-circle-o,
+.theme6 .paySuccessCircle,
+.theme6 .payWaitCircle,
+.theme6 .userProProjectPay .media-body span.checked,
+.theme6 .proProjectPay .media-body span.checked,
+.theme6 .bugInfoPageFile a,
+.theme6 .noticeInfoPageFile a,
+.theme6 .testCaseInfoPageFile a,
+.theme6 .bugInfoHistories p i,
+.theme6 .projectSetting .bugBeizhuTemplate p a,
+.theme6 .projectSetting .bugTemplate p a,
+.theme6 .projectSetting .bugTemplate p a:hover,
+.theme6 #BCTemplate .bugBeizhuTemplate p a,
+.theme6 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme6 #BCTemplate .bugTemplate p a,
+.theme6 #BCTemplate .bugTemplate p a:hover,
+.theme6 #BCTemplate .bugZiyouTemplate p .options a,
+.theme6 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme6 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme6 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme6 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme6 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme6 .selectInput .selectDownBtn,
+.theme6 .userInput .userDownBtn,
+.theme6 .table>tbody>tr>td span.testCaseTestGroup,
+.theme6 .testGroup li p.actived,
+.theme6 .testGroupList li p.actived,
+.theme6 .optionBtns > span,
+.theme6 i.iModule,
+.theme6 i.iVersion,
+.theme6 i.iProduct,
+.theme6 .showAndHideImageFujian:focus,
+.theme6 .showAndHideImageFujian:hover,
+.theme6 .showAndHideImageFujian,
+.theme6 .showEmoji:hover,
+.theme6 .showEmoji:focus,
+.theme6 .showEmoji,
+.theme6 .showEmoji2:hover,
+.theme6 .showEmoji2:focus,
+.theme6 .showEmoji2,
+.theme6 .exportBug i.fa-dot-circle-o,
+.theme6 .exportCase i.fa-dot-circle-o,
+.theme6 .exportTask i.fa-dot-circle-o,
+.theme6 .copyBugType i.fa-dot-circle-o,
+.theme6 .copyBugTestType i.fa-dot-circle-o,
+.theme6 .subTaskType i.fa-dot-circle-o,
+.theme6 .subTaskType2 i.fa-dot-circle-o,
+.theme6 .addImgFujian a,
+.theme6 #allCount,
+.theme6 .defaultColor:visited,
+.theme6 .defaultColor:hover,
+.theme6 .defaultColor,
+.theme6 .pTable-title h5 .more,
+.theme6 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme6 .versionInfoTop .versionInfoBack,
+.theme6 .noticeInfoTop .noticeInfoBack,
+.theme6 .bugInfoTop .bugInfoBack,
+.theme6 .bugTestInfoTop .bugTestInfoBack,
+.theme6 .versionInfoTop span i,
+.theme6 .noticeInfoTop span i,
+.theme6 .bugInfoTop span.btn1 i,
+.theme6 .bugTestInfoTop span.btn1 i,
+.theme6 .tagSelect i,
+.theme6 .copylabel span i.fa-dot-circle-o,
+.theme6 .projectSetting span i.fa-dot-circle-o,
+.theme6 .tabPersonality span i.fa-dot-circle-o,
+.theme6 label.priority span i.fa-dot-circle-o,
+.theme6 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme6 #emailSettingForm label span i.fa-dot-circle-o,
+.theme6 #alertSettingForm label span i.fa-dot-circle-o,
+.theme6 #projectTab label span i.fa-dot-circle-o,
+.theme6 #bowersTab label span i.fa-dot-circle-o,
+.theme6 #projectRolesForm p span i.fa-dot-circle-o,
+.theme6 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme6 .noticeExpiredRadio label.checked span,
+.theme6 .noticeTopRadio label.checked span,
+.theme6 .noticeNotifyRadio label.checked span,
+.theme6 .customTxtRadio label.checked span,
+.theme6 .modal-content h4 i,
+.theme6 .customDropkick .select-icon i,
+.theme6 .navbar-default .nav > li > span.fa,
+.theme6 .navbar-default .nav > li > a:hover,
+.theme6 .navbar-default .nav > li > a:focus,
+.theme6 .navbar-default .nav > li.active a,
+.theme6 .setProjectBtn2,
+.theme6 .erp-content .fc-header-right span.check,
+.theme6 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme6 .fc-header .fc-button-next,
+.theme6 .fc-header .fc-button-prev,
+.theme6 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme6 .projectProductList .pVersion,
+.theme6 .projectProductList .pModule,
+.theme6 .projectProductList .pSubscribe,
+.theme6 .ui-opts-edit,
+.theme6 .productModuleList li span.opt i,
+.theme6 .editModuleName h4,
+.theme6 .pagination>li>a,
+.theme6 .pagination>li>span,
+.theme6 #alertTables.table>tbody>tr p.title,
+.theme6 .projectHelp .us i,
+.theme6 .k-table thead th span,
+.theme6 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme6 .fujian p .edit,
+.theme6 #myProjectMyInvite .myInviteList span.userType,
+.theme6 .tagsList .cell ul li i.fa-edit,
+.theme6 .rememberPwd .fa-check-square-o,
+.theme6 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme6 .bugTestTaskInfoTop span.btn1 i,
+.theme6 .ziyouTemplateList ul li:hover,
+.theme6 .openInfoPage ul li a,
+.theme6 .openInfoPage ul li b,
+.theme6 .rightsTitle .ApplyToAll span.defaultColor,
+.theme6 .bugTestInfoComments p i {
+    color: #fea5b5;
+}
+.theme6 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #fea5b5;
+}
+.theme6 #project-urgent-bug .last-notices,
+.theme6 #project-latest-bug .last-bugs,
+.theme6 .sidebar-collapse,
+.theme6 .table>thead>tr,
+.theme6 .table>tbody>tr,
+.theme6 ul.bugPlanNum li .cell em,
+.theme6 .fc-content,
+.theme6 .gantt,
+.theme6 .countAllWrap,
+.theme6 .k-table thead th,
+.theme6 .k-table tbody td {
+    background-color: #eef8ed;
+}
+.theme6 .navbar-default .nav > li.active a,
+.theme6 .apps,
+.theme6 body.fixed-sidebar .navbar-static-side,
+.theme6 .divider,
+.theme6 #menuBell ul {
+    background-color: #e7e7e7;
+}
+.theme6 .k-table tbody td,
+.theme6 .k-table thead th {
+    border-color: #e7e7e7;
+}
+.theme6 #project-latest-bug .last-bugs:hover,
+.theme6 #project-urgent-bug .last-notices:hover,
+.theme6 .table>tbody>tr.hover,
+.theme6 .table>tbody>tr:hover {
+    background-color: #fff
+}
+.theme6 .table>thead>tr,
+.theme6 .table>tbody>tr {
+    border-bottom-color: #e7e7e7
+}
+.theme6 .table>tbody>tr {
+    border-bottom: solid 1px #e7e7e7;
+}
+.theme6 #alertTables.table>tbody>tr .label {
+    border: solid 1px #fea5b5;
+    color: #fea5b5;
+}
+
+
+.theme7 .fc-event,
+.theme7 .bugDescFirstHistory > div,
+.theme7 .upload-file:focus,
+.theme7 input:focus,
+.theme7 textarea:focus,
+.theme7 .btn-info,
+.theme7 .btn-info:hover,
+.theme7 #changeBtnGroup .btn-info,
+.theme7 .noticeInfoImages img,
+.theme7 .bugInfoImages img,
+.theme7 .bugTestInfoImages img,
+.theme7 .bugInfoHistories .history-imgs-div img,
+.theme7 .bugTestInfoComments .history-imgs-div img,
+.theme7 .userProProjectPrice ul li.checked em,
+.theme7 .proProjectPrice ul li.checked em,
+.theme7 .dataTables_paginate .pagination li.active a,
+.theme7 .file-caption:focus  {
+    border-color: #884f36;
+}
+.theme7 .dataTables_paginate .pagination li.active a {
+    color: #fff;
+}
+.theme7 .modal-header h4 i,
+.theme7 .project-list .row .thumbnail .btns i:hover,
+.theme7 .bugInfoHistories a,
+.theme7 .bugInfoDescription a,
+.theme7 .bugTestInfoDescription a,
+.theme7 .noticeInfoDescription a,
+.theme7 .versionDownloadUrl a,
+.theme7 .versionInfoNotes a {
+    color: #98583c !important;
+}
+.theme7 #console-sidebar-select .dk_options a:hover,
+.theme7 .wrapper-header-left-bg,
+.theme7 .wrapper-header .wrapper-header-right,
+.theme7 .site-header,
+.theme7 .wrapper-header .name {
+    background-color: #884f36;
+}
+.theme7 .navbar-default .nav > li.active {
+    border-left-color: #98583c;
+}
+.theme7 .bugTags,
+.theme7 .bugInfoTags span,
+.theme7 .bugTestInfoTagsList span,
+.theme7 ul.bugPlanNum li .cell .em-Today,
+.theme7 .button-border,
+.theme7 .bugListSprints,
+.theme7 .bugInfoSprints span,
+.theme7 .bugTestTaskInfoTestPlan span {
+    color: #98583c ;
+    border-color: #98583c;
+}
+.theme7 .btn-grey,
+.theme7 .btn-primary,
+.theme7 .bugInfoTagsColor {
+    color: #98583c !important;
+    border-color: #98583c !important;
+}
+.theme7 .bugInfoTagsColor2,
+.theme7 .button-royal,
+.theme7 .button-royal-flat {
+    background: #98583c !important;
+    border-color: #98583c !important;
+    color: #fff !important;
+}
+.theme7 .btn-info:active,
+.theme7 .focusUserNameListDiv .inviteFocusBtn > span:hover,
+.theme7 .btn-grey:hover,
+.theme7 .btn-primary:hover,
+.theme7 .sprintsNameSelect > a {
+    color: #fff !important;
+    background-color: #98583c !important;
+}
+.theme7 .button-border:hover {
+    color: #fff;
+    background-color: #98583c;
+}
+.theme7 .versionInfoTop span i:hover,
+.theme7 .noticeInfoTop span i:hover,
+.theme7 .bugInfoTop span.btn1 i:hover,
+.theme7 .bugTestInfoTop span.btn1 i:hover,
+.theme7 .versionInfoTop .versionInfoBack:hover,
+.theme7 .noticeInfoTop .noticeInfoBack:hover,
+.theme7 .bugInfoTop .bugInfoBack:hover,
+.theme7 .bugTestInfoTop .bugTestInfoBack:hover,
+.theme7 .navbar-default .nav > li.active > span.fa:hover,
+.theme7 .setProjectBtn2:hover i,
+.theme7 .bugTestTaskInfoTop .bugTestInfoBack:hover,
+.theme7 .bugTestTaskInfoTop span.btn1 i:hover,
+.theme7 body.mini-navbar .sidebar-menus-icon:hover span,
+.theme7 .sidebar-menus-icon,
+.theme7 .openInfoPage ul li a:hover,
+.theme7 .openInfoPage ul li b:hover,
+.theme7 #showProjectForm .defaultColor:hover {
+    color: #884f36;
+}
+.theme7 .label-defaultColor,
+.theme7 #menuHelp .dropdown-menu>li>a:hover,
+.theme7 #searchFilter,
+.theme7 #searchFilter .nav>li>a,
+.theme7 #bugTestFilter .nav>li>a ,
+.theme7 #crossStatFilter .nav>li>a,
+.theme7 .testTaskBatchAddFilter .nav>li>a,
+.theme7 .site-header .setting span.username .user-setting ul li:hover,
+.theme7 .site-header .setting .userSetLogout .exit:hover,
+.theme7 .projectClassList ul li:hover,
+.theme7 .site-header .userSetFace,
+.theme7 #changeBtnGroup .btn-info,
+.theme7 .bgDefault,
+.theme7 .bugSearchDiv,
+.theme7 .bugSearchDiv input,
+.theme7 .bugSearchDiv button,
+.theme7 .btn-info,
+.theme7 .fc-header .fc-state-active,
+.theme7 .fc-header .fc-state-hover,
+.theme7 .erp-content .fc-header-right span.check:hover,
+.theme7 .erp-content .viewKanban .k-header .rightDiv span.check:hover,
+.theme7 .dataTables_paginate .pagination li.active a,
+.theme7 .progress-bar-info,
+.theme7 ul.priorityCount li .projectDayNum,
+.theme7 ul.priorityCount li .projectProductNum,
+.theme7 ul.priorityCount li .projectUserNum,
+.theme7 ul.bugPlanNum li .Today,
+.theme7 ul.bugNum li .all,
+.theme7 .nav li>p:hover,
+.theme7 .ui-fail,
+.theme7 .ui-progress,
+.theme7 .focusUserNameListDiv .focusUsersNameList ul li:hover,
+.theme7 .btn-info.disabled.focus,
+.theme7 .btn-info.disabled:focus,
+.theme7 .btn-info.disabled:hover,
+.theme7 .btn-info[disabled].focus,
+.theme7 .btn-info[disabled]:focus,
+.theme7 .btn-info[disabled]:hover,
+.theme7 fieldset[disabled] .btn-info.focus,
+.theme7 fieldset[disabled] .btn-info:focus,
+.theme7 fieldset[disabled] .btn-info:hover,
+    /*.theme7 .glBugList li:hover,*/
+.theme7 .layui-layer-changeEmail .layui-layer-btn a {
+    background-color: #98583c;
+}
+.theme7 #layui-layer-shade-photo-opt span i,
+.theme7 body.mini-navbar .sidebar-menus-icon,
+.theme7 .copyUsersListDiv li .check i,
+.theme7 .copyProductsListDiv li .check i,
+.theme7 .copyProductModule i.fa-dot-circle-o,
+.theme7 .paySuccessCircle,
+.theme7 .payWaitCircle,
+.theme7 .userProProjectPay .media-body span.checked,
+.theme7 .proProjectPay .media-body span.checked,
+.theme7 .bugInfoPageFile a,
+.theme7 .noticeInfoPageFile a,
+.theme7 .testCaseInfoPageFile a,
+.theme7 .bugInfoHistories p i,
+.theme7 .projectSetting .bugBeizhuTemplate p a,
+.theme7 .projectSetting .bugTemplate p a,
+.theme7 .projectSetting .bugTemplate p a:hover,
+.theme7 #BCTemplate .bugBeizhuTemplate p a,
+.theme7 #BCTemplate .bugBeizhuTemplate p a:hover,
+.theme7 #BCTemplate .bugTemplate p a,
+.theme7 #BCTemplate .bugTemplate p a:hover,
+.theme7 #BCTemplate .bugZiyouTemplate p .options a,
+.theme7 #BCTemplate .bugZiyouTemplate p .options a:hover,
+.theme7 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
+.theme7 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme7 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme7 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme7 .selectInput .selectDownBtn,
+.theme7 .userInput .userDownBtn,
+.theme7 .table>tbody>tr>td span.testCaseTestGroup,
+.theme7 .testGroup li p.actived,
+.theme7 .testGroupList li p.actived,
+.theme7 .optionBtns > span,
+.theme7 i.iModule,
+.theme7 i.iVersion,
+.theme7 i.iProduct,
+.theme7 .showAndHideImageFujian:focus,
+.theme7 .showAndHideImageFujian:hover,
+.theme7 .showAndHideImageFujian,
+.theme7 .showEmoji:hover,
+.theme7 .showEmoji:focus,
+.theme7 .showEmoji,
+.theme7 .showEmoji2:hover,
+.theme7 .showEmoji2:focus,
+.theme7 .showEmoji2,
+.theme7 .exportBug i.fa-dot-circle-o,
+.theme7 .exportCase i.fa-dot-circle-o,
+.theme7 .exportTask i.fa-dot-circle-o,
+.theme7 .copyBugType i.fa-dot-circle-o,
+.theme7 .copyBugTestType i.fa-dot-circle-o,
+.theme7 .subTaskType i.fa-dot-circle-o,
+.theme7 .subTaskType2 i.fa-dot-circle-o,
+.theme7 .addImgFujian a,
+.theme7 #allCount,
+.theme7 .defaultColor:visited,
+.theme7 .defaultColor:hover,
+.theme7 .defaultColor,
+.theme7 .pTable-title h5 .more,
+.theme7 .focusUserNameListDiv .inviteFocusBtn > span,
+.theme7 .versionInfoTop .versionInfoBack,
+.theme7 .noticeInfoTop .noticeInfoBack,
+.theme7 .bugInfoTop .bugInfoBack,
+.theme7 .bugTestInfoTop .bugTestInfoBack,
+.theme7 .versionInfoTop span i,
+.theme7 .noticeInfoTop span i,
+.theme7 .bugInfoTop span.btn1 i,
+.theme7 .bugTestInfoTop span.btn1 i,
+.theme7 .tagSelect i,
+.theme7 .copylabel span i.fa-dot-circle-o,
+.theme7 .projectSetting span i.fa-dot-circle-o,
+.theme7 .tabPersonality span i.fa-dot-circle-o,
+.theme7 label.priority span i.fa-dot-circle-o,
+.theme7 #settingUserRightForm label span i.fa-dot-circle-o,
+.theme7 #emailSettingForm label span i.fa-dot-circle-o,
+.theme7 #alertSettingForm label span i.fa-dot-circle-o,
+.theme7 #projectTab label span i.fa-dot-circle-o,
+.theme7 #bowersTab label span i.fa-dot-circle-o,
+.theme7 #projectRolesForm p span i.fa-dot-circle-o,
+.theme7 .myProjectSubscirbeModal .row span i.fa-dot-circle-o,
+.theme7 .noticeExpiredRadio label.checked span,
+.theme7 .noticeTopRadio label.checked span,
+.theme7 .noticeNotifyRadio label.checked span,
+.theme7 .customTxtRadio label.checked span,
+.theme7 .modal-content h4 i,
+.theme7 .customDropkick .select-icon i,
+.theme7 .navbar-default .nav > li > span.fa,
+.theme7 .navbar-default .nav > li > a:hover,
+.theme7 .navbar-default .nav > li > a:focus,
+.theme7 .navbar-default .nav > li.active a,
+.theme7 .setProjectBtn2,
+.theme7 .erp-content .fc-header-right span.check,
+.theme7 .erp-content .viewKanban .k-header .rightDiv span.check,
+.theme7 .fc-header .fc-button-next,
+.theme7 .fc-header .fc-button-prev,
+.theme7 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme7 .projectProductList .pVersion,
+.theme7 .projectProductList .pModule,
+.theme7 .projectProductList .pSubscribe,
+.theme7 .ui-opts-edit,
+.theme7 .productModuleList li span.opt i,
+.theme7 .editModuleName h4,
+.theme7 .pagination>li>a,
+.theme7 .pagination>li>span,
+.theme7 #alertTables.table>tbody>tr p.title,
+.theme7 .projectHelp .us i,
+.theme7 .k-table thead th span,
+.theme7 .project-list .row .thumbnail .data-pencil .fa-pencil,
+.theme7 .fujian p .edit,
+.theme7 #myProjectMyInvite .myInviteList span.userType,
+.theme7 .tagsList .cell ul li i.fa-edit,
+.theme7 .rememberPwd .fa-check-square-o,
+.theme7 .bugTestTaskInfoTop .bugTestInfoBack,
+.theme7 .bugTestTaskInfoTop span.btn1 i,
+.theme7 .ziyouTemplateList ul li:hover,
+.theme7 .openInfoPage ul li a,
+.theme7 .openInfoPage ul li b,
+.theme7 .rightsTitle .ApplyToAll span.defaultColor,
+.theme7 .bugTestInfoComments p i {
+    color: #98583c;
+}
+.theme7 .simditor .simditor-body img.selected {
+    box-shadow: 0 0 0 1px #98583c;
+}
+.theme7 #project-urgent-bug .last-notices,
+.theme7 #project-latest-bug .last-bugs,
+.theme7 .sidebar-collapse,
+.theme7 .table>thead>tr,
+.theme7 .table>tbody>tr,
+.theme7 ul.bugPlanNum li .cell em,
+.theme7 .fc-content,
+.theme7 .gantt,
+.theme7 .countAllWrap,
+.theme7 .k-table thead th,
+.theme7 .k-table tbody td {
+    background-color: #eee;
+}
+.theme7 .navbar-default .nav > li.active a,
+.theme7 .apps,
+.theme7 body.fixed-sidebar .navbar-static-side,
+.theme7 .divider,
+.theme7 #menuBell ul {
+    background-color: #d7d7d7;
+}
+.theme7 .k-table tbody td,
+.theme7 .k-table thead th {
+    border-color: #d7d7d7;
+}
+.theme7 .table>tbody>tr.hover,
+.theme7 .table>tbody>tr:hover {
+    background-color: #f5f5f5
+}
+.theme7 .table>thead>tr,
+.theme7 .table>tbody>tr {
+    border-bottom-color: #d7d7d7
+}
+.theme7 .table>tbody>tr {
+    border-bottom: solid 1px #d7d7d7;
+}
+.theme7 #alertTables.table>tbody>tr .label {
+    border: solid 1px #98583c;
+    color: #98583c;
+}
+.testGroupListForBetch {
+    max-height: 150px;
+}
+
+.inputColor {
+    color: #999;
+}
+
+.width250{
+    width: 250px;
+}
+
+.width240{
+    min-width: 240px;
+}
+
+.width220{
+    width: 220px;
+}
+
+/* 媒体查询 */
+@media (min-width: 1440px) {
+    /*.project-list .row .thumbnail img ,*/
+    /*.myProjectModel .modal-header h4 img {*/
+    /*width: 160px;*/
+    /*height: 160px;*/
+    /*border-radius: 80px;*/
+    /*-moz-border-radius: 80px;*/
+    /*-webkit-border-radius: 80px;*/
+    /*}*/
+}
+@media (min-width: 1920px) {
+    /*.project-list .row .thumbnail img,*/
+    /*.myProjectModel .modal-header h4 img {*/
+    /*width: 180px;*/
+    /*height: 180px;*/
+    /*border-radius: 90px;*/
+    /*-moz-border-radius: 90px;*/
+    /*-webkit-border-radius: 90px;*/
+    /*}*/
+    .wrapper-header {
+        width: 1600px;
+        margin: 0 auto;
+    }
+    .wrapper {
+        width: 1600px;
+        margin: 0 auto;
+        position: absolute;
+        height: 100%;
+        bottom: 0px;
+        left: 50%;
+        margin-left: -800px;
+    }
+    .wrapper .project-list {
+        margin-top: 50px;
+    }
+    .wrapper .project-list #projectList {
+        margin: 0 -13px;
+    }
+    .wrapper .erp-content {
+        right: -15px;
+    }
+    body.fixed-sidebar.mini-navbar .navbar-static-side {
+        width: 59px;
+    }
+    body.fixed-sidebar .navbar-static-side {
+        width: 229px;
+        left: -9px;
+    }
+}
+@media (min-width: 2560px) {
+    /*.project-list .row .thumbnail img,*/
+    /*.myProjectModel .modal-header h4 img {*/
+    /*width: 220px;*/
+    /*height: 220px;*/
+    /*border-radius: 110px;*/
+    /*-moz-border-radius: 110px;*/
+    /*-webkit-border-radius: 110px;*/
+    /*}*/
+}

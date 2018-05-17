@@ -1,0 +1,98 @@
+.fc-event {
+	background: #fff;
+	color: #000;
+}
+.fc-event-inner {
+	background: #f9f9f9;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+.fc-event-title {
+	padding: 5px;
+	display: inline-block;
+	font-size: 14px;
+	word-wrap: break-word;
+    word-break: break-all;
+}
+.fc-event-title .label {
+	font-weight: normal;
+}
+.fc-event-bg {
+	display: none !important;
+}
+.fc-event .ui-resizable-handle {
+	display: none !important;
+}
+.fc-content {
+	background: #fff
+}
+.fc-widget-tables {
+	height: auto !important;
+}
+.fc-agenda-divider {
+	display: none;
+}
+.fc-first.fc-last {
+	line-height: 30px;
+}
+.fc-header .fc-button {
+    background: #fff;
+    color: #000;
+    border: solid 1px #ccc;
+}
+.fc-header .fc-state-active {
+	background: #00aeef;
+	color: #fff;
+	box-shadow:none;
+}
+.fc-header .fc-state-disabled {
+	background: #fcf8e3;
+}
+.fc-header .fc-button-next,
+.fc-header .fc-button-prev {
+    background: #fff;
+    color: #00aeef;
+}
+.fc-header .fc-state-hover {
+	background: #00aeef;
+	color: #fff;
+}
+.fc-header-title h2 {
+	font-weight: normal;
+	font-size: 18px;
+	padding-top: 5px;
+}
+.fc-header .fc-button-next.fc-state-hover,
+.fc-header .fc-button-prev.fc-state-hover {
+	background: #01a3e0;
+}
+.fc-agenda-axis.fc-widget-header.fc-first {
+	display: none;
+}
+.fc-text-arrow {
+	font-size: 24px;
+}
+.fc-border-separate tr.fc-last th {
+	font-weight: normal;
+	width: 14.28571428% !important;
+}
+.fc-view-agendaWeek,
+.fc-view-agendaDay {
+	border-left: solid 1px #ddd;
+}
+.viewCalendar {
+	padding-top: 10px;
+}
+.appCalendarRed {
+	border-color: #d9534f !important;
+}
+.appCalendarYellow {
+	border-color: #f0ad4e !important;
+}
+.appCalendarGreen {
+	border-color: #5cb85c !important;
+}
+.fc .fc-header-space {
+	padding-left: 2px;
+}

@@ -1,0 +1,295 @@
+<div class="erp_content animated fadeInRight full_height"  id="employee_page">
+    <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;">
+        <div class="panel-heading">
+            <div>
+                <button type="button" class="btn btn-success btn-xs _new">新增</button>
+                <button type="button" class="btn btn-warning btn-xs _modify">修改</button>
+                <button type="button" class="btn btn-danger btn-xs _delete">删除</button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div id="treeDemo" class="ztree"></div>
+        </div>
+    </div>
+
+    <div class="full_height">
+
+        <div id="searchFilter">
+            <div class="sidebar-search"><div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="姓名、电话号码" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div></div>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                                <tr erp-id="aaa_{id}">
+                                    <!--<th style="width:50px" erp-data="{id}" erp-convert="fIdConvert">编号</th>-->
+                                    <th style="width:50px" erp-data="{id}">编号</th>
+                                    <th style="width:50px" erp-data="{id}-{name}">姓名</th>
+                                    <th style="width:50px" erp-data="{mobile}">电话号码</th>
+                                    <th style="width:85px" erp-data="{department}">部门</th>
+                                    <th style="width:60px" erp-data="{role}">权限</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改名称 -->
+<div class="modal fade" role="dialog" id="_modifyDepartment">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa defaultColor"></i> 修改部门名称</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form class="form-horizontal pd210 pd410">
+                        <div class="row pd42 pd22">
+                            <div class="col-sm-12">
+                                <div class="cell pd32">
+                                    <p class="inline middle title pd21">部门名称</p>
+                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入部门名称" name="name" onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)"></p>
+                                    <button type="button" class="btn btn-info noborder" id="_modifyDepartmentBt">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新建部门名称 -->
+<div class="modal fade" role="dialog" id="_newDepartment">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa defaultColor"></i> 新增子部门</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form class="form-horizontal pd210 pd410">
+                        <div class="row pd42 pd22">
+                            <div class="col-sm-12">
+                                <div class="cell pd32">
+                                    <p class="inline middle title pd21">部门名称</p>
+                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入部门名称" name="name" onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)"></p>
+                                    <button type="button" class="btn btn-info noborder" id="_newDepartmentBt">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        console.log('Hello');
+
+        init();
+
+        var consts = {
+            nodeKey : '_current_department_node_'
+            , $modifyDnModal : $('#_modifyDepartment')//修改部门名称的modal
+            , $modifyDnBt : $('#_modifyDepartmentBt')//修改部门名称的提交按钮
+            , $modifyDnInput : $('#_modifyDepartment input[name="name"]')//修改部门名称的输入框
+
+            , $newDnModal : $('#_newDepartment')//新增部门名称的modal
+            , $newDnBt : $('#_newDepartmentBt')//新增部门名称的提交按钮
+            , $newDnInput : $('#_newDepartment input[name="name"]')//新增部门名称的输入框
+        };
+
+        var treeSetting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "parentId",
+                    rootPId: 0
+                }
+            },
+
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    $.session(consts.nodeKey, treeNode);
+                    buttonOptStyle();
+                    loadEmployeeData({department : treeNode.id});
+                }
+            }
+        };
+
+        /**
+         * 加载用户数据
+         * @param oParams 参数
+         */
+        function loadEmployeeData(oParams) {
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function promiseEmployeeData(params){
+                return $.http.get({url :'test/page', data : params});
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                console.log($tr);
+            }
+
+            /**
+             * 客户化方法，用来包装td
+             * @param value 待包装的数据
+             */
+            function fIdConvert(value){
+                return 'fIdConverted:' + value;
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : promiseEmployeeData
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : undefined
+            });
+            // utils.dataTable('#dataTables', loadData, {name : '丁'}, fClickTr, [fIdConvert]);
+        }
+
+        /**
+         * 组织树的操作按钮
+         */
+        function buttonOptStyle(){
+            if (!$.session(consts.nodeKey)){
+                $('._modify, ._delete, ._new').addClass('disabled');
+            } else if(-1 === $.session(consts.nodeKey).id){
+                $('._modify, ._delete').addClass('disabled');
+                $('._new').removeClass('disabled');
+            } else {
+                $('._modify, ._delete, ._new').removeClass('disabled');
+            }
+        }
+
+        /**
+         * 事件初始化
+         */
+        function initEvent() {
+            //模态框的默认值
+            consts.$modifyDnModal.on('show.bs.modal', function () {
+                consts.$modifyDnInput.val($.session(consts.nodeKey).name);
+            });
+            consts.$newDnModal.on('show.bs.modal', function () {
+                consts.$newDnInput.val('');
+            });
+
+            //修改部门名称提交
+            consts.$modifyDnBt.unbind('click').click(function () {
+                var node = $.session(consts.nodeKey);
+                services.department.modify(node.id, consts.$modifyDnInput.val())
+                    .then(function (ret) {
+                        consts.$modifyDnModal.modal('hide');
+                        layer.msg(ret._message);
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '修改部门名称失败！');
+                    })
+                    .then(function () {
+                        initDepartments();
+                    })
+                ;
+            });
+
+            //新增部门名称提交
+            consts.$newDnBt.unbind('click').click(function () {
+                var node = $.session(consts.nodeKey) || {};
+                services.department.create({
+                    name : consts.$newDnInput.val(),
+                    parentId : node.id
+                })
+                .then(function (ret) {
+                    consts.$newDnModal.modal('hide');
+                    layer.msg(ret._message);
+                })
+                .catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '新增部门名称失败！');
+                })
+                .then(function () {
+                    initDepartments();
+                })
+            });
+
+
+            //部门增删改操作
+            $('._modify, ._delete, ._new').unbind('click').click(function () {
+                if($(this).hasClass('disabled')) return;
+                if(!$.session(consts.nodeKey)) {
+                    layer.msg('请先选择组织树节点');
+                    return;
+                }
+                if($(this).hasClass('_modify'))
+                    consts.$modifyDnModal.modal('toggle');
+                if($(this).hasClass('_new'))
+                    consts.$newDnModal.modal('toggle');
+                if($(this).hasClass('_delete')){
+                    layer.confirm('删除此部门将会删除他的所有从属部门及人员管理，确定删除吗？',{title:'提示',move:false},function(){
+                        services.department.delete($.session(consts.nodeKey).id)
+                            .then(function (ret) {
+                                layer.msg(ret._message);
+                            })
+                            .catch(function (reason) {
+                                layer.msg(reason.caught ? reason.message : '删除部门名称失败！');
+                            })
+                            .then(function () {
+                                initDepartments();
+                            })
+                    });
+                }
+            });
+
+            //搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                loadEmployeeData({ name : $('#fastKeyword').val() });
+            })
+        }
+
+        /**
+         * 初始化组织树
+         */
+        function initDepartments() {
+            return services.department.all()
+                .then(function (ret) {
+                    ret.all.push({name : '组织结构', id : -1});
+                    var treeObj = $.fn.zTree.init($("#treeDemo"), treeSetting, ret.all);
+                    treeObj.expandAll(true);
+                    $.session(consts.nodeKey, null);
+                    buttonOptStyle();
+                })
+                .catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '初始化组织结构失败！');
+                });
+        }
+
+        /**
+         * 页面初始化
+         */
+        function init() {
+            initDepartments()
+                .then(function () {
+                    initEvent();
+                    loadEmployeeData();
+                });
+        }
+    });
+</script>
+

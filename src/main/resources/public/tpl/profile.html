@@ -1,0 +1,140 @@
+<!-- 修改密码model -->
+<div class="modal fade" id="myProfilePwdModal" role="dialog" aria-labelledby="myPwdSetting">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title" id="myPwdSetting"><i class="fa fa-key defaultColor"></i> 修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd210 pd410" id="settingPwdForm" name="settingPwdForm">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">旧密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" name="old" placeholder="输入当前密码"  autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">新密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" name="new" placeholder="输入6到20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)" onpropertychange="checkStrNum(this,20)" autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">确认密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" name="newAgain" placeholder="输入6到20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)" onpropertychange="checkStrNum(this,20)" autofocus>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button type="button" class="btn btn-info noborder" for="settingPwdForm" id="settingPwdBt">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改手机 -->
+<div class="modal fade myUserNameModal myModel" id="myProfileMobileModal" role="dialog">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-mobile defaultColor"></i> 修改手机号码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form class="form-horizontal pd210 pd410" id="phoneModifyForm" name="phoneModifyForm">
+                        <div class="row pd42 pd22">
+                            <div class="col-sm-12">
+                                <div class="cell pd32">
+                                    <p class="inline middle title pd21">手机号</p>
+                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入手机号" name="phone" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)" onpropertychange="checkStrNum(this,20)"></p>
+                                    <button type="button" class="btn btn-info noborder ModifyPhoneBtn" id="ModifyPhoneBtn">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    requirejs(['validate','utils','services'],function (val,utils,services) {
+        var profileModals = {
+            modifyPhone : $('#myProfileMobileModal')
+            , modifyPwd : $('#myProfilePwdModal')
+        };
+
+        //修改手机号码
+        (function() {
+            var $phone = $('#phoneModifyForm input[name="phone"]');
+            //modal隐藏时
+            profileModals.modifyPhone.on('hidden.bs.modal', function () {
+                $phone.val('');
+            });
+
+            $('#ModifyPhoneBtn').unbind('click').click(function () {
+                if (!$phone.val()) {
+                    layer.msg('手机号码不能为空');
+                    return;
+                }
+                if (!val.phone($phone.val().trim())) {
+                    layer.msg('无效的手机号码');
+                    return;
+                }
+                //TODO 修改手机号码服务
+                console.log($phone.val());
+            })
+
+        })();
+        //退出登陆
+        $('.userSetLogout').unbind('click').click(function () {
+            logout();
+        });
+
+        function logout() {
+            services.account.logout().then(function () {
+                $.session();
+                window.location.href = GLOBALS.ctxPath + 'login.html';
+            })
+        }
+
+        //修改密码
+        (function () {
+            profileModals.modifyPwd.on('hidden.bs.modal', function (e) {;
+                $('#settingPwdForm')[0].reset();
+            });
+            $('#settingPwdBt').unbind('click').click(function(){
+                var oldPwd = document.settingPwdForm.old.value.trim();
+                var newPwd = document.settingPwdForm.new.value.trim();
+                var newPwdAgain = document.settingPwdForm.newAgain.value.trim();
+                function _validate(pwd, type) {
+                    if(pwd.length >20 || pwd.length < 3){
+                        layer.msg(type + '，输入3到20个字符');
+                        return !!0;
+                    }
+                    return !!1;
+                }
+
+                if(!_validate(oldPwd, '旧密码') || !_validate(newPwd, '新密码') || !_validate(newPwdAgain, '确认密码'))
+                    return !!0;
+                if(newPwd !== newPwdAgain){
+                    layer.msg('两次密码不一致');
+                    return !!0;
+                }
+                services.account.modifyPwd(oldPwd, newPwd)
+                    .then(function () {
+                        profileModals.modifyPwd.modal('toggle');
+                        layer.msg('修改密码成功，需要重新登录！');
+                        setTimeout(function () {
+                            return logout();
+                        }, GLOBALS.time);
+                    }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '修改密码失败！');
+                });
+            });
+        })();
+    });
+</script>
