@@ -23,7 +23,6 @@ import java.util.List;
  **/
 
 @Component
-
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -42,9 +41,9 @@ public class PreDataService {
     @PostConstruct
     void init(){
         if(!debug) return;
-        initMenus();
-        initEmployees();
-        initCategories();
+//        initMenus();
+//        initEmployees();
+//        initCategories();
         initDepartments();
     }
 
@@ -69,18 +68,18 @@ public class PreDataService {
         menuRepository.deleteAll();
         List<ErpMenu> menus = Arrays.asList(
                 ErpMenu.builder().code("10").name("基础数据").build()
-                    , ErpMenu.builder().code("1001").name("人员管理").matches("/employee/**").uri("/tpl/employee.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1002").name("成品管理").matches("/product/**").uri("/tpl/product.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1003").name("原材料管理").matches("/material/**").uri("/tpl/material.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1004").name("模具管理").matches("/mould/**").uri("/tpl/mould.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1005").name("设备管理").matches("/equipment;/**").uri("/tpl/equipment;.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1006").name("客户管理").matches("/customer/**").uri("/tpl/customer.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1007").name("供应商管理").matches("/supplier/**").uri("/tpl/supplier.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1001").name("人员管理").matches("basis/employee/**").uri("basis/employee.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1002").name("成品管理").matches("basis/product/**").uri("product.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1003").name("原材料管理").matches("basis/material/**").uri("material.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1004").name("模具管理").matches("basis/mould/**").uri("mould.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment;/**").uri("equipment;.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("customer.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("supplier.html").parentCode("10").build()
                 , ErpMenu.builder().code("20").name("销售模块").build()
-                    , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("/tpl/sale/plan.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("/tpl/sale/order.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("/tpl/sale/approval.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("/tpl/sale/refunds.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
         );
         menuRepository.saveAll(menus);
     }
@@ -175,15 +174,15 @@ public class PreDataService {
         departmentRepository.deleteAll();
         departmentRepository.saveAll(
                 Arrays.asList(
-                        ErpBaseDepartment.builder().code("D001").name("综合办公室").build()
-                        , ErpBaseDepartment.builder().code("D002").name("销售部").build()
-                        , ErpBaseDepartment.builder().code("D003").name("采购部").build()
-                        , ErpBaseDepartment.builder().code("D012").name("总经理室").build()
+                        ErpBaseDepartment.builder().code("D001").name("综合办公室").parentId(-1L).build()
+                        , ErpBaseDepartment.builder().code("D002").name("销售部").parentId(-1L).build()
+                        , ErpBaseDepartment.builder().code("D003").name("采购部").parentId(-1L).build()
+                        , ErpBaseDepartment.builder().code("D012").name("总经理室").parentId(-1L).build()
                 )
         );
 
         //仓储部
-        ErpBaseDepartment _1 = departmentRepository.save(ErpBaseDepartment.builder().code("D004").name("仓储部").build());
+        ErpBaseDepartment _1 = departmentRepository.save(ErpBaseDepartment.builder().code("D004").name("仓储部").parentId(-1L).build());
         departmentRepository.saveAll(
                 Arrays.asList(
                         ErpBaseDepartment.builder().code("D00401").name("原材料仓储部").parentId(_1.getId()).build()
@@ -193,7 +192,7 @@ public class PreDataService {
                 )
         );
         //生产部
-        ErpBaseDepartment _2 = departmentRepository.save(ErpBaseDepartment.builder().code("D005").name("生产部").build());
+        ErpBaseDepartment _2 = departmentRepository.save(ErpBaseDepartment.builder().code("D005").name("生产部").parentId(-1L).build());
         departmentRepository.saveAll(
                 Arrays.asList(
                         ErpBaseDepartment.builder().code("D00501").name("一号车间").parentId(_2.getId()).build()
@@ -202,7 +201,7 @@ public class PreDataService {
         );
 
         //技术部
-        ErpBaseDepartment _3 = departmentRepository.save(ErpBaseDepartment.builder().code("D006").name("技术部").build());
+        ErpBaseDepartment _3 = departmentRepository.save(ErpBaseDepartment.builder().code("D006").name("技术部").parentId(-1L).build());
         departmentRepository.saveAll(
                 Arrays.asList(
                         ErpBaseDepartment.builder().code("D00601").name("开发部").parentId(_3.getId()).build()

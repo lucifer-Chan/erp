@@ -43,7 +43,7 @@ public class EmployeeDetailService implements UserDetailsService, Constants.Role
                 );
 
 
-        ret.putIfAbsent(ANY_ROLE_CODE, StringUtils.tokenizeToStringArray(ANY_ROLE_MATCHES, ","));
+        ret.putIfAbsent(PROFILE_ROLE_CODE, StringUtils.tokenizeToStringArray(PROFILE_ROLE_MATCHES, ","));
 
         return ret.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).collect(Collectors.toList());
 

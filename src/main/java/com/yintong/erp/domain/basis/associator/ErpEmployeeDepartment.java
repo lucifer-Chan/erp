@@ -1,8 +1,7 @@
 package com.yintong.erp.domain.basis.associator;
 
 import com.yintong.erp.utils.base.BaseEntity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +14,8 @@ import javax.persistence.Id;
  **/
 
 @Entity
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class ErpEmployeeDepartment extends BaseEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

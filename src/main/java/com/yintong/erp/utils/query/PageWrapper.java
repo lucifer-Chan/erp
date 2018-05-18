@@ -6,6 +6,10 @@ import net.sf.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 /**
  * @author lucifer.chan
  * @create 2018-05-17 下午2:15
@@ -13,8 +17,13 @@ import org.springframework.util.Assert;
  **/
 public interface PageWrapper {
     static <T> BaseResult page2BaseResult(Page<T> page){
+        //noinspection unchecked
+        return new BaseResult().add(commonAttrs(page)).addList(page.getContent());
+    }
+
+    static <T> JSONObject commonAttrs(Page<T> page){
         Assert.notNull(page, "入参page不能为null");
-        JSONObject commonAttrs = JsonWrapper.builder()
+        return JsonWrapper.builder()
                 .add("totalElements", page.getTotalElements())
                 .add("totalPages", page.getTotalPages())
                 .add("last", page.isLast())
@@ -24,7 +33,12 @@ public interface PageWrapper {
                 .add("numberOfElements", page.getNumberOfElements())
                 .add("number", page.getNumber())
                 .build();
+    }
+
+    static <T> BaseResult page2BaseResult(Page<T> page, Predicate<? super T> filter){
         //noinspection unchecked
-        return new BaseResult().add(commonAttrs).addList(page.getContent());
+        return new BaseResult().add(commonAttrs(page)).addList(
+                page.getContent().stream().filter(filter).collect(Collectors.toList())
+        );
     }
 }

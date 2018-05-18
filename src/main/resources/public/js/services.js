@@ -15,38 +15,100 @@ define('services',['utils'],function (utils) {
             return $.http.post('logout');
         },
 
-        //修改密码
+        //修改密码-self
         modifyPwd : function (old, newed) {
             return $.http.patch({
-                url : '',
+                url : 'profile/password',
                 data : {old: old, newed: newed}
             });
         },
 
-        //删除员工操作
-        delete: function () {
-            return $.http.delete();
-        }
+        //修改电话号码-self
+        modifyMobile : function (mobile) {
+            return $.http.patch({
+                url : 'profile/mobile',
+                data : {mobile: mobile}
+            }).then(function (ret) {
+                $.local(GLOBALS.localKeys.accountInfo, ret);
+                return ret;
+            });
+        },
 
+        //删除员工操作
+        delete : function () {
+            return $.http.delete();
+        },
+
+        /**
+         * 新增用户
+         * @param data - {name, loginName, password, mobile}
+         * @returns {*}
+         */
+        create : function (data) {
+            return $.http.post({
+                url : 'basis/employee',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+
+
+        /**
+         * 修改用户
+         * @param data - {id, name, loginName, mobile}
+         */
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/employee',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+
+        /**
+         * 更新用户的密码
+         * @param id
+         * @param password
+         */
+        updatePassword : function (id, password) {
+            return $.http.patch({
+                url : 'basis/employee/' + id,
+                data : {
+                    password : password
+                }
+            });
+        },
+
+        /**
+         * 组合查询
+         * @param data - {cause|departmentId}
+         * @returns {*}
+         */
+        query : function (data) {
+            return $.http.get({
+                url : 'basis/employee',
+                data : data
+            });
+        }
     };
 
     var menus = {
         //获取当前登陆用户菜单
         current : function () {
-            return $.http.get('menus/current/tree');
+            return $.http.get('basis/menus/current/tree');
         }
     };
 
     var department = {
         //获取所有组织
         all : function () {
-            return $.http.get('department/all');
+            return $.http.get('basis/department/all');
         },
 
         //修改名称
         modify : function (id, name) {
             return $.http.patch({
-                url : 'department/' + id,
+                url : 'basis/department/' + id,
                 data : {
                     name : name
                 }
@@ -55,13 +117,13 @@ define('services',['utils'],function (utils) {
 
         //删除部门
         delete : function (id) {
-            return $.http.delete('department/' + id);
+            return $.http.delete('basis/department/' + id);
         },
 
         //新增部门
         create : function (data) {
             return $.http.post({
-                url : 'department',
+                url : 'basis/department',
                 data : data,
                 contentType : $.contentType.json
             })

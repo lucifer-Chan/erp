@@ -27,7 +27,7 @@ public class DepartmentController {
      * 获取全部部门
      * @return
      */
-    @GetMapping("department/all")
+    @GetMapping("basis/department/all")
     public BaseResult getAllDepartments(){
         List<ErpBaseDepartment> all = departmentRepository.findAll().stream()
                 .sorted(Comparator.comparing(ErpBaseDepartment::getId))
@@ -40,7 +40,7 @@ public class DepartmentController {
      * @param department
      * @return
      */
-    @PostMapping("department")
+    @PostMapping("basis/department")
     public BaseResult createDepartment(@RequestBody ErpBaseDepartment department){
         return new BaseResult()
                 .addPojo( departmentService.createDepartment(department))
@@ -53,7 +53,7 @@ public class DepartmentController {
      * @param name
      * @return
      */
-    @PatchMapping("department/{id}")
+    @PatchMapping("basis/department/{id}")
     public BaseResult modifyDepartmentName(@PathVariable Long id, String name){
         Assert.hasLength(name, "部门名称不能为空");
         return new BaseResult()
@@ -66,7 +66,7 @@ public class DepartmentController {
      * @param id
      * @return
      */
-    @DeleteMapping("department/{id}")
+    @DeleteMapping("basis/department/{id}")
     public BaseResult deleteDepartmentName(@PathVariable Long id){
         return new BaseResult()
                 .setErrmsg("成功删除" + departmentService.deleteDepartment(id) + "及下属所有部门");

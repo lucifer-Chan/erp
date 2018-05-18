@@ -94,7 +94,7 @@ public class MenuService {
      * @param employeeId
      * @return
      */
-    private boolean isAdmin(Long employeeId){
+    public boolean isAdmin(Long employeeId){
         return Objects.nonNull(employeeMenuRepository.findByEmployeeIdAndMenuCode(employeeId, ADMIN_ROLE_CODE));
     }
 

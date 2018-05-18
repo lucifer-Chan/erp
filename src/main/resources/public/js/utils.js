@@ -268,7 +268,7 @@ define('utils',[],function(){
         var $dataProvider = options.$dataProvider || '';
         var oParams = options.oParams || {};
         var fClickTr = options.fClickTr || function(){};
-        var aConverts = options.aConverts || undefined;
+        var aConverts = options.aConverts;
         if(typeof $dataProvider !== 'function' ){
             console.log(holderId, 'dataTable没有数据供应的promise方法');
             throw new TypeError($dataProvider + ' is not a function');
@@ -385,7 +385,11 @@ define('utils',[],function(){
                         fnCallback($.extend({},{aaData:aaData},pageInfo));
                     })
                     .then(function () {
-                        fClickTr && fClickTr($(this));
+                        if (fClickTr) {
+                            _oTable.$('tr').unbind('click').click(function () {
+                                fClickTr($(this));
+                            });
+                        }
                         $('#dataTables_info').parent().hide();
                         if(pageInfo.iTotalRecords >20){
                             $('#dataTables_paginate').parent().attr('class','col-sm-12');

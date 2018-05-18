@@ -5,7 +5,6 @@ import com.yintong.erp.utils.query.ParameterItem.TRANSFORMER;
 import com.yintong.erp.utils.transform.ReflectUtil;
 import lombok.Data;
 import org.jooq.lambda.Unchecked;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -13,10 +12,13 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.*;
 
@@ -46,6 +48,7 @@ public class QueryParameterBuilder {
                 .filter(field -> field.isAnnotationPresent(ParameterItem.class))
                 .map(Unchecked.function(field -> buildSingle(field, root, criteriaBuilder)))
                 .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -61,25 +64,25 @@ public class QueryParameterBuilder {
      * @throws NoSuchMethodException
      * @throws InvocationTargetException
      */
-    private <T> Predicate buildSingle(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws ParseException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    private <T> List<Predicate> buildSingle(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws ParseException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         ParameterItem parameterItem = field.getAnnotation(ParameterItem.class);
         Object value = transValue(field, parameterItem.transformer());
         if(value == null) return null;
         Class clazz = Comparable.class;
-
         if(like.equals(parameterItem.compare())) {
             value = "%" + value + "%";
             clazz = String.class;
         } else if (equal.equals(parameterItem.compare())){
             clazz = Object.class;
         }
-
-        String fieldName = StringUtils.hasLength(parameterItem.mappingTo()) ? parameterItem.mappingTo() : field.getName();
-
-        return  (Predicate)criteriaBuilder.getClass()
-                .getMethod(parameterItem.compare().name(), Expression.class, clazz)
-                .invoke(criteriaBuilder, root.get(fieldName), value) ;
+        String [] fieldNames = parameterItem.mappingTo().length == 0 ?
+                new String[]{field.getName()} : parameterItem.mappingTo();
+        Method method = criteriaBuilder.getClass().getMethod(parameterItem.compare().name(), Expression.class, clazz);
+        final Object _value = value;
+        return Stream.of(fieldNames)
+                .map(Unchecked.function(fieldName -> (Predicate)method.invoke(criteriaBuilder, root.get(fieldName), _value)))
+                .collect(Collectors.toList());
     }
 
     /**

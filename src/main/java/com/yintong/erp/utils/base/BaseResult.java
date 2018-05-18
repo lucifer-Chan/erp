@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.yintong.erp.utils.transform.IgnoreIfNull;
+import com.yintong.erp.utils.transform.IgnoreWhatever;
 import com.yintong.erp.utils.transform.ReflectUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONUtils;
@@ -78,7 +79,7 @@ public class BaseResult{
         List<Field> fields = ReflectUtil.getAllFieldsWithoutIgnored(pojo);
         Map<String, Object> map = new HashMap<>();
         for(Field field : fields){
-            if(!field.isAnnotationPresent(JsonIgnore.class)){
+            if(!field.isAnnotationPresent(JsonIgnore.class) && !field.isAnnotationPresent(IgnoreWhatever.class)){
                 Object value = ReflectUtil.getValueByGetter(field, pojo);
                 String fieldName = field.getName();
                 if(null == value && !field.isAnnotationPresent(IgnoreIfNull.class)){

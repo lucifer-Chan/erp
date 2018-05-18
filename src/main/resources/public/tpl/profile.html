@@ -86,6 +86,14 @@
                 }
                 //TODO 修改手机号码服务
                 console.log($phone.val());
+                services.account.modifyMobile($phone.val())
+                    .then(function () {
+                        profileModals.modifyPhone.modal('toggle');
+                        layer.msg("修改电话号码成功");
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '修改电话号码失败！');
+                    });
             })
 
         })();
@@ -131,9 +139,10 @@
                         setTimeout(function () {
                             return logout();
                         }, GLOBALS.time);
-                    }).catch(function (reason) {
-                    layer.msg(reason.caught ? reason.message : '修改密码失败！');
-                });
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '修改密码失败！');
+                    });
             });
         })();
     });

@@ -13,7 +13,7 @@ import java.util.List;
  * 菜单管理
  **/
 @RestController
-@RequestMapping("menus")
+@RequestMapping("basis/menus")
 public class MenuController {
     @Autowired MenuService menuService;
 

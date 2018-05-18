@@ -43,7 +43,7 @@ public class EmployeeDetails implements UserDetails, Constants.Roles{
             authorities = repository.findByEmployeeId(employee.getId()).stream()
                 .map(ass -> new SimpleGrantedAuthority("ROLE_" + ass.getMenuCode()))
                 .collect(toList());
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + ANY_ROLE_CODE));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + PROFILE_ROLE_CODE));
         }
         return authorities;
     }

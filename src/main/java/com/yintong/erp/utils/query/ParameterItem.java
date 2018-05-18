@@ -9,14 +9,21 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ParameterItem {
-    String mappingTo() default "";
+
+    /**
+     * 匹配到实体类[DTO]上的具体field名-1对多
+     * @return
+     */
+    String [] mappingTo() default {};
     COMPARES compare();
     TRANSFORMER transformer() default TRANSFORMER.NULL;
     enum COMPARES {
         lessThan,
         greaterThan,
         equal,
-        like
+        like,
+        notEqual,
+        notLike
     }
 
     enum TRANSFORMER {

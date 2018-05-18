@@ -14,12 +14,12 @@ public interface Constants {
         /**
          * 任何登陆用户的权限
          */
-        String ANY_ROLE_CODE = "98";
+        String PROFILE_ROLE_CODE = "98";
         /**
          * 任何登陆用户的权限匹配
          */
-        String ANY_ROLE_MATCHES = "/any/**," +
-                "/menus/current/tree"//当前菜单树
+        String PROFILE_ROLE_MATCHES = "/profile/**," +
+                "basis/menus/current/tree"//当前菜单树
                 ;
 
         //不登陆也可以访问
