@@ -13,9 +13,9 @@
     , attachmentNumber : 2
     , attachmentSize : 5
     //全局的回调函数，在模版页面加载完成后调用
-    , callBack : function () {
+    , callBack : function (div) {
         //右侧页面收起打开操作
-        $('#rightInfoPage .fa-angle-double-up, #rightInfoPage .fa-angle-double-down').click(function () {
+        $(div).find('#rightInfoPage .fa-angle-double-up, #rightInfoPage .fa-angle-double-down').click(function () {
             var value = $(this).data("value") + "Info";
             $(this).parents('.row').find('div[data-value="'+ value+'"]').toggle();
             if($(this).hasClass('fa-angle-double-up'))
@@ -24,7 +24,7 @@
                 $(this).removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
         });
         //隐藏右侧页面事件
-        $('.rightInfoBack').click(function () {
+        $(div).find('.rightInfoBack').click(function () {
             $('#rightInfoPage').hide();
         });
     }
