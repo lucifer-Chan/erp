@@ -52,7 +52,6 @@ define('services',['utils'],function (utils) {
             });
         },
 
-
         /**
          * 修改用户
          * @param data - {id, name, loginName, mobile}
@@ -63,6 +62,32 @@ define('services',['utils'],function (utils) {
                 data : data,
                 contentType : $.contentType.json
             });
+        },
+
+        /**
+         * 保存用户-部门
+         * @param id
+         * @param list
+         */
+        saveDepartments : function (id, list) {
+            return $.http.post({
+                url : 'basis/employee/' + id + '/departments',
+                data : list,
+                contentType : $.contentType.json
+            })
+        },
+
+        /**
+         * 保存用户-菜单[权限]
+         * @param id
+         * @param list
+         */
+        saveMenus : function (id, list) {
+            return $.http.post({
+                url : 'basis/employee/' + id + '/menus',
+                data : list,
+                contentType : $.contentType.json
+            })
         },
 
         /**
@@ -87,7 +112,7 @@ define('services',['utils'],function (utils) {
         query : function (data) {
             return $.http.get({
                 url : 'basis/employee',
-                data : data
+                data : $.extend({cause : '', departmentId: ''}, data)
             });
         }
     };
@@ -96,6 +121,11 @@ define('services',['utils'],function (utils) {
         //获取当前登陆用户菜单
         current : function () {
             return $.http.get('basis/menus/current/tree');
+        },
+
+        //可操作的所有菜单
+        children : function () {
+            return $.http.get('basis/menus/all/operation');
         }
     };
 

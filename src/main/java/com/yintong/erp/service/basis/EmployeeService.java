@@ -46,6 +46,9 @@ public class EmployeeService {
      */
     public Page<ErpEmployee> query(EmployeeParameterBuilder parameter){
         PageRequest pageRequest = PageRequest.of(parameter.getPageNum(), parameter.getPerPageNum());
+        if(StringUtils.isEmpty(parameter.cause) && StringUtils.isEmpty(parameter.departmentId))
+            return employeeRepository.findAll(pageRequest);
+
         return StringUtils.hasLength(parameter.cause) ?
                 employeeRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
                     List<Predicate> predicates = parameter.build(root, criteriaBuilder);
@@ -53,26 +56,21 @@ public class EmployeeService {
                     criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
                     return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
                 }, pageRequest) :
-                employeeRepository.findByDepartmentId(parameter.getDepartmentId() + "%", pageRequest);
+                employeeRepository.findByDepartmentId(parameter.getDepartmentId() + "%", pageRequest) ;
     }
     /**
-     * 创建用户-包括密码
+     * 创建用户基本信息-包括密码
      * @param employee
      * @return
      */
-    @Transactional
     public ErpEmployee create(ErpEmployee employee) {
         employee.setId(null);
         validateEmployee(employee);
-        ErpEmployee ret = employeeRepository.save(employee);
-        List<Long> departmentIds = employee.getDepartmentIds();
-        List<String> menuCodes = employee.getMenuCodes();
-        saveDepartmentsAndMenuCodes(ret.getId(), departmentIds, menuCodes);
-        return ret;
+        return employeeRepository.save(employee);
     }
 
     /**
-     * 更新用户-不包括密码
+     * 更新用户基本信息-不包括密码
      * @param employee
      * @return
      */
@@ -85,9 +83,6 @@ public class EmployeeService {
         inDb.setMobile(employee.getMobile());
         inDb.setLoginName(employee.getLoginName());
         inDb.setName(employee.getName());
-        List<Long> departmentIds = employee.getDepartmentIds();
-        List<String> menuCodes = employee.getMenuCodes();
-        saveDepartmentsAndMenuCodes(employee.getId(), departmentIds, menuCodes);
         return employeeRepository.save(inDb);
     }
 
@@ -171,14 +166,16 @@ public class EmployeeService {
     }
 
     /**
-     * 保存用户的部门和权限
+     * 保存用户的部门
      * @param employeeId
      * @param departmentIds
-     * @param menuCodes
+     * @return
      */
-    private void saveDepartmentsAndMenuCodes(Long employeeId, List<Long> departmentIds, List<String> menuCodes){
+    @Transactional
+    public ErpEmployee saveDepartments(Long employeeId, List<Long> departmentIds) {
+        ErpEmployee employee = employeeRepository.findById(employeeId).orElse(null);
+        Assert.notNull(employee, "未找到id为" + employeeId + "的用户");
         employeeDepartmentRepository.deleteByEmployeeId(employeeId);
-        employeeMenuRepository.deleteByEmployeeId(employeeId);
         if(!CollectionUtils.isEmpty(departmentIds)){
             employeeDepartmentRepository.saveAll(
                     departmentIds.stream()
@@ -186,7 +183,20 @@ public class EmployeeService {
                             .collect(toList())
             );
         }
+        return employee;
+    }
 
+    /**
+     * 保存用户的权限
+     * @param employeeId
+     * @param menuCodes
+     * @return
+     */
+    @Transactional
+    public ErpEmployee saveMenus(Long employeeId, List<String> menuCodes) {
+        ErpEmployee employee = employeeRepository.findById(employeeId).orElse(null);
+        Assert.notNull(employee, "未找到id为" + employeeId + "的用户");
+        employeeMenuRepository.deleteByEmployeeId(employeeId);
         if(!CollectionUtils.isEmpty(menuCodes)){
             employeeMenuRepository.saveAll(
                     menuCodes.stream()
@@ -194,6 +204,7 @@ public class EmployeeService {
                             .collect(toList())
             );
         }
+        return employee;
     }
 
     @Getter @Setter

@@ -84,8 +84,6 @@
                     layer.msg('无效的手机号码');
                     return;
                 }
-                //TODO 修改手机号码服务
-                console.log($phone.val());
                 services.account.modifyMobile($phone.val())
                     .then(function () {
                         profileModals.modifyPhone.modal('toggle');

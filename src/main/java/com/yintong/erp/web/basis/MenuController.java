@@ -1,5 +1,6 @@
 package com.yintong.erp.web.basis;
 
+import com.yintong.erp.domain.basis.security.ErpMenuRepository;
 import com.yintong.erp.service.basis.MenuService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.List;
 public class MenuController {
     @Autowired MenuService menuService;
 
+    @Autowired ErpMenuRepository menuRepository;
+
     /**
      * 获取所有菜单-tree
      * @return
@@ -24,6 +27,15 @@ public class MenuController {
     @GetMapping("all/tree")
     public BaseResult getAllMenusTree(){
         return new BaseResult().addList("menus", menuService.allMenusTree());
+    }
+
+    /**
+     * 获取可操作的菜单
+     * @return
+     */
+    @GetMapping("all/operation")
+    public BaseResult getAllMenusOfOperation(){
+        return new BaseResult().addList(menuRepository.findByParentCodeIsNotNullOrderByCode());
     }
 
     /**

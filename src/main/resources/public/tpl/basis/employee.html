@@ -2,13 +2,13 @@
     <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;">
         <div class="panel-heading">
             <div>
-                <button type="button" class="btn btn-success btn-xs _new">新增</button>
-                <button type="button" class="btn btn-warning btn-xs _modify">修改</button>
-                <button type="button" class="btn btn-danger btn-xs _delete">删除</button>
+                <button type="button" class="btn btn-success btn-xs _new">新增部门</button>
+                <button type="button" class="btn btn-warning btn-xs _modify">修改名称</button>
+                <button type="button" class="btn btn-danger btn-xs _delete">删除部门</button>
             </div>
         </div>
         <div class="panel-body">
-            <div id="treeDemo" class="ztree"></div>
+            <div id="orgTree" class="ztree"></div>
         </div>
     </div>
 
@@ -16,6 +16,7 @@
 
         <div id="searchFilter">
             <div class="sidebar-search"><div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="姓名、登录名、电话号码" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div></div>
+            <button type="button" class="btn btn-success btn-ms right" style="margin: 0px 15px 0px 20px;" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增人员</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -91,6 +92,79 @@
         </div>
     </div>
 </div>
+
+<!-- 新建人员model -->
+<div class="modal fade myProjectModel" id="_newEmployee" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document" style="z-index: 1050">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove black"></i></span></button>
+                <h4 class="modal-title"><i class="fa defaultColor"></i> 新增人员</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span>基本信息</span></li>
+                    <li role="presentation"><span>组织信息</span></li>
+                    <li role="presentation"><span>权限信息</span></li>
+                    <!--<li role="presentation" class="active"><span href="#_baseNewInfo" aria-controls="_baseNewInfo" role="tab" data-toggle="tab">基本信息</span></li>-->
+                    <!--<li role="presentation"><span href="#_orgNewInfo" aria-controls="_orgNewInfo" role="tab" data-toggle="tab">组织信息</span></li>-->
+                    <!--<li role="presentation"><span href="#_menuNewInfo" aria-controls="_menuNewInfo" role="tab" data-toggle="tab">权限信息</span></li>-->
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="_baseNewInfo">
+                        <div class="row">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">姓名</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="name" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">登录名</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="loginName" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="mobile" placeholder="联系电话" onfocus="checkStrNum(this,11)" oninput="checkStrNum(this,11)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">密码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="password" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                                    </div>
+                                </div>
+                                <div class="modal-footer noborder">
+                                    <div class="btn btn-info" name="next" role="tab" nav-to="1" href="#_orgNewInfo">下一步</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane projectSetting" id="_orgNewInfo">
+                        <div class="_org"></div>
+                        <div class="modal-footer noborder">
+                            <div class="btn btn-info" name="previous" role="tab"  nav-to="0" href="#_baseNewInfo">上一步</div>
+                            <div class="btn btn-info" name="next" role="tab" nav-to="2" href="_menuNewInfo">下一步</div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane projectSetting" id="_menuNewInfo">
+                        <div class="_menu"></div>
+                        <div class="modal-footer noborder">
+                            <div class="btn btn-info" name="previous" role="tab" nav-to="1" href="_orgNewInfo">上一步</div>
+                            <div class="btn btn-info" name="save">保存</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('Hello');
@@ -99,32 +173,19 @@
 
         var consts = {
             nodeKey : '_current_department_node_'
+            , treeObj : null//组织树
+            , leaves : []//组织树叶子节点
+            , menus : []//可操作的菜单-权限
             , $modifyDnModal : $('#_modifyDepartment')//修改部门名称的modal
             , $modifyDnBt : $('#_modifyDepartmentBt')//修改部门名称的提交按钮
-            , $modifyDnInput : $('#_modifyDepartment input[name="name"]')//修改部门名称的输入框
+            , $modifyDnInput : $('#_modifyDepartment').find('input[name="name"]')//修改部门名称的输入框
 
             , $newDnModal : $('#_newDepartment')//新增部门名称的modal
             , $newDnBt : $('#_newDepartmentBt')//新增部门名称的提交按钮
-            , $newDnInput : $('#_newDepartment input[name="name"]')//新增部门名称的输入框
-        };
+            , $newDnInput : $('#_newDepartment').find('input[name="name"]')//新增部门名称的输入框
 
-        var treeSetting = {
-            data: {
-                simpleData: {
-                    enable: true,
-                    idKey: "id",
-                    pIdKey: "parentId",
-                    rootPId: 0
-                }
-            },
-
-            callback: {
-                onClick: function (event, treeId, treeNode) {
-                    $.session(consts.nodeKey, treeNode);
-                    buttonOptStyle();
-                    loadEmployeeData({departmentId : treeNode.id < 0 ? '' : treeNode.id});
-                }
-            }
+            , editEmployeeModal : $('#_newEmployee')//编辑人员的modal
+            , selectedEmployeeId : ''//选中的员工id
         };
 
         /**
@@ -182,16 +243,143 @@
         }
 
         /**
+         *  画圈圈
+         *  all - 全部的单选项 [{id, name|code}]
+         *  selected - 选中的 [id]
+         *  _format - {idKey, nameKey}
+         *  return - html(string)
+         */
+        function drawCircles(all, selected, _format) {
+            var format = $.extend({}, {idKey : 'id', nameKey : 'name'}, _format);
+            selected = selected || [];
+            var html = '';
+            for(var i = 0; i < all.length; i ++){
+                if(i%2 === 0)
+                    html += '<div class="row">';
+                html += ('<label class="col-sm-3 control-label" style="padding-top: 1px;margin-bottom: 0px">{'+ format.nameKey +'}</label>' +
+                    '<div class="col-sm-1"><span data-value="true"><i id="{'+ format.idKey + '}" class="fa fa-circle-o"></i></span></div>')
+                    .replace('{' + format.nameKey + '}', all[i][format.nameKey])
+                    .replace('{' + format.idKey + '}', all[i][format.idKey]);
+                if(i%2 === 0)
+                    html += '<div class="col-sm-4"></div>';
+                if(i%2 === 1)
+                    html += '</div>';
+            }
+
+            if(all.length%2 === 1)
+                html += '</div>';
+            var $html = $(html);
+
+            $html.find('i').each(function(){
+                var $i = $(this);
+                selected.forEach(function (id){
+                    $i.attr('id') == id && $i.removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+                })
+            }).unbind('click').click(function () {
+                if($(this).hasClass('fa-circle-o'))
+                    $(this).removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+                else
+                    $(this).removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+            });
+
+            return $html;
+        }
+
+        /**
          * 事件初始化
          */
         function initEvent() {
-            //模态框的默认值
+            //模态框初始化-修改部门名称
             consts.$modifyDnModal.on('show.bs.modal', function () {
                 consts.$modifyDnInput.val($.session(consts.nodeKey).name);
             });
+            //模态框初始化-新增部门
             consts.$newDnModal.on('show.bs.modal', function () {
                 consts.$newDnInput.val('');
             });
+            //模态框初始化-编辑用户
+            consts.editEmployeeModal.on('show.bs.modal', function () {
+                $('#_orgNewInfo').find('._org').html(drawCircles(consts.leaves));
+                $('#_menuNewInfo').find('._menu').html(drawCircles(consts.menus, [], {idKey : 'code'}));
+                //默认选中第一个tab
+                $(this).find('div[name="previous"]').eq(0).click();
+            });
+            //模态框隐藏-编辑用户
+            consts.editEmployeeModal.on('hidden.bs.modal', function (e) {
+                //清理数据
+                $(this).find('input[type="text"]').val('');
+                consts.selectedEmployeeId = '';
+            });
+
+            //编辑用户
+            consts.editEmployeeModal.find('div[role="tab"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var $modal = consts.editEmployeeModal;
+                var to = $(this).attr('nav-to');
+                //下一步-上一步
+                function step() {
+                    $modal.find('li[role="presentation"]').eq(to).addClass('active').siblings().removeClass('active');
+
+                }
+                //tab的active属性
+
+                //保存事件
+                if($(this).attr('name') !== 'next'){
+                    step();
+                } else if('1' === to){
+                    //基本信息
+                    services.account.create({
+                        name : $modal.find('input[name="name"]').val(),
+                        loginName : $modal.find('input[name="loginName"]').val(),
+                        password : $modal.find('input[name="password"]').val(),
+                        mobile : $modal.find('input[name="mobile"]').val()
+                    })
+                    .then(function (ret) {
+                        consts.selectedEmployeeId = ret.id;
+                        $('#fastKeyword').val('');
+                        loadEmployeeData();
+                        step();
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '修改用户基本信息失败！');
+                    })
+                } else {
+                    //部门
+                    var departmentIds = [];
+                    $('#_orgNewInfo').find('.fa-dot-circle-o').each(function () {
+                        departmentIds.push($(this).attr('id'));
+                    });
+                    services.account
+                        .saveDepartments(consts.selectedEmployeeId, departmentIds)
+                        .then(function () {
+                            loadEmployeeData();
+                            step();
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '保存组织关联失败！');
+                        })
+                }
+            });
+
+            //保存权限
+            consts.editEmployeeModal.find('div[name="save"]').unbind('click').click(function () {
+                var menuCodes = [];
+                $('#_menuNewInfo').find('.fa-dot-circle-o').each(function () {
+                    menuCodes.push($(this).attr('id'));
+                });
+                services.account
+                    .saveMenus(consts.selectedEmployeeId, menuCodes)
+                    .then(function () {
+                        loadEmployeeData();
+                        consts.editEmployeeModal.modal('hide');
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '保存权限关联失败！');
+                    });
+            });
+
+
+
 
             //修改部门名称提交
             consts.$modifyDnBt.unbind('click').click(function () {
@@ -210,7 +398,7 @@
                 ;
             });
 
-            //新增部门名称提交
+            //新增部门名称
             consts.$newDnBt.unbind('click').click(function () {
                 var node = $.session(consts.nodeKey) || {};
                 services.department.create({
@@ -260,24 +448,82 @@
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
                 loadEmployeeData({ cause : $('#fastKeyword').val() });
-            })
+            });
+
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13)
+                    loadEmployeeData({ cause : $('#fastKeyword').val() });
+            });
+
+            // //新增人员
+            // $('#addUserBt').unbind('click').click(function () {
+            //     alert('点击新增人员')
+            // })
         }
 
         /**
          * 初始化组织树
          */
         function initDepartments() {
+            var treeSetting = {
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "parentId",
+                        rootPId: 0
+                    }
+                },
+
+                callback: {
+                    onClick: function (event, treeId, treeNode) {
+                        $.session(consts.nodeKey, treeNode);
+                        buttonOptStyle();
+                        loadEmployeeData({departmentId : treeNode.id < 0 ? '' : treeNode.id});
+                    }
+                }
+            };
+
+            function leaves(treeNode) {
+                if (treeNode.isParent) {
+                    var childrenNodes = treeNode.children;
+                    if (childrenNodes) {
+                        for (var i = 0; i < childrenNodes.length; i++) {
+                            if (!childrenNodes[i].isParent) {
+                                consts.leaves.push(childrenNodes[i]);
+                            } else {
+                                consts.leaves = leaves(childrenNodes[i], consts.leaves);
+                            }
+                        }
+                    }
+                }
+                return consts.leaves;
+            }
+
             return services.department.all()
                 .then(function (ret) {
                     ret.all.push({name : '组织结构', id : -1});
-                    var treeObj = $.fn.zTree.init($("#treeDemo"), treeSetting, ret.all);
-                    treeObj.expandAll(true);
+                    consts.treeObj = $.fn.zTree.init($("#orgTree"), treeSetting, ret.all);
+                    consts.treeObj.expandAll(true);
+                    leaves(consts.treeObj.getNodeByTId('orgTree_1'), consts.leaves);
+                    console.log(consts.leaves);
                     $.session(consts.nodeKey, null);
                     buttonOptStyle();
                 })
                 .catch(function (reason) {
                     layer.msg(reason.caught ? reason.message : '初始化组织结构失败！');
-                });
+                })
+                .then(function () {
+                    return services.menus.children();
+                })
+                .then(function (ret) {
+                    consts.menus = ret.list;
+                })
+                .catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '获取菜单失败！');
+                })
+
+                ;
         }
 
         /**
@@ -292,4 +538,3 @@
         }
     });
 </script>
-

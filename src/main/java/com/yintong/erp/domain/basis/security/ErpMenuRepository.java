@@ -12,6 +12,8 @@ public interface ErpMenuRepository extends JpaRepository<ErpMenu, String>{
 
     List<ErpMenu> findByParentCodeIsNullOrderByCode();
 
+    List<ErpMenu> findByParentCodeIsNotNullOrderByCode();
+
     List<ErpMenu> findByCodeInOrderByCode(Iterable<String> codes);
 
 }
