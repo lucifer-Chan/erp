@@ -1327,26 +1327,26 @@ body.mini-navbar .site-header span.name .logomini {
 .create-project:hover i {
     opacity: 1;
 }
-.myProjectModel .modal-header button {
+.myErpModal .modal-header button {
     position: absolute;
     right: 20px;
 }
-.myProjectModel .modal-header h4 {
+.myErpModal .modal-header h4 {
     overflow: hidden;
     text-align: center;
     width: 140px;
     margin: 0 auto;
     position: relative;
 }
-.myProjectModel .modal-header h4 .projectHeadImageGray ,
-.myProjectModel .modal-header h4 img,
-.myProjectModel .modal-header h4 .default,
-.myProjectModel .modal-header h4 .ui-image {
+.myErpModal .modal-header h4 .projectHeadImageGray ,
+.myErpModal .modal-header h4 img,
+.myErpModal .modal-header h4 .default,
+.myErpModal .modal-header h4 .ui-image {
     width: 140px;
     height: 140px;
     cursor: pointer;
 }
-.myProjectModel .modal-header h4 .projectHeadImageGray {
+.myErpModal .modal-header h4 .projectHeadImageGray {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1354,7 +1354,7 @@ body.mini-navbar .site-header span.name .logomini {
     background-color: #000;
     display: none;
 }
-.myProjectModel .modal-header h4 .projectHeadImageGray-text {
+.myErpModal .modal-header h4 .projectHeadImageGray-text {
     opacity: 1;
     background: none;
     color: #FFFFFF;
@@ -1363,62 +1363,70 @@ body.mini-navbar .site-header span.name .logomini {
     font-weight: normal;
     line-height: 30px;
 }
-.myProjectModel .modal-header h4 .projectHeadImageGray-text i {
+.myErpModal .modal-header h4 .projectHeadImageGray-text i {
     font-size: 20px;
 }
-.myProjectModel .modal-header h4:hover .projectHeadImageGray {
+.myErpModal .modal-header h4:hover .projectHeadImageGray {
     display: inline-block;
 }
-.myProjectModel .modal-header h4 .projectHeadImage {
+.myErpModal .modal-header h4 .projectHeadImage {
     display: inline-block;
 }
-.myProjectModel .modal-header h4 .upload-img {
+.myErpModal .modal-header h4 .upload-img {
     width: auto;
     height: auto;
     margin: 0px;
     float: none;
 }
-.myProjectModel .modal-header h4 .ui-image {
+.myErpModal .modal-header h4 .ui-image {
     width: 140px;
     height: 140px;
 }
-.myProjectModel .modal-header h4 .ui-image img {
+.myErpModal .modal-header h4 .ui-image img {
     max-width: none;
     max-height: none;
 }
-.myProjectModel .modal-body {
+.myErpModal .modal-body {
     margin: 0px;
     padding: 0px;
 }
-.myProjectModel .modal-body ul.nav-tabs li {
+ul.nav-tabs li {
+    background: #eee;
+    text-align: center;
+}
+ul.nav-tabs li.active span {
+    background: #FFFFFF;
+}
+
+.myErpModal .modal-body ul.nav-tabs li {
     width: 25%;
     background: #eee;
     text-align: center;
 }
-.myProjectModel .modal-body ul.nav-tabs li.active span {
+.myErpModal .modal-body ul.nav-tabs li.active span {
     border: none;
     border-radius: 0px;
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     margin-right: 0px;
 }
-.myProjectModel .modal-body .tab-content {
+.myErpModal .modal-body .tab-content {
     padding: 15px;
 }
-.myProjectModel .modal-body .tab-content .row,
+.myErpModal .modal-body .tab-content .row,
 .myProjectSubscirbeModal .row {
     padding: 0 45px;
 }
-.myProjectModel .modal-body .tab-content .projectUser,
-.myProjectModel .modal-body .tab-content .projectProject{
+.myErpModal .modal-body .tab-content .projectUser,
+.myErpModal .modal-body .tab-content .projectProject{
     padding: 0 30px;
 }
 .myProjectProductModule h5:before,
 .myProjectProductModule h5:after,
-.myProjectModel .modal-body .tab-content .projectUser h5:before,
-.myProjectModel .modal-body .tab-content .projectUser h5:after,
-.myProjectModel .modal-body .tab-content .projectProject h5:before,
-.myProjectModel .modal-body .tab-content .projectProject h5:after
+.myErpModal .modal-body .tab-content .projectUser h5:before,
+.myErpModal .modal-body .tab-content .projectUser h5:after,
+.myErpModal .modal-body .tab-content .projectProject h5:before,
+.myErpModal .modal-body .tab-content .projectProject h5:after
 {
     content: ' ';
     display: inline-block;
@@ -1430,24 +1438,24 @@ body.mini-navbar .site-header span.name .logomini {
     margin: 0 1% 0 -2%;
 }
 .myProjectProductModule h5:after,
-.myProjectModel .modal-body .tab-content .projectUser h5:after,
-.myProjectModel .modal-body .tab-content .projectProject h5:after{
+.myErpModal .modal-body .tab-content .projectUser h5:after,
+.myErpModal .modal-body .tab-content .projectProject h5:after{
     width: 90%;
     margin: 0 -90% 0 1%;
 }
-.myProjectModel .modal-body .tab-content .projectUser h5,
-.myProjectModel .modal-body .tab-content .projectProject h5 {
+.myErpModal .modal-body .tab-content .projectUser h5,
+.myErpModal .modal-body .tab-content .projectProject h5 {
     overflow: hidden;
     margin: 10px -3%;
     padding-left: 3%;
 }
-.myProjectModel .modal-body .tab-content .projectUser .projectUserList,
-.myProjectModel .modal-body .tab-content .projectProject .projectProjectList,
-.myProjectModel .modal-body .tab-content .projectProject .projectProductList {
+.myErpModal .modal-body .tab-content .projectUser .projectUserList,
+.myErpModal .modal-body .tab-content .projectProject .projectProjectList,
+.myErpModal .modal-body .tab-content .projectProject .projectProductList {
     max-height: 240px;
 }
-.myProjectModel .modal-body .tab-content .projectUser .list-group,
-.myProjectModel .modal-body .tab-content .projectProject .list-group{
+.myErpModal .modal-body .tab-content .projectUser .list-group,
+.myErpModal .modal-body .tab-content .projectProject .list-group{
     margin-bottom: 0px;
 }
 #myProjectMyInvite .myInviteList{
@@ -1457,8 +1465,8 @@ body.mini-navbar .site-header span.name .logomini {
 .sprintList ul li,
 .customList ul li,
 .testPlanList ul li,
-.myProjectModel .modal-body .tab-content .projectUser ul li,
-.myProjectModel .modal-body .tab-content .projectProject ul li,
+.myErpModal .modal-body .tab-content .projectUser ul li,
+.myErpModal .modal-body .tab-content .projectProject ul li,
 #myProjectMyInvite .myInviteList .row:first-child {
     border: none;
     padding: 10px 9px 10px 5px;
@@ -1467,8 +1475,8 @@ body.mini-navbar .site-header span.name .logomini {
 .sprintList ul li.list-group-item,
 .customList ul li.list-group-item,
 .testPlanList ul li.list-group-item,
-.myProjectModel .modal-body .tab-content .projectUser ul li.list-group-item,
-.myProjectModel .modal-body .tab-content .projectProject ul li.list-group-item,
+.myErpModal .modal-body .tab-content .projectUser ul li.list-group-item,
+.myErpModal .modal-body .tab-content .projectProject ul li.list-group-item,
 #myProjectMyInvite .myInviteList .row {
     background-color: rgba(200,200,200,0.1);
     padding: 10px 9px 10px 5px;
@@ -1477,15 +1485,15 @@ body.mini-navbar .site-header span.name .logomini {
 .sprintList ul li.list-group-item:nth-child(2n),
 .customList ul li.list-group-item:nth-child(2n),
 .testPlanList ul li.list-group-item:nth-child(2n),
-.myProjectModel .modal-body .tab-content .projectUser ul li.list-group-item:nth-child(2n),
-.myProjectModel .modal-body .tab-content .projectProject ul li.list-group-item:nth-child(2n),
+.myErpModal .modal-body .tab-content .projectUser ul li.list-group-item:nth-child(2n),
+.myErpModal .modal-body .tab-content .projectProject ul li.list-group-item:nth-child(2n),
 #myProjectMyInvite .myInviteList .row:nth-child(2n){
     background: none;
 }
 .sprintList ul li,
 .customList ul li,
 .testPlanList ul li,
-.myProjectModel .modal-body .tab-content .projectUser ul li {
+.myErpModal .modal-body .tab-content .projectUser ul li {
     width: 100%;
     float: left;
 }
@@ -1493,8 +1501,8 @@ body.mini-navbar .site-header span.name .logomini {
 .sprintList ul li span.opt,
 .customList ul li span.opt,
 .testPlanList ul li span.opt,
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt,
-.myProjectModel .modal-body .tab-content .projectProject ul li span.opt{
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt,
+.myErpModal .modal-body .tab-content .projectProject ul li span.opt{
     float: right;
     cursor: pointer;
     display: none;
@@ -1507,20 +1515,20 @@ body.mini-navbar .site-header span.name .logomini {
     display: inline-block;
     max-width: 350px;
 }
-.myProjectModel .modal-body .tab-content .projectProject ul li span.projectName {
+.myErpModal .modal-body .tab-content .projectProject ul li span.projectName {
     max-width: 280px;
     display: inline-block;
     word-wrap: break-word;
     word-break: break-all;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.owner {
+.myErpModal .modal-body .tab-content .projectUser ul li span.owner {
     padding-left: 30px;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail {
+.myErpModal .modal-body .tab-content .projectUser ul li span.setEmail {
     padding-right: 10px;
     display: none;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a {
+.myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a {
     color: #00aeef;
     font-size: 13px;
 }
@@ -1528,12 +1536,12 @@ body.mini-navbar .site-header span.name .logomini {
 .sprintList ul li:hover span.opt,
 .customList ul li:hover span.opt,
 .testPlanList ul li:hover span.opt,
-.myProjectModel .modal-body .tab-content .projectUser ul li:hover span.opt,
-.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt,
-.myProjectModel .modal-body .tab-content .projectUser ul li:hover span.setEmail {
+.myErpModal .modal-body .tab-content .projectUser ul li:hover span.opt,
+.myErpModal .modal-body .tab-content .projectProject ul li:hover span.opt,
+.myErpModal .modal-body .tab-content .projectUser ul li:hover span.setEmail {
     display: inline-block;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i {
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt i {
     font-size: 12px;
     color: #00aeef;
 }
@@ -1558,52 +1566,52 @@ body.mini-navbar .site-header span.name .logomini {
 .testPlanList ul li span.opt i.false {
     color: #f0ad4e;
 }
-.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt i {
+.myErpModal .modal-body .tab-content .projectProject ul li:hover span.opt i {
     vertical-align: middle;
 }
-.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct{
+.myErpModal .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct{
     margin-right: 0px;
 }
-.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct.true {
+.myErpModal .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct.true {
     color: #5cb85c;
 }
-.myProjectModel .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct.false {
+.myErpModal .modal-body .tab-content .projectProject ul li:hover span.opt .iProduct.false {
     color: #f0ad4e;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i.removeUser {
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt i.removeUser {
     color: red !important;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i.disabled.false {
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt i.disabled.false {
     color: #f0ad4e;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt i.disabled.true {
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt i.disabled.true {
     color: #5cb85c;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.userType {
+.myErpModal .modal-body .tab-content .projectUser ul li span.userType {
     padding-left: 30px;
     color: #999999;
 }
-.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash {
+.myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash {
     color: #00aeef;
 }
-.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-trash-o {
+.myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-trash-o {
     color: red;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt ul.dropdown-menu,
-.myProjectModel .modal-body .tab-content .projectProject ul li span.opt ul.dropdown-menu{
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt ul.dropdown-menu,
+.myErpModal .modal-body .tab-content .projectProject ul li span.opt ul.dropdown-menu{
     right: 0px;
     left: auto;
     transition: all 0.5s;
     min-width: 120px;
     z-index: 200;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.opt ul.dropdown-menu li,
-.myProjectModel .modal-body .tab-content .projectProject ul li span.opt ul.dropdown-menu li{
+.myErpModal .modal-body .tab-content .projectUser ul li span.opt ul.dropdown-menu li,
+.myErpModal .modal-body .tab-content .projectProject ul li span.opt ul.dropdown-menu li{
     padding: 0px;
 }
-.myProjectModel .modal-body .tab-content .projectUser ul li span.face img {
+.myErpModal .modal-body .tab-content .projectUser ul li span.face img {
     width: 35px;
     height: 35px;
     border-radius: 18px;
@@ -1629,7 +1637,7 @@ body.mini-navbar .site-header span.name .logomini {
     padding-right: 15px;
 }
 
-.myProjectModel .modal-body .tab-content .storeUserList span.username,
+.myErpModal .modal-body .tab-content .storeUserList span.username,
 #myProjectMyInvite .myInviteList span.username {
     display: inline-block;
     vertical-align: middle;
@@ -1642,12 +1650,12 @@ body.mini-navbar .site-header span.name .logomini {
 #myProjectMyInvite .myInviteList span.username {
     max-width: 340px;
 }
-.myProjectModel .modal-body .tab-content .projectUserList span.username em,
+.myErpModal .modal-body .tab-content .projectUserList span.username em,
 #myProjectMyInvite .myInviteList span.username em {
     font-style: normal;
     font-size: 14px;
 }
-.myProjectModel .modal-body .tab-content .projectProjectList ul li span.projectName {
+.myErpModal .modal-body .tab-content .projectProjectList ul li span.projectName {
     display: inline-block;
     max-width: 400px;
 }
@@ -1655,7 +1663,7 @@ body.mini-navbar .site-header span.name .logomini {
     margin: 0 10px;
 }
 .productModuleList li span.opt .fa-edit,
-.myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit {
+.myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit {
     margin: 0 10px;
 }
 .productModuleList li span.opt i {
@@ -1671,8 +1679,8 @@ body.mini-navbar .site-header span.name .logomini {
 }
 
 
-.myProjectModel .modal-body.editModuleName,
-.myProjectModel .modal-body.editDisplayName {
+.myErpModal .modal-body.editModuleName,
+.myErpModal .modal-body.editDisplayName {
     padding: 25px 50px 40px;
 }
 .editModuleName h4,
@@ -1862,10 +1870,10 @@ body.mini-navbar .site-header span.name .logomini {
     -webkit-border-radius: 18px;
     vertical-align: middle;
 }
-.myProjectModel .modal-body .tab-content .projectSetting {
+.myErpModal .modal-body .tab-content .projectSetting {
     padding-bottom: 20px;
 }
-.myProjectModel .modal-body .tab-content .projectSetting .row,
+.myErpModal .modal-body .tab-content .projectSetting .row,
 .myProjectSubscirbeModal .row  {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -2169,9 +2177,9 @@ label.priority span i.fa-dot-circle-o,
     display: block;
 }
 .bugListFindVersion,
-#bugInfoPage .Version,
+#rightInfoPage .Version,
 #historyInfoModal .Version,
-#bugInfoPage .bugInfoVerifyVersion span {
+#rightInfoPage .bugInfoVerifyVersion span {
     border: solid 1px #d9534f;
     color: #d9534f;
     word-wrap: break-word;
@@ -3330,17 +3338,17 @@ input[type="number"]{
 }
 
 span.bugListVerifyVersion.red,
-#bugInfoPage .bugInfoVerifyVersion span.red {
+#rightInfoPage .bugInfoVerifyVersion span.red {
     color: #d9534f;
     border-color: #d9534f;
 }
 span.bugListVerifyVersion.yellow,
-#bugInfoPage .bugInfoVerifyVersion span.yellow {
+#rightInfoPage .bugInfoVerifyVersion span.yellow {
     color: #f0ad4e;
     border-color: #f0ad4e;
 }
 span.bugListVerifyVersion.green,
-#bugInfoPage .bugInfoVerifyVersion span.green {
+#rightInfoPage .bugInfoVerifyVersion span.green {
     color: #5cb85c;
     border-color: #5cb85c;
 }
@@ -3585,7 +3593,7 @@ span.openInfoPage ul li a i {
 .openInfoPage .bdsharebuttonbox .bds_copyUrl {
     background: none;
 }
-.bugInfoPageAd {
+.rightInfoPageAd {
     background: #f9f9f9;
 }
 #historyInfoModal .modal-body {
@@ -3716,6 +3724,7 @@ span.openInfoPage ul li a i {
 .theme1 .wrapper-header-left-bg,
 .theme1 .wrapper-header .wrapper-header-right,
 .theme1 .wrapper-header .name,
+.theme1 .label-info,
 .theme1 .site-header {
     background-color: #333;
 }
@@ -3767,7 +3776,7 @@ span.openInfoPage ul li a i {
 .theme1 .bugTestInfoTop span.btn1 i:hover,
 .theme1 .versionInfoTop .versionInfoBack:hover,
 .theme1 .noticeInfoTop .noticeInfoBack:hover,
-.theme1 .bugInfoTop .bugInfoBack:hover,
+.theme1 .bugInfoTop .rightInfoBack:hover,
 .theme1 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme1 .navbar-default .nav > li.active > span.fa:hover,
 .theme1 .setProjectBtn2:hover i,
@@ -3834,7 +3843,7 @@ span.openInfoPage ul li a i {
 .theme1 .payWaitCircle,
 .theme1 .userProProjectPay .media-body span.checked,
 .theme1 .proProjectPay .media-body span.checked,
-.theme1 .bugInfoPageFile a,
+.theme1 .rightInfoPageFile a,
 .theme1 .noticeInfoPageFile a,
 .theme1 .testCaseInfoPageFile a,
 .theme1 .bugInfoHistories p i,
@@ -3847,10 +3856,10 @@ span.openInfoPage ul li a i {
 .theme1 #BCTemplate .bugTemplate p a:hover,
 .theme1 #BCTemplate .bugZiyouTemplate p .options a,
 .theme1 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme1 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme1 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme1 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme1 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme1 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme1 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme1 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme1 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme1 .selectInput .selectDownBtn,
 .theme1 .userInput .userDownBtn,
 .theme1 .table>tbody>tr>td span.testCaseTestGroup,
@@ -3885,7 +3894,7 @@ span.openInfoPage ul li a i {
 .theme1 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme1 .versionInfoTop .versionInfoBack,
 .theme1 .noticeInfoTop .noticeInfoBack,
-.theme1 .bugInfoTop .bugInfoBack,
+.theme1 .bugInfoTop .rightInfoBack,
 .theme1 .bugTestInfoTop .bugTestInfoBack,
 .theme1 .versionInfoTop span i,
 .theme1 .noticeInfoTop span i,
@@ -3918,7 +3927,7 @@ span.openInfoPage ul li a i {
 .theme1 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme1 .fc-header .fc-button-next,
 .theme1 .fc-header .fc-button-prev,
-.theme1 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme1 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme1 .projectProductList .pVersion,
 .theme1 .projectProductList .pModule,
 .theme1 .projectProductList .pSubscribe,
@@ -3988,6 +3997,7 @@ span.openInfoPage ul li a i {
 .theme2 .wrapper-header-left-bg,
 .theme2 .wrapper-header .wrapper-header-right,
 .theme2 .site-header,
+.theme2 .label-info,
 .theme2 .wrapper-header .name {
     background-color: #5466a4;
 }
@@ -4036,7 +4046,7 @@ span.openInfoPage ul li a i {
 .theme2 .bugTestInfoTop span.btn1 i:hover,
 .theme2 .versionInfoTop .versionInfoBack:hover,
 .theme2 .noticeInfoTop .noticeInfoBack:hover,
-.theme2 .bugInfoTop .bugInfoBack:hover,
+.theme2 .bugInfoTop .rightInfoBack:hover,
 .theme2 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme2 .navbar-default .nav > li.active > span.fa:hover,
 .theme2 .setProjectBtn2:hover i,
@@ -4103,7 +4113,7 @@ span.openInfoPage ul li a i {
 .theme2 .payWaitCircle,
 .theme2 .userProProjectPay .media-body span.checked,
 .theme2 .proProjectPay .media-body span.checked,
-.theme2 .bugInfoPageFile a,
+.theme2 .rightInfoPageFile a,
 .theme2 .noticeInfoPageFile a,
 .theme2 .testCaseInfoPageFile a,
 .theme2 .bugInfoHistories p i,
@@ -4116,10 +4126,10 @@ span.openInfoPage ul li a i {
 .theme2 #BCTemplate .bugTemplate p a:hover,
 .theme2 #BCTemplate .bugZiyouTemplate p .options a,
 .theme2 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme2 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme2 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme2 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme2 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme2 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme2 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme2 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme2 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme2 .selectInput .selectDownBtn,
 .theme2 .userInput .userDownBtn,
 .theme2 .table>tbody>tr>td span.testCaseTestGroup,
@@ -4154,7 +4164,7 @@ span.openInfoPage ul li a i {
 .theme2 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme2 .versionInfoTop .versionInfoBack,
 .theme2 .noticeInfoTop .noticeInfoBack,
-.theme2 .bugInfoTop .bugInfoBack,
+.theme2 .bugInfoTop .rightInfoBack,
 .theme2 .bugTestInfoTop .bugTestInfoBack,
 .theme2 .versionInfoTop span i,
 .theme2 .noticeInfoTop span i,
@@ -4187,7 +4197,7 @@ span.openInfoPage ul li a i {
 .theme2 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme2 .fc-header .fc-button-next,
 .theme2 .fc-header .fc-button-prev,
-.theme2 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme2 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme2 .projectProductList .pVersion,
 .theme2 .projectProductList .pModule,
 .theme2 .projectProductList .pSubscribe,
@@ -4288,6 +4298,7 @@ span.openInfoPage ul li a i {
 .theme3 .wrapper-header-left-bg,
 .theme3 .wrapper-header .wrapper-header-right,
 .theme3 .site-header,
+.theme3 .label-info,
 .theme3 .wrapper-header .name {
     background-color: #3ea39e;
 }
@@ -4336,7 +4347,7 @@ span.openInfoPage ul li a i {
 .theme3 .bugTestInfoTop span.btn1 i:hover,
 .theme3 .versionInfoTop .versionInfoBack:hover,
 .theme3 .noticeInfoTop .noticeInfoBack:hover,
-.theme3 .bugInfoTop .bugInfoBack:hover,
+.theme3 .bugInfoTop .rightInfoBack:hover,
 .theme3 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme3 .navbar-default .nav > li.active > span.fa:hover,
 .theme3 .setProjectBtn2:hover i,
@@ -4404,7 +4415,7 @@ span.openInfoPage ul li a i {
 .theme3 .payWaitCircle,
 .theme3 .userProProjectPay .media-body span.checked,
 .theme3 .proProjectPay .media-body span.checked,
-.theme3 .bugInfoPageFile a,
+.theme3 .rightInfoPageFile a,
 .theme3 .noticeInfoPageFile a,
 .theme3 .testCaseInfoPageFile a,
 .theme3 .bugInfoHistories p i,
@@ -4417,10 +4428,10 @@ span.openInfoPage ul li a i {
 .theme3 #BCTemplate .bugTemplate p a:hover,
 .theme3 #BCTemplate .bugZiyouTemplate p .options a,
 .theme3 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme3 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme3 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme3 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme3 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme3 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme3 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme3 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme3 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme3 .selectInput .selectDownBtn,
 .theme3 .userInput .userDownBtn,
 .theme3 .table>tbody>tr>td span.testCaseTestGroup,
@@ -4455,7 +4466,7 @@ span.openInfoPage ul li a i {
 .theme3 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme3 .versionInfoTop .versionInfoBack,
 .theme3 .noticeInfoTop .noticeInfoBack,
-.theme3 .bugInfoTop .bugInfoBack,
+.theme3 .bugInfoTop .rightInfoBack,
 .theme3 .bugTestInfoTop .bugTestInfoBack,
 .theme3 .versionInfoTop span i,
 .theme3 .noticeInfoTop span i,
@@ -4488,7 +4499,7 @@ span.openInfoPage ul li a i {
 .theme3 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme3 .fc-header .fc-button-next,
 .theme3 .fc-header .fc-button-prev,
-.theme3 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme3 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme3 .projectProductList .pVersion,
 .theme3 .projectProductList .pModule,
 .theme3 .projectProductList .pSubscribe,
@@ -4572,6 +4583,7 @@ span.openInfoPage ul li a i {
 .theme4 .wrapper-header-left-bg,
 .theme4 .wrapper-header .wrapper-header-right,
 .theme4 .site-header,
+.theme4 .label-info,
 .theme4 .wrapper-header .name {
     background-color: #7b7760;
 }
@@ -4620,7 +4632,7 @@ span.openInfoPage ul li a i {
 .theme4 .bugTestInfoTop span.btn1 i:hover,
 .theme4 .versionInfoTop .versionInfoBack:hover,
 .theme4 .noticeInfoTop .noticeInfoBack:hover,
-.theme4 .bugInfoTop .bugInfoBack:hover,
+.theme4 .bugInfoTop .rightInfoBack:hover,
 .theme4 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme4 .navbar-default .nav > li.active > span.fa:hover,
 .theme4 .setProjectBtn2:hover i,
@@ -4687,7 +4699,7 @@ span.openInfoPage ul li a i {
 .theme4 .payWaitCircle,
 .theme4 .userProProjectPay .media-body span.checked,
 .theme4 .proProjectPay .media-body span.checked,
-.theme4 .bugInfoPageFile a,
+.theme4 .rightInfoPageFile a,
 .theme4 .noticeInfoPageFile a,
 .theme4 .testCaseInfoPageFile a,
 .theme4 .bugInfoHistories p i,
@@ -4700,10 +4712,10 @@ span.openInfoPage ul li a i {
 .theme4 #BCTemplate .bugTemplate p a:hover,
 .theme4 #BCTemplate .bugZiyouTemplate p .options a,
 .theme4 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme4 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme4 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme4 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme4 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme4 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme4 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme4 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme4 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme4 .selectInput .selectDownBtn,
 .theme4 .userInput .userDownBtn,
 .theme4 .table>tbody>tr>td span.testCaseTestGroup,
@@ -4738,7 +4750,7 @@ span.openInfoPage ul li a i {
 .theme4 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme4 .versionInfoTop .versionInfoBack,
 .theme4 .noticeInfoTop .noticeInfoBack,
-.theme4 .bugInfoTop .bugInfoBack,
+.theme4 .bugInfoTop .rightInfoBack,
 .theme4 .bugTestInfoTop .bugTestInfoBack,
 .theme4 .versionInfoTop span i,
 .theme4 .noticeInfoTop span i,
@@ -4771,7 +4783,7 @@ span.openInfoPage ul li a i {
 .theme4 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme4 .fc-header .fc-button-next,
 .theme4 .fc-header .fc-button-prev,
-.theme4 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme4 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme4 .projectProductList .pVersion,
 .theme4 .projectProductList .pModule,
 .theme4 .projectProductList .pSubscribe,
@@ -4876,6 +4888,7 @@ span.openInfoPage ul li a i {
 .theme5 .wrapper-header-left-bg,
 .theme5 .wrapper-header .wrapper-header-right,
 .theme5 .site-header,
+.theme5 .label-info,
 .theme5 .wrapper-header .name {
     background-color: #149078;
 }
@@ -4924,7 +4937,7 @@ span.openInfoPage ul li a i {
 .theme5 .bugTestInfoTop span.btn1 i:hover,
 .theme5 .versionInfoTop .versionInfoBack:hover,
 .theme5 .noticeInfoTop .noticeInfoBack:hover,
-.theme5 .bugInfoTop .bugInfoBack:hover,
+.theme5 .bugInfoTop .rightInfoBack:hover,
 .theme5 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme5 .navbar-default .nav > li.active > span.fa:hover,
 .theme5 .setProjectBtn2:hover i,
@@ -4991,7 +5004,7 @@ span.openInfoPage ul li a i {
 .theme5 .payWaitCircle,
 .theme5 .userProProjectPay .media-body span.checked,
 .theme5 .proProjectPay .media-body span.checked,
-.theme5 .bugInfoPageFile a,
+.theme5 .rightInfoPageFile a,
 .theme5 .noticeInfoPageFile a,
 .theme5 .testCaseInfoPageFile a,
 .theme5 .bugInfoHistories p i,
@@ -5004,10 +5017,10 @@ span.openInfoPage ul li a i {
 .theme5 #BCTemplate .bugTemplate p a:hover,
 .theme5 #BCTemplate .bugZiyouTemplate p .options a,
 .theme5 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme5 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme5 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme5 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme5 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme5 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme5 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme5 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme5 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme5 .selectInput .selectDownBtn,
 .theme5 .userInput .userDownBtn,
 .theme5 .table>tbody>tr>td span.testCaseTestGroup,
@@ -5042,7 +5055,7 @@ span.openInfoPage ul li a i {
 .theme5 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme5 .versionInfoTop .versionInfoBack,
 .theme5 .noticeInfoTop .noticeInfoBack,
-.theme5 .bugInfoTop .bugInfoBack,
+.theme5 .bugInfoTop .rightInfoBack,
 .theme5 .bugTestInfoTop .bugTestInfoBack,
 .theme5 .versionInfoTop span i,
 .theme5 .noticeInfoTop span i,
@@ -5075,7 +5088,7 @@ span.openInfoPage ul li a i {
 .theme5 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme5 .fc-header .fc-button-next,
 .theme5 .fc-header .fc-button-prev,
-.theme5 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme5 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme5 .projectProductList .pVersion,
 .theme5 .projectProductList .pModule,
 .theme5 .projectProductList .pSubscribe,
@@ -5180,6 +5193,7 @@ span.openInfoPage ul li a i {
 .theme6 .wrapper-header-left-bg,
 .theme6 .wrapper-header .wrapper-header-right,
 .theme6 .site-header,
+.theme6 .label-info,
 .theme6 .wrapper-header .name {
     background-color: #f991a4;
 }
@@ -5228,7 +5242,7 @@ span.openInfoPage ul li a i {
 .theme6 .bugTestInfoTop span.btn1 i:hover,
 .theme6 .versionInfoTop .versionInfoBack:hover,
 .theme6 .noticeInfoTop .noticeInfoBack:hover,
-.theme6 .bugInfoTop .bugInfoBack:hover,
+.theme6 .bugInfoTop .rightInfoBack:hover,
 .theme6 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme6 .navbar-default .nav > li.active > span.fa:hover,
 .theme6 .setProjectBtn2:hover i,
@@ -5295,7 +5309,7 @@ span.openInfoPage ul li a i {
 .theme6 .payWaitCircle,
 .theme6 .userProProjectPay .media-body span.checked,
 .theme6 .proProjectPay .media-body span.checked,
-.theme6 .bugInfoPageFile a,
+.theme6 .rightInfoPageFile a,
 .theme6 .noticeInfoPageFile a,
 .theme6 .testCaseInfoPageFile a,
 .theme6 .bugInfoHistories p i,
@@ -5308,10 +5322,10 @@ span.openInfoPage ul li a i {
 .theme6 #BCTemplate .bugTemplate p a:hover,
 .theme6 #BCTemplate .bugZiyouTemplate p .options a,
 .theme6 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme6 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme6 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme6 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme6 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme6 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme6 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme6 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme6 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme6 .selectInput .selectDownBtn,
 .theme6 .userInput .userDownBtn,
 .theme6 .table>tbody>tr>td span.testCaseTestGroup,
@@ -5346,7 +5360,7 @@ span.openInfoPage ul li a i {
 .theme6 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme6 .versionInfoTop .versionInfoBack,
 .theme6 .noticeInfoTop .noticeInfoBack,
-.theme6 .bugInfoTop .bugInfoBack,
+.theme6 .bugInfoTop .rightInfoBack,
 .theme6 .bugTestInfoTop .bugTestInfoBack,
 .theme6 .versionInfoTop span i,
 .theme6 .noticeInfoTop span i,
@@ -5379,7 +5393,7 @@ span.openInfoPage ul li a i {
 .theme6 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme6 .fc-header .fc-button-next,
 .theme6 .fc-header .fc-button-prev,
-.theme6 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme6 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme6 .projectProductList .pVersion,
 .theme6 .projectProductList .pModule,
 .theme6 .projectProductList .pSubscribe,
@@ -5487,6 +5501,7 @@ span.openInfoPage ul li a i {
 .theme7 .wrapper-header-left-bg,
 .theme7 .wrapper-header .wrapper-header-right,
 .theme7 .site-header,
+.theme7 .label-info,
 .theme7 .wrapper-header .name {
     background-color: #884f36;
 }
@@ -5535,7 +5550,7 @@ span.openInfoPage ul li a i {
 .theme7 .bugTestInfoTop span.btn1 i:hover,
 .theme7 .versionInfoTop .versionInfoBack:hover,
 .theme7 .noticeInfoTop .noticeInfoBack:hover,
-.theme7 .bugInfoTop .bugInfoBack:hover,
+.theme7 .bugInfoTop .rightInfoBack:hover,
 .theme7 .bugTestInfoTop .bugTestInfoBack:hover,
 .theme7 .navbar-default .nav > li.active > span.fa:hover,
 .theme7 .setProjectBtn2:hover i,
@@ -5602,7 +5617,7 @@ span.openInfoPage ul li a i {
 .theme7 .payWaitCircle,
 .theme7 .userProProjectPay .media-body span.checked,
 .theme7 .proProjectPay .media-body span.checked,
-.theme7 .bugInfoPageFile a,
+.theme7 .rightInfoPageFile a,
 .theme7 .noticeInfoPageFile a,
 .theme7 .testCaseInfoPageFile a,
 .theme7 .bugInfoHistories p i,
@@ -5615,10 +5630,10 @@ span.openInfoPage ul li a i {
 .theme7 #BCTemplate .bugTemplate p a:hover,
 .theme7 #BCTemplate .bugZiyouTemplate p .options a,
 .theme7 #BCTemplate .bugZiyouTemplate p .options a:hover,
-.theme7 .myProjectModel .modal-body .tab-content .projectUser ul li span.opt i,
-.theme7 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
-.theme7 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
-.theme7 .myProjectModel .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
+.theme7 .myErpModal .modal-body .tab-content .projectUser ul li span.opt i,
+.theme7 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-edit,
+.theme7 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye,
+.theme7 .myErpModal .modal-body .tab-content .projectProductList ul li span.opt .fa-eye-slash,
 .theme7 .selectInput .selectDownBtn,
 .theme7 .userInput .userDownBtn,
 .theme7 .table>tbody>tr>td span.testCaseTestGroup,
@@ -5653,7 +5668,7 @@ span.openInfoPage ul li a i {
 .theme7 .focusUserNameListDiv .inviteFocusBtn > span,
 .theme7 .versionInfoTop .versionInfoBack,
 .theme7 .noticeInfoTop .noticeInfoBack,
-.theme7 .bugInfoTop .bugInfoBack,
+.theme7 .bugInfoTop .rightInfoBack,
 .theme7 .bugTestInfoTop .bugTestInfoBack,
 .theme7 .versionInfoTop span i,
 .theme7 .noticeInfoTop span i,
@@ -5686,7 +5701,7 @@ span.openInfoPage ul li a i {
 .theme7 .erp-content .viewKanban .k-header .rightDiv span.check,
 .theme7 .fc-header .fc-button-next,
 .theme7 .fc-header .fc-button-prev,
-.theme7 .myProjectModel .modal-body .tab-content .projectUser ul li span.setEmail a,
+.theme7 .myErpModal .modal-body .tab-content .projectUser ul li span.setEmail a,
 .theme7 .projectProductList .pVersion,
 .theme7 .projectProductList .pModule,
 .theme7 .projectProductList .pSubscribe,
@@ -5777,7 +5792,7 @@ span.openInfoPage ul li a i {
 /* 媒体查询 */
 @media (min-width: 1440px) {
     /*.project-list .row .thumbnail img ,*/
-    /*.myProjectModel .modal-header h4 img {*/
+    /*.myErpModal .modal-header h4 img {*/
     /*width: 160px;*/
     /*height: 160px;*/
     /*border-radius: 80px;*/
@@ -5787,7 +5802,7 @@ span.openInfoPage ul li a i {
 }
 @media (min-width: 1920px) {
     /*.project-list .row .thumbnail img,*/
-    /*.myProjectModel .modal-header h4 img {*/
+    /*.myErpModal .modal-header h4 img {*/
     /*width: 180px;*/
     /*height: 180px;*/
     /*border-radius: 90px;*/
@@ -5826,7 +5841,7 @@ span.openInfoPage ul li a i {
 }
 @media (min-width: 2560px) {
     /*.project-list .row .thumbnail img,*/
-    /*.myProjectModel .modal-header h4 img {*/
+    /*.myErpModal .modal-header h4 img {*/
     /*width: 220px;*/
     /*height: 220px;*/
     /*border-radius: 110px;*/

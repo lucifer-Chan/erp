@@ -1066,7 +1066,7 @@ ul.bugPlanNum li .PlanNumClass em {
 .bugTestTaskInfoTop span.btn1 i:hover,
 .versionInfoTop .versionInfoBack:hover,
 .noticeInfoTop .noticeInfoBack:hover,
-.bugInfoTop .bugInfoBack:hover,
+.bugInfoTop .rightInfoBack:hover,
 .bugTestInfoTop .bugTestInfoBack:hover,
 .bugTestTaskInfoTop .bugTestInfoBack:hover,
 .navbar-default .nav > li.active > span.fa:hover {
@@ -1074,7 +1074,7 @@ ul.bugPlanNum li .PlanNumClass em {
 }
 .versionInfoTop .versionInfoBack,
 .noticeInfoTop .noticeInfoBack,
-.bugInfoTop .bugInfoBack,
+.bugInfoTop .rightInfoBack,
 .bugTestInfoTop .bugTestInfoBack,
 .bugTestTaskInfoTop .bugTestInfoBack {
     font-size: 25px;
@@ -1347,7 +1347,7 @@ ul.bugPlanNum li .PlanNumClass em {
     padding-top: 7px;
 }
 
-.bugInfoPage,
+.rightInfoPage,
 .bugTestInfoPage {
     display:none;
     position: fixed;
@@ -1506,7 +1506,7 @@ ul.bugPlanNum li .PlanNumClass em {
 .bugInfoBody {
     background: rgb(240,240,240);
 }
-.bugInfoBody em.bugInfoBack {
+.bugInfoBody em.rightInfoBack {
     display: none;
 }
 
@@ -1515,14 +1515,14 @@ ul.bugPlanNum li .PlanNumClass em {
     left: 50%;
     margin-left: -300px;
 }
-#site-bugInfo-main .bugInfoPage {
+#site-bugInfo-main .rightInfoPage {
     right: 50%;
     margin-right: -300px;
     margin-top: 5px;
     margin-bottom: 10px;
     box-shadow: none;
 }
-#site-bugInfo-main .bugInfoPageNr .bugInfoTop em {
+#site-bugInfo-main .rightInfoPageNr .bugInfoTop em {
     display: none;
 }
 #site-bugInfo-main .bugInfoContent {
@@ -1585,18 +1585,18 @@ ul.bugPlanNum li .PlanNumClass em {
     margin-right: 10px;
     font-size: 20px;
 }
-.bugInfoPageFile ,
+.rightInfoPageFile ,
 .noticeInfoPageFile,
 .testCaseInfoPageFile {
     padding: 5px 15px 5px 0;
     font-size: 14px;
 }
-.bugInfoPageFile .right,
+.rightInfoPageFile .right,
 .noticeInfoPageFile .right,
 .testCaseInfoPageFile .right {
     color: #8b8b8b;
 }
-.bugInfoPageFile a,
+.rightInfoPageFile a,
 .noticeInfoPageFile a,
 .testCaseInfoPageFile a {
     color: #00aeef;
@@ -1616,7 +1616,7 @@ ul.bugPlanNum li .PlanNumClass em {
     background: none;
     color: #555555;
 }
-.myProjectModel .modal-body ul.nav-tabs li.active span {
+.myErpModal .modal-body ul.nav-tabs li.active span {
     background: #FFFFFF;
     border: none;
     border-radius: 0px;

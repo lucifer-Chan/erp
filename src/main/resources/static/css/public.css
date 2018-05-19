@@ -264,6 +264,9 @@ textarea.form-control {
 .md44 {
     margin-left: 20px;
 }
+.border-radius{
+    border-radius: .35em !important;
+}
 .label {
     border-radius: 0px;
     padding: .3em .4em .3em;

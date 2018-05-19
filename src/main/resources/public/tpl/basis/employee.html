@@ -93,7 +93,7 @@
 </div>
 
 <!-- 新建人员model -->
-<div class="modal fade myProjectModel" id="_newEmployee" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade myErpModal" id="_newEmployee" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document" style="z-index: 1050">
         <div class="modal-content">
             <div class="modal-header">
@@ -164,9 +164,166 @@
         </div>
     </div>
 </div>
+<!-- 右侧-->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0">
+            <button class="btn btn-primary" type="button" data-action="common">修改基本信息</button>
+            <button class="btn btn-primary" type="button" data-action="department">修改所属部门</button>
+            <button class="btn btn-primary" type="button" data-action="menu">修改权限</button>
+        </span>
+    </div>
+    <div class="bugInfoContent employeeDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                            <span class="col-xs-6 pd0">
+                               <span class="label label-info">基本信息</span>
+                            </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                                <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                            </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">姓名</label>
+                                <div class="col-xs-8 txt pd0">陈露青</div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">条形码</label>
+                                <div class="col-xs-8 txt pd0">UE00000001526</div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">登录名</label>
+                                <div class="col-xs-8 txt pd0">Lucifer.Chan</div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">联系电话</label>
+                                <div class="col-xs-8 txt pd0">13306500517</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">创建时间</label>
+                                <div class="col-xs-8 txt pd0">2018-05-19 20:21:04</div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">密码</label>
+                                <div class="col-xs-8 txt pd0"><span class="label label-danger">未设置</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                       <span class="label label-info">部门信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="department"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="departmentInfo">
+                    <h5 class="pd43">
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发啊部</span>
+                        <span class="md32 border-radius label label-default">开开发部部</span>
+                        <span class="md32 border-radius label label-default">开发部开发部</span>
+                        <span class="md32 border-radius label label-default">原材料仓储部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                    </h5>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                       <span class="label label-info">权限信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="menu"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="menuInfo">
+                    <h5 class="pd43">
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发啊部</span>
+                        <span class="md32 border-radius label label-default">开开发部部</span>
+                        <span class="md32 border-radius label label-default">开发部开发部</span>
+                        <span class="md32 border-radius label label-default">原材料仓储部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                        <span class="md32 border-radius label label-default">开发部</span>
+                    </h5>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#saleLog" aria-controls="saleLog" role="tab" data-toggle="tab">销售日志</span></li>
+                    <li role="presentation"><span href="#produceLog" aria-controls="produceLog" role="tab" data-toggle="tab">生产日志</span></li>
+                    <li role="presentation"><span href="#purchaseLog" aria-controls="purchaseLog" role="tab" data-toggle="tab">采购日志</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="pd43 tab-pane active" id="saleLog">
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                    </div>
+                    <div role="tabpanel" class="pd43 tab-pane" id="produceLog">
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                    </div>
+                    <div role="tabpanel" class="pd43 tab-pane" id="purchaseLog">
+                        <p>显示采购日志。</p>
+                        <p>显示销售日志。</p><p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p>
+                        <p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('Hello');
+
+        $('.bugInfo').slimScroll({
+            height: '100%',
+            railOpacity: 0.9
+        });
 
         init();
 
@@ -207,6 +364,7 @@
              */
             function fClickTr($tr){
                 console.log($tr);
+                $('#rightInfoPage').show().attr('class', 'rightInfoPage animated fadeInRightBig');
             }
 
             /**
@@ -215,7 +373,7 @@
              */
             function sub20(array){
                 var value = array.length ? array[0] : '';
-                return !value ? '' : value.length >= 20 ? value.substr(0, 17) + '...' : value;
+                return !value ? '<span class="label label-warning">未分配</span>' : value.length >= 20 ? value.substr(0, 17) + '...' : value;
             }
 
             utils.dataTable({

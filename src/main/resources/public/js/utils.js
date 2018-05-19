@@ -31,6 +31,8 @@ define('utils',[],function(){
             setting.div.html(data);
             clearTimeout(loadIngTips);
             layer.close(index);
+        }).then(function () {
+            GLOBALS.callBack();
         }).catch(function () {
             clearTimeout(loadIngTips);
             setting.div.html('<h4>页面' + setting.url +'尚未建设！</h4>')
