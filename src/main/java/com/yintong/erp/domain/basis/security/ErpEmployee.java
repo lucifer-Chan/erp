@@ -69,7 +69,7 @@ public class ErpEmployee extends BaseEntityWithBarCode {
         if(StringUtils.hasLength(departmentNames)) return departmentNames;
         try {
             List<Long> ids = SpringUtil.getBean(ErpEmployeeDepartmentRepository.class).findByEmployeeId(id).stream()
-                    .map(ErpEmployeeDepartment::getId)
+                    .map(ErpEmployeeDepartment::getDepartmentId)
                     .collect(Collectors.toList());
             List<String> names =SpringUtil.getBean(ErpBaseDepartmentRepository.class).findByIdIn(ids).stream()
                     .map(ErpBaseDepartment::getName)

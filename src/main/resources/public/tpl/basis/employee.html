@@ -25,12 +25,11 @@
                         <table class="table table-hover" id="dataTables">
                             <thead>
                                 <tr erp-id="aaa_{id}">
-                                    <!--<th style="width:50px" erp-data="{id}" erp-convert="fIdConvert">编号</th>-->
                                     <th style="width:50px" erp-data="{name}">姓名</th>
                                     <th style="width:50px" erp-data="{loginName}">登录名</th>
                                     <th style="width:50px" erp-data="{mobile}">电话号码</th>
-                                    <th style="width:85px" erp-data="{departmentNames}">部门</th>
-                                    <th style="width:60px" erp-data="{menuNames}">权限</th>
+                                    <th style="width:85px" erp-data="{departmentNames}" erp-convert="sub20">部门</th>
+                                    <th style="width:60px" erp-data="{menuNames}" erp-convert="sub20">权限</th>
                                 </tr>
                             </thead>
                         </table>
@@ -119,7 +118,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">姓名</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="name" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                        <input type="text" class="form-control" name="name" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -150,13 +149,13 @@
                         <div class="_org"></div>
                         <div class="modal-footer noborder">
                             <div class="btn btn-info" name="previous" role="tab"  nav-to="0" href="#_baseNewInfo">上一步</div>
-                            <div class="btn btn-info" name="next" role="tab" nav-to="2" href="_menuNewInfo">下一步</div>
+                            <div class="btn btn-info" name="next" role="tab" nav-to="2" href="#_menuNewInfo">下一步</div>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane projectSetting" id="_menuNewInfo">
                         <div class="_menu"></div>
                         <div class="modal-footer noborder">
-                            <div class="btn btn-info" name="previous" role="tab" nav-to="1" href="_orgNewInfo">上一步</div>
+                            <div class="btn btn-info" name="previous" role="tab" nav-to="1" href="#_orgNewInfo">上一步</div>
                             <div class="btn btn-info" name="save">保存</div>
                         </div>
                     </div>
@@ -211,11 +210,12 @@
             }
 
             /**
-             * 客户化方法，用来包装td
-             * @param value 待包装的数据
+             * 客户化方法，字符串长度大于20时截取
+             * @param array 待包装的数据
              */
-            function fIdConvert(value){
-                return 'fIdConverted:' + value;
+            function sub20(array){
+                var value = array.length ? array[0] : '';
+                return !value ? '' : value.length >= 20 ? value.substr(0, 17) + '...' : value;
             }
 
             utils.dataTable({
@@ -223,7 +223,7 @@
                 , $dataProvider : promiseEmployeeData
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
-                // , aConverts : undefined
+                , aConverts : [sub20]
             });
             // utils.dataTable('#dataTables', loadData, {name : '丁'}, fClickTr, [fIdConvert]);
         }
@@ -313,18 +313,20 @@
 
             //编辑用户
             consts.editEmployeeModal.find('div[role="tab"]').unbind('click').click(function (e) {
+                var $button = $(this);
                 e.preventDefault();
                 var $modal = consts.editEmployeeModal;
                 var to = $(this).attr('nav-to');
                 //下一步-上一步
                 function step() {
                     $modal.find('li[role="presentation"]').eq(to).addClass('active').siblings().removeClass('active');
+                    $button.tab('show');
 
                 }
                 //tab的active属性
 
                 //保存事件
-                if($(this).attr('name') !== 'next'){
+                if($button.attr('name') !== 'next'){
                     step();
                 } else if('1' === to){
                     //基本信息
@@ -347,8 +349,10 @@
                     //部门
                     var departmentIds = [];
                     $('#_orgNewInfo').find('.fa-dot-circle-o').each(function () {
+                        console.log($(this));
                         departmentIds.push($(this).attr('id'));
                     });
+                    console.log(departmentIds);
                     services.account
                         .saveDepartments(consts.selectedEmployeeId, departmentIds)
                         .then(function () {
