@@ -67,7 +67,7 @@ public class BaseResult{
 
     @SuppressWarnings("unchecked")
     public BaseResult addPojo(Object pojo, String dateFormat){
-        if(null == dateFormat) dateFormat = "yyyy-MM-dd";
+        if(null == dateFormat) dateFormat = "yyyy-MM-dd HH:mm:ss";
         return add(pojo2Map(pojo, dateFormat));
     }
 
@@ -109,7 +109,7 @@ public class BaseResult{
 
     @SuppressWarnings("unchecked")
     public BaseResult addList(Iterable it, String dateFormat){
-        if(null == dateFormat) dateFormat = "yyyy-MM-dd";
+        if(null == dateFormat) dateFormat = "yyyy-MM-dd HH:mm:ss";
         return addList("list", it, dateFormat);
     }
 
@@ -120,7 +120,7 @@ public class BaseResult{
 
     @SuppressWarnings("unchecked")
     public BaseResult addList(String key, Iterable it){
-        return addList(key, it, "yyyy-MM-dd");
+        return addList(key, it, "yyyy-MM-dd HH:mm:ss");
     }
 
     @SuppressWarnings("unchecked")

@@ -56,7 +56,7 @@ public class EmployeeService {
                     criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
                     return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
                 }, pageRequest) :
-                employeeRepository.findByDepartmentId(parameter.getDepartmentId() + "%", pageRequest) ;
+                employeeRepository.findByDepartmentId(parameter.getDepartmentId(), pageRequest) ;
     }
     /**
      * 创建用户基本信息-包括密码
@@ -126,6 +126,18 @@ public class EmployeeService {
         employeeMenuRepository.deleteByEmployeeId(employeeId);
         employeeDepartmentRepository.deleteByEmployeeId(employeeId);
         return name;
+    }
+
+    /**
+     * 查找单个员工
+     * @param employeeId
+     * @return
+     */
+    public ErpEmployee findOne(Long employeeId){
+        ErpEmployee employee = employeeRepository.findById(employeeId).orElse(null);
+        Assert.notNull(employee, "未找到id为" + employeeId + "的用户");
+        return employee;
+
     }
 
     /**

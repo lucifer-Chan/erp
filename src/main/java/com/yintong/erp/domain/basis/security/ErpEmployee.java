@@ -11,6 +11,7 @@ import com.yintong.erp.utils.transform.IgnoreIfNull;
 import com.yintong.erp.utils.transform.IgnoreWhatever;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
@@ -64,14 +65,33 @@ public class ErpEmployee extends BaseEntityWithBarCode {
     @Transient
     private String menuNames;
 
+    @Transient
+    private String status;//1-有密码；0-无密码
+
+    public String getStatus(){
+        if(StringUtils.hasLength(status)) return status;
+        status = StringUtils.hasLength(password) ? "1" : "0";
+        return status;
+    }
+
+    public List<Long> getDepartmentIds(){
+        if(Objects.isNull(id)) return null;
+        if(!CollectionUtils.isEmpty(departmentIds)) return departmentIds;
+        try {
+            departmentIds = SpringUtil.getBean(ErpEmployeeDepartmentRepository.class).findByEmployeeId(id).stream()
+                    .map(ErpEmployeeDepartment::getDepartmentId)
+                    .collect(Collectors.toList());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return departmentIds;
+    }
+
     public String getDepartmentNames(){
         if(Objects.isNull(id)) return "";
         if(StringUtils.hasLength(departmentNames)) return departmentNames;
         try {
-            List<Long> ids = SpringUtil.getBean(ErpEmployeeDepartmentRepository.class).findByEmployeeId(id).stream()
-                    .map(ErpEmployeeDepartment::getDepartmentId)
-                    .collect(Collectors.toList());
-            List<String> names =SpringUtil.getBean(ErpBaseDepartmentRepository.class).findByIdIn(ids).stream()
+            List<String> names =SpringUtil.getBean(ErpBaseDepartmentRepository.class).findByIdIn(getDepartmentIds()).stream()
                     .map(ErpBaseDepartment::getName)
                     .collect(Collectors.toList());
             departmentNames = StringUtils.collectionToCommaDelimitedString(names);
@@ -81,14 +101,24 @@ public class ErpEmployee extends BaseEntityWithBarCode {
         return departmentNames;
     }
 
+    public List<String> getMenuCodes(){
+        if(Objects.isNull(id)) return null;
+        if(!CollectionUtils.isEmpty(menuCodes)) return menuCodes;
+        try {
+            menuCodes = SpringUtil.getBean(ErpEmployeeMenuRepository.class).findByEmployeeId(id).stream()
+                    .map(ErpEmployeeMenu::getMenuCode)
+                    .collect(Collectors.toList());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return menuCodes;
+    }
+
     public String getMenuNames(){
         if(Objects.isNull(id)) return "";
         if(StringUtils.hasLength(menuNames)) return menuNames;
         try{
-            List<String> codes = SpringUtil.getBean(ErpEmployeeMenuRepository.class).findByEmployeeId(id).stream()
-                    .map(ErpEmployeeMenu::getMenuCode)
-                    .collect(Collectors.toList());
-            List<String> names = SpringUtil.getBean(ErpMenuRepository.class).findByCodeInOrderByCode(codes).stream()
+            List<String> names = SpringUtil.getBean(ErpMenuRepository.class).findByCodeInOrderByCode(getMenuCodes()).stream()
                     .map(ErpMenu::getName)
                     .collect(Collectors.toList());
             menuNames = StringUtils.collectionToCommaDelimitedString(names);

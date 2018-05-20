@@ -47,8 +47,7 @@ public class EmployeeController {
      */
     @PostMapping("{employeeId}/departments")
     public BaseResult saveDepartmentsByEmployeeId(@PathVariable Long employeeId, @RequestBody List<Long> departmentIds){
-        employeeService.saveDepartments(employeeId, departmentIds);
-        return new BaseResult();
+        return new BaseResult().addPojo(employeeService.saveDepartments(employeeId, departmentIds));
     }
 
     /**
@@ -59,8 +58,7 @@ public class EmployeeController {
      */
     @PostMapping("{employeeId}/menus")
     public BaseResult saveMenusByEmployeeId(@PathVariable Long employeeId, @RequestBody List<String> menuCodes){
-        employeeService.saveMenus(employeeId, menuCodes);
-        return new BaseResult();
+        return new BaseResult().addPojo(employeeService.saveMenus(employeeId, menuCodes));
     }
 
     /**
@@ -85,10 +83,25 @@ public class EmployeeController {
         return new BaseResult().addPojo(employeeService.updatePassword(employeeId, password));
     }
 
+    /**
+     * 删除员工
+     * @param employeeId
+     * @return
+     */
     @DeleteMapping("{employeeId}")
     public BaseResult delete(@PathVariable Long employeeId){
         String employeeName = employeeService.delete(employeeId);
         return new BaseResult().setErrmsg("删除" + employeeName + "成功");
+    }
+
+    /**
+     * 根据员工id查找
+     * @param employeeId
+     * @return
+     */
+    @GetMapping("{employeeId}")
+    public BaseResult findOne(@PathVariable Long employeeId){
+        return new BaseResult().addPojo(employeeService.findOne(employeeId));
     }
 
     /**

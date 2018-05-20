@@ -1327,14 +1327,14 @@ body.mini-navbar .site-header span.name .logomini {
 .create-project:hover i {
     opacity: 1;
 }
-.myErpModal .modal-header button {
-    position: absolute;
-    right: 20px;
-}
+/*.myErpModal .modal-header button {*/
+    /*position: absolute;*/
+    /*right: 20px;*/
+/*}*/
 .myErpModal .modal-header h4 {
     overflow: hidden;
-    text-align: center;
-    width: 140px;
+    /*text-align: center;*/
+    /*width: 140px;*/
     margin: 0 auto;
     position: relative;
 }
@@ -1874,6 +1874,7 @@ ul.nav-tabs li.active span {
     padding-bottom: 20px;
 }
 .myErpModal .modal-body .tab-content .projectSetting .row,
+.myErpModal .row,
 .myProjectSubscirbeModal .row  {
     padding-top: 10px;
     padding-bottom: 10px;

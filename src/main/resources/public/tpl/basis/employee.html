@@ -2,9 +2,9 @@
     <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;">
         <div class="panel-heading">
             <div>
-                <button type="button" class="btn btn-success btn-xs _new">新增部门</button>
+                <button type="button" class="btn btn-success btn-xs _new">新增组织</button>
                 <button type="button" class="btn btn-warning btn-xs _modify">修改名称</button>
-                <button type="button" class="btn btn-danger btn-xs _delete">删除部门</button>
+                <button type="button" class="btn btn-danger btn-xs _delete">删除组织</button>
             </div>
         </div>
         <div class="panel-body">
@@ -13,7 +13,6 @@
     </div>
 
     <div class="full_height">
-
         <div id="searchFilter">
             <div class="sidebar-search"><div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="姓名、登录名、电话号码" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div></div>
             <button type="button" class="btn btn-success btn-ms right" style="margin: 0px 15px 0px 20px;" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增人员</button>
@@ -24,11 +23,11 @@
                     <div class="pTable-content customTable">
                         <table class="table table-hover" id="dataTables">
                             <thead>
-                                <tr erp-id="aaa_{id}">
+                                <tr erp-id="{id}">
                                     <th style="width:50px" erp-data="{name}">姓名</th>
                                     <th style="width:50px" erp-data="{loginName}">登录名</th>
                                     <th style="width:50px" erp-data="{mobile}">电话号码</th>
-                                    <th style="width:85px" erp-data="{departmentNames}" erp-convert="sub20">部门</th>
+                                    <th style="width:85px" erp-data="{departmentNames}" erp-convert="sub20">组织</th>
                                     <th style="width:60px" erp-data="{menuNames}" erp-convert="sub20">权限</th>
                                 </tr>
                             </thead>
@@ -45,7 +44,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa defaultColor"></i> 修改部门名称</h4>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 修改组织名称</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -53,8 +52,8 @@
                         <div class="row pd42 pd22">
                             <div class="col-sm-12">
                                 <div class="cell pd32">
-                                    <p class="inline middle title pd21">部门名称</p>
-                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入部门名称" name="name" onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)"></p>
+                                    <p class="inline middle title pd21">组织名称</p>
+                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入组织名称" name="name" onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)"></p>
                                     <button type="button" class="btn btn-info noborder" id="_modifyDepartmentBt">提交</button>
                                 </div>
                             </div>
@@ -65,13 +64,13 @@
         </div>
     </div>
 </div>
-<!-- 新建部门名称 -->
+<!-- 新建组织名称 -->
 <div class="modal fade" role="dialog" id="_newDepartment">
     <div class="modal-dialog" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa defaultColor"></i> 新增子部门</h4>
+                <h4 class="modal-title"><i class="fa fa-plus defaultColor"></i> 新增子组织</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -79,8 +78,8 @@
                         <div class="row pd42 pd22">
                             <div class="col-sm-12">
                                 <div class="cell pd32">
-                                    <p class="inline middle title pd21">部门名称</p>
-                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入部门名称" name="name" onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)"></p>
+                                    <p class="inline middle title pd21">组织名称</p>
+                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入组织名称" name="name" onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)"></p>
                                     <button type="button" class="btn btn-info noborder" id="_newDepartmentBt">提交</button>
                                 </div>
                             </div>
@@ -98,7 +97,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove black"></i></span></button>
-                <h4 class="modal-title"><i class="fa defaultColor"></i> 新增人员</h4>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 新增人员</h4>
             </div>
             <div class="modal-body">
                 <!-- Nav tabs -->
@@ -106,9 +105,6 @@
                     <li role="presentation" class="active"><span>基本信息</span></li>
                     <li role="presentation"><span>组织信息</span></li>
                     <li role="presentation"><span>权限信息</span></li>
-                    <!--<li role="presentation" class="active"><span href="#_baseNewInfo" aria-controls="_baseNewInfo" role="tab" data-toggle="tab">基本信息</span></li>-->
-                    <!--<li role="presentation"><span href="#_orgNewInfo" aria-controls="_orgNewInfo" role="tab" data-toggle="tab">组织信息</span></li>-->
-                    <!--<li role="presentation"><span href="#_menuNewInfo" aria-controls="_menuNewInfo" role="tab" data-toggle="tab">权限信息</span></li>-->
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content">
@@ -164,58 +160,136 @@
         </div>
     </div>
 </div>
+
+<!-- 修改人员基本信息 -->
+<div class="modal fade" role="dialog" id="updateUserBaseInfoModal">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-user defaultColor"></i> 修改基本信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd210 pd410">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">姓名</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="name" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">登录名</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="loginName" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">手机</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="mobile" placeholder="联系电话" onfocus="checkStrNum(this,11)" oninput="checkStrNum(this,11)">
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--修改员工组织-->
+<div class="modal fade myErpModal" role="dialog" id="updateDepartmentModal">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-cogs defaultColor"></i> 修改组织信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="pd210 pd410 projectSetting">
+                    <div class="_org"></div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--修改员工权限-->
+<div class="modal fade myErpModal" role="dialog" id="updateMenuModal">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-unlock-alt defaultColor"></i> 修改权限信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="pd210 pd410 projectSetting">
+                    <div class="_menu"></div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info" name="save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- 右侧-->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
-        <span class="btn0">
-            <button class="btn btn-primary" type="button" data-action="common">修改基本信息</button>
-            <button class="btn btn-primary" type="button" data-action="department">修改所属部门</button>
-            <button class="btn btn-primary" type="button" data-action="menu">修改权限</button>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateUserBaseInfoModal">修改基本信息</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#resetUserPasswordModal">重置密码</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateDepartmentModal">修改所属组织</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateMenuModal">修改权限</button>
         </span>
     </div>
     <div class="bugInfoContent employeeDetail">
         <div class="panel-default bugInfo">
             <div class="row">
                 <p class="pd23 pd43">
-                            <span class="col-xs-6 pd0">
-                               <span class="label label-info">基本信息</span>
-                            </span>
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">基本信息</span>
+                    </span>
                     <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                                <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
-                            </span>
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
                 </p>
                 <div class="col-xs-12" data-value="baseInfo">
                     <div class="pd43">
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">姓名</label>
-                                <div class="col-xs-8 txt pd0">陈露青</div>
+                                <div class="col-xs-8 txt pd0" data-name="name"></div>
                             </div>
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">条形码</label>
-                                <div class="col-xs-8 txt pd0">UE00000001526</div>
+                                <label class="col-xs-4 pd0">编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
                             </div>
 
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">登录名</label>
-                                <div class="col-xs-8 txt pd0">Lucifer.Chan</div>
+                                <div class="col-xs-8 txt pd0" data-name="loginName"></div>
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">联系电话</label>
-                                <div class="col-xs-8 txt pd0">13306500517</div>
+                                <div class="col-xs-8 txt pd0" data-name="mobile"></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">创建时间</label>
-                                <div class="col-xs-8 txt pd0">2018-05-19 20:21:04</div>
+                                <div class="col-xs-8 txt pd0" data-name="createdAt"></div>
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">密码</label>
-                                <div class="col-xs-8 txt pd0"><span class="label label-danger">未设置</span></div>
+                                <div class="col-xs-8 txt pd0" data-status></div>
                             </div>
                         </div>
                     </div>
@@ -225,28 +299,14 @@
             <div class="row">
                 <p class="pd23 pd43">
                     <span class="col-xs-6 pd0">
-                       <span class="label label-info">部门信息</span>
+                       <span class="label label-info">组织信息</span>
                     </span>
                     <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
                         <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="department"></i>
                     </span>
                 </p>
                 <div class="col-xs-12" data-value="departmentInfo">
-                    <h5 class="pd43">
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发啊部</span>
-                        <span class="md32 border-radius label label-default">开开发部部</span>
-                        <span class="md32 border-radius label label-default">开发部开发部</span>
-                        <span class="md32 border-radius label label-default">原材料仓储部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                    </h5>
+                    <h5 class="pd43"></h5>
                 </div>
             </div>
             <hr>
@@ -260,21 +320,7 @@
                     </span>
                 </p>
                 <div class="col-xs-12" data-value="menuInfo">
-                    <h5 class="pd43">
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发啊部</span>
-                        <span class="md32 border-radius label label-default">开开发部部</span>
-                        <span class="md32 border-radius label label-default">开发部开发部</span>
-                        <span class="md32 border-radius label label-default">原材料仓储部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                        <span class="md32 border-radius label label-default">开发部</span>
-                    </h5>
+                    <h5 class="pd43"></h5>
                 </div>
             </div>
             <hr>
@@ -287,32 +333,44 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="pd43 tab-pane active" id="saleLog">
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
+                        <p>暂无</p>
                     </div>
                     <div role="tabpanel" class="pd43 tab-pane" id="produceLog">
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
+                        <p>暂无</p>
                     </div>
                     <div role="tabpanel" class="pd43 tab-pane" id="purchaseLog">
-                        <p>显示采购日志。</p>
-                        <p>显示销售日志。</p><p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p>
-                        <p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p><p>显示销售日志。</p>
-
-
-
-
+                        <p>暂无</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+</div>
+<!-- 重置密码 -->
+<div class="modal fade" id="resetUserPasswordModal" role="dialog">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-key defaultColor"></i> 重置密码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal pd210 pd410">
+                        <div class="row pd42 pd22">
+                            <div class="col-sm-12">
+                                <div class="cell pd32">
+                                    <p class="inline middle title pd21">密码</p>
+                                    <p class="inline middle nr" style="width: 300px"><input type="text" class="form-control" placeholder="输入密码" name="password" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)"></p>
+                                    <button class="btn btn-info noborder" name="save">保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -332,16 +390,24 @@
             , treeObj : null//组织树
             , leaves : []//组织树叶子节点
             , menus : []//可操作的菜单-权限
-            , $modifyDnModal : $('#_modifyDepartment')//修改部门名称的modal
-            , $modifyDnBt : $('#_modifyDepartmentBt')//修改部门名称的提交按钮
-            , $modifyDnInput : $('#_modifyDepartment').find('input[name="name"]')//修改部门名称的输入框
+            , selectedEmployee : {} //选中的员工
+            , oQueryParam : {}//查询参数
 
-            , $newDnModal : $('#_newDepartment')//新增部门名称的modal
-            , $newDnBt : $('#_newDepartmentBt')//新增部门名称的提交按钮
-            , $newDnInput : $('#_newDepartment').find('input[name="name"]')//新增部门名称的输入框
+            , $modifyDnModal : $('#_modifyDepartment')//修改组织名称的modal
+            , $modifyDnBt : $('#_modifyDepartmentBt')//修改组织名称的提交按钮
+            , $modifyDnInput : $('#_modifyDepartment').find('input[name="name"]')//修改组织名称的输入框
 
-            , editEmployeeModal : $('#_newEmployee')//编辑人员的modal
-            , selectedEmployeeId : ''//选中的员工id
+            , $updateBaseInfoModal : $('#updateUserBaseInfoModal')//修改员工基本信息
+            , $resetPasswordModal : $('#resetUserPasswordModal')//重设员工密码
+            , $updateDepartmentModal : $('#updateDepartmentModal')//更新员工组织
+            , $updateMenuModal : $('#updateMenuModal')//更新员工权限
+
+            , $newDnModal : $('#_newDepartment')//新增组织名称的modal
+            , $newDnBt : $('#_newDepartmentBt')//新增组织名称的提交按钮
+            , $newDnInput : $('#_newDepartment').find('input[name="name"]')//新增组织名称的输入框
+            , $editEmployeeModal : $('#_newEmployee')//编辑人员的modal
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            
         };
 
         /**
@@ -349,6 +415,12 @@
          * @param oParams 参数
          */
         function loadEmployeeData(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams;
+            }
 
             /**
              * 加载数据的实际方法
@@ -363,8 +435,20 @@
              * @param $tr 选中的行事件
              */
             function fClickTr($tr){
-                console.log($tr);
-                $('#rightInfoPage').show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.account.one(id)
+                    .then(function (employee) {
+                        initEmployeeDetail(employee);
+                        $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                        $rightPage.find('.fa-angle-double-down').click();
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    })
+                ;
             }
 
             /**
@@ -383,7 +467,46 @@
                 , fClickTr : fClickTr
                 , aConverts : [sub20]
             });
-            // utils.dataTable('#dataTables', loadData, {name : '丁'}, fClickTr, [fIdConvert]);
+        }
+
+        /**
+         * 根据用户信息初始化右侧页面
+         */
+        function initEmployeeDetail(employee) {
+            console.log('员工', employee);
+            consts.selectedEmployee = employee;
+            var unSetting = '<span class="label label-danger">未设置</span>';
+            var $detail = $('.employeeDetail');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            var $departmentInfo = $detail.find('div[data-value="departmentInfo"] h5');
+            var $menuInfo = $detail.find('div[data-value="menuInfo"] h5');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                $(this).html(employee[$(this).data('name')] || unSetting);
+            });
+            $baseInfo.find('div[data-status]').html(
+                employee.status === "1" ? '<span class="label label-success">已设置</span>' : unSetting
+            );
+            //初始化页面数据-组织信息
+            $departmentInfo.empty();
+            var departmentNames = employee.departmentNames;
+            if(!departmentNames.length){
+                $departmentInfo.html(unSetting);
+            } else {
+                departmentNames.split(',').forEach(function (name) {
+                    $departmentInfo.append('<span class="md32 border-radius label label-default">' + name + '</span>');
+                })
+            }
+            //初始化页面数据-权限信息
+            $menuInfo.html('');
+            var menuNames = employee.menuNames;
+            if(!menuNames.length){
+                $menuInfo.html(unSetting);
+            } else {
+                menuNames.split(',').forEach(function (name) {
+                    $menuInfo.append('<span class="md32 border-radius label label-default">' + name + '</span>');
+                })
+            }
         }
 
         /**
@@ -447,33 +570,120 @@
          * 事件初始化
          */
         function initEvent() {
-            //模态框初始化-修改部门名称
+            //模态框初始化-修改组织名称
             consts.$modifyDnModal.on('show.bs.modal', function () {
                 consts.$modifyDnInput.val($.session(consts.nodeKey).name);
             });
-            //模态框初始化-新增部门
+            //模态框初始化-新增组织
             consts.$newDnModal.on('show.bs.modal', function () {
                 consts.$newDnInput.val('');
             });
             //模态框初始化-编辑用户
-            consts.editEmployeeModal.on('show.bs.modal', function () {
+            consts.$editEmployeeModal.on('show.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"]').val('');
+                consts.selectedEmployee = {};
                 $('#_orgNewInfo').find('._org').html(drawCircles(consts.leaves));
                 $('#_menuNewInfo').find('._menu').html(drawCircles(consts.menus, [], {idKey : 'code'}));
                 //默认选中第一个tab
                 $(this).find('div[name="previous"]').eq(0).click();
             });
-            //模态框隐藏-编辑用户
-            consts.editEmployeeModal.on('hidden.bs.modal', function (e) {
-                //清理数据
-                $(this).find('input[type="text"]').val('');
-                consts.selectedEmployeeId = '';
+
+            //模态框-更新用户基本信息
+            consts.$updateBaseInfoModal.on('show.bs.modal', function () {
+                $(this).find('input[name="name"]').val(consts.selectedEmployee.name||'');
+                $(this).find('input[name="loginName"]').val(consts.selectedEmployee.loginName||'');
+                $(this).find('input[name="mobile"]').val(consts.selectedEmployee.mobile ||'');
+            });
+            //模态框-重设密码
+            consts.$resetPasswordModal.on('show.bs.modal', function () {
+                $(this).find('input[name="password"]').val('');
             });
 
+            //模态框-更新组织
+            consts.$updateDepartmentModal.on('show.bs.modal', function () {
+                $(this).find('._org').html(drawCircles(consts.leaves, consts.selectedEmployee.departmentIds));
+            });
+            //模态框-更新权限
+            consts.$updateMenuModal.on('show.bs.modal', function () {
+                $(this).find('._menu').html(drawCircles(consts.menus, consts.selectedEmployee.menuCodes, {idKey : 'code'}));
+            });
+            //更新用户基本信息操作
+            consts.$updateBaseInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var $modal = consts.$updateBaseInfoModal;
+                services.account.update({
+                    id : consts.selectedEmployee.id
+                    , name : $modal.find('input[name="name"]').val()
+                    , loginName : $modal.find('input[name="loginName"]').val()
+                    , mobile : $modal.find('input[name="mobile"]').val()
+                }).then(function (employee) {
+                    loadEmployeeData(true);
+                    initEmployeeDetail(employee);
+                    $modal.modal('hide');
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '修改用户基本信息失败！');
+                });
+
+            });
+            //更新用户密码操作
+            consts.$resetPasswordModal.find('button[name="save"]').unbind('click').click(function () {
+                var $modal = consts.$resetPasswordModal;
+                services.account
+                    .updatePassword(consts.selectedEmployee.id, $modal.find('input[name="password"]').val())
+                    .then(function (employee) {
+                        loadEmployeeData(true);
+                        initEmployeeDetail(employee);
+                        $modal.modal('hide');
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '重设密码失败！');
+                    });
+            });
+
+            //更新用户组织操作
+            consts.$updateDepartmentModal.find('button[name="save"]').unbind('click').click(function () {
+                var $modal = consts.$updateDepartmentModal;
+                var departmentIds = [];
+                $modal.find('.fa-dot-circle-o').each(function () {
+                    console.log($(this));
+                    departmentIds.push($(this).attr('id'));
+                });
+                services.account
+                    .saveDepartments(consts.selectedEmployee.id, departmentIds)
+                    .then(function (employee) {
+                        loadEmployeeData(true);
+                        initEmployeeDetail(employee);
+                        $modal.modal('hide');
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '保存组织关联失败！');
+                    })
+            });
+
+            //更新用户权限操作
+            consts.$updateMenuModal.find('button[name="save"]').unbind('click').click(function () {
+                var $modal = consts.$updateMenuModal;
+                var menuCodes = [];
+                $modal.find('.fa-dot-circle-o').each(function () {
+                    menuCodes.push($(this).attr('id'));
+                });
+                services.account
+                    .saveMenus(consts.selectedEmployee.id, menuCodes)
+                    .then(function (employee) {
+                        loadEmployeeData(true);
+                        initEmployeeDetail(employee);
+                        $modal.modal('hide');
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '保存权限关联失败！');
+                    });
+            });
             //编辑用户
-            consts.editEmployeeModal.find('div[role="tab"]').unbind('click').click(function (e) {
+            consts.$editEmployeeModal.find('div[role="tab"]').unbind('click').click(function (e) {
                 var $button = $(this);
                 e.preventDefault();
-                var $modal = consts.editEmployeeModal;
+                var $modal = consts.$editEmployeeModal;
                 var to = $(this).attr('nav-to');
                 //下一步-上一步
                 function step() {
@@ -495,16 +705,16 @@
                         mobile : $modal.find('input[name="mobile"]').val()
                     })
                     .then(function (ret) {
-                        consts.selectedEmployeeId = ret.id;
+                        consts.selectedEmployee = ret;
                         $('#fastKeyword').val('');
                         loadEmployeeData();
                         step();
                     })
                     .catch(function (reason) {
-                        layer.msg(reason.caught ? reason.message : '修改用户基本信息失败！');
+                        layer.msg(reason.caught ? reason.message : '新增用户失败！');
                     })
                 } else {
-                    //部门
+                    //组织
                     var departmentIds = [];
                     $('#_orgNewInfo').find('.fa-dot-circle-o').each(function () {
                         console.log($(this));
@@ -512,7 +722,7 @@
                     });
                     console.log(departmentIds);
                     services.account
-                        .saveDepartments(consts.selectedEmployeeId, departmentIds)
+                        .saveDepartments(consts.selectedEmployee.id, departmentIds)
                         .then(function () {
                             loadEmployeeData();
                             step();
@@ -522,28 +732,23 @@
                         })
                 }
             });
-
             //保存权限
-            consts.editEmployeeModal.find('div[name="save"]').unbind('click').click(function () {
+            consts.$editEmployeeModal.find('div[name="save"]').unbind('click').click(function () {
                 var menuCodes = [];
                 $('#_menuNewInfo').find('.fa-dot-circle-o').each(function () {
                     menuCodes.push($(this).attr('id'));
                 });
                 services.account
-                    .saveMenus(consts.selectedEmployeeId, menuCodes)
+                    .saveMenus(consts.selectedEmployee.id, menuCodes)
                     .then(function () {
                         loadEmployeeData();
-                        consts.editEmployeeModal.modal('hide');
+                        consts.$editEmployeeModal.modal('hide');
                     })
                     .catch(function (reason) {
                         layer.msg(reason.caught ? reason.message : '保存权限关联失败！');
                     });
             });
-
-
-
-
-            //修改部门名称提交
+            //修改组织名称提交
             consts.$modifyDnBt.unbind('click').click(function () {
                 var node = $.session(consts.nodeKey);
                 services.department.modify(node.id, consts.$modifyDnInput.val())
@@ -552,15 +757,14 @@
                         layer.msg(ret._message);
                     })
                     .catch(function (reason) {
-                        layer.msg(reason.caught ? reason.message : '修改部门名称失败！');
+                        layer.msg(reason.caught ? reason.message : '修改组织名称失败！');
                     })
                     .then(function () {
                         initDepartments();
                     })
                 ;
             });
-
-            //新增部门名称
+            //新增组织名称
             consts.$newDnBt.unbind('click').click(function () {
                 var node = $.session(consts.nodeKey) || {};
                 services.department.create({
@@ -572,15 +776,13 @@
                     layer.msg(ret._message);
                 })
                 .catch(function (reason) {
-                    layer.msg(reason.caught ? reason.message : '新增部门名称失败！');
+                    layer.msg(reason.caught ? reason.message : '新增组织名称失败！');
                 })
                 .then(function () {
                     initDepartments();
                 })
             });
-
-
-            //部门增删改操作
+            //组织增删改操作
             $('._modify, ._delete, ._new').unbind('click').click(function () {
                 if($(this).hasClass('disabled')) return;
                 if(!$.session(consts.nodeKey)) {
@@ -592,13 +794,13 @@
                 if($(this).hasClass('_new'))
                     consts.$newDnModal.modal('toggle');
                 if($(this).hasClass('_delete')){
-                    layer.confirm('删除此部门将会删除他的所有从属部门及人员管理，确定删除吗？',{title:'提示',move:false},function(){
+                    layer.confirm('删除此组织将会删除他的所有从属组织及人员管理，确定删除吗？',{title:'提示',move:false},function(){
                         services.department.delete($.session(consts.nodeKey).id)
                             .then(function (ret) {
                                 layer.msg(ret._message);
                             })
                             .catch(function (reason) {
-                                layer.msg(reason.caught ? reason.message : '删除部门名称失败！');
+                                layer.msg(reason.caught ? reason.message : '删除组织名称失败！');
                             })
                             .then(function () {
                                 initDepartments();
@@ -606,21 +808,14 @@
                     });
                 }
             });
-
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
                 loadEmployeeData({ cause : $('#fastKeyword').val() });
             });
-
             $("#fastKeyword").keydown(function(e){
                 if(e.keyCode === 13)
                     loadEmployeeData({ cause : $('#fastKeyword').val() });
             });
-
-            // //新增人员
-            // $('#addUserBt').unbind('click').click(function () {
-            //     alert('点击新增人员')
-            // })
         }
 
         /**

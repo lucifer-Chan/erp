@@ -34,9 +34,17 @@ define('services',['utils'],function (utils) {
             });
         },
 
+        /**
+         * 根据id查找一个员工
+         * @param employeeId
+         */
+        one : function (employeeId) {
+            return $.http.get('basis/employee/' + employeeId);
+        },
+
         //删除员工操作
-        delete : function () {
-            return $.http.delete();
+        delete : function (employeeId) {
+            return $.http.delete('basis/employee/' + employeeId);
         },
 
         /**

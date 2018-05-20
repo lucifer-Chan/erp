@@ -33,8 +33,21 @@ define('utils',[],function(){
             layer.close(index);
             return setting.div;
         }).then(function (div) {
-            GLOBALS.callBack(div);
-        }).catch(function () {
+            //右侧页面收起打开操作
+            $(div).find('#rightInfoPage .fa-angle-double-up, #rightInfoPage .fa-angle-double-down').click(function () {
+                var value = $(this).data("value") + "Info";
+                $(this).parents('.row').find('div[data-value="'+ value+'"]').toggle();
+                if($(this).hasClass('fa-angle-double-up'))
+                    $(this).removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+                else if($(this).hasClass('fa-angle-double-down'))
+                    $(this).removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+            });
+            //隐藏右侧页面事件
+            $(div).find('.rightInfoBack').click(function () {
+                $('#rightInfoPage').attr('data-id', '').hide();
+            });
+        }).catch(function (reason) {
+            console.log('loadPage', reason);
             clearTimeout(loadIngTips);
             setting.div.html('<h4>页面' + setting.url +'尚未建设！</h4>')
             // layer.msg('请求'+ setting.url + '失败');
