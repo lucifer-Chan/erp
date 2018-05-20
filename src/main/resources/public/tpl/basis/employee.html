@@ -90,7 +90,6 @@
         </div>
     </div>
 </div>
-
 <!-- 新建人员model -->
 <div class="modal fade myErpModal" id="_newEmployee" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document" style="z-index: 1050">
@@ -160,7 +159,6 @@
         </div>
     </div>
 </div>
-
 <!-- 修改人员基本信息 -->
 <div class="modal fade" role="dialog" id="updateUserBaseInfoModal">
     <div class="modal-dialog" role="document" style="z-index: 1040">
@@ -235,8 +233,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- 右侧-->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
     <div class="bugInfoTop">
@@ -374,15 +370,11 @@
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('Hello');
 
-        $('.bugInfo').slimScroll({
-            height: '100%',
-            railOpacity: 0.9
-        });
+
 
         init();
 
@@ -538,10 +530,8 @@
             for(var i = 0; i < all.length; i ++){
                 if(i%2 === 0)
                     html += '<div class="row">';
-                html += ('<label class="col-sm-3 control-label" style="padding-top: 1px;margin-bottom: 0px">{'+ format.nameKey +'}</label>' +
-                    '<div class="col-sm-1"><span data-value="true"><i id="{'+ format.idKey + '}" class="fa fa-circle-o"></i></span></div>')
-                    .replace('{' + format.nameKey + '}', all[i][format.nameKey])
-                    .replace('{' + format.idKey + '}', all[i][format.idKey]);
+                html += '<label class="col-sm-3 control-label" style="padding-top: 1px;margin-bottom: 0px">'+ all[i][format.nameKey] +'</label>' +
+                    '<div class="col-sm-1"><span data-value="true"><i id="'+ all[i][format.idKey] + '" class="fa fa-circle-o"></i></span></div>';
                 if(i%2 === 0)
                     html += '<div class="col-sm-4"></div>';
                 if(i%2 === 1)
@@ -694,10 +684,7 @@
                             layer.msg(reason.caught ? reason.message : '请求失败！');
                         });
                 });
-
-
-
-            })
+            });
 
             //编辑用户
             consts.$editEmployeeModal.find('div[role="tab"]').unbind('click').click(function (e) {
@@ -907,11 +894,11 @@
          * 页面初始化
          */
         function init() {
-            initDepartments()
-                .then(function () {
-                    initEvent();
-                    loadEmployeeData();
-                });
+            $('.bugInfo').slimScroll({ height: '100%', railOpacity: 0.9 });
+            initDepartments().then(function () {
+                initEvent();
+                loadEmployeeData();
+            });
         }
     });
 </script>
