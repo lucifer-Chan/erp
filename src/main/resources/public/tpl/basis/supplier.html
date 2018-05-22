@@ -1,0 +1,184 @@
+<div class="erp_content animated fadeInRight full_height"  id="supplier_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称、联系人、电话号码" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <ul class="nav nav-pills" style="margin: -30px -280px -5px 280px;">
+                    <li role="presentation" class="dropdown" id="category">
+                    </li>
+                    <!--
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">类型：全部 <span class="caret"></span></a>
+                        <ul class="dropdown-menu bugType-dropdown-menu">
+                            <li><a data-value="">全部</a></li>
+                            <li><a data-value="Bug">缺陷</a></li>
+                            <li><a data-value="Task">任务</a></li>
+                            <li><a data-value="Require">需求</a></li>
+                        </ul>
+                    </li>
+                    -->
+                </ul>
+            </div>
+
+
+
+            <button type="button" class="btn btn-default btn-ms right" style="margin: 0px 15px 0px 20px;" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增供应商</button>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:70px" erp-data="{barCode}">编号</th>
+                                <th style="width:40px" erp-data="{supplierTypeCode}" erp-convert="convertType">类型</th>
+                                <th style="width:90px" erp-data="{supplierName}">名称</th>
+                                <th style="width:40px" erp-data="{contactName}">联系人</th>
+                                <th style="width:50px" erp-data="{contactMobile}">手机号码</th>
+                                <th style="width:50px" erp-data="{contactPhone}">固定电话</th>
+                                <th style="width:50px" erp-data="{possession}">所属地</th>
+                                <th style="width:30px" erp-data="{rank}" erp-convert="convertRank">等级</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        console.log('hello supplier');
+        init();
+
+        var consts = {
+            types : {}//供应商类型-code|name
+            , ranks : {} //供应商等级-code|name
+            , oQueryParam : {}//查询参数
+
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $categoryHolder : $('#category')//供应商类别
+        };
+
+        //预置数据
+        function prepareData() {
+            //1-加载模版页面
+            return $.Promise.all([
+                services.supplier.types(), services.lookup('supplier')
+            ]).then(function (array) {
+                array[0].list.forEach(function (value) {
+                    consts.types[value.code] = value.name;
+                });
+                array[1].list.forEach(function (value) {
+                    consts.ranks[value.code] = value.name;
+                });
+            }).catch(function (reason) {
+                console.log('reason', reason);
+            })
+        }
+
+        /**
+         * 加载供应商列表
+         */
+        function loadSupplierData(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.supplier.query(params);
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                // var $rightPage = consts.$rightPage;
+                // var id = $tr.attr('id');
+                // if (id === $rightPage.attr('data-id')) return;
+                // $rightPage.attr('data-id', id);
+                // services.account.one(id)
+                //     .then(function (employee) {
+                //         initEmployeeDetail(employee);
+                //         $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                //         $rightPage.find('.fa-angle-double-down').click();
+                //     })
+                //     .catch(function (reason) {
+                //         layer.msg(reason.caught ? reason.message : '请求失败！');
+                //     })
+                // ;
+            }
+
+            /**
+             * 客户化方法，
+             * @param array 待包装的数据
+             */
+            function convertType(array){
+                var value = array.length ? array[0] : '';
+                return !value ? '' : consts.types[value] || '';
+            }
+
+            function convertRank(array) {
+                var value = array.length ? array[0] : '';
+                return !value ? '' : consts.ranks[value] || '';
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : [convertType, convertRank]
+            });
+        }
+
+        function initEvent() {
+            //搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                consts.oQueryParam.cause = $('#fastKeyword').val();
+                loadSupplierData(true);
+            });
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13){
+                    consts.oQueryParam.cause = $('#fastKeyword').val();
+                    loadSupplierData(true);
+                }
+            });
+        }
+
+        function init() {
+            prepareData()
+                .then(function () {
+                    //类别下拉
+                    consts.$categoryHolder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">类别：全部 <span class="caret"></span></a>');
+                    var ul = $('<ul class="dropdown-menu">');
+                    ul.append('<li><a data-value="">全部</a></li>');
+                    $.each(consts.types, function (code, name) {
+                        ul.append('<li><a data-value="'+ code +'">'+ name + '</a></li>');
+                    });
+                    consts.$categoryHolder.append(ul);
+                    ul.find('li>a').click(function () {
+                        var $this = $(this);
+                        $(this).parents('li.dropdown').children().eq(0).html('类别：'+$this.text()+' <span class="caret"></span>');
+                        consts.oQueryParam.type = $(this).attr('data-value');
+                        console.log('oQueryParam', consts.oQueryParam);
+                        loadSupplierData(true);
+                    });
+                    initEvent();
+                    loadSupplierData();
+                })
+        }
+
+    });
+</script>

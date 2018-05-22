@@ -906,7 +906,9 @@ ul.bugPlanNum li .PlanNumClass em {
 #bugTestFilter .nav>li>a,
 #crossStat .nav>li>a,
 .testTaskBatchAddFilter .nav>li>a {
-    background: #00aeef;
+    /*background: #00aeef;*/
+    background: none;
+    border: solid 1px #fff;
     color: #fff;
 }
 

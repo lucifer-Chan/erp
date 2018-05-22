@@ -11,7 +11,6 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.Collection;
@@ -62,9 +61,8 @@ public class QueryParameterBuilder {
      * @throws ParseException
      * @throws IllegalAccessException
      * @throws NoSuchMethodException
-     * @throws InvocationTargetException
      */
-    private <T> List<Predicate> buildSingle(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws ParseException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    private <T> List<Predicate> buildSingle(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws ParseException, IllegalAccessException, NoSuchMethodException {
 
         ParameterItem parameterItem = field.getAnnotation(ParameterItem.class);
         Object value = transValue(field, parameterItem.transformer());

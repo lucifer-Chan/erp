@@ -168,9 +168,35 @@ define('services',['utils'],function (utils) {
         }
     };
 
+    var supplier = {
+        //分类
+        types : function () {
+            return $.http.get('basis/common/categories/children/direct?code=US');
+        },
+
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'basis/supplier',
+                data : params
+            });
+        }
+    }
+
+    /**
+     * 下拉
+     * @param type
+     * @returns {*}
+     */
+    var lookup = function (type) {
+        return $.http.get('basis/common/lookup/' + type);
+    }
+
     return {
          account: account
         , menus : menus
         , department : department
+        , supplier : supplier
+        , lookup : lookup
     }
 });

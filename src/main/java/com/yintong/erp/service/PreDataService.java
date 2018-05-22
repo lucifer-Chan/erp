@@ -1,9 +1,6 @@
 package com.yintong.erp.service;
 
-import com.yintong.erp.domain.basis.ErpBaseCategory;
-import com.yintong.erp.domain.basis.ErpBaseCategoryRepository;
-import com.yintong.erp.domain.basis.ErpBaseDepartment;
-import com.yintong.erp.domain.basis.ErpBaseDepartmentRepository;
+import com.yintong.erp.domain.basis.*;
 import com.yintong.erp.domain.basis.security.*;
 import com.yintong.erp.utils.bar.BarCodeConstants.*;
 import org.apache.commons.collections4.KeyValue;
@@ -22,7 +19,7 @@ import java.util.List;
  * 预置数据服务
  **/
 
-@Component
+//@Component
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -35,6 +32,8 @@ public class PreDataService {
 
     @Autowired ErpBaseDepartmentRepository departmentRepository;
 
+    @Autowired ErpBaseLookupRepository lookupRepository;
+
     @Value("${yintong.erp.model.debug}")
     private boolean debug;
 
@@ -44,7 +43,8 @@ public class PreDataService {
 //        initMenus();
 //        initEmployees();
 //        initCategories();
-        initDepartments();
+//        initDepartments();
+        initLookup();
     }
 
 
@@ -68,13 +68,13 @@ public class PreDataService {
         menuRepository.deleteAll();
         List<ErpMenu> menus = Arrays.asList(
                 ErpMenu.builder().code("10").name("基础数据").build()
-                    , ErpMenu.builder().code("1001").name("人员管理").matches("basis/employee/**").uri("basis/employee.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1001").name("人员组织管理").matches("basis/employee/**").uri("basis/employee.html").parentCode("10").build()
                     , ErpMenu.builder().code("1002").name("成品管理").matches("basis/product/**").uri("product.html").parentCode("10").build()
                     , ErpMenu.builder().code("1003").name("原材料管理").matches("basis/material/**").uri("material.html").parentCode("10").build()
                     , ErpMenu.builder().code("1004").name("模具管理").matches("basis/mould/**").uri("mould.html").parentCode("10").build()
                     , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment;/**").uri("equipment;.html").parentCode("10").build()
                     , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("customer.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("supplier.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("basis/supplier.html").parentCode("10").build()
                 , ErpMenu.builder().code("20").name("销售模块").build()
                     , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
                     , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
@@ -94,14 +94,7 @@ public class PreDataService {
         ErpEmployee admin = employeeRepository.save(ErpEmployee.builder().loginName("admin").password("123").name("管理员").build());
         erpEmployeeMenuRepository.save(ErpEmployeeMenu.builder().employeeId(admin.getId()).menuCode("99").build());
         //测试员工
-        ErpEmployee employee = employeeRepository.save(ErpEmployee.builder().loginName("test").password("123").name("测试人员").build());
-        erpEmployeeMenuRepository.saveAll(
-                Arrays.asList(
-                        ErpEmployeeMenu.builder().employeeId(employee.getId()).menuCode("1006").build()
-                        , ErpEmployeeMenu.builder().employeeId(employee.getId()).menuCode("1007").build()
-                        , ErpEmployeeMenu.builder().employeeId(employee.getId()).menuCode("2004").build()
-                )
-        );
+        employeeRepository.save(ErpEmployee.builder().loginName("test").password("123").name("测试人员").build());
     }
 
     /**
@@ -206,6 +199,17 @@ public class PreDataService {
                 Arrays.asList(
                         ErpBaseDepartment.builder().code("D00601").name("开发部").parentId(_3.getId()).build()
                         , ErpBaseDepartment.builder().code("D00602").name("理化室").parentId(_3.getId()).build()
+                )
+        );
+    }
+
+    private void initLookup(){
+        lookupRepository.deleteAll();
+        lookupRepository.saveAll(
+                Arrays.asList(
+                        ErpBaseLookup.builder().code("001").name("一级").type("supplier").tag(1L).description("供应商等级").build()
+                        , ErpBaseLookup.builder().code("002").name("二级").type("supplier").tag(2L).description("供应商等级").build()
+                        , ErpBaseLookup.builder().code("003").name("三级").type("supplier").tag(3L).description("供应商等级").build()
                 )
         );
     }

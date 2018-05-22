@@ -6,12 +6,11 @@ import com.yintong.erp.utils.common.SimpleCache;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -31,6 +30,8 @@ public class CategoryService {
      */
     @Autowired SimpleCache<List<ErpBaseCategory>> cache;
 
+    @Autowired SimpleCache<Map<String, ErpBaseCategory>> mapCache;
+
     /**
      * 获取一级类别
      * @return
@@ -44,12 +45,28 @@ public class CategoryService {
      * @return
      */
     public List<ErpBaseCategory> children(@NonNull String parentCode) {
-        return cache.getDataFromCache(KEY_PREFIX + "_" + parentCode,
+        return cache.getDataFromCache(KEY_PREFIX + "_" + parentCode + "_children",
                 ret -> all().stream()
                         .filter(category -> parentCode.equals(category.getParentCode()))
                         .sorted(Comparator.comparing(ErpBaseCategory::getParentCode))
                         .collect(toList())
         );
+    }
+
+    /**
+     * 展开一棵树
+     * @param rootCode
+     * @param ret 返回值
+     * @return
+     */
+    public List<ErpBaseCategory> append(String rootCode, List<ErpBaseCategory> ret){
+        ret.add(one(rootCode));
+        List<ErpBaseCategory> children = children(rootCode);
+        if(!CollectionUtils.isEmpty(children)){
+            for (ErpBaseCategory child : children)
+                ret = append(child.getCode(), ret);
+        }
+        return ret;
     }
 
     /**
@@ -84,11 +101,23 @@ public class CategoryService {
     }
 
     /**
+     * 根据code获取节点
+     * @param code
+     * @return
+     */
+    public ErpBaseCategory one(String code){
+        Map<String, ErpBaseCategory> map = mapCache.getDataFromCache(KEY_PREFIX + "_all_map",
+                ret -> all().stream().collect(Collectors.toMap(ErpBaseCategory::getCode, c->c)));
+        ErpBaseCategory ret = map.get(code);
+        Assert.notNull(ret, "未找到编码为" + code + "的类别");
+        return ret;
+    }
+
+    /**
      * 所有类别
      * @return
      */
-    private List<ErpBaseCategory> all(){
+    public List<ErpBaseCategory> all(){
         return cache.getDataFromCache(KEY_PREFIX + "_all", ret -> categoryRepository.findAll());
     }
-
 }

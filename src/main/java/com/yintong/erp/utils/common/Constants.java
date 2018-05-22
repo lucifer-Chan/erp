@@ -18,8 +18,10 @@ public interface Constants {
         /**
          * 任何登陆用户的权限匹配
          */
-        String PROFILE_ROLE_MATCHES = "/profile/**," +
-                "basis/menus/current/tree"//当前菜单树
+        String PROFILE_ROLE_MATCHES = "/profile/**" +
+                //当前菜单树
+                ",basis/menus/current/tree" +
+                ",basis/common/*"
                 ;
 
         //不登陆也可以访问

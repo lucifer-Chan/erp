@@ -375,7 +375,6 @@ define('utils',[],function(){
                                             params.push(data[r.field]);
                                         });
                                         if(!$.isArray(aConverts)) throw new TypeError((aConverts||'末尾参数：aConverts') + ' is not a Array');
-                                        console.log(aConverts);
                                         for(var i = 0; i < aConverts.length; i ++){
                                             if(typeof aConverts[i] !== 'function' )
                                                 throw new TypeError(aConverts[i]  + ' is not a function');

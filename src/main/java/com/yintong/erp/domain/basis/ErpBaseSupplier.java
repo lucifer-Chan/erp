@@ -31,7 +31,7 @@ public class ErpBaseSupplier extends BaseEntityWithBarCode {
     @BarCode
     @Column(columnDefinition = "varchar(20) comment '供应商类别编码[企业-C:USC0,个体-S:USS0，外协-E：USE0]'")
     private String supplierTypeCode;
-    @Column(columnDefinition = "varchar(64) comment '地址'")
+    @Column(columnDefinition = "varchar(200) comment '地址'")
     private String address;
     @Column(columnDefinition = "varchar(20) comment '联系人'")
     private String contactName;
@@ -41,7 +41,7 @@ public class ErpBaseSupplier extends BaseEntityWithBarCode {
     private String contactPhone;
     @Column(columnDefinition = "varchar(64) comment '传真号码'")
     private String FaxNo;
-    @Column(columnDefinition = "varchar(64) comment '常用托运部'")
+    @Column(columnDefinition = "varchar(200) comment '常用托运部'")
     private String consign;
     @Column(columnDefinition = "varchar(20) comment '所属业务员'")
     private String salesman;
@@ -49,6 +49,6 @@ public class ErpBaseSupplier extends BaseEntityWithBarCode {
     private String possession;
     @Column(columnDefinition = "varchar(10) comment '等级'")
     private String rank;
-    @Column(columnDefinition = "varchar(128) comment '备注'")
+    @Column(columnDefinition = "varchar(2000) comment '备注'")
     private String remark;
 }

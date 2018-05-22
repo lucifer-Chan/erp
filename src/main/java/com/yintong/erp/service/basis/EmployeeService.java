@@ -221,7 +221,7 @@ public class EmployeeService {
 
     @Getter @Setter
     public static class EmployeeParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"name", "mobile", "loginName"}, compare = like)
+        @ParameterItem(mappingTo = {"name", "mobile", "loginName", "barCode"}, compare = like)
         String cause;
         String departmentId;
 

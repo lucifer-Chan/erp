@@ -40,6 +40,13 @@ public class ErpBaseCategory extends BaseEntity {
     @Transient
     private boolean root;
 
+    @Transient
+    private int level;
+
+    public int getLevel(){
+        return code.length();
+    }
+
     public boolean isLeaf(){
         return code.length() == 4;
     }

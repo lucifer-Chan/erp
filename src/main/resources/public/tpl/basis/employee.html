@@ -14,7 +14,9 @@
 
     <div class="full_height">
         <div id="searchFilter">
-            <div class="sidebar-search"><div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="姓名、登录名、电话号码" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div></div>
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="姓名、登录名、电话号码、编号" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
             <button type="button" class="btn btn-default btn-ms right" style="margin: 0px 15px 0px 20px;" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增人员</button>
         </div>
         <div class="pd23 pd43">
@@ -24,11 +26,12 @@
                         <table class="table table-hover" id="dataTables">
                             <thead>
                                 <tr erp-id="{id}">
-                                    <th style="width:50px" erp-data="{name}">姓名</th>
-                                    <th style="width:50px" erp-data="{loginName}">登录名</th>
+                                    <th style="width:70px" erp-data="{barCode}">编号</th>
+                                    <th style="width:40px" erp-data="{name}">姓名</th>
+                                    <th style="width:40px" erp-data="{loginName}">登录名</th>
                                     <th style="width:50px" erp-data="{mobile}">电话号码</th>
-                                    <th style="width:85px" erp-data="{departmentNames}" erp-convert="sub20">组织</th>
-                                    <th style="width:60px" erp-data="{menuNames}" erp-convert="sub20">权限</th>
+                                    <th style="width:70px" erp-data="{departmentNames}" erp-convert="sub20">组织</th>
+                                    <th style="width:70px" erp-data="{menuNames}" erp-convert="sub20">权限</th>
                                 </tr>
                             </thead>
                         </table>
@@ -239,9 +242,9 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateUserBaseInfoModal">修改基本信息</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#resetUserPasswordModal">重置密码</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateDepartmentModal">修改所属组织</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateMenuModal">修改权限</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#resetUserPasswordModal">重置密码</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
