@@ -1,0 +1,207 @@
+<div class="erp_content animated fadeInRight full_height"  id="mould_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <ul class="nav nav-pills" style="margin: -30px -280px -5px 280px;">
+                    <li role="presentation" class="dropdown" id="mould_category">
+                    </li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-default btn-ms right" style="margin: 0px 15px 0px 20px;" id="addMould" data-toggle="modal" data-target="#_newMould">新增模具</button>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:70px" erp-data="{barCode}">编号</th>
+                                <th style="width:40px" erp-data="{modelToolTypeCode}" erp-convert="convertType">类型</th>
+                                <th style="width:90px" erp-data="{modelToolName}">名称</th>
+                                <th style="width:40px" erp-data="{specification}">规格描述</th>
+                                <th style="width:50px" erp-data="{remark}">备注</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改模具信息 -->
+<div class="modal fade" role="dialog" id="_newMould">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-user defaultColor"></i> 新增模具信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd210 pd410">
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 右侧-->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateUserBaseInfoModal">修改模具信息</button>
+            <button class="btn btn-primary" data-name="delete">删除</button>
+        </span>
+    </div>
+    <div class="bugInfoContent mouldDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">基本信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">名称</label>
+                                <div class="col-xs-8 txt pd0" data-name="name"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        //初始页面
+        init();
+
+
+
+        var consts = {
+            types : {}//模具类型-code|name
+            , oQueryParam : {}//查询参数
+            , selectedMould : {} //选中的模具
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $categoryHolder : $('#mould_category')//模具类别
+            , $editMouldModal : $('#_newMould')//编辑人员的modal
+        };
+        //预置数据
+        function prepareData() {
+            //1-加载模版页面
+            return $.Promise.all([
+                services.mould.types(), services.lookup('mould')
+            ]).then(function (array) {
+                array[0].list.forEach(function (value) {
+                    consts.types[value.code] = value.name;
+                });
+                array[1].list.forEach(function (value) {
+                    consts.ranks[value.code] = value.name;
+                });
+            }).catch(function (reason) {
+                console.log('reason', reason);
+            })
+        }
+
+        /**
+         * 加载模具列表
+         */
+        function loadMouldData(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.mould.query(params);
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+
+            }
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+            });
+        }
+
+        function initEvent() {
+            //搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                consts.oQueryParam.cause = $('#fastKeyword').val();
+                loadMouldData(true);
+            });
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13){
+                    consts.oQueryParam.cause = $('#fastKeyword').val();
+                    loadMouldData(true);
+                }
+            });
+
+            //模态框初始化-编辑模具信息
+            consts.$editMouldModal.on('show.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"]').val('');
+
+            });
+
+            //编辑用户
+            consts.$editMouldModal.unbind('click').click(function (e) {
+
+                var $button = $(this);
+                e.preventDefault();
+                var $modal = consts.$editEmployeeModal;
+            });
+        }
+
+        function init() {
+            prepareData().then(function () {
+                //类别下拉
+                consts.$categoryHolder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">类别：全部 <span class="caret"></span></a>');
+                var ul = $('<ul class="dropdown-menu">');
+                ul.append('<li><a data-value="">全部</a></li>');
+                $.each(consts.types, function (code, name) {
+                    ul.append('<li><a data-value="'+ code +'">'+ name + '</a></li>');
+                });
+                consts.$categoryHolder.append(ul);
+                ul.find('li>a').click(function () {
+                    var $this = $(this);
+                    $(this).parents('li.dropdown').children().eq(0).html('类别：'+$this.text()+' <span class="caret"></span>');
+                    consts.oQueryParam.type = $(this).attr('data-value');
+                    console.log('mould_oQueryParam', consts.oQueryParam);
+                    loadMouldData(true);
+                });
+                initEvent();
+                loadMouldData();
+            });
+        }
+
+    });
+</script>
