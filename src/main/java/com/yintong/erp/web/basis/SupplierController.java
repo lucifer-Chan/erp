@@ -6,9 +6,7 @@ import com.yintong.erp.service.basis.SupplierService.SupplierParameterBuilder;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 
@@ -23,10 +21,46 @@ public class SupplierController {
 
     @Autowired SupplierService supplierService;
 
+    /**
+     * 组合查询
+     * @param parameter
+     * @return
+     */
     @GetMapping
     public BaseResult query(SupplierParameterBuilder parameter){
         Page<ErpBaseSupplier> page = supplierService.query(parameter);
         return page2BaseResult(page);
+    }
+
+    /**
+     * 新增供应商
+     * @param supplier
+     * @return
+     */
+    @PostMapping
+    public BaseResult create(@RequestBody ErpBaseSupplier supplier){
+        return new BaseResult().addPojo(supplierService.create(supplier));
+    }
+
+    /**
+     * 更新供应商
+     * @param supplier
+     * @return
+     */
+    @PutMapping
+    public BaseResult update(@RequestBody ErpBaseSupplier supplier){
+        return new BaseResult().addPojo(supplierService.update(supplier));
+    }
+
+    /**
+     * 根据id删除
+     * @param supplierId
+     * @return
+     */
+    @DeleteMapping("{supplierId}")
+    public BaseResult delete(@PathVariable Long supplierId){
+        supplierService.delete(supplierId);
+        return new BaseResult();
     }
 
 }

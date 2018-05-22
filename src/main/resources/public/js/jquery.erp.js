@@ -198,6 +198,9 @@
 
     //1-扩展基本方法
     $.extend({
+        isObject : function(val) {
+            return val != null && typeof val === 'object' && Array.isArray(val) === false;
+        },
         Promise: Promise,
         /**
          * sessionStorage

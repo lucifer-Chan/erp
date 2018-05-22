@@ -180,8 +180,28 @@ define('services',['utils'],function (utils) {
                 url : 'basis/supplier',
                 data : params
             });
+        },
+        //新建
+        create : function (data) {
+            return $.http.post({
+                url : 'basis/supplier',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //更新
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/supplier',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //删除
+        delete : function (id) {
+            return $.http.delete('basis/supplier/' + id);
         }
-    }
+    };
 
     /**
      * 下拉

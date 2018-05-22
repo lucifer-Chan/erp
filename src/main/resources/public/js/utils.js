@@ -432,6 +432,116 @@ define('utils',[],function(){
         dataTableMap.set(holderId, _oTable);
     }
 
+    /**
+     * @param setting -{$holder, -- dom
+     *                  data, -- 数据 [{code, name}] or {a:b,c:d,e:f}
+     *                  prefix, -- 前缀
+     *                  callback -- 点击a标签的回调函数，参数为a的data-value
+     *                  }
+     */
+    function dropdown(setting) {
+        setting = $.extend({$holder : $('<div/>'), data : [], prefix:''}, setting);
+        var callback = setting.callback || function (value) {console.log(value)};
+        setting.$holder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'+ setting.prefix +'：全部 <span class="caret"></span></a>');
+        var ul = $('<ul class="dropdown-menu">');
+        ul.append('<li><a data-value="">全部</a></li>');
+        var dataType = $.isArray(setting.data) ? 'array' : $.isObject(setting.data) ? 'object' : undefined;
+        if(dataType === 'object'){
+            $.each(setting.data, function (code, name) {
+                ul.append('<li><a data-value="'+ code +'">'+ name + '</a></li>');
+            });
+        } else if(dataType === 'object'){
+            $.each(setting.data, function () {
+                ul.append('<li><a data-value="'+ this.code +'">'+ this.name + '</a></li>');
+            });
+        }
+        setting.$holder.append(ul);
+        ul.find('li>a').click(function () {
+            var $this = $(this);
+            $(this).parents('li.dropdown').children().eq(0).html(setting.prefix +'：' +$this.text()+' <span class="caret"></span>');
+            callback($(this).attr('data-value'));
+        });
+    }
+
+    /**
+     * @param setting -{$holder, -- dom
+     *                  data, -- 数据 [{code, name}] or {a:b,c:d,e:f}
+     *                  current, -- 当前数据
+     *                  callback -- 选择option的回调函数，参数为option的value
+     *                  }
+     */
+    function dropkick(setting) {
+        setting = $.extend({$holder : $('<div/>'), data : [], current : ''}, setting);
+        var callback = setting.callback || function (value) {console.log(value)};
+        var holderId = setting.$holder.attr('id');
+        var $select = $('<select id="'+holderId+'_Select">');
+        var dataType = $.isArray(setting.data) ? 'array' : $.isObject(setting.data) ? 'object' : undefined;
+        var count = 0;
+
+        if(dataType === 'object'){
+            $.each(setting.data, function (code, name) {
+                var selected = (setting.current && setting.current == code) ? ' selected' : '';
+                $select.append('<option value="'+code+ '"' + selected + '>' + name + '</option>');
+                count ++;
+            });
+        } else if(dataType === 'object'){
+            $.each(setting.data, function () {
+                var selected = (setting.current && setting.current == this.code) ? ' selected' : '';
+                $select.append('<option value="'+ this.code+ '"' + selected + '>' + this.name + '</option>');
+                count ++;
+            });
+        }
+        setting.$holder.empty().append($select);
+        setting.$holder.attr('data-value', setting.current || '');
+        $('#' + holderId+'_Select').dropkick({
+            change : function(value){
+                setting.$holder.attr('data-value', value);
+                callback(value);
+                setTimeout(function(){
+                    setting.$holder.find('.search i').hide();
+                    setting.$holder.find('input').val('');
+                    setting.$holder.find('ul li').each(function(index,el){
+                        $(el).show();
+                    });
+                },500);
+            }
+        });
+        if(count > 8){
+            setting.$holder.find('ul').before('<div class="search"><input type="text" class="form-control" placeholder="快速搜索"><i class="fa fa-times-circle"></i></div>');
+            setting.$holder.find('input').focus(function(){
+                var $this = $(this);
+                setting.$holder.children().addClass('dk_open dk_focus');
+                $this.unbind('input').on('input',function(){
+                    var input_val = $this.val().toLowerCase();
+                    var li_val = setting.$holder.find('ul li');
+                    if(!!input_val){
+                        setting.$holder.find('.search i').show();
+                    }else{
+                        setting.$holder.find('.search i').hide();
+                    }
+                    li_val.each(function(index,el){
+                        var text = $(el).find('a').text();
+                        console.log(text);
+                        if(text && text.toLowerCase().indexOf(input_val) > -1){
+                            $(el).show();
+                        } else {
+                            $(el).hide();
+                        }
+                    });
+                });
+                return false;
+            });
+            setting.$holder.find('.search i').click(function(){
+                $(this).hide();
+                setting.$holder.find('input').val('');
+                setting.$holder.find('ul li').each(function(index,el){
+                    $(el).show();
+                });
+            });
+        }
+        setting.$holder.find('.input-group').click(function(){return false});
+    }
+
 
 
 
@@ -448,5 +558,7 @@ define('utils',[],function(){
         , initTheme: initTheme
         , setPageTitle: setPageTitle
         , dataTable : dataTable
+        , dropdown : dropdown
+        , dropkick : dropkick
     }
 });

@@ -3680,12 +3680,19 @@ span.openInfoPage ul li a i {
 }
 /*lucifer at 20180515*/
 #searchFilter {
-    display: inline-block;
+    display: flex;
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
+    height: 42px;
     /*margin-bottom: -2px;*/
     background-color: #0394cb;
+}
+
+#searchFilter button.operation{
+    position: absolute;
+    right: 20px;
+    height: 32px;
 }
 
 /* 主题 */

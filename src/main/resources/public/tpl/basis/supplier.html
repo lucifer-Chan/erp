@@ -3,26 +3,14 @@
         <div id="searchFilter">
             <div class="sidebar-search">
                 <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称、联系人、电话号码" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
-                <ul class="nav nav-pills" style="margin: -30px -280px -5px 280px;">
-                    <li role="presentation" class="dropdown" id="category">
-                    </li>
-                    <!--
-                    <li role="presentation" class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">类型：全部 <span class="caret"></span></a>
-                        <ul class="dropdown-menu bugType-dropdown-menu">
-                            <li><a data-value="">全部</a></li>
-                            <li><a data-value="Bug">缺陷</a></li>
-                            <li><a data-value="Task">任务</a></li>
-                            <li><a data-value="Require">需求</a></li>
-                        </ul>
-                    </li>
-                    -->
-                </ul>
             </div>
-
-
-
-            <button type="button" class="btn btn-default btn-ms right" style="margin: 0px 15px 0px 20px;" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增供应商</button>
+            <ul class="nav nav-pills">
+                <li role="presentation" class="dropdown" id="type">
+                </li>
+                <li role="presentation" class="dropdown" id="rank">
+                </li>
+            </ul>
+            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editSupplier">新增供应商</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -49,6 +37,94 @@
     </div>
 </div>
 
+
+<!-- 编辑供应商基本信息 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editSupplier">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-bank defaultColor"></i> 编辑供应商信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="supplierName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">地址</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="address" placeholder="最多输入50个字符" autofocus onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">类型</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="supplierTypeCode" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                        <label class="col-sm-2 control-label">等级</label>
+                        <div class="col-sm-4">
+                            <div class="customDropkick" style="width: 100%;" id="_rank" name="rank"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">所属地</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="possession" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">固定电话</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="contactPhone" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                        <label class="col-sm-2 control-label">传真号码</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="faxNo" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">联系人</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="contactName" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">手机号</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="contactMobile" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">托运部</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="consign" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">业务员</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="salesman" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10">
+                            <textarea rows="5" class="form-control" name="rank"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('hello supplier');
@@ -60,7 +136,8 @@
             , oQueryParam : {}//查询参数
 
             , $rightPage : $('#rightInfoPage')//右侧页面
-            , $categoryHolder : $('#category')//供应商类别
+            , $typeHolder : $('#type')//供应商类别
+            , $ranHolder : $('#rank')//供应商等级
         };
 
         //预置数据
@@ -83,7 +160,7 @@
         /**
          * 加载供应商列表
          */
-        function loadSupplierData(oParams) {
+        function loadDataTable(oParams) {
             //缓存查询条件
             if (oParams === true){
                 oParams = consts.oQueryParam;
@@ -143,40 +220,55 @@
             });
         }
 
+        /**
+         * 初始化事件
+         */
         function initEvent() {
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
                 consts.oQueryParam.cause = $('#fastKeyword').val();
-                loadSupplierData(true);
+                loadDataTable(true);
             });
             $("#fastKeyword").keydown(function(e){
                 if(e.keyCode === 13){
                     consts.oQueryParam.cause = $('#fastKeyword').val();
-                    loadSupplierData(true);
+                    loadDataTable(true);
                 }
             });
+            //初始化搜索下拉列表
+            utils.dropdown({
+                $holder : consts.$typeHolder,
+                data : consts.types,
+                prefix : '类别',
+                callback : function (value) {
+                    consts.oQueryParam.type = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadDataTable(true);
+                }
+            });
+            utils.dropdown({
+                $holder : consts.$ranHolder,
+                data : consts.ranks,
+                prefix : '等级',
+                callback : function (value) {
+                    consts.oQueryParam.rank = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadDataTable(true);
+                }
+            });
+            // utils.dropkick({
+            //     $holder : $('#_rank'),
+            //     data : consts.ranks
+            // })
         }
+        
+
 
         function init() {
             prepareData()
                 .then(function () {
-                    //类别下拉
-                    consts.$categoryHolder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">类别：全部 <span class="caret"></span></a>');
-                    var ul = $('<ul class="dropdown-menu">');
-                    ul.append('<li><a data-value="">全部</a></li>');
-                    $.each(consts.types, function (code, name) {
-                        ul.append('<li><a data-value="'+ code +'">'+ name + '</a></li>');
-                    });
-                    consts.$categoryHolder.append(ul);
-                    ul.find('li>a').click(function () {
-                        var $this = $(this);
-                        $(this).parents('li.dropdown').children().eq(0).html('类别：'+$this.text()+' <span class="caret"></span>');
-                        consts.oQueryParam.type = $(this).attr('data-value');
-                        console.log('oQueryParam', consts.oQueryParam);
-                        loadSupplierData(true);
-                    });
                     initEvent();
-                    loadSupplierData();
+                    loadDataTable();
                 })
         }
 

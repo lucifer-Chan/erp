@@ -24,8 +24,8 @@ public class ErpBaseSupplier extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '供应商编号'")
-    private String supplierNo;
+//    @Column(columnDefinition = "varchar(64) comment '供应商编号'")
+//    private String supplierNo;
     @Column(columnDefinition = "varchar(20) comment '供应商名称'")
     private String supplierName;
     @BarCode
@@ -40,7 +40,7 @@ public class ErpBaseSupplier extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(20) comment '固定电话'")
     private String contactPhone;
     @Column(columnDefinition = "varchar(64) comment '传真号码'")
-    private String FaxNo;
+    private String faxNo;
     @Column(columnDefinition = "varchar(200) comment '常用托运部'")
     private String consign;
     @Column(columnDefinition = "varchar(20) comment '所属业务员'")

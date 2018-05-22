@@ -17,7 +17,7 @@
             <div class="sidebar-search">
                 <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="姓名、登录名、电话号码、编号" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
-            <button type="button" class="btn btn-default btn-ms right" style="margin: 0px 15px 0px 20px;" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增人员</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_newEmployee">新增人员</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -410,7 +410,7 @@
          * 加载用户数据
          * @param oParams 参数
          */
-        function loadEmployeeData(oParams) {
+        function loadDataTable(oParams) {
             //缓存查询条件
             if (oParams === true){
                 oParams = consts.oQueryParam;
@@ -422,7 +422,7 @@
              * 加载数据的实际方法
              * @param params
              */
-            function promiseEmployeeData(params){
+            function dataProvider(params){
                 return services.account.query(params);
             }
 
@@ -458,7 +458,7 @@
 
             utils.dataTable({
                 holder: '#dataTables'
-                , $dataProvider : promiseEmployeeData
+                , $dataProvider : dataProvider
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
                 , aConverts : [sub20]
@@ -612,7 +612,7 @@
                     , loginName : $modal.find('input[name="loginName"]').val()
                     , mobile : $modal.find('input[name="mobile"]').val()
                 }).then(function (employee) {
-                    loadEmployeeData(true);
+                    loadDataTable(true);
                     initEmployeeDetail(employee);
                     $modal.modal('hide');
                 }).catch(function (reason) {
@@ -626,7 +626,7 @@
                 services.account
                     .updatePassword(consts.selectedEmployee.id, $modal.find('input[name="password"]').val())
                     .then(function (employee) {
-                        loadEmployeeData(true);
+                        loadDataTable(true);
                         initEmployeeDetail(employee);
                         $modal.modal('hide');
                     })
@@ -646,7 +646,7 @@
                 services.account
                     .saveDepartments(consts.selectedEmployee.id, departmentIds)
                     .then(function (employee) {
-                        loadEmployeeData(true);
+                        loadDataTable(true);
                         initEmployeeDetail(employee);
                         $modal.modal('hide');
                     })
@@ -665,7 +665,7 @@
                 services.account
                     .saveMenus(consts.selectedEmployee.id, menuCodes)
                     .then(function (employee) {
-                        loadEmployeeData(true);
+                        loadDataTable(true);
                         initEmployeeDetail(employee);
                         $modal.modal('hide');
                     })
@@ -679,7 +679,7 @@
                     services.account.delete(consts.selectedEmployee.id)
                         .then(function (ret) {
                             layer.msg(ret._message);
-                            loadEmployeeData(true);
+                            loadDataTable(true);
                             consts.selectedEmployee = {};
                             consts.$rightPage.hide();
                         })
@@ -717,7 +717,7 @@
                     .then(function (ret) {
                         consts.selectedEmployee = ret;
                         $('#fastKeyword').val('');
-                        loadEmployeeData();
+                        loadDataTable();
                         step();
                     })
                     .catch(function (reason) {
@@ -734,7 +734,7 @@
                     services.account
                         .saveDepartments(consts.selectedEmployee.id, departmentIds)
                         .then(function () {
-                            loadEmployeeData();
+                            loadDataTable();
                             step();
                         })
                         .catch(function (reason) {
@@ -751,7 +751,7 @@
                 services.account
                     .saveMenus(consts.selectedEmployee.id, menuCodes)
                     .then(function () {
-                        loadEmployeeData();
+                        loadDataTable();
                         consts.$editEmployeeModal.modal('hide');
                     })
                     .catch(function (reason) {
@@ -820,11 +820,11 @@
             });
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
-                loadEmployeeData({ cause : $('#fastKeyword').val() });
+                loadDataTable({ cause : $('#fastKeyword').val() });
             });
             $("#fastKeyword").keydown(function(e){
                 if(e.keyCode === 13)
-                    loadEmployeeData({ cause : $('#fastKeyword').val() });
+                    loadDataTable({ cause : $('#fastKeyword').val() });
             });
         }
 
@@ -846,7 +846,7 @@
                     onClick: function (event, treeId, treeNode) {
                         $.session(consts.nodeKey, treeNode);
                         buttonOptStyle();
-                        loadEmployeeData({departmentId : treeNode.id < 0 ? '' : treeNode.id});
+                        loadDataTable({departmentId : treeNode.id < 0 ? '' : treeNode.id});
                     }
                 }
             };
@@ -900,7 +900,7 @@
             $('.bugInfo').slimScroll({ height: '100%', railOpacity: 0.9 });
             initDepartments().then(function () {
                 initEvent();
-                loadEmployeeData();
+                loadDataTable();
             });
         }
     });

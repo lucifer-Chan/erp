@@ -7,6 +7,7 @@ import com.yintong.erp.utils.common.SessionUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
+import com.yintong.erp.validator.OnDeleteEmployeeValidator;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import javax.persistence.criteria.Predicate;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +40,10 @@ public class EmployeeService {
 
     @Autowired ErpEmployeeMenuRepository employeeMenuRepository;
 
+    @Autowired(required = false) List<OnDeleteEmployeeValidator> validators;
+
     /**
+     *
      * 动态查询
      * @param parameter
      * @return
@@ -54,19 +56,7 @@ public class EmployeeService {
                 employeeRepository.findAll(parameter.specification(), pageRequest) :
                 employeeRepository.findByDepartmentId(parameter.getDepartmentId(), pageRequest) ;
     }
-//    public Page<ErpEmployee> query(EmployeeParameterBuilder parameter){
-//        PageRequest pageRequest = PageRequest.of(parameter.getPageNum(), parameter.getPerPageNum());
-//        if(StringUtils.isEmpty(parameter.cause) && StringUtils.isEmpty(parameter.departmentId))
-//            return employeeRepository.findAll(pageRequest);
-//        return StringUtils.hasLength(parameter.cause) ?
-//                employeeRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
-//                    List<Predicate> predicates = parameter.build(root, criteriaBuilder);
-//                    System.out.println(root);
-//                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-//                    return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
-//                }, pageRequest) :
-//                employeeRepository.findByDepartmentId(parameter.getDepartmentId(), pageRequest) ;
-//    }
+
     /**
      * 创建用户基本信息-包括密码
      * @param employee
@@ -130,7 +120,8 @@ public class EmployeeService {
         ErpEmployee employee = employeeRepository.findById(employeeId).orElse(null);
         Assert.notNull(employee, "未找到id为" + employeeId + "的用户");
         String name = employee.getName();
-        //TODO 销售单、制令单等有关联业务存在的情况下，不能删除
+        if(CollectionUtils.isNotEmpty(validators))
+            validators.forEach(validator->validator.validate(employeeId));
         employeeRepository.delete(employee);
         employeeMenuRepository.deleteByEmployeeId(employeeId);
         employeeDepartmentRepository.deleteByEmployeeId(employeeId);

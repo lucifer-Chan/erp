@@ -669,7 +669,7 @@ ul.bugPlanNum li .PlanNumClass em {
     background: #00adef;
 }
 .dropdown-menu {
-    min-width: 128px;
+    min-width: 110px;
     border: none;
     border-radius: 0px;
 }
@@ -910,6 +910,7 @@ ul.bugPlanNum li .PlanNumClass em {
     background: none;
     border: solid 1px #fff;
     color: #fff;
+    width: 110px;
 }
 
 /* ÃÂ³Â¼Ã†ÃÂ¼ */
