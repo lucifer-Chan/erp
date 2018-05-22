@@ -183,6 +183,21 @@ define('services',['utils'],function (utils) {
         }
     }
 
+    var mould = {
+        //分类
+        types : function () {
+            return $.http.get('basis/common/categories/children/direct?code=D');
+        },
+
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'basis/mould',
+                data : params
+            });
+        }
+    };
+
     /**
      * 下拉
      * @param type
@@ -197,6 +212,7 @@ define('services',['utils'],function (utils) {
         , menus : menus
         , department : department
         , supplier : supplier
+        , mould : mould
         , lookup : lookup
     }
 });
