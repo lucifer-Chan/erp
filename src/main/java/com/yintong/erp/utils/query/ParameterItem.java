@@ -1,6 +1,8 @@
 package com.yintong.erp.utils.query;
 
+import javax.persistence.criteria.Predicate.BooleanOperator;
 import java.lang.annotation.*;
+import static javax.persistence.criteria.Predicate.BooleanOperator.*;
 
 /**
  * Created by lucifer.chan on 2017/12/8.
@@ -15,8 +17,25 @@ public @interface ParameterItem {
      * @return
      */
     String [] mappingTo() default {};
+
+    /**
+     * AND or OR 分组
+     * @return
+     */
+    BooleanOperator group() default AND;
+
+    /**
+     * 比较方式
+     * @return
+     */
     COMPARES compare();
+
+    /**
+     * 数据转换-适用于实体类为Date类型
+     * @return
+     */
     TRANSFORMER transformer() default TRANSFORMER.NULL;
+
     enum COMPARES {
         lessThan,
         greaterThan,

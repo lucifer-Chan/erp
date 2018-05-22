@@ -2,22 +2,17 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
+import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
-import javax.persistence.criteria.Predicate;
-
-import java.util.List;
 
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.*;
+import static javax.persistence.criteria.Predicate.BooleanOperator.*;
 
 /**
  * @author lucifer.chan
@@ -35,30 +30,18 @@ public class SupplierService {
      * @return
      */
     public Page<ErpBaseSupplier> query(SupplierParameterBuilder parameter){
-        PageRequest pageRequest = PageRequest.of(parameter.getPageNum(), parameter.getPerPageNum());
-        if(StringUtils.isEmpty(parameter.cause) && StringUtils.isEmpty(parameter.type))
-            return supplierRepository.findAll(pageRequest);
-        return supplierRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
-                    List<Predicate> predicates = parameter.build(root, criteriaBuilder);
-                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-                    Predicate typePredicate = criteriaBuilder.equal(root.get("supplierTypeCode"), parameter.type);
-                    return StringUtils.isEmpty(parameter.type) ?
-                            criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])) :
-                            CollectionUtils.isEmpty(predicates) ?
-                                    criteriaBuilder.and(typePredicate) :
-                                    criteriaBuilder.and(typePredicate, criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
-                }, pageRequest);
+        return supplierRepository.findAll(parameter.specification(), parameter.pageable());
     }
 
 
 
 
-    @Getter
-    @Setter
+    @Getter @Setter
+    @OrderBy(fieldName = "id")
     public static class SupplierParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "supplierName", "contactName", "contactMobile", "contactPhone"}, compare = like)
+        @ParameterItem(mappingTo = {"barCode", "supplierName", "contactName", "contactMobile", "contactPhone"}, compare = like, group = OR)
         String cause;
-//        @ParameterItem(mappingTo = "supplierTypeCode", compare = equal)
+        @ParameterItem(mappingTo = "supplierTypeCode", compare = equal)
         String type;
     }
 }

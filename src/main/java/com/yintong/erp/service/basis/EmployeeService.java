@@ -4,6 +4,7 @@ import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartment;
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartmentRepository;
 import com.yintong.erp.domain.basis.security.*;
 import com.yintong.erp.utils.common.SessionUtil;
+import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ import java.util.Objects;
 
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.*;
 import static java.util.stream.Collectors.*;
+import static javax.persistence.criteria.Predicate.BooleanOperator.*;
 
 /**
  * @author lucifer.chan
@@ -48,16 +50,23 @@ public class EmployeeService {
         PageRequest pageRequest = PageRequest.of(parameter.getPageNum(), parameter.getPerPageNum());
         if(StringUtils.isEmpty(parameter.cause) && StringUtils.isEmpty(parameter.departmentId))
             return employeeRepository.findAll(pageRequest);
-
         return StringUtils.hasLength(parameter.cause) ?
-                employeeRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
-                    List<Predicate> predicates = parameter.build(root, criteriaBuilder);
-                    System.out.println(root);
-                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-                    return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
-                }, pageRequest) :
+                employeeRepository.findAll(parameter.specification(), pageRequest) :
                 employeeRepository.findByDepartmentId(parameter.getDepartmentId(), pageRequest) ;
     }
+//    public Page<ErpEmployee> query(EmployeeParameterBuilder parameter){
+//        PageRequest pageRequest = PageRequest.of(parameter.getPageNum(), parameter.getPerPageNum());
+//        if(StringUtils.isEmpty(parameter.cause) && StringUtils.isEmpty(parameter.departmentId))
+//            return employeeRepository.findAll(pageRequest);
+//        return StringUtils.hasLength(parameter.cause) ?
+//                employeeRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
+//                    List<Predicate> predicates = parameter.build(root, criteriaBuilder);
+//                    System.out.println(root);
+//                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+//                    return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
+//                }, pageRequest) :
+//                employeeRepository.findByDepartmentId(parameter.getDepartmentId(), pageRequest) ;
+//    }
     /**
      * 创建用户基本信息-包括密码
      * @param employee
@@ -220,8 +229,9 @@ public class EmployeeService {
     }
 
     @Getter @Setter
+    @OrderBy(fieldName = "createdAt")
     public static class EmployeeParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"name", "mobile", "loginName", "barCode"}, compare = like)
+        @ParameterItem(mappingTo = {"name", "mobile", "loginName", "barCode"}, compare = like, group = OR)
         String cause;
         String departmentId;
 
