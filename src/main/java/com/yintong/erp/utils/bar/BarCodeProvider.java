@@ -34,7 +34,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
 
     @Override
     public boolean onPreUpdate(PreUpdateEvent event) {
-        onPreCommit(event, event.getState());
+//        onPreCommit(event, event.getState());
         return false;
     }
 

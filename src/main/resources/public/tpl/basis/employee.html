@@ -375,12 +375,8 @@
 </div>
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
-        console.log('Hello');
-
-
-
+        console.log('starting at employee.html');
         init();
-
         var consts = {
             nodeKey : '_current_department_node_'
             , treeObj : null//组织树
@@ -403,7 +399,6 @@
             , $newDnInput : $('#_newDepartment').find('input[name="name"]')//新增组织名称的输入框
             , $editEmployeeModal : $('#_newEmployee')//编辑人员的modal
             , $rightPage : $('#rightInfoPage')//右侧页面
-            
         };
 
         /**
@@ -443,8 +438,7 @@
                     })
                     .catch(function (reason) {
                         layer.msg(reason.caught ? reason.message : '请求失败！');
-                    })
-                ;
+                    });
             }
 
             /**
@@ -556,7 +550,6 @@
                 else
                     $(this).removeClass('fa-dot-circle-o').addClass('fa-circle-o');
             });
-
             return $html;
         }
 
@@ -593,7 +586,6 @@
             consts.$resetPasswordModal.on('show.bs.modal', function () {
                 $(this).find('input[name="password"]').val('');
             });
-
             //模态框-更新组织
             consts.$updateDepartmentModal.on('show.bs.modal', function () {
                 $(this).find('._org').html(drawCircles(consts.leaves, consts.selectedEmployee.departmentIds));
@@ -618,7 +610,6 @@
                 }).catch(function (reason) {
                     layer.msg(reason.caught ? reason.message : '修改用户基本信息失败！');
                 });
-
             });
             //更新用户密码操作
             consts.$resetPasswordModal.find('button[name="save"]').unbind('click').click(function () {
@@ -634,7 +625,6 @@
                         layer.msg(reason.caught ? reason.message : '重设密码失败！');
                     });
             });
-
             //更新用户组织操作
             consts.$updateDepartmentModal.find('button[name="save"]').unbind('click').click(function () {
                 var $modal = consts.$updateDepartmentModal;
@@ -652,9 +642,8 @@
                     })
                     .catch(function (reason) {
                         layer.msg(reason.caught ? reason.message : '保存组织关联失败！');
-                    })
+                    });
             });
-
             //更新用户权限操作
             consts.$updateMenuModal.find('button[name="save"]').unbind('click').click(function () {
                 var $modal = consts.$updateMenuModal;
@@ -701,8 +690,6 @@
                     $button.tab('show');
 
                 }
-                //tab的active属性
-
                 //保存事件
                 if($button.attr('name') !== 'next'){
                     step();
@@ -739,7 +726,7 @@
                         })
                         .catch(function (reason) {
                             layer.msg(reason.caught ? reason.message : '保存组织关联失败！');
-                        })
+                        });
                 }
             });
             //保存权限
@@ -771,8 +758,7 @@
                     })
                     .then(function () {
                         initDepartments();
-                    })
-                ;
+                    });
             });
             //新增组织名称
             consts.$newDnBt.unbind('click').click(function () {
@@ -790,7 +776,7 @@
                 })
                 .then(function () {
                     initDepartments();
-                })
+                });
             });
             //组织增删改操作
             $('._modify, ._delete, ._new').unbind('click').click(function () {
@@ -814,7 +800,7 @@
                             })
                             .then(function () {
                                 initDepartments();
-                            })
+                            });
                     });
                 }
             });
@@ -888,9 +874,7 @@
                 })
                 .catch(function (reason) {
                     layer.msg(reason.caught ? reason.message : '获取菜单失败！');
-                })
-
-                ;
+                });
         }
 
         /**

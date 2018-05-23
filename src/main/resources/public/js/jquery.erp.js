@@ -14,6 +14,17 @@
         }
     })();
 
+    //序列化form
+    $.prototype.serializeObject = function(){
+        var obj= {};
+        $.each(this.serializeArray(),function(index,param){
+            if(!(param.name in obj)){
+                obj[param.name]=param.value;
+            }
+        });
+        return obj;
+    };
+
     /**
      * 定制的promise
      * @param resolver

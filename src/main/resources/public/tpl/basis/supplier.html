@@ -19,7 +19,7 @@
                         <table class="table table-hover" id="dataTables">
                             <thead>
                             <tr erp-id="{id}">
-                                <th style="width:70px" erp-data="{barCode}">编号</th>
+                                <th style="width:70px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <th style="width:40px" erp-data="{supplierTypeCode}" erp-convert="convertType">类型</th>
                                 <th style="width:90px" erp-data="{supplierName}">名称</th>
                                 <th style="width:40px" erp-data="{contactName}">联系人</th>
@@ -36,8 +36,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- 编辑供应商基本信息 -->
 <div class="modal fade" role="dialog" data-backdrop="static" id="_editSupplier">
     <div class="modal-dialog" role="document" style="z-index: 1040">
@@ -63,7 +61,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">类型</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" name="supplierTypeCode" placeholder="最多输入20个字符" onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                            <div class="customDropkick" style="width: 100%;" id="_type" name="supplierTypeCode"></div>
                         </div>
                         <label class="col-sm-2 control-label">等级</label>
                         <div class="col-sm-4">
@@ -114,7 +112,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10">
-                            <textarea rows="5" class="form-control" name="rank"></textarea>
+                            <textarea rows="5" class="form-control" name="remark"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer noborder">
@@ -125,6 +123,125 @@
         </div>
     </div>
 </div>
+<!-- 右侧-->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editSupplier">修改基本信息</button>
+            <button class="btn btn-primary" data-name="delete">删除</button>
+        </span>
+    </div>
+    <div class="bugInfoContent initSupplierDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">基本信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">名称</label>
+                                <div class="col-xs-8 txt pd0" data-name="supplierName"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">类型</label>
+                                <div class="col-xs-8 txt pd0" data-convert="supplierTypeCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">等级</label>
+                                <div class="col-xs-8 txt pd0" data-convert="rank"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">固定电话</label>
+                                <div class="col-xs-8 txt pd0" data-name="contactPhone"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">传真号码</label>
+                                <div class="col-xs-8 txt pd0" data-name="faxNo"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">联系人</label>
+                                <div class="col-xs-8 txt pd0" data-name="contactName"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">手机号</label>
+                                <div class="col-xs-8 txt pd0" data-name="contactMobile"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">托运部</label>
+                                <div class="col-xs-8 txt pd0" data-name="consign"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">业务员</label>
+                                <div class="col-xs-8 txt pd0" data-name="salesman"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">地址</label>
+                                <div class="col-xs-10 txt pd0" data-name="address"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">所属地</label>
+                                <div class="col-xs-10 txt pd0" data-name="possession"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">备注</label>
+                                <div class="col-xs-10 txt pd0" data-name="remark"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!--
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#saleLog" aria-controls="saleLog" role="tab" data-toggle="tab">销售日志</span></li>
+                    <li role="presentation"><span href="#produceLog" aria-controls="produceLog" role="tab" data-toggle="tab">生产日志</span></li>
+                    <li role="presentation"><span href="#purchaseLog" aria-controls="purchaseLog" role="tab" data-toggle="tab">采购日志</span></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="pd43 tab-pane active" id="saleLog">
+                        <p>暂无</p>
+                    </div>
+                    <div role="tabpanel" class="pd43 tab-pane" id="produceLog">
+                        <p>暂无</p>
+                    </div>
+                    <div role="tabpanel" class="pd43 tab-pane" id="purchaseLog">
+                        <p>暂无</p>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+</div>
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('hello supplier');
@@ -134,10 +251,13 @@
             types : {}//供应商类型-code|name
             , ranks : {} //供应商等级-code|name
             , oQueryParam : {}//查询参数
+            , supplier : {}//选中的供应商
 
             , $rightPage : $('#rightInfoPage')//右侧页面
             , $typeHolder : $('#type')//供应商类别
             , $ranHolder : $('#rank')//供应商等级
+            , $editInfoModal : $('#_editSupplier')//编辑供应商modal
+
         };
 
         //预置数据
@@ -181,20 +301,23 @@
              * @param $tr 选中的行事件
              */
             function fClickTr($tr){
-                // var $rightPage = consts.$rightPage;
-                // var id = $tr.attr('id');
-                // if (id === $rightPage.attr('data-id')) return;
-                // $rightPage.attr('data-id', id);
-                // services.account.one(id)
-                //     .then(function (employee) {
-                //         initEmployeeDetail(employee);
-                //         $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
-                //         $rightPage.find('.fa-angle-double-down').click();
-                //     })
-                //     .catch(function (reason) {
-                //         layer.msg(reason.caught ? reason.message : '请求失败！');
-                //     })
-                // ;
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.supplier.one(id)
+                    .then(function (supplier) {
+                        console.log('点击tr', supplier);
+                        consts.supplier = supplier;
+                        initSupplierDetail(supplier);
+                        //TODO
+                        $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                        $rightPage.find('.fa-angle-double-down').click();
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    })
+                ;
             }
 
             /**
@@ -221,9 +344,102 @@
         }
 
         /**
+         * 初始化右侧
+         */
+        function initSupplierDetail(supplier) {
+
+            var unSetting = '<span class="label label-danger">未设置</span>';
+            var $detail = $('.initSupplierDetail');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                $(this).html(supplier[$(this).data('name')] || unSetting);
+            });
+            $baseInfo.find('div[data-convert="supplierTypeCode"]').html(
+                consts.types[supplier.supplierTypeCode] || unSetting
+            );
+            $baseInfo.find('div[data-convert="rank"]').html(
+                consts.ranks[supplier.rank] || unSetting
+            );
+        }
+
+        /**
          * 初始化事件
          */
         function initEvent() {
+            //编辑模态框
+            consts.$editInfoModal.on('show.bs.modal', function () {
+                var $this = $(this);
+                if(consts.supplier.id){
+                    //更新
+                    $.each(consts.supplier, function (name, value) {
+                        $this.find('form [name="'+ name +'"]').val(value);
+                    });
+                    utils.dropkick({ $holder : $('#_rank'), data : consts.ranks, current : consts.supplier.rank});
+                    utils.dropkick({ $holder : $('#_type'), data : consts.types, current : consts.supplier.supplierTypeCode});
+                    // $this.find('.dk_options, .select-icon').remove();
+                } else {
+                    //新建
+                    utils.dropkick({ $holder : $('#_rank'), data : consts.ranks });
+                    utils.dropkick({ $holder : $('#_type'), data : consts.types });
+                }
+                // //根据id初始化
+                // if(consts.supplier.id){
+                //     //更新
+                //     services.supplier.one(consts.supplier.id).then(function (ret) {
+                //         $.each(ret, function (name, value) {
+                //             $this.find('form [name="'+ name +'"]').val(value);
+                //         });
+                //         utils.dropkick({ $holder : $('#_rank'), data : consts.ranks, current : ret.rank});
+                //         utils.dropkick({ $holder : $('#_type'), data : consts.types, current : ret.supplierTypeCode});
+                //         // $this.find('.dk_options, .select-icon').remove();
+                //     });
+                // } else {
+                //     //新建
+                //     utils.dropkick({ $holder : $('#_rank'), data : consts.ranks });
+                //     utils.dropkick({ $holder : $('#_type'), data : consts.types });
+                // }
+            }).on('hidden.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"], #_type, #_rank, #_remark, textarea').val('');
+                consts.supplier = {};
+
+            });
+            //保存供应商
+            consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var data = consts.$editInfoModal.find('form').serializeObject();
+                var _function = !!consts.supplier.id ? services.supplier.update : services.supplier.create;
+                data.id = consts.supplier.id || '';
+                data.supplierTypeCode = $('#_type').data('value');
+                data.rank = $('#_rank').data('value');
+                _function(data).then(function (supplier) {
+                    loadDataTable(true);
+                    if(consts.supplier.id)
+                        initSupplierDetail(supplier);
+                    consts.$editInfoModal.modal('hide')
+                    layer.msg('保存供应商信息成功');
+                }).catch(function (reason) {
+                    console.log('保存供应商', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+            //删除供应商
+            consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
+                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                    services.supplier.delete(consts.supplier.id)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            loadDataTable(true);
+                            consts.supplier = {};
+                            consts.$rightPage.hide();
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                        });
+                });
+            });
+
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
                 consts.oQueryParam.cause = $('#fastKeyword').val();
@@ -256,12 +472,12 @@
                     loadDataTable(true);
                 }
             });
-            // utils.dropkick({
-            //     $holder : $('#_rank'),
-            //     data : consts.ranks
-            // })
+            //新增按钮绑定事件
+            $('#addUserBt').bind('click', function(){
+                consts.supplier = {};
+            })
         }
-        
+
 
 
         function init() {

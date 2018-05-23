@@ -173,7 +173,6 @@ define('services',['utils'],function (utils) {
         types : function () {
             return $.http.get('basis/common/categories/children/direct?code=US');
         },
-
         //查询
         query : function (params) {
             return $.http.get({
@@ -181,6 +180,11 @@ define('services',['utils'],function (utils) {
                 data : params
             });
         },
+        //查找
+        one : function (id) {
+            return $.http.get('basis/supplier/' + id);
+        },
+
         //新建
         create : function (data) {
             return $.http.post({

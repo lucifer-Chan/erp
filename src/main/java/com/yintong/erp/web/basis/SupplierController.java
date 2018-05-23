@@ -63,4 +63,14 @@ public class SupplierController {
         return new BaseResult();
     }
 
+    /**
+     * 根据供应商id查找供应商
+     * @param supplierId
+     * @return
+     */
+    @GetMapping("{supplierId}")
+    public BaseResult one(@PathVariable Long supplierId){
+        return new BaseResult().addPojo(supplierService.one(supplierId));
+    }
+
 }

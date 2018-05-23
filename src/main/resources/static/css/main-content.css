@@ -1627,7 +1627,7 @@ ul.bugPlanNum li .PlanNumClass em {
     -moz-border-radius: 0px;
     margin-right: 0px;
 }
-
+#allCount{padding-left: 5px}
 #allCount,
 .selectCount {
     font-weight: normal;

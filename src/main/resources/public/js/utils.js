@@ -338,12 +338,13 @@ define('utils',[],function(){
             "bFilter":false,
             "bInfo": false,
             "bStateSave": false,
-            "iDisplayLength": 20,//当前每页显示多少
+            "iDisplayLength": 15,//当前每页显示多少
             "ordering": false, // 禁止排序
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 var params = $.extend({},oParams, {pageNum : aoData.start / aoData.length + 1, perPageNum : aoData.length});
                 $dataProvider(params)
                     .then(function (ret) {
+                        $('#allCount').text('共'+ret.totalElements+'条记录');
                         pageInfo.iTotalRecords = ret.totalElements;
                         pageInfo.iTotalDisplayRecords = ret.totalElements;
                         var aaData = [];
@@ -406,7 +407,7 @@ define('utils',[],function(){
                             });
                         }
                         $('#dataTables_info').parent().hide();
-                        if(pageInfo.iTotalRecords >20){
+                        if(pageInfo.iTotalRecords >15){
                             $('#dataTables_paginate').parent().attr('class','col-sm-12');
                         }else{
                             $('#dataTables_paginate').parent().hide();
@@ -450,7 +451,7 @@ define('utils',[],function(){
             $.each(setting.data, function (code, name) {
                 ul.append('<li><a data-value="'+ code +'">'+ name + '</a></li>');
             });
-        } else if(dataType === 'object'){
+        } else if(dataType === 'array'){
             $.each(setting.data, function () {
                 ul.append('<li><a data-value="'+ this.code +'">'+ this.name + '</a></li>');
             });
@@ -484,7 +485,7 @@ define('utils',[],function(){
                 $select.append('<option value="'+code+ '"' + selected + '>' + name + '</option>');
                 count ++;
             });
-        } else if(dataType === 'object'){
+        } else if(dataType === 'array'){
             $.each(setting.data, function () {
                 var selected = (setting.current && setting.current == this.code) ? ' selected' : '';
                 $select.append('<option value="'+ this.code+ '"' + selected + '>' + this.name + '</option>');
@@ -493,7 +494,7 @@ define('utils',[],function(){
         }
         setting.$holder.empty().append($select);
         setting.$holder.attr('data-value', setting.current || '');
-        $('#' + holderId+'_Select').dropkick({
+        var $$ = $('#' + holderId+'_Select').dropkick({
             change : function(value){
                 setting.$holder.attr('data-value', value);
                 callback(value);

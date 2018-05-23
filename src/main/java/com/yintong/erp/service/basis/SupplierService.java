@@ -60,8 +60,23 @@ public class SupplierService {
      * @return
      */
     public ErpBaseSupplier update(ErpBaseSupplier supplier){
+        Assert.notNull(supplier.getId(), "供应商id不能为空");
+        ErpBaseSupplier inDb = supplierRepository.findById(supplier.getId()).orElse(null);
+        Assert.notNull(inDb, "未找到供应商");
         validateSupplierType(supplier);
+        supplier.setBarCode(inDb.getBarCode());
         return supplierRepository.save(supplier);
+    }
+
+    /**
+     * 根据供应商id查找供应商
+     * @param supplierId
+     * @return
+     */
+    public ErpBaseSupplier one(Long supplierId){
+        ErpBaseSupplier supplier = supplierRepository.findById(supplierId).orElse(null);
+        Assert.notNull(supplier, "未找到供应商");
+        return supplier;
     }
 
     /**
