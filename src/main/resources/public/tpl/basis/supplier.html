@@ -210,7 +210,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <label class="col-xs-2 pd0">备注</label>
-                                <div class="col-xs-10 txt pd0" data-name="remark"></div>
+                                <div class="col-xs-10 txt pd0" data-name="remark" data-convert="false"></div>
                             </div>
                         </div>
                     </div>
@@ -325,13 +325,15 @@
              * @param array 待包装的数据
              */
             function convertType(array){
-                var value = array.length ? array[0] : '';
-                return !value ? '' : consts.types[value] || '';
+                var _value = array.length ? array[0] : '';
+                var clazz =  "USC0" === _value ? 'primary' : "USS0" === _value ? 'info' : 'default';
+                var value = !_value ? '' : consts.types[_value] || '';
+                return '<span class="label label-'+ clazz +'">'+ value +'</span>'
             }
 
             function convertRank(array) {
                 var value = array.length ? array[0] : '';
-                return !value ? '' : consts.ranks[value] || '';
+                return '<span class="label label-primary">'+ (!value ? '' : consts.ranks[value] || '') +'</span>'
             }
 
             utils.dataTable({
@@ -353,7 +355,8 @@
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                $(this).html(supplier[$(this).data('name')] || unSetting);
+                var def = $(this).data('convert') === false ? '无' : unSetting;
+                $(this).html(supplier[$(this).data('name')] || def);
             });
             $baseInfo.find('div[data-convert="supplierTypeCode"]').html(
                 consts.types[supplier.supplierTypeCode] || unSetting
@@ -402,7 +405,6 @@
             }).on('hidden.bs.modal', function () {
                 //清理数据
                 $(this).find('input[type="text"], #_type, #_rank, #_remark, textarea').val('');
-                consts.supplier = {};
 
             });
             //保存供应商
