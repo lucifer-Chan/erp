@@ -7,8 +7,10 @@
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="mould_category">
                 </li>
+                <li role="presentation" class="dropdown" id="mould_supplier">
+                </li>
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addMould" data-toggle="modal" data-target="#_newMould">新增模具</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addMould" data-toggle="modal" data-target="#_editMould">新增模具</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -19,7 +21,7 @@
                             <tr erp-id="{id}">
                                 <th style="width:70px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <th style="width:40px" erp-data="{modelToolTypeCode}" erp-convert="convertType">类型</th>
-                                <th style="width:90px" erp-data="{modelToolName}">名称</th>
+                                <th style="width:90px" erp-data="{modelToolName}" >名称</th>
                                 <th style="width:40px" erp-data="{specification}">规格描述</th>
                                 <th style="width:50px" erp-data="{remark}">备注</th>
                             </tr>
@@ -32,7 +34,7 @@
     </div>
 </div>
 <!-- 修改模具信息 -->
-<div class="modal fade" role="dialog" id="_newMould">
+<div class="modal fade" role="dialog" id="_editMould">
     <div class="modal-dialog" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
@@ -40,8 +42,38 @@
                 <h4 class="modal-title"><i class="fa fa-user defaultColor"></i> 新增模具信息</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal pd210 pd410">
-
+                <form class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="modelToolName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">模具类别</label>
+                        <div class="col-sm-4">
+                            <div class="customDropkick" style="width: 100%;" id="_type" name="modelToolTypeCode"></div>
+                        </div>
+                        <label class="col-sm-2 control-label">供应商</label>
+                        <div class="col-sm-4">
+                            <div class="customDropkick" style="width: 100%;" id="_supplier" name="supplierTypeCode"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">规格描述</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="specification" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10">
+                            <textarea rows="5" class="form-control" name="remark" id="remark"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -56,7 +88,7 @@
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
-    <div class="bugInfoContent mouldDetail">
+    <div class="bugInfoContent initMouldDetail">
         <div class="panel-default bugInfo">
             <div class="row">
                 <p class="pd23 pd43">
@@ -95,23 +127,25 @@
 
         var consts = {
             types : {}//模具类型-code|name
+            ,supplier:{}//供应商-code|name
             , oQueryParam : {}//查询参数
             , selectedMould : {} //选中的模具
             , $rightPage : $('#rightInfoPage')//右侧页面
             , $categoryHolder : $('#mould_category')//模具类别
-            , $editMouldModal : $('#_newMould')//编辑人员的modal
+            , $supplierHolder : $('#mould_supplier')//供应商
+            , $editMouldModal : $('#_editMould')//编辑人员的modal
         };
         //预置数据
         function prepareData() {
             //1-加载模版页面
             return $.Promise.all([
-                services.mould.types(), services.lookup('mould')
+                services.mould.types(), services.mould.findSupplierAll()
             ]).then(function (array) {
                 array[0].list.forEach(function (value) {
                     consts.types[value.code] = value.name;
                 });
                 array[1].list.forEach(function (value) {
-                    consts.ranks[value.code] = value.name;
+                    consts.supplier[value.barCode] = value.supplierName;
                 });
             }).catch(function (reason) {
                 console.log('reason', reason);
@@ -144,15 +178,49 @@
             function fClickTr($tr){
 
             }
+            /**
+             * 模具列表初始化方法，
+             * @param array 待包装的数据
+             */
+            function convertType(array){
+                var _value = array.length ? array[0] : '';
+                var value = !_value ? '' : consts.types[_value] || '';
+                return '<span >'+ value +'</span>'
+            }
             utils.dataTable({
                 holder: '#dataTables'
                 , $dataProvider : dataProvider
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
+                , aConverts : [convertType]
             });
         }
 
         function initEvent() {
+            //初始化搜索下拉列表
+            utils.dropdown({
+                $holder : consts.$categoryHolder,
+                data : consts.types,
+                prefix : '模具类别',
+                callback : function (value) {
+                    consts.oQueryParam.type = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadMouldData(true);
+                }
+            });
+            utils.dropdown({
+                $holder : consts.$supplierHolder,
+                data : consts.supplier,
+                prefix : '供应商',
+                callback : function (value) {
+                    consts.oQueryParam.rank = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadMouldData(true);
+                }
+            });
+
+
+
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
                 consts.oQueryParam.cause = $('#fastKeyword').val();
@@ -167,9 +235,29 @@
 
             //模态框初始化-编辑模具信息
             consts.$editMouldModal.on('show.bs.modal', function () {
-                //清理数据
-                $(this).find('input[type="text"]').val('');
+                //新建
+                utils.dropkick({ $holder : $('#_type'), data : consts.types });
+                utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier });
 
+            }).on('hidden.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"], #_type, #_supplier,  textarea').val('');
+                consts.selectedMould = {};
+
+            });
+            //保存模具
+            consts.$editMouldModal.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var data = consts.$editMouldModal.find('form').serializeObject();
+                data.modelToolTypeCode = $('#_type').data('value');
+                data.supplierTypeCode = $('#_supplier').data('value');
+                console.log(JSON.stringify(data));
+                var _function =  services.mould.create;
+                _function(data).then(function (mould) {
+                    loadMouldData(true);
+                    consts.$editMouldModal.modal('hide');
+                    layer.msg('保存模具信息成功');
+                });
             });
 
             //编辑用户
@@ -183,21 +271,6 @@
 
         function init() {
             prepareData().then(function () {
-                //类别下拉
-                consts.$categoryHolder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">类别：全部 <span class="caret"></span></a>');
-                var ul = $('<ul class="dropdown-menu">');
-                ul.append('<li><a data-value="">全部</a></li>');
-                $.each(consts.types, function (code, name) {
-                    ul.append('<li><a data-value="'+ code +'">'+ name + '</a></li>');
-                });
-                consts.$categoryHolder.append(ul);
-                ul.find('li>a').click(function () {
-                    var $this = $(this);
-                    $(this).parents('li.dropdown').children().eq(0).html('类别：'+$this.text()+' <span class="caret"></span>');
-                    consts.oQueryParam.type = $(this).attr('data-value');
-                    console.log('mould_oQueryParam', consts.oQueryParam);
-                    loadMouldData(true);
-                });
                 initEvent();
                 loadMouldData();
             });

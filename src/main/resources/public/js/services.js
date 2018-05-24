@@ -212,12 +212,23 @@ define('services',['utils'],function (utils) {
         types : function () {
             return $.http.get('basis/common/categories/children/direct?code=D');
         },
-
+        //模块对应的供应商
+        findSupplierAll : function () {
+            return $.http.get('basis/mould/findSupplierAll');
+        },
         //查询
         query : function (params) {
             return $.http.get({
                 url : 'basis/mould',
                 data : params
+            });
+        },
+        //新增模具
+        create:function(data){
+            return $.http.post({
+                url : 'basis/mould',
+                data : data,
+                contentType : $.contentType.json
             });
         }
     };
