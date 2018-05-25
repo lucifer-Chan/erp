@@ -251,9 +251,10 @@ define('services',['utils'],function (utils) {
 
     var product = {
         //分类
-        types : function () {
-            return $.http.get('basis/common/categories/children/direct?code=D');
+        typeP : function () {
+            return $.http.get('basis/common/categories/children/direct?code=P');
         },
+
         //模块对应的供应商
         findSupplierAll : function () {
             return $.http.get('basis/mould/findSupplierAll');
@@ -306,6 +307,7 @@ define('services',['utils'],function (utils) {
         , department : department
         , supplier : supplier
         , mould : mould
+        , product : product
         , lookup : lookup
     }
 });
