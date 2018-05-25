@@ -92,6 +92,14 @@ public class SupplierService {
     }
 
     /**
+     * 查询供应商
+     * @return
+     */
+    public List<ErpBaseSupplier> findSupplierAll(){
+        return supplierRepository.findAll();
+    }
+
+    /**
      * 验证供应商类型
      * @param supplier
      */

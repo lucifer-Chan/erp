@@ -223,6 +223,18 @@ define('services',['utils'],function (utils) {
                 data : params
             });
         },
+        //更新
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/mould',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //查找
+        one : function (id) {
+            return $.http.get('basis/mould/' + id);
+        },
         //新增模具
         create:function(data){
             return $.http.post({
@@ -230,6 +242,52 @@ define('services',['utils'],function (utils) {
                 data : data,
                 contentType : $.contentType.json
             });
+        },
+        //删除
+        delete : function (id) {
+            return $.http.delete('basis/mould/' + id);
+        }
+    };
+
+    var product = {
+        //分类
+        types : function () {
+            return $.http.get('basis/common/categories/children/direct?code=D');
+        },
+        //模块对应的供应商
+        findSupplierAll : function () {
+            return $.http.get('basis/mould/findSupplierAll');
+        },
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'basis/mould',
+                data : params
+            });
+        },
+        //更新
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/mould',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //查找
+        one : function (id) {
+            return $.http.get('basis/mould/' + id);
+        },
+        //新增模具
+        create:function(data){
+            return $.http.post({
+                url : 'basis/mould',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //删除
+        delete : function (id) {
+            return $.http.delete('basis/mould/' + id);
         }
     };
 

@@ -2,16 +2,14 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseModelTool;
 import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
-import com.yintong.erp.domain.basis.ErpBaseSupplier;
-import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
-import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
-import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
+import com.yintong.erp.validator.OnDeleteMouldValidator;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -36,8 +34,10 @@ public class MouldService {
     @Autowired
     private ErpBaseModelToolRepository modelToolRepositor;
 
-    @Autowired
-    private ErpBaseSupplierRepository supplierRepository;
+
+
+    @Autowired(required = false)
+    private List<OnDeleteMouldValidator> onDeleteMouldValidator;
 
     /**
      *查询列表
@@ -47,14 +47,18 @@ public class MouldService {
     public Page<ErpBaseModelTool> query(MouldParameterBuilder parameter){
         return modelToolRepositor.findAll(parameter.specification(), parameter.pageable());
     }
-
     /**
-     * 查询供应商
+     * 根据模具id查找供应商
+     * @param mouldId
      * @return
      */
-    public List<ErpBaseSupplier> FindSupplierAll(){
-        return supplierRepository.findAll();
+    public ErpBaseModelTool one(Long mouldId){
+        ErpBaseModelTool mould = modelToolRepositor.findById(mouldId).orElse(null);
+        Assert.notNull(mould, "未找到供应商");
+        return mould;
     }
+
+
 
     /**
      * 创建模具
@@ -66,6 +70,30 @@ public class MouldService {
         mould.setId(null);//防止假数据
         validateSupplierType(mould);
         return modelToolRepositor.save(mould);
+    }
+    /**
+     * 更新模具
+     * @param mould
+     * @return
+     */
+    public ErpBaseModelTool update(ErpBaseModelTool mould){
+        Assert.notNull(mould.getId(), "模具id不能为空");
+        ErpBaseModelTool inDb = modelToolRepositor.findById(mould.getId()).orElse(null);
+        Assert.notNull(inDb, "未找到模具");
+        validateSupplierType(mould);
+        mould.setBarCode(inDb.getBarCode());
+        return modelToolRepositor.save(mould);
+    }
+    /**
+     * 删除供应商
+     * @param mouldId
+     */
+    @Transactional
+    public void delete(Long mouldId){
+        if(!CollectionUtils.isEmpty(onDeleteMouldValidator))
+            onDeleteMouldValidator.forEach(validator -> validator.validate(mouldId));
+        modelToolRepositor.deleteById(mouldId);
+
     }
 
     /**
@@ -91,4 +119,6 @@ public class MouldService {
         @ParameterItem(mappingTo = "modelToolTypeCode", compare = equal)
         String type;
     }
+
+
 }
