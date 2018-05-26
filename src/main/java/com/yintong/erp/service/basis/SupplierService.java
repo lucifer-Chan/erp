@@ -50,7 +50,7 @@ public class SupplierService {
      */
     public ErpBaseSupplier create(ErpBaseSupplier supplier){
         supplier.setId(null);//防止假数据
-        validateSupplierType(supplier);
+        validateSupplier(supplier);
         return supplierRepository.save(supplier);
     }
 
@@ -61,10 +61,8 @@ public class SupplierService {
      */
     public ErpBaseSupplier update(ErpBaseSupplier supplier){
         Assert.notNull(supplier.getId(), "供应商id不能为空");
-        ErpBaseSupplier inDb = supplierRepository.findById(supplier.getId()).orElse(null);
-        Assert.notNull(inDb, "未找到供应商");
-        validateSupplierType(supplier);
-        supplier.setBarCode(inDb.getBarCode());
+        Assert.notNull(supplierRepository.findById(supplier.getId()).orElse(null), "未找到供应商");
+        validateSupplier(supplier);
         return supplierRepository.save(supplier);
     }
 
@@ -100,14 +98,15 @@ public class SupplierService {
     }
 
     /**
-     * 验证供应商类型
+     * 验证供应商
      * @param supplier
      */
-    private void validateSupplierType(ErpBaseSupplier supplier){
+    private void validateSupplier(ErpBaseSupplier supplier){
         Assert.notNull(supplier, "供应商不能为null");
         String type = supplier.getSupplierTypeCode();
         Assert.hasLength(type, "类型不能为空");
         Assert.isTrue(Arrays.asList(USC0, USS0, USE0).contains(BAR_CODE_PREFIX.valueOf(type)), "供应商类型不正确");
+        Assert.hasLength(supplier.getSupplierName(), "供应商名称不能为空");
     }
 
 

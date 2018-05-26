@@ -207,7 +207,8 @@ public class PreDataService {
         lookupRepository.deleteAll();
         lookupRepository.saveAll(
                 Arrays.asList(
-                        ErpBaseLookup.builder().code("001").name("一级").type("supplier").tag(1L).description("供应商等级").build()
+                        ErpBaseLookup.builder().code("000").name("【无】").type("supplier").tag(0L).description("供应商等级").build()
+                        , ErpBaseLookup.builder().code("001").name("一级").type("supplier").tag(1L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("002").name("二级").type("supplier").tag(2L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("003").name("三级").type("supplier").tag(3L).description("供应商等级").build()
                 )
