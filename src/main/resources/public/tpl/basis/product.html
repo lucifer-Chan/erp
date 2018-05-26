@@ -39,97 +39,173 @@
 </div>
 <!-- 修改成品信息 -->
 <div class="modal fade" role="dialog" data-backdrop="static" id="_editProduct">
-    <div class="modal-dialog" role="document" style="z-index: 1040">
+    <div class="modal-dialog modal-lg" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
                 <h4 class="modal-title"><i class="fa fa-bank defaultColor"></i> 编辑成品信息</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal pd23">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">名称</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="supplierName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><a href="#_baseNewInfo" role="tab" data-toggle="tab"><span>基本信息</span></a></li>
+                    <li role="presentation"><a href="#_specificationInfo" role="tab" data-toggle="tab"><span>规格信息</span></a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="_baseNewInfo">
+                        <div class="row">
+                            <form class="form-horizontal pd22 pd12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">名称</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="supplierName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">规格描述</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="specification" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">大类</label>
+                                    <div class="col-sm-3">
+                                        <div class="customDropkick" style="width: 100%;" id="_typeP" name="endProductTypeCodeP"></div>
+                                    </div>
+                                    <label class="col-sm-3 control-label">细类</label>
+                                    <div class="col-sm-3">
+                                        <div class="customDropkick" style="width: 100%;" id="_typeC" name="endProductTypeCode"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">客户图号</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="custDrawingNo" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">模具位</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="modelLocation" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">技术要求</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="technicalRequirements" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">单粒银耗(g)</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="unitSilverLoss" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">单粒银铜(g)</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="unitSilverCopper" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">自定义属性1</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="userDefinedOne" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">自定义属性2</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="userDefinedTwo" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">自定义属性3</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="userDefinedThree" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">备注</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="remark" placeholder="最多输入60个字符" autofocus onfocus="checkStrNum(this,60)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">大类</label>
-                        <div class="col-sm-4">
-                            <div class="customDropkick" style="width: 100%;" id="_typeP" name="endProductTypeCodeP"></div>
-                        </div>
-                        <label class="col-sm-2 control-label">细类</label>
-                        <div class="col-sm-4">
-                            <div class="customDropkick" style="width: 100%;" id="_typeC" name="endProductTypeCode"></div>
+                    <div role="tabpanel" class="tab-pane projectSetting" id="_specificationInfo">
+                        <div class="row">
+                            <form class="form-horizontal pd42 pd22 pd12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">头径D(mm)上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spHdmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">头径D(mm)下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spHdmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">头厚T(mm)上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spHtmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">头厚T(mm)下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spHtmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">脚径d(mm)上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spFtmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">脚径d(mm)下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spFtmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">脚长L(mm)上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spFlmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">脚长L(mm)下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spFlmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">头径银层S1(mm)上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spHdsmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">头径银层S1(mm)下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spHdsmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">脱模角度θ(° )上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spTmammUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">脱模角度θ(° )下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spTmammLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">球半径SR(mm)上限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spSrammUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                    <label class="col-sm-3 control-label">球半径SR(mm)下限</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="spSrammLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">规格描述</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="specification" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">客户图号</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="custDrawingNo" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">模具位</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="modelLocation" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">单粒银耗(g)</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="unitSilverLoss" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">单粒银铜(g)</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="unitSilverCopper" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">技术要求</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="technicalRequirements" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">自定义属性1</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="userDefinedOne" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">自定义属性2</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="userDefinedTwo" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">自定义属性3</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="userDefinedThree" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">供应商</label>
-                        <div class="col-sm-9">
-                            <div class="customDropkick" style="width: 100%;" id="_supplier" name="supplierTypeCode"></div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">备注</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="remark" placeholder="最多输入60个字符" autofocus onfocus="checkStrNum(this,60)" oninput="checkStrNum(this,30)">
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
