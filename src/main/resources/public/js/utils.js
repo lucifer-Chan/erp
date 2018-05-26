@@ -493,7 +493,7 @@ define('utils',[],function(){
             });
         }
         setting.$holder.empty().append($select);
-        setting.$holder.attr('data-value', setting.current || '');
+        setting.$holder.attr('data-value', setting.current || $select.find('option').eq(0).val() || '');
         var $$ = $('#' + holderId+'_Select').dropkick({
             change : function(value){
                 setting.$holder.attr('data-value', value);

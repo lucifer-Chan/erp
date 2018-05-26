@@ -59,13 +59,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">类型</label>
-                        <div class="col-sm-4">
-                            <div class="customDropkick" style="width: 100%;" id="_type" name="supplierTypeCode"></div>
-                        </div>
                         <label class="col-sm-2 control-label">等级</label>
                         <div class="col-sm-4">
                             <div class="customDropkick" style="width: 100%;" id="_rank" name="rank"></div>
+                        </div>
+                        <label class="col-sm-2 control-label _type">类型</label>
+                        <div class="col-sm-4 _type">
+                            <div class="customDropkick" style="width: 100%;" id="_type" name="supplierTypeCode"></div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -266,6 +266,7 @@
             return $.Promise.all([
                 services.supplier.types(), services.lookup('supplier')
             ]).then(function (array) {
+                consts.ranks[""] = "[无]";
                 array[0].list.forEach(function (value) {
                     consts.types[value.code] = value.name;
                 });
@@ -309,6 +310,7 @@
                     .then(function (supplier) {
                         console.log('点击tr', supplier);
                         consts.supplier = supplier;
+                        $('._type').hide();
                         initSupplierDetail(supplier);
                         //TODO
                         $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
@@ -386,22 +388,6 @@
                     utils.dropkick({ $holder : $('#_rank'), data : consts.ranks });
                     utils.dropkick({ $holder : $('#_type'), data : consts.types });
                 }
-                // //根据id初始化
-                // if(consts.supplier.id){
-                //     //更新
-                //     services.supplier.one(consts.supplier.id).then(function (ret) {
-                //         $.each(ret, function (name, value) {
-                //             $this.find('form [name="'+ name +'"]').val(value);
-                //         });
-                //         utils.dropkick({ $holder : $('#_rank'), data : consts.ranks, current : ret.rank});
-                //         utils.dropkick({ $holder : $('#_type'), data : consts.types, current : ret.supplierTypeCode});
-                //         // $this.find('.dk_options, .select-icon').remove();
-                //     });
-                // } else {
-                //     //新建
-                //     utils.dropkick({ $holder : $('#_rank'), data : consts.ranks });
-                //     utils.dropkick({ $holder : $('#_type'), data : consts.types });
-                // }
             }).on('hidden.bs.modal', function () {
                 //清理数据
                 $(this).find('input[type="text"], #_type, #_rank, #_remark, textarea').val('');
@@ -477,6 +463,7 @@
             //新增按钮绑定事件
             $('#addUserBt').bind('click', function(){
                 consts.supplier = {};
+                $('._type').show();
             })
         }
 
