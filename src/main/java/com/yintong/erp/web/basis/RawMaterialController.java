@@ -40,5 +40,8 @@ public class RawMaterialController {
         return new BaseResult().addPojo(id);
     }
 
-
+    @RequestMapping("get")
+    public BaseResult get(Long id){
+        return new BaseResult().addPojo(rawMaterialService.findOne(id));
+    }
 }

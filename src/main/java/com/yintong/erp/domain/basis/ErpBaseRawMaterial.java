@@ -24,8 +24,6 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '原材料编号'")
-    private String rawNo;
     @Column(columnDefinition = "varchar(20) comment '原材料名称'")
     private String rawName;
     @BarCode

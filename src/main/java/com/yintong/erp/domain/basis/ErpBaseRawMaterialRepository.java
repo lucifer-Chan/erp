@@ -14,7 +14,5 @@ public interface ErpBaseRawMaterialRepository extends JpaRepository<ErpBaseRawMa
 
     List<ErpBaseRawMaterial> findAll();
 
-    ErpBaseRawMaterial findById(String  rawNo);
-
     Page<ErpBaseRawMaterial> findAll(Specification<ErpBaseRawMaterial> specification, Pageable pageable);
 }

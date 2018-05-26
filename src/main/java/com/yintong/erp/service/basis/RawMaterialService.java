@@ -35,17 +35,22 @@ public class RawMaterialService {
         erpBaseRawMaterialRepository.save(erpBaseRawMaterial);
     }
 
+    @Transactional
     public void remove(Long id) {
         erpBaseRawMaterialRepository.deleteById(id);
+    }
+
+    public ErpBaseRawMaterial findOne(Long id) {
+        return erpBaseRawMaterialRepository.getOne(id);
     }
 
     @Getter
     @Setter
     @OrderBy(fieldName = "id")
     public static class RawMaterialParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"rawMaterType"}, compare = equal)
-        String rawMaterType;
-        @ParameterItem(mappingTo = "supplierType", compare = equal)
-        String supplierType;
+        @ParameterItem(mappingTo = {"rawTypeCode"}, compare = equal)
+        String rawTypeCode;
+        @ParameterItem(mappingTo = "rawName", compare = equal)
+        String rawName;
     }
 }

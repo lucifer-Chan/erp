@@ -40,9 +40,9 @@ public class PreDataService {
     @PostConstruct
     void init(){
         if(!debug) return;
-/*        initMenus();
+        initMenus();
         initEmployees();
-        initCategories();*/
+        initCategories();
         initDepartments();
         initLookup();
     }
