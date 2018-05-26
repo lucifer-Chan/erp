@@ -19,7 +19,7 @@ import java.util.List;
  * 预置数据服务
  **/
 
-//@Component
+@Component
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -40,10 +40,10 @@ public class PreDataService {
     @PostConstruct
     void init(){
         if(!debug) return;
-//        initMenus();
-//        initEmployees();
-//        initCategories();
-//        initDepartments();
+/*        initMenus();
+        initEmployees();
+        initCategories();
+        initDepartments();*/
         initLookup();
     }
 
@@ -69,10 +69,10 @@ public class PreDataService {
         List<ErpMenu> menus = Arrays.asList(
                 ErpMenu.builder().code("10").name("基础数据").build()
                     , ErpMenu.builder().code("1001").name("人员组织管理").matches("basis/employee/**").uri("basis/employee.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1002").name("成品管理").matches("basis/product/**").uri("product.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1002").name("成品管理").matches("basis/product/**").uri("basis/product.html").parentCode("10").build()
                     , ErpMenu.builder().code("1003").name("原材料管理").matches("basis/material/**").uri("material.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1004").name("模具管理").matches("basis/mould/**").uri("mould.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment;/**").uri("equipment;.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1004").name("模具管理").matches("basis/mould/**").uri("basis/mould.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment/**").uri("equipment.html").parentCode("10").build()
                     , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("customer.html").parentCode("10").build()
                     , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("basis/supplier.html").parentCode("10").build()
                 , ErpMenu.builder().code("20").name("销售模块").build()

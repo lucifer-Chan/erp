@@ -1,11 +1,6 @@
 package com.yintong.erp.sandbox;
 
-import com.yintong.erp.service.CategoryService;
-import com.yintong.erp.service.DepartmentService;
-import com.yintong.erp.utils.base.BaseResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("test")
 public class TestController {
-    @Autowired CategoryService categoryService;
+    /*@Autowired CategoryService categoryService;
     @Autowired DepartmentService departmentService;
 
     @GetMapping("category/{code}")
@@ -38,6 +33,6 @@ public class TestController {
     @GetMapping("department")
     public BaseResult department2(){
         return new BaseResult().addList("tree", departmentService.tree());
-    }
+    }*/
 }
 

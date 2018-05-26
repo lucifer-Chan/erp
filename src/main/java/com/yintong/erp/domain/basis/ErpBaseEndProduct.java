@@ -5,10 +5,7 @@ import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
@@ -55,4 +52,6 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
 
+    @Transient
+    private String supplierTypeCode;
 }
