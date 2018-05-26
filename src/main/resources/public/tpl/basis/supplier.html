@@ -266,7 +266,6 @@
             return $.Promise.all([
                 services.supplier.types(), services.lookup('supplier')
             ]).then(function (array) {
-                consts.ranks[""] = "[无]";
                 array[0].list.forEach(function (value) {
                     consts.types[value.code] = value.name;
                 });
