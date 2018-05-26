@@ -60,7 +60,7 @@ public class SupplierController {
     @DeleteMapping("{supplierId}")
     public BaseResult delete(@PathVariable Long supplierId){
         supplierService.delete(supplierId);
-        return new BaseResult();
+        return new BaseResult().setErrmsg("删除成功");
     }
 
     /**

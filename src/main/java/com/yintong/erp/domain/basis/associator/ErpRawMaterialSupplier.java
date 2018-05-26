@@ -30,7 +30,7 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode {
     private String rawMaterType;
     @BarCodeIndex(1)
     @Column(columnDefinition = "bigint(20) comment '原材料表id'")
-    private Long rawMatertId;
+    private Long rawMaterId;
     @BarCodeIndex(holder = true, value = 2)// 1位
     @Column(columnDefinition = "varchar(1) comment '供应商类型'")
     private String supplierType;
