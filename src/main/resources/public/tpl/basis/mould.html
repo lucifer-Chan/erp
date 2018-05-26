@@ -7,8 +7,8 @@
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="mould_category">
                 </li>
-                <li role="presentation" class="dropdown" id="mould_supplier">
-                </li>
+                <!--<li role="presentation" class="dropdown" id="mould_supplier">-->
+                <!--</li>-->
             </ul>
             <button type="button" class="btn btn-default btn-ms operation" id="addMould" data-toggle="modal" data-target="#_editMould">新增模具</button>
         </div>
@@ -23,7 +23,7 @@
                                 <th style="width:40px" erp-data="{modelToolTypeCode}" erp-convert="convertType">类型</th>
                                 <th style="width:90px" erp-data="{modelToolName}" >名称</th>
                                 <th style="width:40px" erp-data="{specification}">规格描述</th>
-                                <th style="width:40px" erp-data="{supplierTypeCode}">供应商</th>
+                                <!--<th style="width:40px" erp-data="{supplierTypeCode}">供应商</th>-->
                                 <th style="width:50px" erp-data="{remark}">备注</th>
                             </tr>
                             </thead>
@@ -52,13 +52,13 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">模具类别</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-10">
                             <div class="customDropkick" style="width: 100%;" id="_type" name="modelToolTypeCode"></div>
                         </div>
-                        <label class="col-sm-2 control-label">供应商</label>
+                   <!--     <label class="col-sm-2 control-label">供应商</label>
                         <div class="col-sm-4">
                             <div class="customDropkick" style="width: 100%;" id="_supplier" name="supplierTypeCode"></div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">规格描述</label>
@@ -118,10 +118,10 @@
                                 <label class="col-xs-4 pd0">类型</label>
                                 <div class="col-xs-8 txt pd0" data-convert="modelToolTypeCode"></div>
                             </div>
-                            <div class="col-xs-6">
+               <!--             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">供应商</label>
                                 <div class="col-xs-8 txt pd0" data-convert="supplierTypeCode"></div>
-                            </div>
+                            </div>-->
 
                         </div>
                         <div class="row">
@@ -170,9 +170,9 @@
                 array[0].list.forEach(function (value) {
                     consts.types[value.code] = value.name;
                 });
-                array[1].list.forEach(function (value) {
+           /*     array[1].list.forEach(function (value) {
                     consts.supplier[value.barCode] = value.supplierName;
-                });
+                });*/
             }).catch(function (reason) {
                 console.log('reason', reason);
             })
@@ -254,9 +254,9 @@
             $baseInfo.find('div[data-convert="modelToolTypeCode"]').html(
                 consts.types[mould.modelToolTypeCode] || unSetting
             );
-            $baseInfo.find('div[data-convert="supplierTypeCode"]').html(
+        /*    $baseInfo.find('div[data-convert="supplierTypeCode"]').html(
                 consts.types[mould.supplierTypeCode] || unSetting
-            );
+            );*/
 
         }
 
@@ -305,12 +305,12 @@
                     $.each(consts.selectedMould, function (name, value) {
                         $this.find('form [name="'+ name +'"]').val(value);
                     });
-                    utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier, current : consts.supplier.supplierTypeCode});
+                   // utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier, current : consts.supplier.supplierTypeCode});
                     utils.dropkick({ $holder : $('#_type'), data : consts.types, current : consts.selectedMould.modelToolTypeCode});
                 }else{
                     //新建
                     utils.dropkick({ $holder : $('#_type'), data : consts.types });
-                    utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier });
+                   // utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier });
                 }
 
             }).on('hidden.bs.modal', function () {
@@ -326,7 +326,7 @@
                 var _function =  !!consts.selectedMould.id ? services.mould.update : services.mould.create;
                 data.id = consts.selectedMould.id || '';
                 data.modelToolTypeCode = $('#_type').data('value');
-                data.supplierTypeCode = $('#_supplier').data('value');
+               // data.supplierTypeCode = $('#_supplier').data('value');
                 console.log(JSON.stringify(data));
                 _function(data).then(function (mould) {
                     loadMouldData(true);
