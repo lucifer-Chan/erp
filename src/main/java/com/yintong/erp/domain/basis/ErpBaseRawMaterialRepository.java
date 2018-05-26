@@ -1,5 +1,8 @@
 package com.yintong.erp.domain.basis;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,4 +15,6 @@ public interface ErpBaseRawMaterialRepository extends JpaRepository<ErpBaseRawMa
     List<ErpBaseRawMaterial> findAll();
 
     ErpBaseRawMaterial findById(String  rawNo);
+
+    Page<ErpBaseRawMaterial> findAll(Specification<ErpBaseRawMaterial> specification, Pageable pageable);
 }
