@@ -42,8 +42,8 @@ public class PreDataService {
         if(!debug) return;
 /*        initMenus();
         initEmployees();
-        initCategories();
-        initDepartments();*/
+        initCategories();*/
+        initDepartments();
         initLookup();
     }
 
