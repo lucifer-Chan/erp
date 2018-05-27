@@ -3,9 +3,16 @@ package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.SpringUtil;
+import com.yintong.erp.utils.excel.Importable;
 import lombok.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
@@ -17,7 +24,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
+public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importable{
 
     @Id
     @GeneratedValue
@@ -97,8 +104,28 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
     private String userDefinedTwo;
     @Column(columnDefinition = "varchar(64) comment '自定义属性3'")
     private String userDefinedThree;
-    @Column(columnDefinition = "varchar(128) comment '备注'")
+    @Column(columnDefinition = "varchar(2000) comment '备注'")
     private String remark;
+    @Column(columnDefinition = "datetime comment '导入时间,空值表示录入'")
+    private Date importedAt;
+
+    @Transient
+    private String endProductTypeName;
+
+    public void setEndProductTypeName(String endProductTypeName){
+        this.endProductTypeName = endProductTypeName;
+        List<ErpBaseCategory> list = SpringUtil.getBean(ErpBaseCategoryRepository.class).findByFullName(endProductTypeName);
+        if(CollectionUtils.isNotEmpty(list)){
+            ErpBaseCategory category = list.stream().filter(c->c.getCode().length() == 4).findAny().orElse(null);
+            if(Objects.nonNull(category))
+                this.endProductTypeCode = category.getCode();
+        }
+    }
+
+    @Override
+    public void validate(){
+        Assert.hasLength(endProductTypeCode, "未找到类别");
+    }
 
     @Transient
     private String supplierTypeCode;

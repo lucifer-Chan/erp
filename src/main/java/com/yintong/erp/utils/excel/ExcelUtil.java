@@ -40,9 +40,8 @@ public class ExcelUtil {
     }
 
     public <T extends Importable> ExcelImporter<T> builder(Class<T> clazz){
-        return new ExcelImporter<T>(this, clazz);
+        return new ExcelImporter<>(this, clazz);
     }
-
 
     public static class ExcelImporter<T extends Importable> {
         private ExcelUtil excelUtil;

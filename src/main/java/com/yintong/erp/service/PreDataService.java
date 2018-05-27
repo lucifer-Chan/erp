@@ -2,11 +2,10 @@ package com.yintong.erp.service;
 
 import com.yintong.erp.domain.basis.*;
 import com.yintong.erp.domain.basis.security.*;
-import com.yintong.erp.utils.bar.BarCodeConstants.*;
+import com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 import org.apache.commons.collections4.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -19,7 +18,7 @@ import java.util.List;
  * 预置数据服务
  **/
 
-@Component
+//@Component
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -73,7 +72,7 @@ public class PreDataService {
                     , ErpMenu.builder().code("1003").name("原材料管理").matches("basis/material/**").uri("material.html").parentCode("10").build()
                     , ErpMenu.builder().code("1004").name("模具管理").matches("basis/mould/**").uri("basis/mould.html").parentCode("10").build()
                     , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment/**").uri("equipment.html").parentCode("10").build()
-                    , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("customer.html").parentCode("10").build()
+                    , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("basis/customer.html").parentCode("10").build()
                     , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("basis/supplier.html").parentCode("10").build()
                 , ErpMenu.builder().code("20").name("销售模块").build()
                     , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()

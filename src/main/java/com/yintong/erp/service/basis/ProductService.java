@@ -3,6 +3,8 @@ package com.yintong.erp.service.basis;
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import com.yintong.erp.utils.excel.ExcelUtil;
+import com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
@@ -16,8 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
@@ -56,7 +59,19 @@ public class ProductService {
         return mould;
     }
 
-
+    /**
+     * 导入
+     * @param excel
+     * @return
+     */
+    public ExcelImporter<ErpBaseEndProduct> import0(InputStream excel) throws IOException {
+        ExcelImporter<ErpBaseEndProduct> importer = new ExcelUtil(excel).builder(ErpBaseEndProduct.class);
+        List<ErpBaseEndProduct> entities = importer.getSuccessData();
+        Date importedAt = new Date();
+        entities.forEach(entity-> entity.setImportedAt(importedAt));
+        erpBaseEndProductRepository.saveAll(entities);
+        return importer;
+    }
 
     /**
      * 创建成品
@@ -91,7 +106,6 @@ public class ProductService {
         if(!CollectionUtils.isEmpty(onDeleteProductalidator))
             onDeleteProductalidator.forEach(validator -> validator.validate(productId));
         erpBaseEndProductRepository.deleteById(productId);
-
     }
 
     /**
