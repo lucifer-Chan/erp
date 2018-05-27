@@ -10,7 +10,7 @@
                 <!--<li role="presentation" class="dropdown" id="mould_supplier">-->
                 <!--</li>-->
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addMould" data-toggle="modal" data-target="#_editMould">新增模具</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editMould">新增模具</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -50,7 +50,7 @@
                             <input type="text" class="form-control" name="modelToolName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group ">
                         <label class="col-sm-2 control-label">模具类别</label>
                         <div class="col-sm-10">
                             <div class="customDropkick" style="width: 100%;" id="_type" name="modelToolTypeCode"></div>
@@ -211,6 +211,7 @@
                 services.mould.one(id).then(function (mould) {
                     console.log('点击tr', mould);
                     consts.selectedMould = mould;
+                    $('._type').hide();
                     initMouldDetail(mould);
                     //TODO
                     $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
@@ -319,19 +320,25 @@
 
 
             });
+
             //保存模具
             consts.$editMouldModal.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
                 var data = consts.$editMouldModal.find('form').serializeObject();
                 var _function =  !!consts.selectedMould.id ? services.mould.update : services.mould.create;
                 data.id = consts.selectedMould.id || '';
-                data.modelToolTypeCode = $('#_type').data('value');
+          /*      var $testDiv = utils.udDataAttr();*/
+                data.modelToolTypeCode =$("#_type").data('value');
                // data.supplierTypeCode = $('#_supplier').data('value');
-                console.log(JSON.stringify(data));
                 _function(data).then(function (mould) {
                     loadMouldData(true);
+                    if(consts.selectedMould.id)
+                        initMouldDetail(mould);
                     consts.$editMouldModal.modal('hide');
                     layer.msg('保存模具信息成功');
+                }).catch(function (reason) {
+                    console.log('保存供应商', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
             //删除供应商
@@ -360,6 +367,7 @@
             //新增按钮绑定事件
             $('#addUserBt').bind('click', function(){
                 consts.selectedMould = {};
+                $('._type').show();
             })
         }
 
@@ -371,4 +379,5 @@
         }
 
     });
+
 </script>

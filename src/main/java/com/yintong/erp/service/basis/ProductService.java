@@ -117,7 +117,7 @@ public class ProductService {
         @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo"}, compare = like, group = OR)
         String cause;
         @ParameterItem(mappingTo = "endProductTypeCode", compare = equal)
-        String type;
+        String typeC;
     }
 
 }

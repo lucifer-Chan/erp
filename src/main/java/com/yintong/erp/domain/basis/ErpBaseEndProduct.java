@@ -35,6 +35,8 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode {
     private String custDrawingNo;
     @Column(columnDefinition = "varchar(64) comment '图纸编号'")
     private String drawingNo;
+    @Column(columnDefinition = "varchar(20) comment '模具位'")
+    private String modelLocation;
     @Column(columnDefinition = "varchar(10) comment '头径D(mm)上限'")
     private String spHdmmUpper;
     @Column(columnDefinition = "varchar(10) comment '头径D(mm)下限'")

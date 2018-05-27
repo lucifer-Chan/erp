@@ -251,10 +251,17 @@ define('services',['utils'],function (utils) {
 
     var product = {
         //分类
-        typeP : function () {
+        //分类
+        getTypeAll : function () {
+            return $.http.get('basis/common/categories/tree?code=P');
+        },
+        getTypeP : function () {
             return $.http.get('basis/common/categories/children/direct?code=P');
         },
-
+        //细类
+        getTypeC : function (code) {
+            return $.http.get('basis/common/categories/children/direct?code='+code);
+        },
         //模块对应的供应商
         findSupplierAll : function () {
             return $.http.get('basis/mould/findSupplierAll');
@@ -262,33 +269,33 @@ define('services',['utils'],function (utils) {
         //查询
         query : function (params) {
             return $.http.get({
-                url : 'basis/mould',
+                url : 'basis/product',
                 data : params
             });
         },
         //更新
         update : function (data) {
             return $.http.put({
-                url : 'basis/mould',
+                url : 'basis/product',
                 data : data,
                 contentType : $.contentType.json
             });
         },
         //查找
         one : function (id) {
-            return $.http.get('basis/mould/' + id);
+            return $.http.get('basis/product/' + id);
         },
         //新增模具
         create:function(data){
             return $.http.post({
-                url : 'basis/mould',
+                url : 'basis/product',
                 data : data,
                 contentType : $.contentType.json
             });
         },
         //删除
         delete : function (id) {
-            return $.http.delete('basis/mould/' + id);
+            return $.http.delete('basis/product/' + id);
         }
     };
 
