@@ -140,6 +140,25 @@ public class ReflectUtil {
         }
     }
 
+    /**
+     * 调用一个field的setter方法
+     * @param field
+     * @param holder
+     * @param value
+     */
+    public static void setValueBySetter(Field field, Object holder,  Object value){
+        try {
+            String fieldName = field.getName();
+            String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1,fieldName.length());
+            Method method = holder.getClass().getMethod(methodName, field.getType());
+            method.setAccessible(true);
+            method.invoke(holder, value);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     public static void main(String[] args) {
         String name = "createdAt";
         System.out.println(name.substring(0,1).toUpperCase() + name.substring(1,name.length()));
