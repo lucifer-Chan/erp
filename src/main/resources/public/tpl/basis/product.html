@@ -534,13 +534,10 @@
             return $.Promise.all([
                 services.product.getTypeAll(), services.mould.findSupplierAll()
             ]).then(function (array) {
-                console.log("array=="+JSON.stringify(array));
-                console.log("array[0].list=="+JSON.stringify(array[0].list));
                 array[0].tree.forEach(function (value) {
                     consts.typeP[value.code] = value.name;
                     var arrayChild = value.children;
                     var typeClideArray = {};
-                    console.log("arrayChild=="+JSON.stringify(arrayChild));
                     arrayChild.forEach(function(childValue){
                         typeClideArray[childValue.code]=childValue.name;
                     });
