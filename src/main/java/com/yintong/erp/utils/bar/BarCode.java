@@ -2,7 +2,7 @@ package com.yintong.erp.utils.bar;
 
 import java.lang.annotation.*;
 
-import static com.yintong.erp.utils.bar.BarCodeConstants.*;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 
 
 /**

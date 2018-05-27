@@ -2,14 +2,13 @@ package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.service.basis.EmployeeService;
+import com.yintong.erp.service.basis.EmployeeService.EmployeeParameterBuilder;
 import com.yintong.erp.service.basis.MenuService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-
-import com.yintong.erp.service.basis.EmployeeService.*;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.bar.BarCode;
-import com.yintong.erp.utils.bar.BarCodeColumn;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import lombok.*;
 

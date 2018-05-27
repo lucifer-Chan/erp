@@ -6,7 +6,6 @@ import net.sf.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 

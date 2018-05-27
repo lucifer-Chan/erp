@@ -2,7 +2,8 @@ package com.yintong.erp.utils.query;
 
 import javax.persistence.criteria.Predicate.BooleanOperator;
 import java.lang.annotation.*;
-import static javax.persistence.criteria.Predicate.BooleanOperator.*;
+
+import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
 
 /**
  * Created by lucifer.chan on 2017/12/8.

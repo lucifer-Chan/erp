@@ -8,7 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Stream;
-import static java.util.stream.Collectors.*;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author lucifer.chan

@@ -22,7 +22,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.yintong.erp.utils.query.ParameterItem.COMPARES.*;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 
 /**
  * @author lucifer.chan

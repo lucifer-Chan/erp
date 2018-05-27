@@ -2,26 +2,27 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
-import com.yintong.erp.utils.bar.BarCodeConstants.*;
+import com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteSupplierValidator;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.yintong.erp.utils.query.ParameterItem.COMPARES.*;
-import static javax.persistence.criteria.Predicate.BooleanOperator.*;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
+import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 /**
  * @author lucifer.chan
  * @create 2018-05-22 上午12:04

@@ -1,7 +1,6 @@
 package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.security.*;
-
 import com.yintong.erp.utils.common.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,13 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.yintong.erp.utils.common.Constants.Roles.ADMIN_ROLE_CODE;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static com.yintong.erp.utils.common.Constants.Roles.*;
 
 
 /**

@@ -2,7 +2,10 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartment;
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartmentRepository;
-import com.yintong.erp.domain.basis.security.*;
+import com.yintong.erp.domain.basis.security.ErpEmployee;
+import com.yintong.erp.domain.basis.security.ErpEmployeeMenu;
+import com.yintong.erp.domain.basis.security.ErpEmployeeMenuRepository;
+import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
 import com.yintong.erp.utils.common.SessionUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
@@ -10,6 +13,7 @@ import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteEmployeeValidator;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,14 +21,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.StringUtils;
+
 import java.util.List;
 import java.util.Objects;
 
-import static com.yintong.erp.utils.query.ParameterItem.COMPARES.*;
-import static java.util.stream.Collectors.*;
-import static javax.persistence.criteria.Predicate.BooleanOperator.*;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
+import static java.util.stream.Collectors.toList;
+import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 
 /**
  * @author lucifer.chan

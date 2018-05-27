@@ -1,6 +1,9 @@
 package com.yintong.erp.security;
 
-import com.yintong.erp.domain.basis.security.*;
+import com.yintong.erp.domain.basis.security.ErpEmployee;
+import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
+import com.yintong.erp.domain.basis.security.ErpMenu;
+import com.yintong.erp.domain.basis.security.ErpMenuRepository;
 import com.yintong.erp.utils.common.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

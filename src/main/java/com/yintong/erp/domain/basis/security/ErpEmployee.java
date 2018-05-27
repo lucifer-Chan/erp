@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.UE00;
 
 /**
  * @author lucifer.chan
