@@ -734,6 +734,9 @@
                 data : consts.typeP,
                 prefix : '大类',
                 callback : function (value) {
+                    consts.oQueryParam.typeC = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadDataTable(true);
                     //初始化搜索下拉列表
                     utils.dropdown({
                         $holder : consts.$typeCHolder,
