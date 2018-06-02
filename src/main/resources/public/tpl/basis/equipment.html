@@ -5,12 +5,12 @@
                 <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
             <ul class="nav nav-pills">
-                <li role="presentation" class="dropdown" id="mould_category">
+                <li role="presentation" class="dropdown" id="equipment_category">
                 </li>
                 <!--<li role="presentation" class="dropdown" id="mould_supplier">-->
                 <!--</li>-->
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editMould">新增模具</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editEquipment">新增设备</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -20,8 +20,8 @@
                             <thead>
                             <tr erp-id="{id}">
                                 <th style="width:70px" erp-data="{barCode}">编号<span id="allCount"></span></th>
-                                <th style="width:40px" erp-data="{modelToolTypeCode}" erp-convert="convertType">类型</th>
-                                <th style="width:90px" erp-data="{modelToolName}" >名称</th>
+                                <th style="width:40px" erp-data="{equipmentTypeCode}" erp-convert="convertType">类型</th>
+                                <th style="width:90px" erp-data="{equipmentName}" >名称</th>
                                 <th style="width:40px" erp-data="{specification}">规格描述</th>
                                 <!--<th style="width:40px" erp-data="{supplierTypeCode}">供应商</th>-->
                                 <th style="width:50px" erp-data="{remark}">备注</th>
@@ -34,31 +34,27 @@
         </div>
     </div>
 </div>
-<!-- 修改模具信息 -->
-<div class="modal fade" role="dialog" id="_editMould">
+<!-- 修改设备信息 -->
+<div class="modal fade" role="dialog" id="_editEquipment">
     <div class="modal-dialog" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa fa-user defaultColor"></i> 编辑模具信息</h4>
+                <h4 class="modal-title"><i class="fa fa-user defaultColor"></i> 编辑设备信息</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal pd23">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">名称</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="modelToolName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                            <input type="text" class="form-control" name="equipmentName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                         </div>
                     </div>
                     <div class="form-group _type">
-                        <label class="col-sm-2 control-label">模具类别</label>
+                        <label class="col-sm-2 control-label">设备类别</label>
                         <div class="col-sm-10">
-                            <div class="customDropkick" style="width: 100%;" id="_type" name="modelToolTypeCode"></div>
+                            <div class="customDropkick" style="width: 100%;" id="_type" name="equipmentTypeCode"></div>
                         </div>
-                   <!--     <label class="col-sm-2 control-label">供应商</label>
-                        <div class="col-sm-4">
-                            <div class="customDropkick" style="width: 100%;" id="_supplier" name="supplierTypeCode"></div>
-                        </div>-->
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">规格描述</label>
@@ -85,11 +81,11 @@
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_editMould">修改模具信息</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editEquipment">修改设备信息</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
-    <div class="bugInfoContent initMouldDetail">
+    <div class="bugInfoContent initEquipmentDetail">
         <div class="panel-default bugInfo">
             <div class="row">
                 <p class="pd23 pd43">
@@ -105,7 +101,7 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">名称</label>
-                                <div class="col-xs-8 txt pd0" data-name="modelToolName"></div>
+                                <div class="col-xs-8 txt pd0" data-name="equipmentName"></div>
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">编号</label>
@@ -116,12 +112,8 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">类型</label>
-                                <div class="col-xs-8 txt pd0" data-convert="modelToolTypeCode"></div>
+                                <div class="col-xs-8 txt pd0" data-convert="equipmentTypeCode"></div>
                             </div>
-               <!--             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">供应商</label>
-                                <div class="col-xs-8 txt pd0" data-convert="supplierTypeCode"></div>
-                            </div>-->
 
                         </div>
                         <div class="row">
@@ -144,6 +136,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         //初始页面
@@ -152,27 +145,23 @@
 
 
         var consts = {
-            types : {}//模具类型-code|name
-            ,supplier:{}//供应商-code|name
+            types : {}//设备类型-code|name
             , oQueryParam : {}//查询参数
-            , selectedMould : {} //选中的模具
+            , selectedEquipment : {} //选中的设备
             , $rightPage : $('#rightInfoPage')//右侧页面
-            , $categoryHolder : $('#mould_category')//模具类别
-            , $supplierHolder : $('#mould_supplier')//供应商
-            , $editMouldModal : $('#_editMould')//编辑人员的modal
+            , $categoryHolder : $('#equipment_category')//设备类别
+            , $editEquipmentModal : $('#_editEquipment')//编辑设备的modal
         };
         //预置数据
         function prepareData() {
             //1-加载模版页面
             return $.Promise.all([
-                services.mould.types(), services.mould.findSupplierAll()
+                services.equipment.types()
             ]).then(function (array) {
                 array[0].list.forEach(function (value) {
                     consts.types[value.code] = value.name;
                 });
-           /*     array[1].list.forEach(function (value) {
-                    consts.supplier[value.barCode] = value.supplierName;
-                });*/
+
             }).catch(function (reason) {
                 console.log('reason', reason);
             })
@@ -181,7 +170,7 @@
         /**
          * 加载模具列表
          */
-        function loadMouldData(oParams) {
+        function loadEquipmentData(oParams) {
             //缓存查询条件
             if (oParams === true){
                 oParams = consts.oQueryParam;
@@ -194,7 +183,7 @@
              * @param params
              */
             function dataProvider(params){
-                return services.mould.query(params);
+                return services.equipment.query(params);
             }
 
             /**
@@ -208,11 +197,11 @@
                     return;
                 }
                 $rightPage.attr('data-id', id);
-                services.mould.one(id).then(function (mould) {
-                    console.log('点击tr', mould);
-                    consts.selectedMould = mould;
+                services.equipment.one(id).then(function (equipment) {
+                    console.log('点击tr', equipment);
+                    consts.selectedEquipment = equipment;
                     $('._type').hide();
-                    initMouldDetail(mould);
+                    initEquipmentDetail(equipment);
                     //TODO
                     $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
                     $rightPage.find('.fa-angle-double-down').click();
@@ -242,22 +231,20 @@
         /**
          * 初始化右侧
          */
-        function initMouldDetail(mould) {
+        function initEquipmentDetail(equipment) {
 
             var unSetting = '<span class="label label-danger">未设置</span>';
-            var $detail = $('.initMouldDetail');
+            var $detail = $('.initEquipmentDetail');
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
                 var def = $(this).data('convert') === false ? '无' : unSetting;
-                $(this).html(mould[$(this).data('name')] || def);
+                $(this).html(equipment[$(this).data('name')] || def);
             });
-            $baseInfo.find('div[data-convert="modelToolTypeCode"]').html(
-                consts.types[mould.modelToolTypeCode] || unSetting
+            $baseInfo.find('div[data-convert="equipmentTypeCode"]').html(
+                consts.types[equipment.equipmentTypeCode] || unSetting
             );
-        /*    $baseInfo.find('div[data-convert="supplierTypeCode"]').html(
-                consts.types[mould.supplierTypeCode] || unSetting
-            );*/
+
 
         }
 
@@ -266,89 +253,89 @@
             utils.dropdown({
                 $holder : consts.$categoryHolder,
                 data : consts.types,
-                prefix : '模具类别',
+                prefix : '设备类别',
                 callback : function (value) {
                     consts.oQueryParam.type = value;
                     console.log('oQueryParam', consts.oQueryParam);
-                    loadMouldData(true);
+                    loadEquipmentData(true);
                 }
             });
- /*           utils.dropdown({
-                $holder : consts.$supplierHolder,
-                data : consts.supplier,
-                prefix : '供应商',
-                callback : function (value) {
-                    consts.oQueryParam.supplierTypeCode = value;
-                    console.log('oQueryParam', consts.oQueryParam);
-                    loadMouldData(true);
-                }
-            });*/
+            /*           utils.dropdown({
+             $holder : consts.$supplierHolder,
+             data : consts.supplier,
+             prefix : '供应商',
+             callback : function (value) {
+             consts.oQueryParam.supplierTypeCode = value;
+             console.log('oQueryParam', consts.oQueryParam);
+             loadMouldData(true);
+             }
+             });*/
 
 
 
             //搜索图标
             $('#searchIcon').unbind('click').click(function(){
                 consts.oQueryParam.cause = $('#fastKeyword').val();
-                loadMouldData(true);
+                loadEquipmentData(true);
             });
             $("#fastKeyword").keydown(function(e){
                 if(e.keyCode === 13){
                     consts.oQueryParam.cause = $('#fastKeyword').val();
-                    loadMouldData(true);
+                    loadEquipmentData(true);
                 }
             });
 
             //模态框初始化-编辑模具信息
-            consts.$editMouldModal.on('show.bs.modal', function () {
+            consts.$editEquipmentModal.on('show.bs.modal', function () {
                 var $this = $(this);
-                if(consts.selectedMould.id){
+                if(consts.selectedEquipment.id){
                     //更新
-                    $.each(consts.selectedMould, function (name, value) {
+                    $.each(consts.selectedEquipment, function (name, value) {
                         $this.find('form [name="'+ name +'"]').val(value);
                     });
-                   // utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier, current : consts.supplier.supplierTypeCode});
-                    utils.dropkick({ $holder : $('#_type'), data : consts.types, current : consts.selectedMould.modelToolTypeCode});
+                    // utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier, current : consts.supplier.supplierTypeCode});
+                    utils.dropkick({ $holder : $('#_type'), data : consts.types, current : consts.selectedEquipment.equipmentTypeCode});
                 }else{
                     //新建
                     utils.dropkick({ $holder : $('#_type'), data : consts.types });
-                   // utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier });
+                    // utils.dropkick({ $holder : $('#_supplier'), data : consts.supplier });
                 }
 
             }).on('hidden.bs.modal', function () {
                 //清理数据
-                $(this).find('input[type="text"], #_type, #_supplier,  textarea').val('');
+                $(this).find('input[type="text"], #_type, textarea').val('');
 
 
             });
 
             //保存模具
-            consts.$editMouldModal.find('button[name="save"]').unbind('click').click(function (e) {
+            consts.$editEquipmentModal.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
-                var data = consts.$editMouldModal.find('form').serializeObject();
-                var _function =  !!consts.selectedMould.id ? services.mould.update : services.mould.create;
-                data.id = consts.selectedMould.id || '';
-          /*      var $testDiv = utils.udDataAttr();*/
-                data.modelToolTypeCode =$("#_type").data('value');
-               // data.supplierTypeCode = $('#_supplier').data('value');
+                var data = consts.$editEquipmentModal.find('form').serializeObject();
+                var _function =  !!consts.selectedEquipment.id ? services.equipment.update : services.equipment.create;
+                data.id = consts.selectedEquipment.id || '';
+                /*      var $testDiv = utils.udDataAttr();*/
+                data.equipmentTypeCode =$("#_type").data('value');
+                // data.supplierTypeCode = $('#_supplier').data('value');
                 _function(data).then(function (mould) {
-                    loadMouldData(true);
-                    if(consts.selectedMould.id)
-                        initMouldDetail(mould);
-                    consts.$editMouldModal.modal('hide');
-                    layer.msg('保存模具信息成功');
+                    loadEquipmentData(true);
+                    if(consts.selectedEquipment.id)
+                        initEquipmentDetail(mould);
+                    consts.$editEquipmentModal.modal('hide');
+                    layer.msg('保存设备信息成功');
                 }).catch(function (reason) {
-                    console.log('保存模具', reason);
+                    console.log('保存设备', reason);
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
             //删除供应商
             consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
                 layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
-                    services.mould.delete(consts.selectedMould.id)
+                    services.equipment.delete(consts.selectedEquipment.id)
                         .then(function (ret) {
                             layer.msg(ret._message);
-                            loadMouldData(true);
-                            consts.selectedMould = {};
+                            loadEquipmentData(true);
+                            consts.selectedEquipment = {};
                             consts.$rightPage.hide();
                         })
                         .catch(function (reason) {
@@ -357,16 +344,10 @@
                 });
             });
 
-            //编辑用户
-            consts.$editMouldModal.unbind('click').click(function (e) {
 
-                var $button = $(this);
-                e.preventDefault();
-                var $modal = consts.$editEmployeeModal;
-            });
             //新增按钮绑定事件
             $('#addUserBt').bind('click', function(){
-                consts.selectedMould = {};
+                consts.selectedEquipment = {};
                 $('._type').show();
             })
         }
@@ -374,7 +355,7 @@
         function init() {
             prepareData().then(function () {
                 initEvent();
-                loadMouldData();
+                loadEquipmentData();
             });
         }
 
