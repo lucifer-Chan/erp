@@ -6,9 +6,8 @@ import com.yintong.erp.service.basis.RawMaterialService.RawMaterialParameterBuil
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 
 /**
@@ -22,26 +21,51 @@ public class RawMaterialController {
     @Autowired
     private RawMaterialService rawMaterialService;
 
-    @RequestMapping("list")
-    public BaseResult list(RawMaterialParameterBuilder parameterBuilder){
-        Page<ErpBaseRawMaterial> list = rawMaterialService.list(parameterBuilder);
-        return page2BaseResult(list);
+    @GetMapping
+    public BaseResult query(RawMaterialParameterBuilder parameter){
+        Page<ErpBaseRawMaterial> page = rawMaterialService.query(parameter);
+        return page2BaseResult(page);
     }
 
-    @RequestMapping("save")
-    public BaseResult add(@RequestBody ErpBaseRawMaterial erpBaseRawMaterial){
-        rawMaterialService.save(erpBaseRawMaterial);
-        return new BaseResult().addPojo(erpBaseRawMaterial);
+    /**
+     * 新增原材料
+     * @param material
+     * @return
+     */
+    @PostMapping
+    public BaseResult create(@RequestBody ErpBaseRawMaterial material){
+        return new BaseResult().addPojo(rawMaterialService.create(material));
     }
 
-    @RequestMapping("remove")
-    public BaseResult remove(Long id){
-        rawMaterialService.remove(id);
-        return new BaseResult().addPojo(id);
+    /**
+     * 根据成品id查找原材料
+     * @param materialId
+     * @return
+     */
+    @GetMapping("{materialId}")
+    public BaseResult one(@PathVariable Long materialId){
+        return new BaseResult().addPojo(rawMaterialService.one(materialId));
     }
 
-    @RequestMapping("get")
-    public BaseResult get(Long id){
-        return new BaseResult().addPojo(rawMaterialService.findOne(id));
+    /**
+     * 根据id删除
+     * @param materialId
+     * @return
+     */
+    @DeleteMapping("{materialId}")
+    public BaseResult delete(@PathVariable Long materialId){
+        rawMaterialService.delete(materialId);
+        return new BaseResult();
+    }
+
+
+    /**
+     * 更新成原材料
+     * @param material
+     * @return
+     */
+    @PutMapping
+    public BaseResult update(@RequestBody ErpBaseRawMaterial material){
+        return new BaseResult().addPojo(rawMaterialService.update(material));
     }
 }

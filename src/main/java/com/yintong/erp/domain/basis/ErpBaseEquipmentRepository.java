@@ -1,5 +1,8 @@
 package com.yintong.erp.domain.basis;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,5 +12,6 @@ import java.util.List;
  */
 public interface ErpBaseEquipmentRepository extends JpaRepository<ErpBaseEquipment,Long> {
 
-    List<ErpBaseEquipment> findAll();
+    Page<ErpBaseEquipment> findAll(Specification<ErpBaseEquipment> specification, Pageable pageable);
+
 }

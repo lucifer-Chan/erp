@@ -299,6 +299,46 @@ define('services',['utils'],function (utils) {
         }
     };
 
+    var equipment = {
+        //分类
+        types : function () {
+            return $.http.get('basis/common/categories/children/direct?code=E');
+        },
+
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'basis/equipment',
+                data : params
+            });
+        },
+        //更新
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/equipment',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //查找
+        one : function (id) {
+            return $.http.get('basis/equipment/' + id);
+        },
+        //新增设备
+        create:function(data){
+            return $.http.post({
+                url : 'basis/equipment',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //删除
+        delete : function (id) {
+            return $.http.delete('basis/equipment/' + id);
+        }
+    };
+
+
     /**
      * 下拉
      * @param type
@@ -315,6 +355,7 @@ define('services',['utils'],function (utils) {
         , supplier : supplier
         , mould : mould
         , product : product
+        ,equipment:equipment
         , lookup : lookup
     }
 });
