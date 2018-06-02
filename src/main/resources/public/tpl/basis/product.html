@@ -11,7 +11,8 @@
                 </li>
 
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editProduct">新增成品</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="batchOperationBt" data-toggle="modal" data-target="#_batchOperation">批量操作</button>
+            <button style="right: 110px" type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editProduct">新增成品</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -36,6 +37,45 @@
             </div>
         </div>
     </div>
+</div>
+<!--批量操作-->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_batchOperation">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-file-excel-o defaultColor"></i> 批量操作</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><a href="#_batchImport" role="tab" data-toggle="tab"><span>批量导入</span></a></li>
+                    <li role="presentation"><a href="#_batchDelete" role="tab" data-toggle="tab"><span>批量删除</span></a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="_batchImport">
+                        <form class="form-horizontal" method="post"
+                              enctype="multipart/form-data">
+                            <div class="box-body">
+                                <div>
+                                    <label class="control-label">请选择要导入的Excel文件：</label>
+                                    <input id="excelFile" name="excelFile" class="file-loading" type="file" multiple accept=".xlsx">
+                                    <br>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="_batchDelete">
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- 修改成品信息 -->
 <div class="modal fade" role="dialog" data-backdrop="static" id="_editProduct">
@@ -512,8 +552,8 @@
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('hello product');
-        init();
 
+        init();
         var consts = {
             typeAll : {}//所有成品大类-{code:{code:name}}
             ,typeP : {}//成品大类-code|name
@@ -526,8 +566,10 @@
             , oQueryParam : {}//查询参数
             , $editInfoModal : $('#_editProduct')//编辑供应商modal
             , $rightPage : $('#rightInfoPage')//右侧页面
-
+            , $batchModal : $('#_batchOperation')//批量操作modal
+            , $uploadInput : $('#excelFile')//导入excel的input
         };
+
         //预置数据
         function prepareData() {
             //1-加载模版页面
@@ -642,6 +684,22 @@
         }
 
         function initEvent(){
+
+            // {$input, uploadUrl, type, $modal}
+            utils.uploadFile({
+                $input : consts.$uploadInput,
+                uploadUrl : GLOBALS.ctxPath + 'basis/product/upload',
+                type : 'product',
+                $modal : consts.$batchModal,
+                onSuccess : function (fileName, ret){
+                    layer.msg('成功导入' + ret.successNum + '条成品信息');
+                    loadDataTable(true)
+                },
+                onFailed : function (fileName, ret) {
+                    layer.msg('导入'+ fileName + '失败！失败原因：' + (ret.message||ret.errmsg ||'请求失败'));
+                }
+            });
+
             consts.$editInfoModal.on('show.bs.modal', function () {
                 var $this = $(this);
                 if(consts.product.id){
@@ -674,8 +732,6 @@
                         utils.dropkick({ $holder : $('#_typeC'), data :  consts.typeAll[value] });
 
                     } });
-
-
                 }
             }).on('hidden.bs.modal', function () {
                 //清理数据
@@ -733,17 +789,17 @@
                 $holder : consts.$typePHolder,
                 data : consts.typeP,
                 prefix : '大类',
-                callback : function (value) {
-                    consts.oQueryParam.typeC = value;
+                callback : function (typeP) {
+                    consts.oQueryParam.typeC = typeP;
                     console.log('oQueryParam', consts.oQueryParam);
                     loadDataTable(true);
                     //初始化搜索下拉列表
                     utils.dropdown({
                         $holder : consts.$typeCHolder,
-                        data : consts.typeAll[value],
+                        data : consts.typeAll[typeP],
                         prefix : '细类',
-                        callback : function (value) {
-                            consts.oQueryParam.typeC = value;
+                        callback : function (typeC) {
+                            consts.oQueryParam.typeC = typeC || typeP;
                             console.log('oQueryParam', consts.oQueryParam);
                             loadDataTable(true);
                         }

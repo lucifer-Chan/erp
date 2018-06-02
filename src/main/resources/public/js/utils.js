@@ -543,8 +543,52 @@ define('utils',[],function(){
         setting.$holder.find('.input-group').click(function(){return false});
     }
 
+    /**
+     * 文件上传
+     * @param oSettings - {$input, uploadUrl, type, $modal, onSuccess, onFailed}
+     */
+    function uploadFile(oSettings) {
+        var $input = oSettings.$input;
+        var uploadUrl = oSettings.uploadUrl;
+        var type = oSettings.type || '';
+        var $modal = oSettings.$modal;
+        var onSuccess = oSettings.onSuccess || function () {}
+        var onFailed = oSettings.onFailed || function (){}
+        //$input, uploadUrl, type
+        $input.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: uploadUrl, //上传的地址
+            uploadAsync: true, //默认异步上传
+            showCaption: true,//是否显示标题
+            showUpload: true, //是否显示上传按钮
+            browseClass: "btn btn-primary", //按钮样式
+            allowedFileExtensions: ["xlsx"], //接收的文件后缀
+            maxFileCount: 1,//最大上传文件数限制
+            showPreview: false, //是否显示预览
+            uploadExtraData: function () {
+                return {type : type};
+            }
+        });
 
+        $input.on("fileuploaded", function (event, data, previewId, index) {
+            console.log(data);
+            var fileName = data.files[index].name;
+            var response = data.response;
+            if(response.success === true){
+                onSuccess(fileName, response.ret);
+                //关闭
+                $modal && $modal.modal('hide');
+            } else{
+                onFailed(fileName, response.ret || response);
+                $input.fileinput("clear").fileinput("reset").fileinput('refresh').fileinput('enable');
+            }
+        });
 
+        $modal && $modal.on('hidden.bs.modal', function () {
+            //清理数据
+            $input.fileinput("clear").fileinput("reset").fileinput('refresh').fileinput('enable');
+        });
+    }
 
 
     return {
@@ -561,5 +605,6 @@ define('utils',[],function(){
         , dataTable : dataTable
         , dropdown : dropdown
         , dropkick : dropkick
+        , uploadFile : uploadFile
     }
 });
