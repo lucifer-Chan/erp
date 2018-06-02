@@ -130,7 +130,7 @@ public class ProductService {
     public static class ProductParameterBuilder extends QueryParameterBuilder {
         @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo"}, compare = like, group = OR)
         String cause;
-        @ParameterItem(mappingTo = "endProductTypeCode", compare = equal)
+        @ParameterItem(mappingTo = "endProductTypeCode", compare = like)
         String typeC;
     }
 

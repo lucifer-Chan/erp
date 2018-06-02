@@ -289,10 +289,10 @@
                         <span class="label label-info">基本信息</span>
                     </span>
                     <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base1"></i>
                     </span>
                 </p>
-                <div class="col-xs-12" data-value="baseInfo">
+                <div class="col-xs-12" data-value="base1Info">
                     <div class="pd43">
                         <div class="row">
                             <div class="col-xs-6">
@@ -378,10 +378,10 @@
                         <span class="label label-info">规格信息</span>
                     </span>
                     <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base2"></i>
                     </span>
                 </p>
-                <div class="col-xs-12" data-value="baseInfo">
+                <div class="col-xs-12" data-value="base2Info">
                     <div class="pd43">
                         <div class="row">
                             <div class="col-xs-6">
@@ -623,7 +623,7 @@
         function initProductDetail(product) {
             var unSetting = '<span class="label label-danger">未设置</span>';
             var $detail = $('.initProductDetail');
-            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            var $baseInfo = $detail.find('div[data-value="base1Info"], div[data-value="base2Info"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
                 var def = $(this).data('convert') === false ? '无' : unSetting;
@@ -734,6 +734,9 @@
                 data : consts.typeP,
                 prefix : '大类',
                 callback : function (value) {
+                    consts.oQueryParam.typeC = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadDataTable(true);
                     //初始化搜索下拉列表
                     utils.dropdown({
                         $holder : consts.$typeCHolder,
