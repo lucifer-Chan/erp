@@ -2,12 +2,14 @@ package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.excel.Importable;
 import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
@@ -19,7 +21,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseRawMaterial extends BaseEntityWithBarCode {
+public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importable {
 
     @Id
     @GeneratedValue
@@ -81,5 +83,7 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode {
     private String spHCstrength;
     @Column(columnDefinition = "varchar(10) comment '脚部复合强度'")
     private String spFCstrength;
+    @Column(columnDefinition = "datetime comment '导入时间,空值表示录入'")
+    private Date importedAt;
 
 }
