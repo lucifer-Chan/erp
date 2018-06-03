@@ -45,6 +45,7 @@ define('utils',[],function(){
             //隐藏右侧页面事件
             $(div).find('.rightInfoBack').click(function () {
                 $('#rightInfoPage').attr('data-id', '').hide();
+                $('.customTable').find('tr').removeClass('hover');
             });
         }).catch(function (reason) {
             console.log('loadPage', reason);
