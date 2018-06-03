@@ -91,7 +91,7 @@ public class MouldService {
     @Transactional
     public void delete(Long mouldId){
         if(!CollectionUtils.isEmpty(onDeleteMouldValidator))
-            onDeleteMouldValidator.forEach(validator -> validator.validate(mouldId));
+            onDeleteMouldValidator.forEach(validator -> validator.onDeleteMould(mouldId));
         modelToolRepositor.deleteById(mouldId);
 
     }

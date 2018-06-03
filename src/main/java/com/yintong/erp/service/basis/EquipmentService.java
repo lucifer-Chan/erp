@@ -88,7 +88,7 @@ public class EquipmentService {
     @Transactional
     public void delete(Long equipmentId){
         if(!CollectionUtils.isEmpty(onDeleteEquipmentValidator))
-            onDeleteEquipmentValidator.forEach(validator -> validator.validate(equipmentId));
+            onDeleteEquipmentValidator.forEach(validator -> validator.onDeleteEquipment(equipmentId));
         erpBaseEquipmentRepository.deleteById(equipmentId);
 
     }

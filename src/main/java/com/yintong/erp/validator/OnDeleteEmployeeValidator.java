@@ -11,5 +11,5 @@ public interface OnDeleteEmployeeValidator {
      * etc
      * @param employeeId
      */
-    void validate(Long employeeId);
+    void onDeleteEmployee(Long employeeId);
 }

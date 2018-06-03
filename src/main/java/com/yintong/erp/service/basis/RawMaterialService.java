@@ -92,7 +92,7 @@ public class RawMaterialService {
     @Transactional
     public void delete(Long materialId){
         if(!CollectionUtils.isEmpty(onDeleteRawMaterialValidator))
-            onDeleteRawMaterialValidator.forEach(validator -> validator.validate(materialId));
+            onDeleteRawMaterialValidator.forEach(validator -> validator.onDeleteMaterial(materialId));
         erpBaseRawMaterialRepository.deleteById(materialId);
     }
 

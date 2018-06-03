@@ -85,7 +85,7 @@ public class SupplierService {
     @Transactional
     public void delete(Long supplierId){
         if(!CollectionUtils.isEmpty(onDeleteSuppliers))
-            onDeleteSuppliers.forEach(validator -> validator.validate(supplierId));
+            onDeleteSuppliers.forEach(validator -> validator.onDeleteSupplier(supplierId));
         supplierRepository.deleteById(supplierId);
         //TODO 因为涉及到具体的删除验证（产品、原材料等）需要调用其他service的delete方法去删除关联
     }

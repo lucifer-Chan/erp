@@ -125,7 +125,7 @@ public class EmployeeService {
         Assert.notNull(employee, "未找到id为" + employeeId + "的用户");
         String name = employee.getName();
         if(CollectionUtils.isNotEmpty(validators))
-            validators.forEach(validator->validator.validate(employeeId));
+            validators.forEach(validator->validator.onDeleteEmployee(employeeId));
         employeeRepository.delete(employee);
         employeeMenuRepository.deleteByEmployeeId(employeeId);
         employeeDepartmentRepository.deleteByEmployeeId(employeeId);

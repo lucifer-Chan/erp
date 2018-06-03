@@ -105,7 +105,7 @@ public class ProductService {
     @Transactional
     public void delete(Long productId){
         if(!CollectionUtils.isEmpty(onDeleteProductalidator))
-            onDeleteProductalidator.forEach(validator -> validator.validate(productId));
+            onDeleteProductalidator.forEach(validator -> validator.onDeleteProduct(productId));
         erpBaseEndProductRepository.deleteById(productId);
     }
 

@@ -12,5 +12,5 @@ public interface OnDeleteProductValidator {
      * etc
      * @param productId
      */
-    void validate(Long productId);
+    void onDeleteProduct(Long productId);
 }

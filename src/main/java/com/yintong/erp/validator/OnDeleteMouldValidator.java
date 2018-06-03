@@ -9,5 +9,5 @@ public interface OnDeleteMouldValidator {
      * 如果模具有关联操作
      * @param mouldId
      */
-    void validate(Long mouldId);
+    void onDeleteMould(Long mouldId);
 }

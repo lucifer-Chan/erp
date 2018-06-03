@@ -10,5 +10,5 @@ public interface OnDeleteEquipmentValidator {
      * 如果模具有关联操作
      * @param equipmentId
      */
-    void validate(Long equipmentId);
+    void onDeleteEquipment(Long equipmentId);
 }
