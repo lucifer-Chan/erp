@@ -87,7 +87,7 @@ public class CustomerService {
     @Transactional
     public void delete(Long customerId){
         if(!CollectionUtils.isEmpty(onDeleteCustomerValidator))
-            onDeleteCustomerValidator.forEach(validator -> validator.validate(customerId));
+            onDeleteCustomerValidator.forEach(validator -> validator.onDeleteCustomer(customerId));
         erpBaseCustomerRepository.deleteById(customerId);
     }
 
