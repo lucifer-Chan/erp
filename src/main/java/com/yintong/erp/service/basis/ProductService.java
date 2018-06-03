@@ -3,6 +3,7 @@ package com.yintong.erp.service.basis;
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
 import com.yintong.erp.utils.query.OrderBy;
@@ -68,7 +69,7 @@ public class ProductService {
         ExcelImporter<ErpBaseEndProduct> importer = new ExcelUtil(excel).builder(ErpBaseEndProduct.class);
         List<ErpBaseEndProduct> entities = importer.getSuccessData();
         Date importedAt = new Date();
-        entities.forEach(entity-> entity.setImportedAt(importedAt));
+        entities.forEach(entity-> entity.setImportedAt(DateUtil.getDateTimeString(importedAt)));
         erpBaseEndProductRepository.saveAll(entities);
         return importer;
     }
@@ -107,6 +108,7 @@ public class ProductService {
             onDeleteProductalidator.forEach(validator -> validator.validate(productId));
         erpBaseEndProductRepository.deleteById(productId);
     }
+
 
     /**
      * 验证成品类型

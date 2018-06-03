@@ -1,19 +1,27 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.utils.base.BaseResult;
+import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 
@@ -32,6 +40,9 @@ public class ProductController {
     @Autowired
     private SupplierService supplierService;
 
+    @Autowired
+    private ErpBaseEndProductRepository productRepository;
+
     @GetMapping("findSupplierAll")
     public BaseResult findSupplierAll(){
         List<ErpBaseSupplier> supplierList= supplierService.findSupplierAll();
@@ -45,13 +56,23 @@ public class ProductController {
     }
 
     /**
+     * 更新成品
+     * @param product
+     * @return
+     */
+    @PutMapping
+    public BaseResult update(@RequestBody ErpBaseEndProduct product){
+        return new BaseResult().addPojo(productService.update(product)).setErrmsg("更新成功");
+    }
+
+    /**
      * 新增成品
      * @param product
      * @return
      */
     @PostMapping
     public BaseResult create(@RequestBody ErpBaseEndProduct product){
-        return new BaseResult().addPojo(productService.create(product));
+        return new BaseResult().addPojo(productService.create(product)).setErrmsg("保存成功");
     }
 
     /**
@@ -72,18 +93,7 @@ public class ProductController {
     @DeleteMapping("{productId}")
     public BaseResult delete(@PathVariable Long productId){
         productService.delete(productId);
-        return new BaseResult();
-    }
-
-
-    /**
-     * 更新成品
-     * @param product
-     * @return
-     */
-    @PutMapping
-    public BaseResult update(@RequestBody ErpBaseEndProduct product){
-        return new BaseResult().addPojo(productService.update(product));
+        return new BaseResult().setErrmsg("删除成功");
     }
 
     /**
@@ -98,5 +108,43 @@ public class ProductController {
         log.info("正在导入：" + type);
         ExcelUtil.ExcelImporter<ErpBaseEndProduct> result =  productService.import0(file.getInputStream());
         return new BaseResult().put("successNum", result.getSuccessData().size());
+    }
+
+    /**
+     * 按照导入时间group数量
+     * @return
+     */
+    @GetMapping("group")
+    public BaseResult group(){
+        List<Map<String, Object>> ret = productRepository.groupByImportAt().stream()
+                .map(array-> new HashMap<String, Object>(){{
+                    put("num", array[0]);
+                    put("importedAt", array[1]);
+                }})
+                .collect(Collectors.toList());
+       return new BaseResult().addList(ret);
+    }
+
+    /**
+     * 根据导入时间批量删除
+     * @param importedAt
+     * @return
+     */
+    @DeleteMapping("batch/{importedAt}")
+    public BaseResult batchDelete(@PathVariable String importedAt){
+        log.info("importedAt", importedAt);
+        Assert.hasLength(importedAt, "参数无效");
+        List<ErpBaseEndProduct> products = productRepository.findByImportedAt(importedAt);
+        int sum = products.size();
+        int count = 0;
+        for(ErpBaseEndProduct product : products){
+            try{
+                productService.delete(product.getId());
+                count ++;
+            } catch (Exception e){
+
+            }
+        }
+        return new BaseResult().setErrmsg("成功删除（" + count + "/" + sum + "）");
     }
 }

@@ -251,7 +251,6 @@ define('services',['utils'],function (utils) {
 
     var product = {
         //分类
-        //分类
         getTypeAll : function () {
             return $.http.get('basis/common/categories/tree?code=P');
         },
@@ -296,6 +295,14 @@ define('services',['utils'],function (utils) {
         //删除
         delete : function (id) {
             return $.http.delete('basis/product/' + id);
+        },
+        //导入的查询
+        imported : function () {
+            return $.http.get('basis/product/group');
+        },
+        //批量删除
+        batchDelete : function (importedAt) {
+            return $.http.delete('basis/product/batch/' + importedAt);
         }
     };
 
