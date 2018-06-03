@@ -36,7 +36,7 @@
     </div>
 </div>
 <!-- 修改成品信息 -->
-<div class="modal fade" role="dialog" data-backdrop="static" id="_editMaterial">
+<div class="myErpModal modal fade" role="dialog" data-backdrop="static" id="_editMaterial">
     <div class="modal-dialog modal-lg" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
@@ -223,10 +223,10 @@
                                         <input type="text" class="form-control" name="spFCstrength" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
                                     </div>
                                 </div>
+                                <div class="modal-footer noborder">
+                                    <button class="btn btn-info noborder" name="save">保存</button>
+                                </div>
                             </form>
-                        </div>
-                        <div class="modal-footer noborder">
-                            <button class="btn btn-info noborder" name="save">保存</button>
                         </div>
                     </div>
                 </div>
