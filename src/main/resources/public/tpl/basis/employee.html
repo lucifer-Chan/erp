@@ -472,7 +472,7 @@
             var $menuInfo = $detail.find('div[data-value="menuInfo"] h5');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                $(this).html(employee[$(this).data('name')] || unSetting);
+                $(this).html(employee[$(this).attr('data-name')] || unSetting);
             });
             $baseInfo.find('div[data-status]').html(
                 employee.status === "1" ? '<span class="label label-success">已设置</span>' : unSetting

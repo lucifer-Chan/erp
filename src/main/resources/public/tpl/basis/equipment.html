@@ -238,8 +238,8 @@
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                var def = $(this).data('convert') === false ? '无' : unSetting;
-                $(this).html(equipment[$(this).data('name')] || def);
+                var def = $(this).attr('data-convert') === false ? '无' : unSetting;
+                $(this).html(equipment[$(this).attr('data-name')] || def);
             });
             $baseInfo.find('div[data-convert="equipmentTypeCode"]').html(
                 consts.types[equipment.equipmentTypeCode] || unSetting
@@ -315,8 +315,7 @@
                 var _function =  !!consts.selectedEquipment.id ? services.equipment.update : services.equipment.create;
                 data.id = consts.selectedEquipment.id || '';
                 /*      var $testDiv = utils.udDataAttr();*/
-                data.equipmentTypeCode =$("#_type").data('value');
-                // data.supplierTypeCode = $('#_supplier').data('value');
+                data.equipmentTypeCode =$("#_type").attr('data-value');
                 _function(data).then(function (mould) {
                     loadEquipmentData(true);
                     if(consts.selectedEquipment.id)

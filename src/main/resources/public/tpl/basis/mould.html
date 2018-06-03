@@ -249,8 +249,8 @@
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                var def = $(this).data('convert') === false ? '无' : unSetting;
-                $(this).html(mould[$(this).data('name')] || def);
+                var def = $(this).attr('data-convert') === false ? '无' : unSetting;
+                $(this).html(mould[$(this).attr('data-name')] || def);
             });
             $baseInfo.find('div[data-convert="modelToolTypeCode"]').html(
                 consts.types[mould.modelToolTypeCode] || unSetting
@@ -328,8 +328,7 @@
                 var _function =  !!consts.selectedMould.id ? services.mould.update : services.mould.create;
                 data.id = consts.selectedMould.id || '';
           /*      var $testDiv = utils.udDataAttr();*/
-                data.modelToolTypeCode =$("#_type").data('value');
-               // data.supplierTypeCode = $('#_supplier').data('value');
+                data.modelToolTypeCode =$("#_type").attr('data-value');
                 _function(data).then(function (mould) {
                     loadMouldData(true);
                     if(consts.selectedMould.id)

@@ -625,8 +625,8 @@
             var $baseInfo = $detail.find('div[data-value="base1Info"], div[data-value="base2Info"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                var def = $(this).data('convert') === false ? '无' : unSetting;
-                $(this).html(materialData[$(this).data('name')] || def);
+                var def = $(this).attr('data-convert') === false ? '无' : unSetting;
+                $(this).html(materialData[$(this).attr('data-name')] || def);
             });
             var typeChild= consts.typeAll[materialData.rawTypeCode.substring(0,2)]|| consts.typeAll[materialData.rawTypeCode];
             var datailTypeP =consts.typeP[materialData.rawTypeCode.substring(0,2)]||consts.typeP[materialData.rawTypeCode];
@@ -740,7 +740,7 @@
                 var data = consts.$editInfoMaterial.find('form').serializeObject();
                 var _function = !!consts.material.id ? services.rawMaterial.update : services.rawMaterial.create;
                 data.id = consts.material.id || '';
-                data.rawTypeCode = $('#_typeC').data('value');
+                data.rawTypeCode = $('#_typeC').attr('data-value');
                 _function(data).then(function (material) {
                     loadDataTable(true);
                     if(consts.material.id)

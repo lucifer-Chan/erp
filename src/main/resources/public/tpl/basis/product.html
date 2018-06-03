@@ -686,8 +686,8 @@
             var $baseInfo = $detail.find('div[data-value="base1Info"], div[data-value="base2Info"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                var def = $(this).data('convert') === false ? '无' : unSetting;
-                $(this).html(product[$(this).data('name')] || def);
+                var def = $(this).attr('data-convert') === false ? '无' : unSetting;
+                $(this).html(product[$(this).attr('data-name')] || def);
             });
             var typeChild= consts.typeAll[product.endProductTypeCode.substring(0,2)];
             var datailTypeP =consts.typeP[product.endProductTypeCode.substring(0,2)];
@@ -800,7 +800,7 @@
                 var data = consts.$editInfoModal.find('form').serializeObject();
                 var _function = !!consts.product.id ? services.product.update : services.product.create;
                 data.id = consts.product.id || '';
-                data.endProductTypeCode = $('#_typeC').data('value');
+                data.endProductTypeCode = $('#_typeC').attr('data-value');
                 console.log("save/update="+JSON.stringify(data));
                 _function(data).then(function (product) {
                     loadDataTable(true);

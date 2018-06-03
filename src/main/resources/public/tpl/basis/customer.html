@@ -335,8 +335,8 @@
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
-                var def = $(this).data('convert') === false ? '无' : unSetting;
-                $(this).html(customer[$(this).data('name')] || def);
+                var def = $(this).attr('data-convert') === false ? '无' : unSetting;
+                $(this).html(customer[$(this).attr('data-name')] || def);
             });
             $baseInfo.find('div[data-convert="customerTypeCode"]').html(
                 consts.types[customer.customerTypeCode] || unSetting
@@ -377,8 +377,8 @@
                 var data = consts.$editInfoModal.find('form').serializeObject();
                 var _function = !!consts.customer.id ? services.customer.update : services.customer.create;
                 data.id = consts.customer.id || '';
-                data.customerTypeCode = $('#_type').data('value');
-                data.rank = $('#_rank').data('value');
+                data.customerTypeCode = $('#_type').attr('data-value');
+                data.rank = $('#_rank').attr('data-value');
                 _function(data).then(function (customer) {
                     loadDataTable(true);
                     if(consts.customer.id)
@@ -444,8 +444,6 @@
                 $('._type').show();
             })
         }
-
-
 
         function init() {
             prepareData()
