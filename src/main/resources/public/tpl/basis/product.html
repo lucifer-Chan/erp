@@ -73,11 +73,11 @@
                                     <div class="pTable-content customTable">
                                         <table class="table table-hover" id="batchDeleteTable">
                                             <thead>
-                                                <tr>
-                                                    <th style="width:20%">数量</span></th>
-                                                    <th style="width:50%">导入时间</th>
-                                                    <th style="width:30%">操作</th>
-                                                </tr>
+                                            <tr>
+                                                <th style="width:20%">数量</span></th>
+                                                <th style="width:50%">导入时间</th>
+                                                <th style="width:30%">操作</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
@@ -632,21 +632,22 @@
                 var $rightPage = consts.$rightPage;
                 var id = $tr.attr('id');
                 if (id === $rightPage.attr('data-id')){
+                    $('.rightInfoBack').click();
                     return;
                 }
 
                 services.product.one(id).then(function (productData) {
-                        console.log('点击tr', productData);
-                        consts.product = productData;
+                    console.log('点击tr', productData);
+                    consts.product = productData;
 
-                        $('._typeC').hide();
-                        initProductDetail(productData);
+                    $('._typeC').hide();
+                    initProductDetail(productData);
 
-                        $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
-                        $rightPage.find('.fa-angle-double-down').click();
-                    }).catch(function (reason) {
-                        layer.msg(reason.caught ? reason.message : '请求失败！');
-                    });
+                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                    $rightPage.find('.fa-angle-double-down').click();
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
             }
             /**
              * 客户化方法，
@@ -740,25 +741,25 @@
                         });
                     }
                 })
-                .then(function () {
-                    $('._delete').unbind('click').click(function () {
-                        var importedAt = $(this).parents('tr').attr('id');
-                        layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
-                            services.product.batchDelete(importedAt)
-                                .then(function (ret) {
-                                    layer.msg(ret._message);
-                                    initBatchDeleteTable();
-                                    loadDataTable(true);
-                                })
-                                .catch(function (reason) {
-                                    layer.msg(reason.caught ? reason.message : '请求失败！');
-                                });
-                        });
+                    .then(function () {
+                        $('._delete').unbind('click').click(function () {
+                            var importedAt = $(this).parents('tr').attr('id');
+                            layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                                services.product.batchDelete(importedAt)
+                                    .then(function (ret) {
+                                        layer.msg(ret._message);
+                                        initBatchDeleteTable();
+                                        loadDataTable(true);
+                                    })
+                                    .catch(function (reason) {
+                                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                                    });
+                            });
+                        })
                     })
-                })
-                .catch(function (reason) {
-                    layer.msg(reason.caught ? reason.message : '请求失败！');
-                })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    })
             }
 
             //批量删除
@@ -781,11 +782,11 @@
                     //新建
                     utils.dropkick({ $holder : $('#_typeC'), data : {"":"无"} });
                     utils.dropkick({ $holder : $('#_typeP'), data : consts.typeP,callback : function (value) {
-                        console.log("弹框大类="+value);
-                        consts.typeC={};
-                        utils.dropkick({ $holder : $('#_typeC'), data :  consts.typeAll[value] });
+                            console.log("弹框大类="+value);
+                            consts.typeC={};
+                            utils.dropkick({ $holder : $('#_typeC'), data :  consts.typeAll[value] });
 
-                    } });
+                        } });
                 }
             }).on('hidden.bs.modal', function () {
                 //清理数据

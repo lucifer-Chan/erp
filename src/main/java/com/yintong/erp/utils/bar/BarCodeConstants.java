@@ -3,7 +3,37 @@ package com.yintong.erp.utils.bar;
 import org.apache.commons.collections4.KeyValue;
 import org.springframework.util.Assert;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
+
 public interface BarCodeConstants {
+
+//    public static final BAR_CODE_PREFIX [] USER_TYPES = {
+//
+//    }
+
+    /**
+     * 成品类别
+     * @return
+     */
+    static List<BAR_CODE_PREFIX> productTypes(){
+        return Stream.of(BAR_CODE_PREFIX.values())
+                .filter(b -> b.first().getKey().equals("P"))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 供应商类别
+     * @return
+     */
+    static List<BAR_CODE_PREFIX> supplierTypes(){
+        return Stream.of(BAR_CODE_PREFIX.values())
+                .filter(b -> b.first().getKey().equals("U") && b.second().getKey().equals("S"))
+                .collect(Collectors.toList());
+    }
 
     /**
      * 前缀的枚举
