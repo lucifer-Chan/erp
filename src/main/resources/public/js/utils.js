@@ -401,16 +401,15 @@ define('utils',[],function(){
                         fnCallback($.extend({},{aaData:aaData},pageInfo));
                     })
                     .then(function () {
-                        if (fClickTr) {
-                            _oTable.$('tr').unbind('click').click(function () {
-                                fClickTr($(this));
-                            });
-                        }
-                        $('#dataTables_info').parent().hide();
+                        _oTable.$('tr').unbind('click').click(function () {
+                            $(this).addClass('hover').siblings().removeClass('hover');
+                            fClickTr($(this));
+                        });
+                        $(holderId+ '_info').parent().hide();
                         if(pageInfo.iTotalRecords >15){
-                            $('#dataTables_paginate').parent().attr('class','col-sm-12');
+                            $(holderId + '_paginate').parent().attr('class','col-sm-12');
                         }else{
-                            $('#dataTables_paginate').parent().hide();
+                            $(holderId +'_paginate').parent().hide();
                         }
                     })
                     .catch(function (reason) {
