@@ -2,14 +2,16 @@ package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
 import lombok.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.util.Assert;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
@@ -33,14 +35,6 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     private String rawTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
-    @Column(columnDefinition = "varchar(128) comment '备注'")
-    private String remark;
-    @Column(columnDefinition = "varchar(64) comment '自定义属性1'")
-    private String userDefinedOne;
-    @Column(columnDefinition = "varchar(64) comment '自定义属性2'")
-    private String userDefinedTwo;
-    @Column(columnDefinition = "varchar(64) comment '自定义属性3'")
-    private String userDefinedThree;
     @Column(columnDefinition = "varchar(10) comment '头径D(mm)上限'")
     private String spHdmmUpper;
     @Column(columnDefinition = "varchar(10) comment '头径D(mm)下限'")
@@ -89,7 +83,35 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     private String spHCstrength;
     @Column(columnDefinition = "varchar(10) comment '脚部复合强度'")
     private String spFCstrength;
-    @Column(columnDefinition = "datetime comment '导入时间,空值表示录入'")
-    private Date importedAt;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性1'")
+    private String userDefinedOne;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性2'")
+    private String userDefinedTwo;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性3'")
+    private String userDefinedThree;
+    @Column(columnDefinition = "varchar(128) comment '备注'")
+    private String remark;
+    @Column(columnDefinition = "varchar(20) comment '导入时间,空值表示录入'")
+    private String importedAt;
+
+    @Transient
+    private String rawTypeName;
+
+
+
+    public void setRawTypeName(String rawTypeName){
+        this.rawTypeName = rawTypeName;
+        List<ErpBaseCategory> list = SpringUtil.getBean(ErpBaseCategoryRepository.class).findByFullName(rawTypeName);
+        if(CollectionUtils.isNotEmpty(list)){
+            ErpBaseCategory category = list.stream().filter(c->c.getCode().length() == 4).findAny().orElse(null);
+            if(Objects.nonNull(category))
+                this.rawTypeCode = category.getCode();
+        }
+    }
+
+    @Override
+    public void validate(){
+        Assert.hasLength(rawTypeCode, "未找到类别");
+    }
 
 }

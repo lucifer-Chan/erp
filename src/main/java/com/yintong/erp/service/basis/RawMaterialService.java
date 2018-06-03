@@ -3,6 +3,7 @@ package com.yintong.erp.service.basis;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterial;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterialRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
@@ -120,7 +121,7 @@ public class RawMaterialService {
         ExcelUtil.ExcelImporter<ErpBaseRawMaterial> importer = new ExcelUtil(excel).builder(ErpBaseRawMaterial.class);
         List<ErpBaseRawMaterial> entities = importer.getSuccessData();
         Date importedAt = new Date();
-        entities.forEach(entity-> entity.setImportedAt(importedAt));
+        entities.forEach(entity-> entity.setImportedAt(DateUtil.getDateTimeString(importedAt)));
         erpBaseRawMaterialRepository.saveAll(entities);
         return importer;
     }

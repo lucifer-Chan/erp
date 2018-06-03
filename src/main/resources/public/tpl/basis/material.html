@@ -11,7 +11,8 @@
                 </li>
 
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editMaterial">新增原材料</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="batchOperationBt" data-toggle="modal" data-target="#_batchOperation">批量操作</button>
+            <button style="right: 110px" type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editMaterial">新增成品</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -34,6 +35,62 @@
             </div>
         </div>
     </div>
+</div>
+
+<!--批量操作-->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_batchOperation">
+    <div class="modal-dialog" role="document" style="max-height: 600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-file-excel-o defaultColor"></i> 批量操作</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><a href="#_batchImport" role="tab" data-toggle="tab"><span>批量导入</span></a></li>
+                    <li role="presentation"><a href="#_batchDelete" role="tab" data-toggle="tab"><span>批量删除</span></a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="_batchImport">
+                        <form class="form-horizontal" method="post"
+                              enctype="multipart/form-data">
+                            <div class="box-body">
+                                <div>
+                                    <label class="control-label">请选择要导入的Excel文件：</label>
+                                    <input id="excelFile" name="excelFile" class="file-loading" type="file" multiple accept=".xlsx">
+                                    <br>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="_batchDelete">
+                        <div class="pd23 pd43">
+                            <div class="row">
+                                <div class="pTable">
+                                    <div class="pTable-content customTable">
+                                        <table class="table table-hover" id="batchDeleteTable">
+                                            <thead>
+                                            <tr>
+                                                <th style="width:20%">数量</span></th>
+                                                <th style="width:50%">导入时间</th>
+                                                <th style="width:30%">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- 修改成品信息 -->
 <div class="myErpModal modal fade" role="dialog" data-backdrop="static" id="_editMaterial">
@@ -445,7 +502,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+    requirejs(['slimScroll','ztree','utils','services'],function (slimScroll,ztree, utils, services) {
         console.log('hello product');
         init();
 
@@ -461,6 +518,8 @@
             , oQueryParam : {}//查询参数
             , $editInfoMaterial : $('#_editMaterial')//编辑供应商modal
             , $rightPage : $('#rightInfoPage')//右侧页面
+            , $batchModal : $('#_batchOperation')//批量操作modal
+            , $uploadInput : $('#excelFile')//导入excel的input
 
         };
         //预置数据
@@ -582,6 +641,70 @@
         }
 
         function initEvent(){
+            // {$input, uploadUrl, type, $modal}
+            //导入Excel
+            utils.uploadFile({
+                $input : consts.$uploadInput,
+                uploadUrl : GLOBALS.ctxPath + 'basis/rawMaterial/upload',
+                type : 'rawMaterial',
+                $modal : consts.$batchModal,
+                onSuccess : function (fileName, ret){
+                    layer.msg('成功导入' + ret.successNum + '条原材料信息');
+                    loadDataTable(true)
+                },
+                onFailed : function (fileName, ret) {
+                    layer.msg('导入'+ fileName + '失败！失败原因：' + (ret.message||ret.errmsg ||'请求失败'));
+                }
+            });
+
+            //初始化删除列表
+            function initBatchDeleteTable() {
+                services.rawMaterial.imported().then(function (ret) {
+                    var $batchTBody = $('#batchDeleteTable').find('tbody');
+                    if(!ret.list.length){
+                        $batchTBody.html('<tr><td colspan="3">没有数据</td></tr>');
+                    } else {
+                        $batchTBody.empty();
+                        ret.list.forEach(function (row) {
+                            $batchTBody.append(
+                                '<tr id="'+ row.importedAt +'">'
+                                + '<td>' + row.num + '</td>'
+                                + '<td>' + row.importedAt + '</td>'
+                                + '<td><span type="button" class="btn btn-danger btn-xs _delete">删除</span></td>'
+                            );
+                        });
+                        $('#batchDeleteTable').parent().slimScroll({
+                            height: '100%',
+                            railOpacity: 0.9
+                        });
+                    }
+                })
+                    .then(function () {
+                        $('._delete').unbind('click').click(function () {
+                            var importedAt = $(this).parents('tr').attr('id');
+                            layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                                services.rawMaterial.batchDelete(importedAt)
+                                    .then(function (ret) {
+                                        layer.msg(ret._message);
+                                        initBatchDeleteTable();
+                                        loadDataTable(true);
+                                    })
+                                    .catch(function (reason) {
+                                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                                    });
+                            });
+                        })
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    })
+            }
+
+            //批量删除
+            consts.$batchModal.on('show.bs.modal', function () {
+                initBatchDeleteTable();
+            });
+
             consts.$editInfoMaterial.on('show.bs.modal', function () {
                 $('#myTab li:eq(0) a').tab('show');
                 var $this = $(this);

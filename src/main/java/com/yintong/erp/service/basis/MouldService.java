@@ -68,7 +68,7 @@ public class MouldService {
     @Transactional
     public ErpBaseModelTool create(ErpBaseModelTool mould){
         mould.setId(null);//防止假数据
-        validateSupplierType(mould);
+        validateModelType(mould);
         return modelToolRepositor.save(mould);
     }
     /**
@@ -80,7 +80,7 @@ public class MouldService {
         Assert.notNull(mould.getId(), "模具id不能为空");
         ErpBaseModelTool inDb = modelToolRepositor.findById(mould.getId()).orElse(null);
         Assert.notNull(inDb, "未找到模具");
-        validateSupplierType(mould);
+        validateModelType(mould);
         mould.setBarCode(inDb.getBarCode());
         return modelToolRepositor.save(mould);
     }
@@ -100,7 +100,7 @@ public class MouldService {
      * 验证供应商类型
      * @param mould
      */
-    private void validateSupplierType(ErpBaseModelTool mould){
+    private void validateModelType(ErpBaseModelTool mould){
         Assert.notNull(mould, "模具null");
         String type = mould.getModelToolTypeCode();
         Assert.hasLength(type, "类型不能为空");

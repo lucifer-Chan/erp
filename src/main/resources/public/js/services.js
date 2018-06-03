@@ -388,6 +388,52 @@ define('services',['utils'],function (utils) {
         //删除
         delete : function (id) {
             return $.http.delete('basis/rawMaterial/' + id);
+        },
+        //导入的查询
+        imported : function () {
+            return $.http.get('basis/rawMaterial/group');
+        },
+        //批量删除
+        batchDelete : function (importedAt) {
+            return $.http.delete('basis/rawMaterial/batch/' + importedAt);
+        }
+    };
+
+    var customer = {
+        //分类
+        types : function () {
+            return $.http.get('basis/common/categories/children/direct?code=UC');
+        },
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'basis/customer',
+                data : params
+            });
+        },
+        //查找
+        one : function (id) {
+            return $.http.get('basis/customer/' + id);
+        },
+        //新建
+        create : function (data) {
+            return $.http.post({
+                url : 'basis/customer',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //更新
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/customer',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //删除
+        delete : function (id) {
+            return $.http.delete('basis/customer/' + id);
         }
     };
 
@@ -410,6 +456,7 @@ define('services',['utils'],function (utils) {
         , product : product
         ,equipment:equipment
         ,rawMaterial:rawMaterial
+        ,customer:customer
         , lookup : lookup
     }
 });

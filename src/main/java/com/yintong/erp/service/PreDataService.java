@@ -6,6 +6,7 @@ import com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 import org.apache.commons.collections4.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -39,10 +40,10 @@ public class PreDataService {
     @PostConstruct
     void init(){
         if(!debug) return;
-        initMenus();
+        /*initMenus();
         initEmployees();
         initCategories();
-        initDepartments();
+        initDepartments();*/
         initLookup();
     }
 
@@ -210,7 +211,12 @@ public class PreDataService {
                         , ErpBaseLookup.builder().code("001").name("一级").type("supplier").tag(1L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("002").name("二级").type("supplier").tag(2L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("003").name("三级").type("supplier").tag(3L).description("供应商等级").build()
+                        ,ErpBaseLookup.builder().code("000").name("【无】").type("customer").tag(0L).description("客户等级").build()
+                        , ErpBaseLookup.builder().code("001").name("一级").type("customer").tag(1L).description("客户等级").build()
+                        , ErpBaseLookup.builder().code("002").name("二级").type("customer").tag(2L).description("客户等级").build()
+                        , ErpBaseLookup.builder().code("003").name("三级").type("customer").tag(3L).description("客户等级").build()
                 )
         );
+
     }
 }
