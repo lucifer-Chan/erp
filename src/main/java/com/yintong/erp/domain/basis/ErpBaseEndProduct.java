@@ -106,8 +106,8 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String userDefinedThree;
     @Column(columnDefinition = "varchar(2000) comment '备注'")
     private String remark;
-    @Column(columnDefinition = "datetime comment '导入时间,空值表示录入'")
-    private Date importedAt;
+    @Column(columnDefinition = "varchar(20) comment '导入时间,空值表示录入'")
+    private String importedAt;
 
     @Transient
     private String endProductTypeName;
