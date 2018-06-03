@@ -338,6 +338,52 @@ define('services',['utils'],function (utils) {
         }
     };
 
+    var rawMaterial = {
+        //分类
+        getTypeAll : function () {
+            return $.http.get('basis/common/categories/tree?code=M');
+        },
+        getTypeP : function () {
+            return $.http.get('basis/common/categories/children/direct?code=M');
+        },
+        //细类
+        getTypeC : function (code) {
+            return $.http.get('basis/common/categories/children/direct?code='+code);
+        },
+
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'basis/rawMaterial',
+                data : params
+            });
+        },
+        //更新
+        update : function (data) {
+            return $.http.put({
+                url : 'basis/rawMaterial',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //查找
+        one : function (id) {
+            return $.http.get('basis/rawMaterial/' + id);
+        },
+        //新增模具
+        create:function(data){
+            return $.http.post({
+                url : 'basis/rawMaterial',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //删除
+        delete : function (id) {
+            return $.http.delete('basis/rawMaterial/' + id);
+        }
+    };
+
 
     /**
      * 下拉
@@ -356,6 +402,7 @@ define('services',['utils'],function (utils) {
         , mould : mould
         , product : product
         ,equipment:equipment
+        ,rawMaterial:rawMaterial
         , lookup : lookup
     }
 });
