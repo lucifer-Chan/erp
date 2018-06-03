@@ -41,7 +41,7 @@ public class ErpBaseCustomer extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(20) comment '固定电话'")
     private String contactPhone;
     @Column(columnDefinition = "varchar(64) comment '传真号码'")
-    private String FaxNo;
+    private String faxNo;
     @Column(columnDefinition = "varchar(64) comment '常用托运部'")
     private String consign;
     @Column(columnDefinition = "varchar(20) comment '所属业务员'")
