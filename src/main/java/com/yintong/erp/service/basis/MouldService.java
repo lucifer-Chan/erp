@@ -104,6 +104,7 @@ public class MouldService {
         Assert.notNull(mould, "模具null");
         String type = mould.getModelToolTypeCode();
         Assert.hasLength(type, "类型不能为空");
+        Assert.hasLength(mould.getModelToolName(), "模具名称不能为空");
         Assert.isTrue(Arrays.asList(D100,D200,D300,D400,D500,D600,D700,D800).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "模具类型不正确");
     }
 

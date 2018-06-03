@@ -35,6 +35,12 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     private String specification;
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性1'")
+    private String userDefinedOne;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性2'")
+    private String userDefinedTwo;
+    @Column(columnDefinition = "varchar(64) comment '自定义属性3'")
+    private String userDefinedThree;
     @Column(columnDefinition = "varchar(10) comment '头径D(mm)上限'")
     private String spHdmmUpper;
     @Column(columnDefinition = "varchar(10) comment '头径D(mm)下限'")

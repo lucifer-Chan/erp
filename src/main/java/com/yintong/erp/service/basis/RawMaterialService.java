@@ -104,6 +104,7 @@ public class RawMaterialService {
         Assert.notNull(material, "原材料null");
         String type = material.getRawTypeCode();
         Assert.hasLength(type, "类型不能为空");
+        Assert.hasLength(material.getRawName(), "原材料名称不能为空");
         Assert.isTrue(Arrays.asList(MA00,MZR0,MZY0,MZB0,MZN0,
                 MZQ0,MM00,MF00,MRA0,
                 MRZR,MRZY,MRZB,MRZN,MRZQ,

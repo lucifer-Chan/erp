@@ -101,6 +101,7 @@ public class EquipmentService {
         Assert.notNull(equipment, "设备null");
         String type = equipment.getEquipmentTypeCode();
         Assert.hasLength(type, "类型不能为空");
+        Assert.hasLength(equipment.getEquipmentName(), "设备名称不能为空");
         Assert.isTrue(Arrays.asList(EJ00,EL00,EH00,EQ00).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "设备类型不正确");
     }
 
