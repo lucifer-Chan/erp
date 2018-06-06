@@ -118,6 +118,7 @@ public class CategoryService {
      * @return
      */
     public List<ErpBaseCategory> all(){
-        return cache.getDataFromCache(KEY_PREFIX + "_all", ret -> categoryRepository.findAll());
+        return categoryRepository.findAll();
+//        return cache.getDataFromCache(KEY_PREFIX + "_all", ret -> categoryRepository.findAll());
     }
 }

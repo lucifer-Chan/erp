@@ -3,10 +3,13 @@ package com.yintong.erp.web.basis;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.SupplierService.SupplierParameterBuilder;
+import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 
@@ -20,6 +23,8 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 public class SupplierController {
 
     @Autowired SupplierService supplierService;
+
+    @Autowired SupplierProductService supplierProductService;
 
     /**
      * 组合查询
@@ -72,5 +77,35 @@ public class SupplierController {
     public BaseResult one(@PathVariable Long supplierId){
         return new BaseResult().addPojo(supplierService.one(supplierId));
     }
+
+    /**
+     * 根据供应商id获取所有的未关联的成品树[包括类别节点]->ztree
+     * @param supplierId
+     * @return
+     */
+    @GetMapping("product/nodes/unassociated")
+    public BaseResult unAssociatedProductNodes(Long supplierId){
+        return new BaseResult().addList(supplierProductService.unAssociatedNodes(supplierId));
+    }
+
+    /**
+     * 获取所有的成品的树
+     * @return
+     */
+    @GetMapping("product/nodes/all")
+    public BaseResult allNodes(){
+        return new BaseResult().addList(supplierProductService.productTreeNodes());
+    }
+
+
+    /**
+     * 保存供应商和成品之间的关联
+     */
+    @PostMapping("{supplierId}/product")
+    public BaseResult saveProductAss(@PathVariable Long supplierId, @RequestBody List<Long> productIds){
+        supplierProductService.batchSave(supplierId, productIds);
+        return new BaseResult().addList(supplierProductService.associatedNodes(supplierId)).setErrmsg("保存成功");
+    }
+
 
 }

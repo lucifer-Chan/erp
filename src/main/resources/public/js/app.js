@@ -7,7 +7,7 @@ requirejs.config({
         slimScroll : '/vendor/jquery/jquery.slimscroll.min.1.3.8',
         metisMenu : '/vendor/jquery/jquery.metisMenu',
         treeview : '/vendor/bootstrap/bootstrap-treeview',
-        ztree : '/vendor/jquery/ztree/jquery.ztree.core'
+        ztree : '/vendor/jquery/ztree/jquery.ztree.all'
     }
 });
 

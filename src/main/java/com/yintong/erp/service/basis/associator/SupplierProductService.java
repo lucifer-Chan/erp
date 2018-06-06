@@ -4,15 +4,24 @@ import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
+import com.yintong.erp.dto.TreeNode;
+import com.yintong.erp.service.basis.CategoryService;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.validator.OnDeleteProductValidator;
 import com.yintong.erp.validator.OnDeleteSupplierValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author lucifer.chan
@@ -27,6 +36,8 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
     @Autowired ErpBaseEndProductRepository productRepository;
 
     @Autowired ErpEndProductSupplierRepository productSupplierRepository;
+
+    @Autowired CategoryService categoryService;
 
     /**
      * 建立供应商和成品的关联
@@ -44,8 +55,31 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
      * 批量保存
      * @param associations
      */
+    @Transactional
     public void batchSave(List<ErpEndProductSupplier> associations) {
         associations.forEach(this::save);
+    }
+
+    /**
+     * 批量保存
+     * @param supplierId
+     * @param productIds
+     */
+    @Transactional
+    public void batchSave(Long supplierId, List<Long> productIds) {
+        String supplierTypeCode3 = supplierRepository.getOne(supplierId).getSupplierTypeCode().substring(2,3);
+        batchSave(
+                productIds.stream()
+                        .map(productId ->
+                                ErpEndProductSupplier.builder()
+                                        .endProductType(productRepository.getOne(productId).getEndProductTypeCode())
+                                        .endProductId(productId)
+                                        .supplierType(supplierTypeCode3)
+                                        .supplierId(supplierId)
+                                        .associateAt(new Date())
+                                        .build()
+                        ).collect(Collectors.toList())
+        );
     }
 
     /**
@@ -88,5 +122,82 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
                 CollectionUtils.isEmpty(productSupplierRepository.findBySupplierId(supplierId)),
                 "请先删除供应商和成品之间的关联."
         );
+    }
+
+    /**
+     * 所有成品的节点-包括枝节点
+     * @return
+     */
+    public List<TreeNode> productTreeNodes(){
+        return nodes(null);
+    }
+
+    /**
+     * 根据供应商id获取所有的未关联的树
+     * @param supplierId
+     * @return
+     */
+    public List<TreeNode> unAssociatedNodes(Long supplierId){
+        return nodes(node -> !associatedProductIds(supplierId).contains(node.getCode()));
+    }
+
+    /**
+     * 根据供应商id获取所有的已关联的树
+     * @param supplierId
+     * @return
+     */
+    public List<TreeNode> associatedNodes(Long supplierId){
+        List<TreeNode> leaves =  productRepository.findAll()
+                .stream()
+                .map(product -> {
+                    TreeNode treeNode = new TreeNode(product.getId() + "", product.getEndProductName() + "-" + product.getSpecification(), product.getEndProductTypeCode(), false);
+                    ErpEndProductSupplier ass = productSupplierRepository.findByEndProductIdAndSupplierId(product.getId(), supplierId).orElse(null);
+                    return Objects.isNull(ass) ? treeNode :
+                            treeNode
+                                    .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"))
+                                    .setName(treeNode.getName() + "      [" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]")
+                            ;
+                })
+                .filter(node -> Objects.nonNull(node.getSource()))
+
+                .collect(Collectors.toList());
+        List<TreeNode> branch = branch();
+        branch.addAll(leaves);
+        return branch;
+        //return nodes(node -> associatedProductIds(supplierId).contains(node.getCode()));
+    }
+
+    /**
+     * 获取供应商所有的成品关联->productId
+     * @param supplierId
+     * @return
+     */
+    private List<String> associatedProductIds(Long supplierId){
+        return productSupplierRepository.findBySupplierId(supplierId)
+                .stream()
+                .map(ErpEndProductSupplier::getEndProductId)
+                .map(l -> l + "")
+                .collect(Collectors.toList());
+    }
+
+    private List<TreeNode> nodes(Predicate<TreeNode> filter){
+        Stream<TreeNode> leafStream = productRepository.findAll()
+                .stream()
+                .map(product ->
+                        new TreeNode(product.getId() + "", product.getEndProductName() + "-" + product.getSpecification(), product.getEndProductTypeCode(), false)
+                );
+        List<TreeNode> leaves =  Objects.isNull(filter) ?
+                leafStream.collect(Collectors.toList()) :
+                leafStream.filter(filter).collect(Collectors.toList());
+        List<TreeNode> branch = branch();
+        branch.addAll(leaves);
+        return branch;
+    }
+
+    private List<TreeNode> branch(){
+        return categoryService.append("P", new ArrayList<>())
+                .stream()
+                .map(category -> new TreeNode(category.getCode(), category.getName(), category.getParentCode(), true))
+                .collect(Collectors.toList());
     }
 }

@@ -10,7 +10,7 @@
                 <li role="presentation" class="dropdown" id="rank">
                 </li>
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editSupplier">新增供应商</button>
+            <button class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editSupplier">新增供应商</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -126,6 +126,7 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSupplier">修改基本信息</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_productAss">维护成品</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -214,31 +215,78 @@
                 </div>
             </div>
             <hr>
-            <!--
+
             <div>
-                <ul class="nav nav-tabs noborder" role="tablist">
-                    <li role="presentation" class="active"><span href="#saleLog" aria-controls="saleLog" role="tab" data-toggle="tab">销售日志</span></li>
-                    <li role="presentation"><span href="#produceLog" aria-controls="produceLog" role="tab" data-toggle="tab">生产日志</span></li>
-                    <li role="presentation"><span href="#purchaseLog" aria-controls="purchaseLog" role="tab" data-toggle="tab">采购日志</span></li>
+                <ul class="nav nav-tabs noborder" role="tablist" id="__assTabs">
+                    <li role="presentation" class="active"><span href="#__productAss" aria-controls="__productAss" role="tab" data-toggle="tab">成品关联</span></li>
+                    <li role="presentation"><span href="#__materialAss" aria-controls="__materialAss" role="tab" data-toggle="tab">原材料关联</span></li>
+                    <li role="presentation"><span href="#__model" aria-controls="__model" role="tab" data-toggle="tab">模具关联</span></li>
                 </ul>
 
                 <div class="tab-content">
-                    <div role="tabpanel" class="pd43 tab-pane active" id="saleLog">
-                        <p>暂无</p>
+                    <div role="tabpanel" class="pd43 tab-pane active" id="__productAss">
+                        <p>暂无-1</p>
                     </div>
-                    <div role="tabpanel" class="pd43 tab-pane" id="produceLog">
-                        <p>暂无</p>
+                    <div role="tabpanel" class="pd43 tab-pane" id="__materialAss">
+                        <p>暂无-2</p>
                     </div>
-                    <div role="tabpanel" class="pd43 tab-pane" id="purchaseLog">
-                        <p>暂无</p>
+                    <div role="tabpanel" class="pd43 tab-pane" id="__model">
+                        <p>暂无-3</p>
                     </div>
                 </div>
             </div>
-            -->
         </div>
     </div>
 </div>
 </div>
+
+<!--选择成品-->
+<div class="modal fade myErpModal" role="dialog" data-backdrop="static" id="_productAss">
+    <div class="modal-dialog modal-lg" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-unlock-alt defaultColor"></i> 维护成品关联</h4>
+            </div>
+            <div class="modal-body" style="max-height: 800px;">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="pd43">
+                            <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;width: 100%;">
+                                <div class="panel-heading">
+                                    <div>
+                                        供选成品[拖拽到右侧...]
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="_productAssTree" class="ztree" style="height: 700px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="pd43">
+                            <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;width: 95%;">
+                                <div class="panel-heading">
+                                    <div>
+                                        我是右侧^_^<button type="button" class="btn btn-success btn-xs right" id="_productAssSaveBt">保存关联</button>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <ul id="_productAssTargetTree" class="ztree" style="height: 700px;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('hello supplier');
@@ -254,6 +302,8 @@
             , $typeHolder : $('#type')//供应商类别
             , $ranHolder : $('#rank')//供应商等级
             , $editInfoModal : $('#_editSupplier')//编辑供应商modal
+            , $productAssModal : $('#_productAss')//成品关联Modal
+            , targetProductTree : null
 
         };
 
@@ -308,9 +358,9 @@
                         consts.supplier = supplier;
                         $('._type').hide();
                         initSupplierDetail(supplier);
-                        //TODO
                         $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
                         $rightPage.find('.fa-angle-double-down').click();
+                        $('#__assTabs').find('span').eq(0).click();
                     })
                     .catch(function (reason) {
                         layer.msg(reason.caught ? reason.message : '请求失败！');
@@ -364,6 +414,63 @@
             );
         }
 
+        //TODO
+        var treeSetting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                    rootPId: 0
+                },
+                key : {
+                    title : 'title'
+                }
+            },
+
+            edit: {
+                enable: true,
+                showRemoveBtn: false,
+                showRenameBtn: false
+            },
+
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    console.log(treeNode)
+                },
+
+                beforeDrag: function (treeId, treeNodes) {
+                    for (var i=0,l=treeNodes.length; i<l; i++) {
+                        if (treeNodes[i].drag === false) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
+                beforeDrop: function (treeId, treeNodes, targetNode, moveType) {
+                    console.log(moveType);
+                    return !targetNode;
+                }
+            }
+        };
+
+        var targetTreeSetting = $.extend({}, treeSetting, {
+            edit: {
+                enable: true,
+                showRemoveBtn: true,
+                showRenameBtn: false
+            }
+        });
+
+        var initProductTrees = function () {
+            services.association.supplier(consts.supplier.id).productTree()
+                .then(function (ret) {
+                    console.log('树', ret);
+                    $.fn.zTree.init($('#_productAssTree'), treeSetting, ret.list).expandAll(true);
+                    consts.targetProductTree = $.fn.zTree.init($('#_productAssTargetTree'), targetTreeSetting, []);
+                });
+        }
+
         /**
          * 初始化事件
          */
@@ -389,6 +496,11 @@
                 $(this).find('input[type="text"], #_type, #_rank, #_remark, textarea').val('');
 
             });
+            //成品关联模态框
+            consts.$productAssModal.on('show.bs.modal', function () {
+                initProductTrees();
+            });
+
             //保存供应商
             consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
@@ -460,6 +572,35 @@
             $('#addUserBt').bind('click', function(){
                 consts.supplier = {};
                 $('._type').show();
+            });
+
+            //保存成品关联
+            $('#_productAssSaveBt').unbind('click').click(function () {
+                console.log(consts.targetProductTree);
+                var productIds = [];
+                (consts.targetProductTree.getNodes() || []).forEach(function (node) {
+                    productIds.push(node.code);
+                });
+                console.log(consts.supplier.id, productIds);
+
+                if(!productIds.length){
+                    layer.msg('请先拖拽成品');
+                    return false;
+                }
+
+                services.association.supplier(consts.supplier.id).saveProducts(productIds)
+                    .then(function (ret) {
+                        layer.msg(ret._message);
+                        console.log(ret);
+                        consts.$productAssModal.modal('hide');
+                        //TODO init the region of right's ass
+                    })
+
+                // initProductTrees
+            });
+
+            $('#__assTabs').find('span').bind('click', function () {
+                console.log($(this).attr('href'))
             })
         }
 

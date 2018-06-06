@@ -445,6 +445,36 @@ define('services',['utils'],function (utils) {
      */
     var lookup = function (type) {
         return $.http.get('basis/common/lookup/' + type);
+    };
+
+    /**
+     * 关联
+     * @type {{}}
+     */
+    var association = {
+        //供应商
+        supplier : function (supplierId) {
+            return {
+                //供应商-成品树[未关联]
+                productTree : function () {
+                    return $.http.get({
+                        url : 'basis/supplier/product/nodes/unassociated',
+                        data : {
+                            supplierId : supplierId
+                        }
+                    })
+                }
+                , saveProducts : function (productIds) {
+                    return $.http.post({
+                        url : 'basis/supplier/' + supplierId + '/product',
+                        data : productIds,
+                        contentType : $.contentType.json
+                    })
+                }
+
+
+            }
+        }
     }
 
     return {
@@ -454,9 +484,10 @@ define('services',['utils'],function (utils) {
         , supplier : supplier
         , mould : mould
         , product : product
-        ,equipment:equipment
-        ,rawMaterial:rawMaterial
-        ,customer:customer
+        , equipment:equipment
+        , rawMaterial:rawMaterial
+        , customer:customer
         , lookup : lookup
+        , association : association
     }
 });

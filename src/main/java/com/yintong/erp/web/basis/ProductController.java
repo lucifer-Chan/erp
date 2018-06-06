@@ -5,6 +5,7 @@ import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.SupplierService;
+import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
@@ -34,14 +35,11 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 @RequestMapping("basis/product")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    @Autowired ProductService productService;
 
-    @Autowired
-    private SupplierService supplierService;
+    @Autowired SupplierService supplierService;
 
-    @Autowired
-    private ErpBaseEndProductRepository productRepository;
+    @Autowired ErpBaseEndProductRepository productRepository;
 
     @GetMapping("findSupplierAll")
     public BaseResult findSupplierAll(){
@@ -147,4 +145,5 @@ public class ProductController {
         }
         return new BaseResult().setErrmsg("成功删除（" + count + "/" + sum + "）");
     }
+
 }

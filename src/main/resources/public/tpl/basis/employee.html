@@ -856,6 +856,10 @@
             return services.department.all()
                 .then(function (ret) {
                     ret.all.push({name : '组织结构', id : -1});
+                    ret.all.forEach(function (node) {
+                        node['isParent'] = true;
+                        console.log(node);
+                    })
                     consts.treeObj = $.fn.zTree.init($("#orgTree"), treeSetting, ret.all);
                     consts.treeObj.expandAll(true);
                     leaves(consts.treeObj.getNodeByTId('orgTree_1'), consts.leaves);
