@@ -11,6 +11,7 @@ import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteRawMaterialValidator;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +34,7 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * Created by Zangtao on 2018/5/26.
  * 原材料
  */
+@Slf4j
 @Service
 public class RawMaterialService {
 
@@ -110,7 +113,7 @@ public class RawMaterialService {
                 MZQ0,MM00,MF00,MRA0,
                 MRZR,MRZY,MRZB,MRZN,MRZQ,
                 MRZ0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "原材料类型不正确");
-        material.validate();
+        material.uniqueValidate();
     }
 
     /**
@@ -122,9 +125,16 @@ public class RawMaterialService {
         ExcelUtil.ExcelImporter<ErpBaseRawMaterial> importer = new ExcelUtil(excel).builder(ErpBaseRawMaterial.class);
         List<ErpBaseRawMaterial> entities = importer.getSuccessData();
         Date importedAt = new Date();
-        entities.forEach(entity-> entity.setImportedAt(DateUtil.getDateTimeString(importedAt)));
-        erpBaseRawMaterialRepository.saveAll(entities);
-        return importer;
+        List<ErpBaseRawMaterial> count = new ArrayList<>();
+        for(ErpBaseRawMaterial entity : entities){
+            try{
+                entity.setImportedAt(DateUtil.getDateTimeString(importedAt));
+                count.add(create(entity));
+            } catch (Exception e){
+                log.error("导入原材料失败", e);
+            }
+        }
+        return importer.setSuccessData(count);
     }
 
 

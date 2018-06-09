@@ -19,11 +19,15 @@ import java.util.stream.Collectors;
  **/
 public interface Importable {
     /**
-     * 验证 Assert.xxx();
+     * 必填项验证 Assert.xxx();
      * @return
      */
-    default void validate(){
-    }
+    void requiredValidate();
+
+    /**
+     * 唯一性验证
+     */
+    void uniqueValidate();
 
     /**
      * 根据data赋值一个entity
@@ -45,7 +49,7 @@ public interface Importable {
             Assert.notNull(field, this.getClass().getName() +"中未找到" + fieldName + "属性");
             ReflectUtil.setValueBySetter(field, this, data.get(i));
         }
-        validate();
+        requiredValidate();
     }
 
 

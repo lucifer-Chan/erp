@@ -9,7 +9,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -97,8 +96,6 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     @Transient
     private String rawTypeName;
 
-
-
     public void setRawTypeName(String rawTypeName){
         this.rawTypeName = rawTypeName;
         List<ErpBaseCategory> list = SpringUtil.getBean(ErpBaseCategoryRepository.class).findByFullName(rawTypeName);
@@ -110,8 +107,12 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     }
 
     @Override
-    public void validate(){
+    public void requiredValidate(){
         Assert.hasLength(rawTypeCode, "未找到类别");
+    }
+
+    @Override
+    public void uniqueValidate(){
         ErpBaseRawMaterialRepository repository = SpringUtil.getBean(ErpBaseRawMaterialRepository.class);
         List<ErpBaseRawMaterial> shouldBeEmpty
                 = Objects.isNull(id)

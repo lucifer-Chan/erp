@@ -12,6 +12,7 @@ import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteProductValidator;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * Created by jianqiang on 2018/5/26 0026.
  * 成品
  */
+@Slf4j
 @Service
 public class ProductService {
 
@@ -69,9 +71,16 @@ public class ProductService {
         ExcelImporter<ErpBaseEndProduct> importer = new ExcelUtil(excel).builder(ErpBaseEndProduct.class);
         List<ErpBaseEndProduct> entities = importer.getSuccessData();
         Date importedAt = new Date();
-        entities.forEach(entity-> entity.setImportedAt(DateUtil.getDateTimeString(importedAt)));
-        erpBaseEndProductRepository.saveAll(entities);
-        return importer;
+        List<ErpBaseEndProduct> count = new ArrayList<>();
+        for (ErpBaseEndProduct entity : entities){
+            try{
+                entity.setImportedAt(DateUtil.getDateTimeString(importedAt));
+                count.add(create(entity));
+            } catch (Exception e){
+                log.error("导入成品失败", e);
+            }
+        }
+        return importer.setSuccessData(count);
     }
 
     /**
@@ -122,7 +131,7 @@ public class ProductService {
         Assert.isTrue(Arrays.asList(PTT0,PTD0,PTW0,PTU0,PNR0,
                 PNY0,PNM0,PNF0,PRT0,PRD0,PRW0,PRU0,PRR0,PRY0,
                 PRM0,PRF0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "成品类型不正确");
-        product.validate();
+        product.uniqueValidate();
     }
 
     /**

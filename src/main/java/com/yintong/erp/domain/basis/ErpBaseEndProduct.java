@@ -123,8 +123,12 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     }
 
     @Override
-    public void validate(){
+    public void requiredValidate(){
         Assert.hasLength(endProductTypeCode, "未找到类别");
+    }
+
+    @Override
+    public void uniqueValidate(){
         ErpBaseEndProductRepository repository = SpringUtil.getBean(ErpBaseEndProductRepository.class);
         List<ErpBaseEndProduct> shouldBeEmpty
                 = Objects.isNull(id)

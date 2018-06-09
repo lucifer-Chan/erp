@@ -1,6 +1,7 @@
 package com.yintong.erp.utils.excel;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -49,6 +50,11 @@ public class ExcelUtil {
         private List<T> successData = new ArrayList<>();
         @Getter
         private List<List<String>> errorData = new ArrayList<>();
+
+        public ExcelImporter<T> setSuccessData(List<T> successData){
+            this.successData = successData;
+            return this;
+        }
 
         private Class<T> clazz;
 
