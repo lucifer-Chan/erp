@@ -1,5 +1,6 @@
 package com.yintong.erp.service.basis.associator;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
@@ -8,6 +9,7 @@ import com.yintong.erp.dto.TreeNode;
 import com.yintong.erp.service.basis.CategoryService;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.validator.OnDeleteProductValidator;
+import com.yintong.erp.validator.OnDeleteSupplierProductValidator;
 import com.yintong.erp.validator.OnDeleteSupplierValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
     @Autowired ErpEndProductSupplierRepository productSupplierRepository;
 
     @Autowired CategoryService categoryService;
+
+    @Autowired(required = false) List<OnDeleteSupplierProductValidator> onDeleteSupplierProductValidators;
 
     /**
      * 建立供应商和成品的关联
@@ -88,8 +92,12 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
      * @param supplierId
      */
     public void delete(Long productId, Long supplierId){
-        productSupplierRepository.deleteByEndProductIdAndSupplierId(productId, supplierId);
-
+        ErpEndProductSupplier one = productSupplierRepository.findByEndProductIdAndSupplierId(productId, supplierId).orElse(null);
+        if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierProductValidators))
+            onDeleteSupplierProductValidators
+                    .forEach(validator -> validator.onDeleteSupplierProduct(supplierId, productId));
+        Assert.notNull(one, "未找到关联");
+        productSupplierRepository.delete(one);
     }
 
     /**
@@ -145,26 +153,28 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
      * 根据供应商id获取所有的已关联的树
      * @param supplierId
      * @return
+     * TODO 修改为只显示拥有的类别，而非全类别
      */
     public List<TreeNode> associatedNodes(Long supplierId){
-        List<TreeNode> leaves =  productRepository.findAll()
-                .stream()
-                .map(product -> {
-                    TreeNode treeNode = new TreeNode(product.getId() + "", product.getEndProductName() + "-" + product.getSpecification(), product.getEndProductTypeCode(), false);
-                    ErpEndProductSupplier ass = productSupplierRepository.findByEndProductIdAndSupplierId(product.getId(), supplierId).orElse(null);
-                    return Objects.isNull(ass) ? treeNode :
-                            treeNode
-                                    .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"))
-                                    .setName(treeNode.getName() + "      [" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]")
-                            ;
-                })
-                .filter(node -> Objects.nonNull(node.getSource()))
 
+        List<TreeNode> leaves = productSupplierRepository.findBySupplierId(supplierId)
+                .stream()
+                .map(ass -> {
+                    String parentCode = ass.getEndProductType();
+                    Long productId = ass.getEndProductId();
+                    ErpBaseEndProduct product = productRepository.getOne(productId);
+                    TreeNode treeNode = new TreeNode(ass.getEndProductId() + "", product.getEndProductName() + "-" + product.getSpecification(), parentCode, false)
+                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
+                    return treeNode
+                            .setFullName(treeNode.getName())
+                            .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");
+                })
                 .collect(Collectors.toList());
-        List<TreeNode> branch = branch();
+        List<TreeNode> branch = branch().stream()
+                .filter(node -> leaves.stream().map(TreeNode::getParentCode).collect(Collectors.toSet()).contains(node.getCode()))
+                .collect(Collectors.toList());
         branch.addAll(leaves);
         return branch;
-        //return nodes(node -> associatedProductIds(supplierId).contains(node.getCode()));
     }
 
     /**

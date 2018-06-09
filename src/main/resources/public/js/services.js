@@ -456,7 +456,7 @@ define('services',['utils'],function (utils) {
         supplier : function (supplierId) {
             return {
                 //供应商-成品树[未关联]
-                productTree : function () {
+                unProductTree : function () {
                     return $.http.get({
                         url : 'basis/supplier/product/nodes/unassociated',
                         data : {
@@ -464,6 +464,7 @@ define('services',['utils'],function (utils) {
                         }
                     })
                 }
+                //保存关联
                 , saveProducts : function (productIds) {
                     return $.http.post({
                         url : 'basis/supplier/' + supplierId + '/product',
@@ -471,7 +472,29 @@ define('services',['utils'],function (utils) {
                         contentType : $.contentType.json
                     })
                 }
-
+                //删除关联//@DeleteMapping("{supplierId}/product/{productId}")
+                , delete : function (productId) {
+                    return $.http.delete('basis/supplier/'+ supplierId+'/product/' + productId);
+                }
+                //供应商-成品树[已关联]
+                , edProductTree : function () {
+                    return $.http.get({
+                        url : 'basis/supplier/product/nodes/associated',
+                        data : {
+                            supplierId : supplierId
+                        }
+                    })
+                }
+                //保存上下限 {supplierId}/product/{productId}
+                , saveWarning : function(productId, alertLower, alertUpper){
+                    return $.http.patch({
+                        url : 'basis/supplier/'+ supplierId +'/product/' + productId,
+                        data : {
+                            alertLower : alertLower,
+                            alertUpper : alertUpper
+                        }
+                    })
+                }
 
             }
         }

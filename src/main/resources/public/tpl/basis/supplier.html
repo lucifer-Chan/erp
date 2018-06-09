@@ -127,6 +127,8 @@
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSupplier">修改基本信息</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_productAss">维护成品</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#">维护原材料</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#">维护模具</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -225,7 +227,30 @@
 
                 <div class="tab-content">
                     <div role="tabpanel" class="pd43 tab-pane active" id="__productAss">
-                        <p>暂无-1</p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                                    <div class="panel-heading">
+                                        <div id="__productAssEdit">
+                                            预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            &nbsp&nbsp&nbsp&nbsp
+                                            预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            <button class="btn btn-success btn-xs alertSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
+                                            <button class="btn btn-danger btn-xs alertDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p id="__productAssTreeEmpty">暂无成品关联</p>
+                                        <div id="__productAssTree" class="ztree"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div role="tabpanel" class="pd43 tab-pane" id="__materialAss">
                         <p>暂无-2</p>
@@ -288,7 +313,7 @@
 
 
 <script type="text/javascript">
-    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+    requirejs(['ztree','slimScroll', 'utils','services'],function (ztree, slimScroll, utils, services) {
         console.log('hello supplier');
         init();
 
@@ -304,6 +329,7 @@
             , $editInfoModal : $('#_editSupplier')//编辑供应商modal
             , $productAssModal : $('#_productAss')//成品关联Modal
             , targetProductTree : null
+            , edProductTree : null
 
         };
 
@@ -436,7 +462,7 @@
 
             callback: {
                 onClick: function (event, treeId, treeNode) {
-                    console.log(treeNode)
+                    console.log('选中节点',treeNode);
                 },
 
                 beforeDrag: function (treeId, treeNodes) {
@@ -462,13 +488,109 @@
             }
         });
 
+        var associtedTreeSetting = $.extend({}, treeSetting, {
+            edit : {enable : false},
+            callback : {
+                onClick : function (event, treeId, treeNode) {
+                    console.log('选中节点',treeNode);
+                    var editDiv = $("#__productAssEdit");
+                    var alertLower = editDiv.find('.alertLower');
+                    var alertUpper = editDiv.find('.alertUpper');
+                    alertLower.val(treeNode.source.alertLower);
+                    alertUpper.val(treeNode.source.alertUpper);
+                    if(treeNode.source){
+                        editDiv.show().find('.alertSaveBt, .alertDeleteBt')
+                            .attr('data-id', treeNode.code).unbind('click');
+                        //保存上下限
+                        editDiv.find('.alertSaveBt')
+                            .click(function () {
+                                var productId = $(this).attr('data-id');
+                                if (!alertLower.val()|| !alertUpper.val()){
+                                    layer.msg('预警上下限必须>=0');
+                                    return false;
+                                }
+                                var iLower = parseInt(alertLower.val());
+                                var iUpper = parseInt(alertUpper.val());
+                                if (iLower >= iUpper){
+                                    layer.msg('预警下限必须小于上限');
+                                    return false;
+                                }
+                                //保存上下限
+                                //productId, alertLower, alertUpper
+                                services.association.supplier(consts.supplier.id)
+                                    .saveWarning(productId, iLower, iUpper)
+                                    .then(function (ret) {
+                                        layer.msg(ret._message);
+                                        console.log(treeId, treeNode);
+                                        //刷新值
+                                        treeNode.source.alertLower = iLower;
+                                        treeNode.source.alertUpper = iUpper;
+                                        treeNode.title = treeNode.fullName + '[' + iLower + ',' + iUpper + ']';
+                                        treeNode.name = treeNode.title.length > 50 ? treeNode.title.substring(0, 48) + '...' : treeNode.title;
+                                        $.fn.zTree.getZTreeObj(treeId).updateNode(treeNode);
+                                    })
+                                    .catch(function (reason) {
+                                        console.log(reason);
+                                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                                    });
+                            });
+                        //删除关联
+                        editDiv.find('.alertDeleteBt')
+                            .click(function () {
+                                var productId = $(this).attr('data-id');
+                                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                                    services.association.supplier(consts.supplier.id)
+                                        .delete(productId)
+                                        .then(function (ret) {
+                                            layer.msg(ret._message);
+                                            editDiv.hide().find('.alertSaveBt, alertDeleteBt').removeAttr('data-id');
+                                            console.log(treeId, treeNode);
+                                            $.fn.zTree.getZTreeObj(treeId).removeNode(treeNode);
+                                        })
+                                        .catch(function (reason) {
+                                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                                        });
+                                });
+                            });
+                    } else {
+                        editDiv.hide().find('.alertSaveBt, alertDeleteBt').removeAttr('data-id');
+                    }
+                }
+            }
+        });
+
+        /**
+         * 初始化成品编辑树
+         */
         var initProductTrees = function () {
-            services.association.supplier(consts.supplier.id).productTree()
+            services.association.supplier(consts.supplier.id).unProductTree()
                 .then(function (ret) {
                     console.log('树', ret);
                     $.fn.zTree.init($('#_productAssTree'), treeSetting, ret.list).expandAll(true);
                     consts.targetProductTree = $.fn.zTree.init($('#_productAssTargetTree'), targetTreeSetting, []);
                 });
+        };
+
+        var initEdProductTree = function () {
+            services.association.supplier(consts.supplier.id).edProductTree()
+                .then(function (ret) {
+                    console.log('已关联的树', ret);
+                    if(!ret.list.length){
+                        $('#__productAssTreeEmpty').show();
+                    } else {
+                        $('#__productAssTreeEmpty').hide();
+                    }
+                    $("#__productAssEdit").hide();
+                    consts.edProductTree = $.fn.zTree
+                        .init($('#__productAssTree'), associtedTreeSetting, ret.list)
+                        .expandAll(true);
+                    $('.bugInfo').slimScroll({
+                        position:'left',
+                        height: '100%',
+                        railOpacity: 0.9
+                    });
+
+                })
         }
 
         /**
@@ -593,14 +715,14 @@
                         layer.msg(ret._message);
                         console.log(ret);
                         consts.$productAssModal.modal('hide');
-                        //TODO init the region of right's ass
+                        $('#__assTabs').find('span').eq(0).click();
                     })
-
-                // initProductTrees
             });
 
             $('#__assTabs').find('span').bind('click', function () {
-                console.log($(this).attr('href'))
+                var target = $(this).attr('href');
+                if(target === '#__productAss')
+                    initEdProductTree();
             })
         }
 

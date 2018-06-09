@@ -1,12 +1,15 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.SupplierService.SupplierParameterBuilder;
 import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +28,8 @@ public class SupplierController {
     @Autowired SupplierService supplierService;
 
     @Autowired SupplierProductService supplierProductService;
+
+    @Autowired ErpEndProductSupplierRepository productSupplierRepository;
 
     /**
      * 组合查询
@@ -89,6 +94,16 @@ public class SupplierController {
     }
 
     /**
+     * 根据供应商id获取所有的已关联的成品树[包括类别节点]->ztree
+     * @param supplierId
+     * @return
+     */
+    @GetMapping("product/nodes/associated")
+    public BaseResult associatedProductNodes(Long supplierId){
+        return new BaseResult().addList(supplierProductService.associatedNodes(supplierId));
+    }
+
+    /**
      * 获取所有的成品的树
      * @return
      */
@@ -104,8 +119,28 @@ public class SupplierController {
     @PostMapping("{supplierId}/product")
     public BaseResult saveProductAss(@PathVariable Long supplierId, @RequestBody List<Long> productIds){
         supplierProductService.batchSave(supplierId, productIds);
-        return new BaseResult().addList(supplierProductService.associatedNodes(supplierId)).setErrmsg("保存成功");
+        return new BaseResult().setErrmsg("保存成功");
     }
 
+    /**
+     * 保存供应商的成品的上下限
+     */
+    @PatchMapping("{supplierId}/product/{productId}")
+    public BaseResult saveProductWarning(@PathVariable Long supplierId, @PathVariable Long productId, Integer alertLower, Integer alertUpper){
+        ErpEndProductSupplier one = productSupplierRepository.findByEndProductIdAndSupplierId(productId, supplierId).orElse(null);
+        Assert.notNull(one, "未找到关联");
+        one.setAlertLower(alertLower);
+        one.setAlertUpper(alertUpper);
+        return new BaseResult().addPojo(productSupplierRepository.save(one)).setErrmsg("保存成功");
+    }
+
+    /**
+     * 保存供应商和成品的关联
+     */
+    @DeleteMapping("{supplierId}/product/{productId}")
+    public BaseResult deleteProductAss(@PathVariable Long supplierId, @PathVariable Long productId){
+        supplierProductService.delete(productId, supplierId);
+        return new BaseResult().setErrmsg("删除成功");
+    }
 
 }

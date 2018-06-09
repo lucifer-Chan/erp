@@ -16,8 +16,6 @@ public interface ErpEndProductSupplierRepository extends JpaRepository<ErpEndPro
 
     Optional<ErpEndProductSupplier> findByEndProductIdAndSupplierId(Long productId, Long supplierId);
 
-    void deleteByEndProductIdAndSupplierId(Long productId, Long supplierId);
-
     void deleteBySupplierId(Long supplierId);
 
     void deleteByEndProductId(Long productId);
