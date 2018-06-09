@@ -20,4 +20,6 @@ public interface ErpBaseEndProductRepository extends JpaRepository<ErpBaseEndPro
     List<Object []> groupByImportAt();
 
     List<ErpBaseEndProduct> findByImportedAt(String importedAt);
+
+    List<ErpBaseEndProduct> findByEndProductNameAndSpecification(String endProductName, String specification);
 }

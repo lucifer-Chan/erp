@@ -125,6 +125,13 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Override
     public void validate(){
         Assert.hasLength(endProductTypeCode, "未找到类别");
+        Assert.isTrue(
+                CollectionUtils.isEmpty(
+                    SpringUtil.getBean(ErpBaseEndProductRepository.class)
+                            .findByEndProductNameAndSpecification(endProductName, specification)
+                )
+                , "名称-规格重复"
+        );
     }
 
     @Transient

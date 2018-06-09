@@ -22,4 +22,6 @@ public interface ErpBaseRawMaterialRepository extends JpaRepository<ErpBaseRawMa
 
     List<ErpBaseRawMaterial> findByImportedAt(String importedAt);
 
+    List<ErpBaseRawMaterial> findByRawNameAndSpecification(String rawName, String specification);
+
 }

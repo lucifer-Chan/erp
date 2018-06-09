@@ -112,6 +112,12 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     @Override
     public void validate(){
         Assert.hasLength(rawTypeCode, "未找到类别");
+        Assert.isTrue(
+                CollectionUtils.isEmpty(
+                        SpringUtil.getBean(ErpBaseRawMaterialRepository.class)
+                                .findByRawNameAndSpecification(rawName, specification)
+                )
+                , "名称-规格重复"
+        );
     }
-
 }
