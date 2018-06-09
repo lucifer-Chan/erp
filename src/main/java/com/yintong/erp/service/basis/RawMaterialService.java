@@ -110,6 +110,7 @@ public class RawMaterialService {
                 MZQ0,MM00,MF00,MRA0,
                 MRZR,MRZY,MRZB,MRZN,MRZQ,
                 MRZ0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "原材料类型不正确");
+        material.validate();
     }
 
     /**
