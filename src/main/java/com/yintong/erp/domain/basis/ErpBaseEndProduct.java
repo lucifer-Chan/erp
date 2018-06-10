@@ -29,8 +29,8 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Id
     @GeneratedValue
     private Long id;
-    @Column(columnDefinition = "varchar(64) comment '成品编号'")
-    private String endProductNo;
+    @Column(columnDefinition = "varchar(12) comment '单位'")
+    private String unit;
     @Column(columnDefinition = "varchar(20) comment '成品名称'")
     private String endProductName;
     @BarCode
