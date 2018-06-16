@@ -14,7 +14,15 @@ public interface BarCodeConstants {
 //    public static final BAR_CODE_PREFIX [] USER_TYPES = {
 //
 //    }
-
+    /**
+     * 原材料类别
+     * @return
+     */
+    static List<BAR_CODE_PREFIX> rawMaterialTypes(){
+        return Stream.of(BAR_CODE_PREFIX.values())
+                .filter(b -> b.first().getKey().equals("M"))
+                .collect(Collectors.toList());
+    }
     /**
      * 成品类别
      * @return

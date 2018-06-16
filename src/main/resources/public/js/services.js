@@ -497,6 +497,51 @@ define('services',['utils'],function (utils) {
                 }
 
             }
+        },
+        rawMaterial : function (supplierId) {
+            return {
+                //供应商-原材料树[未关联]
+                unRawMaterialTree : function () {
+                    return $.http.get({
+                        url : 'basis/supplier/rawMaterial/nodes/unassociated',
+                        data : {
+                            supplierId : supplierId
+                        }
+                    })
+                }
+                //保存关联
+                , saveRawMaterials : function (rawMaterialIds) {
+                    return $.http.post({
+                        url : 'basis/supplier/' + supplierId + '/rawMaterial',
+                        data : rawMaterialIds,
+                        contentType : $.contentType.json
+                    })
+                }
+                //删除关联//@DeleteMapping("{supplierId}/rawMaterial/{rawMaterialId}")
+                , delete : function (rawMaterialId) {
+                    return $.http.delete('basis/supplier/'+ supplierId+'/rawMaterial/' + rawMaterialId);
+                }
+                //供应商-原材料树[已关联]
+                , rawMaterialTree : function () {
+                    return $.http.get({
+                        url : 'basis/supplier/rawMaterial/nodes/associated',
+                        data : {
+                            supplierId : supplierId
+                        }
+                    })
+                }
+                //保存上下限 {supplierId}/rawMaterial/{rawMaterialId}
+                , saveWarning : function(rawMaterialId, alertLower, alertUpper){
+                    return $.http.patch({
+                        url : 'basis/supplier/'+ supplierId +'/rawMaterial/' + rawMaterialId,
+                        data : {
+                            alertLower : alertLower,
+                            alertUpper : alertUpper
+                        }
+                    })
+                }
+
+            }
         }
     }
 
