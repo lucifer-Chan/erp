@@ -542,6 +542,51 @@ define('services',['utils'],function (utils) {
                 }
 
             }
+        },
+        model : function (supplierId) {
+            return {
+                //供应商-模具树[未关联]
+                unModelTree : function () {
+                    return $.http.get({
+                        url : 'basis/supplier/mould/nodes/unassociated',
+                        data : {
+                            supplierId : supplierId
+                        }
+                    })
+                }
+                //保存关联
+                , saveMould : function (mouldIds) {
+                    return $.http.post({
+                        url : 'basis/supplier/' + supplierId + '/mould',
+                        data : mouldIds,
+                        contentType : $.contentType.json
+                    })
+                }
+                //删除关联//@DeleteMapping("{supplierId}/mould/{mouldId}")
+                , delete : function (mouldId) {
+                    return $.http.delete('basis/supplier/'+ supplierId+'/mould/' + mouldId);
+                }
+                //供应商-原材料树[已关联]
+                , modelTree : function () {
+                    return $.http.get({
+                        url : 'basis/supplier/mould/nodes/associated',
+                        data : {
+                            supplierId : supplierId
+                        }
+                    })
+                }
+                //保存上下限 {supplierId}/mould/{mouldId}
+                , saveWarning : function(mouldId, alertLower, alertUpper){
+                    return $.http.patch({
+                        url : 'basis/supplier/'+ supplierId +'/mould/' + mouldId,
+                        data : {
+                            alertLower : alertLower,
+                            alertUpper : alertUpper
+                        }
+                    })
+                }
+
+            }
         }
     }
 

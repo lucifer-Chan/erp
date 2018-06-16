@@ -15,6 +15,15 @@ public interface BarCodeConstants {
 //
 //    }
     /**
+     * 模具类别
+     * @return
+     */
+    static List<BAR_CODE_PREFIX> mouldTypes(){
+        return Stream.of(BAR_CODE_PREFIX.values())
+                .filter(b -> b.first().getKey().equals("D"))
+                .collect(Collectors.toList());
+    }
+    /**
      * 原材料类别
      * @return
      */

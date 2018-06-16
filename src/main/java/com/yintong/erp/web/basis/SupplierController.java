@@ -1,12 +1,10 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
-import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
-import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
-import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
-import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
+import com.yintong.erp.domain.basis.associator.*;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.SupplierService.SupplierParameterBuilder;
+import com.yintong.erp.service.basis.associator.SupplierMouldService;
 import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.base.BaseResult;
@@ -38,6 +36,10 @@ public class SupplierController {
     SupplierRawMaterialService supplierRawMaterialService;
     @Autowired
     ErpRawMaterialSupplierRepository erpRawMaterialSupplierRepository;
+    @Autowired
+    SupplierMouldService supplierMouldService;
+    @Autowired
+    ErpModelSupplierRepository erpModelSupplierRepository;
 
     /**
      * 组合查询
@@ -206,11 +208,73 @@ public class SupplierController {
     }
 
     /**
-     * 保存供应商和成品的关联
+     * 保存供应商和原材料的关联
      */
     @DeleteMapping("{supplierId}/rawMaterial/{rawMaterId}")
     public BaseResult deleteRawMaterialAss(@PathVariable Long supplierId, @PathVariable Long rawMaterId){
         supplierRawMaterialService.delete(rawMaterId, supplierId);
+        return new BaseResult().setErrmsg("删除成功");
+    }
+
+
+
+    /**
+     * 根据供应商id获取所有的未关联的模具树[包括类别节点]->ztree
+     * @param supplierId
+     * @return
+     */
+    @GetMapping("mould/nodes/unassociated")
+    public BaseResult unAssociatedMouldNodes(Long supplierId){
+        return new BaseResult().addList(supplierMouldService.unAssociatedNodes(supplierId));
+    }
+
+    /**
+     * 根据供应商id获取所有的已关联的模具树[包括类别节点]->ztree
+     * @param supplierId
+     * @return
+     */
+    @GetMapping("mould/nodes/associated")
+    public BaseResult associatedMouldNodes(Long supplierId){
+        return new BaseResult().addList(supplierMouldService.associatedNodes(supplierId));
+    }
+
+    /**
+     * 获取所有的模具的树
+     * @return
+     */
+    @GetMapping("mould/nodes/all")
+    public BaseResult allMouldNodes(){
+        return new BaseResult().addList(supplierMouldService.mouldTreeNodes());
+    }
+
+
+    /**
+     * 保存供应商和模具之间的关联
+     */
+    @PostMapping("{supplierId}/mould")
+    public BaseResult saveMouldAss(@PathVariable Long supplierId, @RequestBody List<Long> moulds){
+        supplierMouldService.batchSave(supplierId, moulds);
+        return new BaseResult().setErrmsg("保存成功");
+    }
+
+    /**
+     * 保存供应商的模具的上下限
+     */
+    @PatchMapping("{supplierId}/mould/{mouldId}")
+    public BaseResult saveMouldWarning(@PathVariable Long supplierId, @PathVariable Long mouldId, Integer alertLower, Integer alertUpper){
+        ErpModelSupplier one = erpModelSupplierRepository.findByModelIdAndSupplierId(mouldId, supplierId).orElse(null);
+        Assert.notNull(one, "未找到关联");
+        one.setAlertLower(alertLower);
+        one.setAlertUpper(alertUpper);
+        return new BaseResult().addPojo(erpModelSupplierRepository.save(one)).setErrmsg("保存成功");
+    }
+
+    /**
+     * 保存供应商和模具的关联
+     */
+    @DeleteMapping("{supplierId}/mould/{mouldId}")
+    public BaseResult deleteMouldAss(@PathVariable Long supplierId, @PathVariable Long mouldId){
+        supplierMouldService.delete(mouldId, supplierId);
         return new BaseResult().setErrmsg("删除成功");
     }
 

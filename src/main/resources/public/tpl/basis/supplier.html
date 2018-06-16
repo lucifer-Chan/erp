@@ -128,7 +128,7 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSupplier">修改基本信息</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_productAss">维护成品</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_rawMaterialAss">维护原材料</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#">维护模具</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_modelAss">维护模具</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -222,7 +222,7 @@
                 <ul class="nav nav-tabs noborder" role="tablist" id="__assTabs">
                     <li role="presentation" class="active"><span href="#__productAss" aria-controls="__productAss" role="tab" data-toggle="tab">成品关联</span></li>
                     <li role="presentation"><span href="#__rmaterialAss" aria-controls="__rmaterialAss" role="tab" data-toggle="tab">原材料关联</span></li>
-                    <li role="presentation"><span href="#__model" aria-controls="__model" role="tab" data-toggle="tab">模具关联</span></li>
+                    <li role="presentation"><span href="#__modelAss" aria-controls="__modelAss" role="tab" data-toggle="tab">模具关联</span></li>
                 </ul>
 
                 <div class="tab-content">
@@ -277,8 +277,30 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="pd43 tab-pane" id="__model">
-                        <p>暂无-3</p>
+                    <div role="tabpanel" class="pd43 tab-pane" id="__modelAss">
+                        <div class="row">
+                            <div class="col-sm-12">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                                    <div class="panel-heading">
+                                        <div id="__modelAssEdit">
+                                            预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            &nbsp&nbsp&nbsp&nbsp
+                                            预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            <button class="btn btn-success btn-xs alertModelSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
+                                            <button class="btn btn-danger btn-xs alertModelDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p id="__modelAssTreeEmpty">暂无原材料关联</p>
+                                        <div id="__modelAssTree" class="ztree"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -373,7 +395,49 @@
         </div>
     </div>
 </div>
-
+<!--选择模具-->
+<div class="modal fade myErpModal" role="dialog" data-backdrop="static" id="_modelAss">
+    <div class="modal-dialog modal-lg" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-unlock-alt defaultColor"></i> 维护模具关联</h4>
+            </div>
+            <div class="modal-body" style="max-height: 800px;">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="pd43">
+                            <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;width: 100%;">
+                                <div class="panel-heading">
+                                    <div>
+                                        供选模具[拖拽到右侧...]
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="_modelAssTree" class="ztree" style="height: 700px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="pd43">
+                            <div class="panel panel-default width240 full_height" style="float: left;margin-right: 15px;width: 95%;">
+                                <div class="panel-heading">
+                                    <div>
+                                        我是右侧^_^<button type="button" class="btn btn-success btn-xs right" id="_modelAssSaveBt">保存关联</button>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <ul id="_modelAssTargetTree" class="ztree" style="height: 700px;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script type="text/javascript">
@@ -393,10 +457,13 @@
             , $editInfoModal : $('#_editSupplier')//编辑供应商modal
             , $productAssModal : $('#_productAss')//成品关联Modal
             , $rawMaterialAssModal : $('#_rawMaterialAss')//原材料关联Modal
+            , $modelAssModal : $('#_modelAss')//模具关联Modal
             , targetProductTree : null
             , edProductTree : null
             , targetRawMaterialTree : null
             , rawMaterialTree : null
+            , targetModelTree : null
+            , modelTree : null
 
         };
 
@@ -697,6 +764,77 @@
             }
         });
 
+        var modelAssocitedTreeSetting = $.extend({}, treeSetting, {
+            edit : {enable : false},
+            callback : {
+                onClick : function (event, treeId, treeNode) {
+                    console.log('选中节点',treeNode);
+                    var editDiv = $("#__modelAssEdit");
+                    var alertLower = editDiv.find('.alertLower');
+                    var alertUpper = editDiv.find('.alertUpper');
+                    alertLower.val(treeNode.source.alertLower);
+                    alertUpper.val(treeNode.source.alertUpper);
+                    if(treeNode.source){
+                        editDiv.show().find('.alertModelSaveBt, .alertModelDeleteBt')
+                            .attr('data-id', treeNode.code).unbind('click');
+                        //保存上下限
+                        editDiv.find('.alertModelSaveBt')
+                            .click(function () {
+                                var modelId = $(this).attr('data-id');
+                                if (!alertLower.val()|| !alertUpper.val()){
+                                    layer.msg('预警上下限必须>=0');
+                                    return false;
+                                }
+                                var iLower = parseInt(alertLower.val());
+                                var iUpper = parseInt(alertUpper.val());
+                                if (iLower >= iUpper){
+                                    layer.msg('预警下限必须小于上限');
+                                    return false;
+                                }
+                                //保存上下限
+                                //modelId, alertLower, alertUpper
+                                services.association.model(consts.supplier.id)
+                                    .saveWarning(modelId, iLower, iUpper)
+                                    .then(function (ret) {
+                                        layer.msg(ret._message);
+                                        console.log(treeId, treeNode);
+                                        //刷新值
+                                        treeNode.source.alertLower = iLower;
+                                        treeNode.source.alertUpper = iUpper;
+                                        treeNode.title = treeNode.fullName + '[' + iLower + ',' + iUpper + ']';
+                                        treeNode.name = treeNode.title.length > 50 ? treeNode.title.substring(0, 48) + '...' : treeNode.title;
+                                        $.fn.zTree.getZTreeObj(treeId).updateNode(treeNode);
+                                    })
+                                    .catch(function (reason) {
+                                        console.log(reason);
+                                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                                    });
+                            });
+                        //删除关联
+                        editDiv.find('.alertModelDeleteBt')
+                            .click(function () {
+                                var modelId = $(this).attr('data-id');
+                                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                                    services.association.model(consts.supplier.id)
+                                        .delete(modelId)
+                                        .then(function (ret) {
+                                            layer.msg(ret._message);
+                                            editDiv.hide().find('.alertModelSaveBt, .alertModelDeleteBt').removeAttr('data-id');
+                                            console.log(treeId, treeNode);
+                                            $.fn.zTree.getZTreeObj(treeId).removeNode(treeNode);
+                                        })
+                                        .catch(function (reason) {
+                                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                                        });
+                                });
+                            });
+                    } else {
+                        editDiv.hide().find('.alertModelSaveBt, .alertModelDeleteBt').removeAttr('data-id');
+                    }
+                }
+            }
+        });
+
         /**
          * 初始化成品编辑树
          */
@@ -717,6 +855,17 @@
                     console.log('树', ret);
                     $.fn.zTree.init($('#_rawMaterialAssTree'), treeSetting, ret.list).expandAll(true);
                     consts.targetRawMaterialTree = $.fn.zTree.init($('#_rawMaterialAssTargetTree'), targetTreeSetting, []);
+                });
+        };
+
+        /**模具原材料编辑树
+         */
+        var initModelTrees = function () {
+            services.association.model(consts.supplier.id).unModelTree()
+                .then(function (ret) {
+                    console.log('树', ret);
+                    $.fn.zTree.init($('#_modelAssTree'), treeSetting, ret.list).expandAll(true);
+                    consts.targetModelTree = $.fn.zTree.init($('#_modelAssTargetTree'), targetTreeSetting, []);
                 });
         };
 
@@ -767,6 +916,30 @@
                 })
         }
 
+        var initModelTree = function () {
+            console.log("===="+consts.supplier.id);
+            services.association.model(consts.supplier.id).modelTree()
+                .then(function (ret) {
+                    console.log(JSON.stringify("====ret==="+ret));
+                    console.log('已关联的树', ret);
+                    if(!ret.list.length){
+                        $('#__modelAssTreeEmpty').show();
+                    } else {
+                        $('#__modelAssTreeEmpty').hide();
+                    }
+                    $("#__modelAssEdit").hide();
+                    consts.modelTree = $.fn.zTree
+                        .init($('#__modelAssTree'), modelAssocitedTreeSetting, ret.list)
+                        .expandAll(true);
+                    $('.bugInfo').slimScroll({
+                        position:'left',
+                        height: '100%',
+                        railOpacity: 0.9
+                    });
+
+                })
+        }
+
         /**
          * 初始化事件
          */
@@ -799,6 +972,10 @@
             //原材料关联模态框
             consts.$rawMaterialAssModal.on('show.bs.modal', function () {
                 initRawMaterialTrees();
+            });
+            //模具关联模态框
+            consts.$modelAssModal.on('show.bs.modal', function () {
+                initModelTrees();
             });
             //保存供应商
             consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
@@ -918,12 +1095,37 @@
                     })
             });
 
+            //保存模具关联
+            $('#_modelAssSaveBt').unbind('click').click(function () {
+                console.log(consts.targetModelTree);
+                var modelIds = [];
+                (consts.targetModelTree.getNodes() || []).forEach(function (node) {
+                    modelIds.push(node.code);
+                });
+                console.log(consts.supplier.id, modelIds);
+
+                if(!modelIds.length){
+                    layer.msg('请先拖拽成品');
+                    return false;
+                }
+                services.association.model(consts.supplier.id).saveMould(modelIds)
+                    .then(function (ret) {
+                        layer.msg(ret._message);
+                        console.log(ret);
+                        consts.$modelAssModal.modal('hide');
+                        $('#__assTabs').find('span').eq(2).click();
+                    })
+            });
+
             $('#__assTabs').find('span').bind('click', function () {
                 var target = $(this).attr('href');
+                console.log("====target="+target);
                 if(target === '#__productAss')
                     initEdProductTree();
                 else if(target === '#__rmaterialAss')
                     initRawMaterialTree();
+                else if(target === '#__modelAss')
+                    initModelTree();
 
             })
         }
