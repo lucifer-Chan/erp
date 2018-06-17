@@ -7,6 +7,7 @@ import org.apache.commons.collections4.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.List;
  * 预置数据服务
  **/
 
-//@Component
+@Component
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -39,11 +40,11 @@ public class PreDataService {
 
     @PostConstruct
     void init(){
-        if(!debug) return;
-        /*initMenus();
+//        if(!debug) return;
+        initMenus();
         initEmployees();
         initCategories();
-        initDepartments();*/
+        initDepartments();
         initLookup();
     }
 
@@ -65,6 +66,7 @@ public class PreDataService {
      * TODO 待完善
      */
     private void initMenus(){
+        if(! CollectionUtils.isEmpty(menuRepository.findAll())) return;
         menuRepository.deleteAll();
         List<ErpMenu> menus = Arrays.asList(
                 ErpMenu.builder().code("10").name("基础数据").build()
@@ -75,11 +77,11 @@ public class PreDataService {
                     , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment/**").uri("basis/equipment.html").parentCode("10").build()
                     , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("basis/customer.html").parentCode("10").build()
                     , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("basis/supplier.html").parentCode("10").build()
-                , ErpMenu.builder().code("20").name("销售模块").build()
-                    , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
+//                , ErpMenu.builder().code("20").name("销售模块").build()
+//                    , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
+//                    , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
+//                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
+//                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
         );
         menuRepository.saveAll(menus);
     }
@@ -88,19 +90,21 @@ public class PreDataService {
      * 初始化人员
      */
     private void initEmployees(){
+        if(! CollectionUtils.isEmpty(employeeRepository.findAll())) return;
         employeeRepository.deleteAll();
         erpEmployeeMenuRepository.deleteAll();
         //管理员
         ErpEmployee admin = employeeRepository.save(ErpEmployee.builder().loginName("admin").password("123").name("管理员").build());
         erpEmployeeMenuRepository.save(ErpEmployeeMenu.builder().employeeId(admin.getId()).menuCode("99").build());
         //测试员工
-        employeeRepository.save(ErpEmployee.builder().loginName("test").password("123").name("测试人员").build());
+//        employeeRepository.save(ErpEmployee.builder().loginName("test").password("123").name("测试人员").build());
     }
 
     /**
      * 初始化类别
      */
     private void initCategories(){
+        if(! CollectionUtils.isEmpty(categoryRepository.findAll())) return;
         categoryRepository.deleteAll();
 
         LinkedHashMap<String, ErpBaseCategory> map = new LinkedHashMap<>();
@@ -164,6 +168,7 @@ public class PreDataService {
      * 初始化部门
      */
     private void initDepartments(){
+        if(! CollectionUtils.isEmpty(departmentRepository.findAll())) return;
         departmentRepository.deleteAll();
         departmentRepository.saveAll(
                 Arrays.asList(
@@ -204,6 +209,7 @@ public class PreDataService {
     }
 
     private void initLookup(){
+        if(! CollectionUtils.isEmpty(lookupRepository.findAll())) return;
         lookupRepository.deleteAll();
         lookupRepository.saveAll(
                 Arrays.asList(

@@ -109,10 +109,15 @@ public class RawMaterialService {
         String type = material.getRawTypeCode();
         Assert.hasLength(type, "类型不能为空");
         Assert.hasLength(material.getRawName(), "原材料名称不能为空");
-        Assert.isTrue(Arrays.asList(MA00,MZR0,MZY0,MZB0,MZN0,
-                MZQ0,MM00,MF00,MRA0,
-                MRZR,MRZY,MRZB,MRZN,MRZQ,
-                MRZ0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "原材料类型不正确");
+        Assert.isTrue(
+                Arrays.asList(MA00,MZR0,MZY0,MZB0,MZN0,MZQ0,MM00,MF00)
+                        .contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type))
+                , "原材料类型不正确"
+        );
+//        Assert.isTrue(Arrays.asList(MA00,MZR0,MZY0,MZB0,MZN0,
+//                MZQ0,MM00,MF00,MRA0,
+//                MRZR,MRZY,MRZB,MRZN,MRZQ,
+//                MRZ0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "原材料类型不正确");
         material.uniqueValidate();
     }
 

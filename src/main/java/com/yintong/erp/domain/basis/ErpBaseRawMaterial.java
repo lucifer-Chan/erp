@@ -97,6 +97,7 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     private String rawTypeName;
 
     public void setRawTypeName(String rawTypeName){
+        rawTypeName = "原材料-" + rawTypeName;
         this.rawTypeName = rawTypeName;
         List<ErpBaseCategory> list = SpringUtil.getBean(ErpBaseCategoryRepository.class).findByFullName(rawTypeName);
         if(CollectionUtils.isNotEmpty(list)){
@@ -116,8 +117,8 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
         ErpBaseRawMaterialRepository repository = SpringUtil.getBean(ErpBaseRawMaterialRepository.class);
         List<ErpBaseRawMaterial> shouldBeEmpty
                 = Objects.isNull(id)
-                ? repository.findByRawNameAndSpecification(rawTypeCode, specification)
-                : repository.findByRawNameAndSpecificationAndIdNot(rawTypeCode, specification, id);
+                ? repository.findByRawNameAndSpecification(rawName, specification)
+                : repository.findByRawNameAndSpecificationAndIdNot(rawName, specification, id);
         Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
     }
 

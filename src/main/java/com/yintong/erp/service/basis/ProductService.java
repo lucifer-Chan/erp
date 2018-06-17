@@ -128,9 +128,11 @@ public class ProductService {
         String type = product.getEndProductTypeCode();
         Assert.hasLength(type, "类型不能为空");
         Assert.hasLength(product.getEndProductName(), "成品名称不能为空");
-        Assert.isTrue(Arrays.asList(PTT0,PTD0,PTW0,PTU0,PNR0,
-                PNY0,PNM0,PNF0,PRT0,PRD0,PRW0,PRU0,PRR0,PRY0,
-                PRM0,PRF0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "成品类型不正确");
+        Assert.isTrue(Arrays.asList(PTT0,PTD0,PTW0,PTU0,PNR0,PNY0,PNM0,PNF0)
+                .contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "成品类型不正确");
+//        Assert.isTrue(Arrays.asList(PTT0,PTD0,PTW0,PTU0,PNR0,
+//                PNY0,PNM0,PNF0,PRT0,PRD0,PRW0,PRU0,PRR0,PRY0,
+//                PRM0,PRF0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "成品类型不正确");
         product.uniqueValidate();
     }
 

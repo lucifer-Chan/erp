@@ -113,6 +113,7 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String endProductTypeName;
 
     public void setEndProductTypeName(String endProductTypeName){
+        endProductTypeName = "成品-" + endProductTypeName;
         this.endProductTypeName = endProductTypeName;
         List<ErpBaseCategory> list = SpringUtil.getBean(ErpBaseCategoryRepository.class).findByFullName(endProductTypeName);
         if(CollectionUtils.isNotEmpty(list)){
