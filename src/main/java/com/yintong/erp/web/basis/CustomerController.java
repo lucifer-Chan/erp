@@ -3,6 +3,8 @@ package com.yintong.erp.web.basis;
 import com.yintong.erp.domain.basis.ErpBaseCustomer;
 import com.yintong.erp.service.basis.CustomerService;
 import com.yintong.erp.utils.base.BaseResult;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,27 @@ public class CustomerController {
     @PostMapping
     public BaseResult create(@RequestBody ErpBaseCustomer customer){
         return new BaseResult().addPojo(customerService.create(customer));
+    }
+
+    /**
+     * 批量新增
+     * @param customers
+     * @return
+     */
+    @PostMapping("batch/save")
+    public BaseResult batchCreate(@RequestBody List<ErpBaseCustomer> customers){
+        int result = 0;
+        List<String> exceptions = new ArrayList<>();
+        for(ErpBaseCustomer customer : customers){
+            try{
+                customerService.create(customer);
+                result ++;
+            } catch (Exception e){
+                exceptions.add(e.getMessage());
+            }
+        }
+
+        return new BaseResult().addList("exceptions", exceptions).put("result", result);
     }
 
     /**
