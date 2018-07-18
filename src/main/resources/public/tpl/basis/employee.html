@@ -838,20 +838,21 @@
             };
 
             function leaves(treeNode) {
-                if (treeNode.isParent) {
+                if (treeNode.children) {
                     var childrenNodes = treeNode.children;
                     if (childrenNodes) {
                         for (var i = 0; i < childrenNodes.length; i++) {
-                            if (!childrenNodes[i].isParent) {
+                            if (!childrenNodes[i].children) {
                                 consts.leaves.push(childrenNodes[i]);
                             } else {
-                                consts.leaves = leaves(childrenNodes[i], consts.leaves);
+                                consts.leaves = leaves(childrenNodes[i]);
                             }
                         }
                     }
                 }
                 return consts.leaves;
             }
+
 
             return services.department.all()
                 .then(function (ret) {
@@ -862,7 +863,7 @@
                     })
                     consts.treeObj = $.fn.zTree.init($("#orgTree"), treeSetting, ret.all);
                     consts.treeObj.expandAll(true);
-                    leaves(consts.treeObj.getNodeByTId('orgTree_1'), consts.leaves);
+                    leaves(consts.treeObj.getNodeByTId('orgTree_1'));
                     console.log(consts.leaves);
                     $.session(consts.nodeKey, null);
                     buttonOptStyle();
