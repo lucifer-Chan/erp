@@ -107,7 +107,7 @@ public class CustomerService {
         Assert.notNull(customer, "客户不能为null");
         String type = customer.getCustomerTypeCode();
         Assert.hasLength(type, "类型不能为空");
-        Assert.isTrue(Arrays.asList(UCC0, UCS0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "客户类型不正确");
+        Assert.isTrue(Arrays.asList(UCC0, UCS0, UCG0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "客户类型不正确");
         Assert.hasLength(customer.getCustomerName(), "客户名称不能为空");
     }
 

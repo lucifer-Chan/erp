@@ -104,7 +104,7 @@ public class PreDataService {
      * 初始化类别
      */
     private void initCategories(){
-        if(! CollectionUtils.isEmpty(categoryRepository.findAll())) return;
+//        if(! CollectionUtils.isEmpty(categoryRepository.findAll())) return;
         categoryRepository.deleteAll();
 
         LinkedHashMap<String, ErpBaseCategory> map = new LinkedHashMap<>();
