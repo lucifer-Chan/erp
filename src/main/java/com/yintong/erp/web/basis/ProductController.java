@@ -130,7 +130,7 @@ public class ProductController {
      */
     @DeleteMapping("batch/{importedAt}")
     public BaseResult batchDelete(@PathVariable String importedAt){
-        log.info("importedAt", importedAt);
+        log.info("importedAt:{}", importedAt);
         Assert.hasLength(importedAt, "参数无效");
         List<ErpBaseEndProduct> products = productRepository.findByImportedAt(importedAt);
         int sum = products.size();
