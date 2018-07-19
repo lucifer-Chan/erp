@@ -42,6 +42,10 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String custDrawingNo;
     @Column(columnDefinition = "varchar(64) comment '客户代码(旧)'")
     private String custCodeOld;
+    @Column(columnDefinition = "varchar(64) comment '客户代码(新)'")
+    private String custCodeNew;
+    @Column(columnDefinition = "varchar(64) comment '客户名称'")
+    private String custName;
     @Column(columnDefinition = "varchar(10) comment '只/KG'")
     private String onlyOrKg;
     @Column(columnDefinition = "varchar(10) comment '难度系数'")

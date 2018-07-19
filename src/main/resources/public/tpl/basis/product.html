@@ -22,7 +22,7 @@
                             <thead>
                             <tr erp-id="{id}">
                                 <th style="width:50px" erp-data="{barCode}">编号<span id="allCount"></span></th>
-                                <th style="width:70px" erp-data="{endProductName}" >名称</th>
+                                <th style="width:70px" erp-data="{endProductName}" >货物名称(客户)</th>
                                 <th style="width:70px" erp-data="{specification}">规格描述</th>
                                 <th style="width:30px" erp-data="{endProductTypeCode}" erp-convert="convertTypeP">大类</th>
                                 <th style="width:30px" erp-data="{endProductTypeCode}" erp-convert="convertTypeC">细类</th>
@@ -116,9 +116,9 @@
                         <div class="row">
                             <form class="form-horizontal pd22 pd12">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">名称</label>
+                                    <label class="col-sm-2 control-label">货物名称(客户)</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="endProductName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                        <input type="text" class="form-control" name="endProductName" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
                                     </div>
                                     <label class="col-sm-2 control-label">规格描述</label>
                                     <div class="col-sm-4">
@@ -158,8 +158,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">客户代码(旧)</label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-4">
                                         <input type="text" class="form-control" name="custCodeOld" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                    </div>
+                                    <label class="col-sm-2 control-label">客户代码(新)</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="custCodeNew" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">客户名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="custName" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -372,15 +382,18 @@
                 <div class="col-xs-12" data-value="base1Info">
                     <div class="pd43">
                         <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">名称</label>
-                                <div class="col-xs-8 txt pd0" data-name="endProductName"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">编号</label>
-                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            <div class="col-xs-12">
+                                <label class="col-xs-3 pd0">货物名称(客户)</label>
+                                <div class="col-xs-9 txt pd0" data-name="endProductName"></div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-3 pd0">编号</label>
+                                <div class="col-xs-9 txt pd0" data-name="barCode"></div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">大类</label>
@@ -389,6 +402,12 @@
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">细类</label>
                                 <div class="col-xs-8 txt pd0"  data-convert="endProductTypeCode"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">客户名称</label>
+                                <div class="col-xs-10 txt pd0" data-name="custName"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -402,11 +421,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12">
-                                <label class="col-xs-2 pd0">客户代码(旧)</label>
-                                <div class="col-xs-10 txt pd0" data-name="custCodeOld"></div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">客户代码(旧)</label>
+                                <div class="col-xs-8 txt pd0" data-name="custCodeOld"></div>
                             </div>
-
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">客户代码(新)</label>
+                                <div class="col-xs-8 txt pd0" data-name="custCodeNew"></div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
