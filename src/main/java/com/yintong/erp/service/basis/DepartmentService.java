@@ -66,6 +66,7 @@ public class DepartmentService {
     public String deleteDepartment(Long id){
         ErpBaseDepartment department = departmentRepository.findById(id).orElse(null);
         Assert.notNull(department, "未找到id为" + id + "的部门");
+        Assert.isNull(department.getCode(), "预置部门不能删除。");
         String ret =  department.getName();
         List<ErpBaseDepartment> departments = append(department, null);
         List<Long> departmentIds = departments.stream().map(ErpBaseDepartment::getId).collect(toList());
