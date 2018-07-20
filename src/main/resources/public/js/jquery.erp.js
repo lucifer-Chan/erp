@@ -391,6 +391,10 @@
                 }
             }
             , function (reason) {
+                if((reason.responseText || '').indexOf(' <div class="title"><a href="/index.html">') > -1){
+                    window.location.href = global.ctxPath + 'login.html';
+                }
+
                 var json = reason.responseJSON || {};
                 console.error('http-返回错误[' + settings.url + ']', json);
                 return $.Promise.reject({
