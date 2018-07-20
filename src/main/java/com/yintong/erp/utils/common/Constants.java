@@ -25,7 +25,8 @@ public interface Constants {
                 ;
 
         //不登陆也可以访问
-        String OPEN_MATCHES = "/open/**,/js/**" +
-                ",/**";
+        String OPEN_MATCHES = "/open/**";
+//        String OPEN_MATCHES = "/open/**,/js/**" +
+//                ",/**";
     }
 }

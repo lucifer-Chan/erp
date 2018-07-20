@@ -65,9 +65,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Cons
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
 
+    /**
+     * 静态资源放行
+     * @param web
+     */
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/assets/**", "/favicon.ico");
+//        web.ignoring().antMatchers("/assets/**", "/favicon.ico");
+        web.ignoring().antMatchers(
+                "/js/**"
+                , "/tpl/**"
+
+                , "/css/**"
+                , "/font-awesome/**"
+                , "/font/**"
+                , "/img/**"
+                , "/vendor/**"
+
+                , "/favicon.ico");
     }
 
     @Bean
