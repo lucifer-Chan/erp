@@ -127,8 +127,8 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSupplier">修改基本信息</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_productAss">维护成品</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_rawMaterialAss">维护原材料</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_productAss">维护成品</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_modelAss">维护模具</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
@@ -221,12 +221,37 @@
 
             <div>
                 <ul class="nav nav-tabs noborder" role="tablist" id="__assTabs">
-                    <li role="presentation" class="active"><span href="#__productAss" aria-controls="__productAss" role="tab" data-toggle="tab">成品关联</span></li>
                     <li role="presentation"><span href="#__rmaterialAss" aria-controls="__rmaterialAss" role="tab" data-toggle="tab">原材料关联</span></li>
+                    <li role="presentation" class="active"><span href="#__productAss" aria-controls="__productAss" role="tab" data-toggle="tab">成品关联</span></li>
                     <li role="presentation"><span href="#__modelAss" aria-controls="__modelAss" role="tab" data-toggle="tab">模具关联</span></li>
                 </ul>
 
                 <div class="tab-content">
+                    <div role="tabpanel" class="pd43 tab-pane" id="__rmaterialAss">
+                        <div class="row">
+                            <div class="col-sm-12">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                                    <div class="panel-heading">
+                                        <div id="__rmaterialAssEdit">
+                                            预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            &nbsp&nbsp&nbsp&nbsp
+                                            预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            <button class="btn btn-success btn-xs alertRawmaterialSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
+                                            <button class="btn btn-danger btn-xs alertRawmaterialDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p id="__rmaterialAssTreeEmpty">暂无原材料关联</p>
+                                        <div id="__rmaterialAssTree" class="ztree"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div role="tabpanel" class="pd43 tab-pane active" id="__productAss">
                         <div class="row">
                             <div class="col-sm-12">
@@ -252,31 +277,6 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div role="tabpanel" class="pd43 tab-pane" id="__rmaterialAss">
-                        <div class="row">
-                            <div class="col-sm-12">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
-                                    <div class="panel-heading">
-                                        <div id="__rmaterialAssEdit">
-                                            预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
-                                            &nbsp&nbsp&nbsp&nbsp
-                                            预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
-                                            <button class="btn btn-success btn-xs alertRawmaterialSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
-                                            <button class="btn btn-danger btn-xs alertRawmaterialDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p id="__rmaterialAssTreeEmpty">暂无原材料关联</p>
-                                        <div id="__rmaterialAssTree" class="ztree"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div role="tabpanel" class="pd43 tab-pane" id="__modelAss">
                         <div class="row">
