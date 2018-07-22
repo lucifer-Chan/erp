@@ -175,7 +175,7 @@ public class QueryParameterBuilder {
      * @throws IllegalAccessException
      * @throws ParseException
      */
-    private Object transValue(Field field, TRANSFORMER transformer) throws IllegalAccessException, ParseException {
+    private Object transValue(Field field, TRANSFORMER transformer) throws IllegalAccessException {
         field.setAccessible(true);
         Object value = field.get(this);
         if(Objects.isNull(value))

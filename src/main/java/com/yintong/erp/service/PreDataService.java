@@ -3,6 +3,9 @@ package com.yintong.erp.service;
 import com.yintong.erp.domain.basis.*;
 import com.yintong.erp.domain.basis.security.*;
 import com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
+import com.yintong.erp.utils.common.Constants;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +69,7 @@ public class PreDataService {
      * TODO 待完善
      */
     private void initMenus(){
-        if(! CollectionUtils.isEmpty(menuRepository.findAll())) return;
+//        if(! CollectionUtils.isEmpty(menuRepository.findAll())) return;
         menuRepository.deleteAll();
         List<ErpMenu> menus = Arrays.asList(
                 ErpMenu.builder().code("10").name("基础数据").build()
@@ -77,11 +80,11 @@ public class PreDataService {
                     , ErpMenu.builder().code("1005").name("设备管理").matches("basis/equipment/**").uri("basis/equipment.html").parentCode("10").build()
                     , ErpMenu.builder().code("1006").name("客户管理").matches("basis/customer/**").uri("basis/customer.html").parentCode("10").build()
                     , ErpMenu.builder().code("1007").name("供应商管理").matches("basis/supplier/**").uri("basis/supplier.html").parentCode("10").build()
-//                , ErpMenu.builder().code("20").name("销售模块").build()
-//                    , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
-//                    , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
-//                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
-//                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
+                , ErpMenu.builder().code("20").name("销售模块").build()
+                    , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
         );
         menuRepository.saveAll(menus);
     }
@@ -104,7 +107,7 @@ public class PreDataService {
      * 初始化类别
      */
     private void initCategories(){
-//        if(! CollectionUtils.isEmpty(categoryRepository.findAll())) return;
+        if(! CollectionUtils.isEmpty(categoryRepository.findAll())) return;
         categoryRepository.deleteAll();
 
         LinkedHashMap<String, ErpBaseCategory> map = new LinkedHashMap<>();
@@ -209,19 +212,36 @@ public class PreDataService {
     }
 
     private void initLookup(){
-        if(! CollectionUtils.isEmpty(lookupRepository.findAll())) return;
+//        if(! CollectionUtils.isEmpty(lookupRepository.findAll())) return;
         lookupRepository.deleteAll();
         lookupRepository.saveAll(
                 Arrays.asList(
+                        //供应商等级
                         ErpBaseLookup.builder().code("000").name("【无】").type("supplier").tag(0L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("001").name("一级").type("supplier").tag(1L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("002").name("二级").type("supplier").tag(2L).description("供应商等级").build()
                         , ErpBaseLookup.builder().code("003").name("三级").type("supplier").tag(3L).description("供应商等级").build()
+                        //客户等级
                         ,ErpBaseLookup.builder().code("000").name("【无】").type("customer").tag(0L).description("客户等级").build()
                         , ErpBaseLookup.builder().code("001").name("一级").type("customer").tag(1L).description("客户等级").build()
                         , ErpBaseLookup.builder().code("002").name("二级").type("customer").tag(2L).description("客户等级").build()
                         , ErpBaseLookup.builder().code("003").name("三级").type("customer").tag(3L).description("客户等级").build()
                 )
+        );
+
+        //销售订单状态
+        lookupRepository.saveAll(
+                Stream.of(Constants.SaleOrderStatus.values())
+                        .map(status ->
+                                ErpBaseLookup.builder()
+                                        .code(status.name())
+                                        .name(status.description())
+                                        .type("sale_order")
+                                        .description("销售订单状态")
+                                        .tag(Integer.valueOf(status.ordinal()).longValue())
+                                        .build()
+                        )
+                .collect(Collectors.toList())
         );
 
     }

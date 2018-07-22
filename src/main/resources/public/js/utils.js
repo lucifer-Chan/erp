@@ -2,7 +2,7 @@
  * Created by lucifer.chan on 2018/03/19.
  */
 
-define('utils',[],function(){
+define('utils',['timeObjectUtil'],function(timeObjectUtil){
     /**
      * ajax加载页面
      * @param div
@@ -590,6 +590,46 @@ define('utils',[],function(){
         });
     }
 
+    //日期选择器的默认配置
+    var datepickerConfig = {
+        keyboardNavigation: false,
+        forceParse: true,
+        autoclose: true,
+        clearBtn : true,
+        todayHighlight: true,
+        language : 'zh-CN',
+        format : 'yyyy-mm-dd',
+        weekStart: 0,
+        startDate : new Date('2000-01-01'),
+        endDate : new Date('2300-01-01')
+    };
+
+    /**
+     * 日期选择
+     * @param json
+     */
+    function datepicker(json){
+        json = $.extend({weekBeginMonday:false},json);
+        json.begin.datepicker(datepickerConfig).on('changeDate',function(ev){
+            if(typeof ev.date != 'undefined'){
+                var value = ev.date.valueOf();
+                var endDate = json.end.val();
+                if(new Date(endDate) < value){
+                    json.end.datepicker('setDate',timeObjectUtil.longMsTimeConvertToDate3(value));
+                }
+            }
+        });
+        json.end.datepicker(datepickerConfig).on('changeDate',function(ev){
+            if(typeof ev.date != 'undefined'){
+                var value = ev.date.valueOf();
+                var beginDate = json.begin.val();
+                if(new Date(beginDate) > value){
+                    json.begin.datepicker('setDate',timeObjectUtil.longMsTimeConvertToDate3(value));
+                }
+            }
+        });
+    }
+
 
     return {
         loadPage: loadPage
@@ -606,5 +646,7 @@ define('utils',[],function(){
         , dropdown : dropdown
         , dropkick : dropkick
         , uploadFile : uploadFile
+        , datepickerConfig : datepickerConfig
+        , datepicker : datepicker
     }
 });

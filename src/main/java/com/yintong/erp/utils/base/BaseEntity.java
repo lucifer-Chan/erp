@@ -1,6 +1,7 @@
 package com.yintong.erp.utils.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.utils.common.SessionUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,11 @@ public abstract class BaseEntity implements Filterable {
     @JsonIgnore
     private Long createdBy;
 
+    /**
+     * 创建者名字
+     */
+    private String createdName;
+
     @JsonIgnore
     private Integer isDel;//1-逻辑删除;
 
@@ -35,6 +41,11 @@ public abstract class BaseEntity implements Filterable {
 
     @JsonIgnore
     private Long lastUpdatedBy;
+
+    /**
+     * 更新者名字
+     */
+    private String lastUpdatedName;
 
     /**
      * 供Override
@@ -51,9 +62,12 @@ public abstract class BaseEntity implements Filterable {
         createdAt = new Date();
         isDel = 0;
         try{
-            createdBy = SessionUtil.getCurrentUserId();
+            ErpEmployee employee = SessionUtil.getCurrentUser();
+            createdBy = employee.getId();
+            createdName = employee.getName();
         } catch(Exception e){
             createdBy = -1L;
+            createdName = "system";
         }
         prePersist();
     }
@@ -62,9 +76,12 @@ public abstract class BaseEntity implements Filterable {
     private void _preUpdate(){
         lastUpdatedAt = new Date();
         try{
-            lastUpdatedBy = SessionUtil.getCurrentUserId();
+            ErpEmployee employee = SessionUtil.getCurrentUser();
+            lastUpdatedBy = employee.getId();
+            lastUpdatedName = employee.getName();
         } catch(Exception e){
             lastUpdatedBy = -1L;
+            lastUpdatedName = "system";
         }
         preUpdate();
     }

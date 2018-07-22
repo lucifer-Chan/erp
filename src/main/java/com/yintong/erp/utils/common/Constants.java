@@ -29,4 +29,27 @@ public interface Constants {
 //        String OPEN_MATCHES = "/open/**,/js/**" +
 //                ",/**";
     }
+
+    /**
+     * 销售订单状态
+     */
+    enum SaleOrderStatus {
+        STATUS_001("未发布"),
+        STATUS_002("待审核"),
+        STATUS_003("审核通过"),
+        STATUS_004("审核退回"),
+        STATUS_005("已出库"),
+        STATUS_006("客户退货"),
+        STATUS_007("已完成");
+
+        SaleOrderStatus(String description) {
+            this.description = description;
+        }
+        
+        private String description;
+
+        public String description() {
+            return description;
+        }
+    }
 }

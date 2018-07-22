@@ -1,0 +1,421 @@
+<div class="erp_content animated fadeInRight full_height"  id="sale_plan_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+            <button type="button" class="btn btn-default btn-ms operation" id="editSalePlanBt" data-toggle="modal" data-target="#_editSalePlan">新增销售计划</button>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:50px" erp-data="{barCode}">计划单编号<span id="allCount"></span></th>
+                                <th style="width:70px" erp-data="{description}" >计划内容</th>
+                                <th style="width:70px" erp-data="{productName}">销售成品</th>
+                                <th style="width:30px" erp-data="{startDate}" erp-convert="convertDate">计划开始日期</th>
+                                <th style="width:30px" erp-data="{endDate}" erp-convert="convertDate">计划达成日期</th>
+                                <th style="width:30px" erp-data="{planMoney}" erp-convert="convertMoney">计划销售金额</th>
+                                <th style="width:30px" erp-data="{currentMoney}" erp-convert="convertMoney">已达成金额</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑基本信息 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editSalePlan">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑计划单信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">计划日期</label>
+                        <div class="col-sm-9 projectPlanDate">
+                            <div class="input-daterange input-group col-sm-9">
+                                <input type="text" class="input-sm form-control" name="startDate" id="_editStartDate" value="">
+                                <span class="input-group-addon">到</span>
+                                <input type="text" class="input-sm form-control" name="endDate" id="_editEndDate" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">计划内容</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                        </div>
+                    </div>
+                    <div class="form-group _productId">
+                        <label class="col-sm-3 control-label">销售成品</label>
+                        <div class="col-sm-9">
+                            <div class="customDropkick" style="width: 100%;" id="_productId"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">计划销售金额</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="0.01" class="form-control" name="planMoney" placeholder="输入数字，支持两位小数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">备注</label>
+                        <div class="col-sm-9">
+                            <textarea rows="3" class="form-control" name="remark"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 右侧-->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editSalePlan">修改销售计划单</button>
+            <button class="btn btn-primary" data-name="delete">删除</button>
+        </span>
+    </div>
+    <div class="bugInfoContent initPlanDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">销售计划单信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">计划单编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">创建时间</label>
+                                <div class="col-xs-8 txt pd0" data-name="createdAt"></div>
+                            </div>
+                        </div>
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-12">-->
+                                <!--<label class="col-xs-2 pd0">计划时间</label>-->
+                                <!--<div class="col-xs-10 txt pd0" data-convert="planDate"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-12">-->
+                                <!--<label class="col-xs-2 pd0">计划内容</label>-->
+                                <!--<div class="col-xs-10 txt pd0" data-name="description"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-12">-->
+                                <!--<label class="col-xs-2 pd0">销售成品</label>-->
+                                <!--<div class="col-xs-10 txt pd0" data-name="productName"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">销售金额</label>
+                                <div class="col-xs-8 txt pd0" data-convert="planMoney"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">已达成金额</label>
+                                <div class="col-xs-8 txt pd0" data-convert="currentMoney"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">备注</label>
+                                <div class="col-xs-10 txt pd0" data-name="remark" data-convert="false"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#finishHistory" aria-controls="finishHistory" role="tab" data-toggle="tab">达成记录</span></li>
+                    <li role="presentation"><span href="#optHistory" aria-controls="optHistory" role="tab" data-toggle="tab">修改记录</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="pd43 tab-pane active" id="finishHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="pd43 tab-pane" id="optHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        console.log('hello salePlan');
+        var consts = {
+            oQueryParam : {}//查询参数
+            , currentPlan : {}//当前计划
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $editInfoModal : $('#_editSalePlan')//编辑客户modal
+            , $startDate : $('#_editStartDate')
+            , $endDate : $('#_editEndDate')
+            , products : []//所有成品
+            , logTemplate : '<p>' +
+                '<span class="name"><b>{name}</b></span>' +
+                '<span class="content"> {content}</span>  ' +
+                '<span class="right">{time}</span>' +
+                '</p>'
+
+        };
+
+
+        //预置数据
+        function prepareData() {
+            return services.product.all().then(function (ret) {
+                consts.products = [];
+                consts.products.push({code : -1, name : '【请选择成品】'});
+                ret.list.forEach(function (value) {
+                    consts.products.push({code : value.id , name : value.endProductName + '-' + value.specification});
+                })
+            }).catch(function (reason) {
+                console.log('reason', reason);
+            });
+        }
+
+        /**
+         * 加载计划单列表
+         */
+        function loadDataTable(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.salePlan.query(params);
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.salePlan.one(id).then(function (tr) {
+                    console.log('点击tr', tr);
+                    consts.currentPlan = tr;
+                    $('._productId').hide();
+                    initTrDetail(tr);
+                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                    $rightPage.find('.fa-angle-double-down').click();
+
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            }
+
+            function convertMoney(array){
+                return '¥' + (array.length ? array[0] : '0.00');
+            }
+
+            function convertDate(array) {
+                return (array.length ? array[0] : '').substr(0,10);
+
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : [convertMoney, convertDate]
+            });
+        }
+
+        /**
+         * 初始化右侧
+         */
+        function initTrDetail(tr) {
+            var unSetting = '<span class="label label-danger">未设置</span>';
+            var $detail = $('.initPlanDetail');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                var def = $(this).attr('data-convert') === 'false' ? '无' : unSetting;
+                $(this).html(tr[$(this).attr('data-name')] || def);
+            });
+            //data-convert="planDate"
+            $baseInfo.find('div[data-convert="planDate"]').html(tr.startDate.substr(0,10) + ' 至 ' + tr.endDate.substr(0,10));
+            $baseInfo.find('div[data-convert="planMoney"]').html('¥' + tr.planMoney);
+            $baseInfo.find('div[data-convert="currentMoney"]').html('¥' + tr.currentMoney);
+
+            //达成记录
+            var html = '';
+            var finishHistory = tr.finishHistory || [];
+            if(finishHistory.length){
+                tr.finishHistory.forEach(function (log) {
+                    html += consts.logTemplate.replace('{name}', log.createdName)
+                        .replace('{content}', '订单编号:' + log.orderCode + ',单价:' + log.unitPrice + ', 总额:' + log.money)
+                        .replace('{time}', log.orderOptDate);
+                })
+            } else {
+                html = '<p>暂无</p>';
+            }
+            $('#finishHistory').find('.bugInfoHistories').html(html);
+
+            return services.salePlan.optHistory(tr.id)
+                .then(function (ret) {
+                    var html = '';
+                    var opts = ret.list||[];
+                    if(opts.length){
+                        opts.forEach(function (log) {
+                            html += consts.logTemplate.replace('{name}', log.createdName)
+                                .replace('{content}', log.content)
+                                .replace('{time}', log.createdAt);
+                        });
+                    } else {
+                        html = '<p>暂无</p>';
+                    }
+                    $('#optHistory').find('.bugInfoHistories').html(html);
+                });
+        }
+
+        /**
+         * 初始化事件
+         */
+        function initEvent() {
+            //搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                consts.oQueryParam.cause = $('#fastKeyword').val();
+                loadDataTable(true);
+            });
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13){
+                    consts.oQueryParam.cause = $('#fastKeyword').val();
+                    loadDataTable(true);
+                }
+            });
+
+            //编辑模态框
+            consts.$editInfoModal.on('shown.bs.modal', function () {
+                var $this = $(this);
+                //初始数据
+                $.each(consts.currentPlan, function (name, value) {
+                    if (name === 'startDate' || name === 'endDate'){
+                        value = (value ||'').substr(0,10);
+                    }
+                    $this.find('form [name="'+ name +'"]').val(value);
+                });
+                // 时间控件
+                utils.datepicker({
+                    begin : consts.$startDate,
+                    end : consts.$endDate
+                });
+                //供选成品
+                utils.dropkick({ $holder : $('#_productId'), data : consts.products , current : consts.currentPlan.productId});
+            }).on('hidden.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"], textarea').val('');
+            });
+
+            //save salePlan
+            consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var data = consts.$editInfoModal.find('form').serializeObject();
+                data.productId = $('#_productId').attr('data-value');
+                if(data.productId === '-1'){
+                    layer.msg('请选择成品！');
+                    return;
+                }
+
+                if(!data.startDate || !data.endDate){
+                    layer.msg('请选择时间范围！');
+                    return;
+                }
+                data.id = consts.currentPlan.id || '';
+                data.planMoney = parseFloat(data.planMoney||0.00).toFixed(2);
+                var _function = !!consts.currentPlan.id ? services.salePlan.update : services.salePlan.create;
+                console.log('save data', data);
+                _function(data).then(function (plan) {
+                    loadDataTable(true);
+                    if (consts.currentPlan.id){
+                        initTrDetail(plan);
+                        consts.currentPlan = plan;
+                    }
+                    consts.$editInfoModal.modal('hide');
+                    layer.msg('保存销售计划单成功');
+                }).catch(function (reason) {
+                    console.log('保存客户', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+
+            //新增按钮绑定事件
+            $('#editSalePlanBt').bind('click', function(){
+                consts.currentPlan = {};
+                $('._productId').show();
+            });
+            //删除用户操作
+            consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
+                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                    services.salePlan.delete(consts.currentPlan.id)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            loadDataTable(true);
+                            consts.currentPlan = {};
+                            consts.$rightPage.hide();
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                        });
+                });
+            });
+        }
+
+
+
+        function init() {
+            prepareData().then(function () {
+                initEvent();
+                loadDataTable();
+            });
+        }
+
+        init();
+
+    });
+</script>

@@ -1213,6 +1213,12 @@ ul.bugPlanNum li .PlanNumClass em {
     vertical-align: middle;
     line-height: 22px;*/
 }
+
+.bugInfoHistories p span.name,
+.bugInfoHistories p span.content {
+    font-size: 13px;
+}
+
 .bugTestInfoComments p span.name img,
 .bugInfoHistories p span.name img,
 .bugTestTaskHistory p span.name img {
@@ -1355,7 +1361,7 @@ ul.bugPlanNum li .PlanNumClass em {
     display:none;
     position: fixed;
     z-index: 999;
-    width:600px;
+    width:700px;
     right: 0px;
     top:55px;
     bottom: 5px;

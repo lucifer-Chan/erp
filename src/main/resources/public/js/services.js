@@ -303,6 +303,10 @@ define('services',['utils'],function (utils) {
         //批量删除
         batchDelete : function (importedAt) {
             return $.http.delete('basis/product/batch/' + importedAt);
+        },
+        //所有成品
+        all : function () {
+            return $.http.get('basis/product/all');
         }
     };
 
@@ -436,7 +440,6 @@ define('services',['utils'],function (utils) {
             return $.http.delete('basis/customer/' + id);
         }
     };
-
 
     /**
      * 下拉
@@ -588,7 +591,60 @@ define('services',['utils'],function (utils) {
 
             }
         }
-    }
+    };
+
+    /**
+     * 销售计划
+     * @type {{}}
+     */
+    var salePlan = {
+        //新增
+        create : function (data) {
+            return $.http.post({
+                url : 'sale/plan',
+                data : data,
+                contentType : $.contentType.json
+            })
+        },
+        //新增
+        update : function (data) {
+            var plan = {};
+            return $.http.put({
+                url : 'sale/plan',
+                data : data,
+                contentType : $.contentType.json
+            }).then(function (ret) {
+                plan = ret;
+                return $.http.get('sale/plan/' + ret.id + '/history/opt');
+            }).then(function (opts) {
+                //操作记录
+                plan.opts = opts.list;
+                return plan;
+            });
+        },
+
+        delete : function (planId) {
+            return $.http.delete('sale/plan/' + planId);
+        },
+
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'sale/plan',
+                data : params
+            });
+        },
+
+        //单个获取
+        one : function (planId) {
+            return $.http.get('sale/plan/' + planId);
+        },
+
+        //计划单的操作记录
+        optHistory : function (planId) {
+            return $.http.get('sale/plan/' + planId + '/history/opt');
+        }
+    };
 
     return {
          account: account
@@ -602,5 +658,6 @@ define('services',['utils'],function (utils) {
         , customer:customer
         , lookup : lookup
         , association : association
+        , salePlan : salePlan
     }
 });

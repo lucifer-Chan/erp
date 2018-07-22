@@ -53,6 +53,11 @@ public class ProductController {
         return page2BaseResult(page);
     }
 
+    @GetMapping("all")
+    public BaseResult findAll(){
+        return new BaseResult().addList(productRepository.findAll());
+    }
+
     /**
      * 更新成品
      * @param product
