@@ -85,6 +85,8 @@ public class PreDataService {
                     , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
                     , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
                     , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
+                , ErpMenu.builder().code("30").name("库存管理").build()
+                , ErpMenu.builder().code("3001").name("仓位维护").matches("/warehouse/maintain/**").uri("warehouse/maintain.html").parentCode("30").build()
         );
         menuRepository.saveAll(menus);
     }
