@@ -1096,6 +1096,7 @@ ul.bugPlanNum li .PlanNumClass em {
     z-index: 98;
     top: 55px;
     bottom: 0px;
+    overflow: auto;
 }
 .noticeInfo .row,
 .bugInfo .row,
