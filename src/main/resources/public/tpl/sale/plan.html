@@ -76,7 +76,7 @@
                     <div class="modal-footer noborder">
                         <button class="btn btn-info noborder" name="save">保存</button>
                     </div>
-                </>
+                </form>
             </div>
         </div>
     </div>
@@ -159,11 +159,11 @@
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div role="tabpanel" class="pd43 tab-pane active" id="finishHistory">
+                    <div role="tabpanel" class="tab-pane active" id="finishHistory">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
-                    <div role="tabpanel" class="pd43 tab-pane" id="optHistory">
+                    <div role="tabpanel" class="tab-pane" id="optHistory">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
@@ -237,7 +237,6 @@
                 $rightPage.attr('data-id', id);
                 services.salePlan.one(id).then(function (tr) {
                     console.log('点击tr', tr);
-                    consts.currentPlan = tr;
                     $('._productId').hide();
                     initTrDetail(tr);
                     $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
@@ -270,6 +269,7 @@
          * 初始化右侧
          */
         function initTrDetail(tr) {
+            consts.currentPlan = tr;
             var unSetting = '<span class="label label-danger">未设置</span>';
             var $detail = $('.initPlanDetail');
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
@@ -373,8 +373,7 @@
                 _function(data).then(function (plan) {
                     loadDataTable(true);
                     if (consts.currentPlan.id){
-                        initTrDetail(plan);
-                        consts.currentPlan = plan;
+                        initTrDetail(plan)
                     }
                     consts.$editInfoModal.modal('hide');
                     layer.msg('保存销售计划单成功');
