@@ -307,6 +307,16 @@ define('services',['utils'],function (utils) {
         //所有成品
         all : function () {
             return $.http.get('basis/product/all');
+        },
+        //保存上下限 {supplierId}/product/{productId}
+        saveWarning : function(id, alertLower, alertUpper){
+            return $.http.patch({
+                url : 'basis/product/'+ id,
+                data : {
+                    alertLower : alertLower,
+                    alertUpper : alertUpper
+                }
+            })
         }
     };
 

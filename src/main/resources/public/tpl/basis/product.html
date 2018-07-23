@@ -32,6 +32,7 @@
                                 <th style="width:40px" erp-data="{custCodeOld}">客户代码(旧)</th>
                                 <th style="width:40px" erp-data="{onlyOrKg}">只/KG</th>
                                 <th style="width:40px" erp-data="{courseRating}">难度系数</th>
+                                <th style="width:40px" erp-data="{alertLower}{alertUpper}{unit}" erp-convert="convertWarning">预警阀值</th>
                             </tr>
                             </thead>
                         </table>
@@ -358,6 +359,34 @@
         </div>
     </div>
 </div>
+<!-- 预警阀值-->
+<div class="modal fade" role="dialog" id="_editWarning">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 修改预警阀值</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警下限</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" id="alertLower" step="1">
+                        </div>
+                        <label class="col-sm-2 control-label">预警上限</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" id="alertUpper" step="1">
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" id="saveWarningBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- 右侧-->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
@@ -365,6 +394,7 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editProduct">修改基本信息</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editWarning">修改预警阀值</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -388,20 +418,24 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12">
-                                <label class="col-xs-3 pd0">编号</label>
-                                <div class="col-xs-9 txt pd0" data-name="barCode"></div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">预警阀值</label>
+                                <div class="col-xs-8 txt pd0" data-convert="convertWarning"></div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">大类</label>
-                                <div class="col-xs-8 txt pd0"   data-convert="endProductTypeCodeP"></div>
+                                <div class="col-xs-8 txt pd0" data-convert="endProductTypeCodeP"></div>
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">细类</label>
-                                <div class="col-xs-8 txt pd0"  data-convert="endProductTypeCode"></div>
+                                <div class="col-xs-8 txt pd0" data-convert="endProductTypeCode"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -643,6 +677,7 @@
             , $editInfoModal : $('#_editProduct')//编辑供应商modal
             , $rightPage : $('#rightInfoPage')//右侧页面
             , $batchModal : $('#_batchOperation')//批量操作modal
+            , $warningModal : $('#_editWarning')//预警modal
             , $uploadInput : $('#excelFile')//导入excel的input
         };
 
@@ -697,8 +732,6 @@
 
                 services.product.one(id).then(function (productData) {
                     console.log('点击tr', productData);
-                    consts.product = productData;
-
                     $('._typeC').hide();
                     initProductDetail(productData);
 
@@ -722,8 +755,15 @@
                 var _value = array.length ? array[0] : '';
                 var childValue = consts.typeAll[_value.substring(0,2)];
                 var value = !_value ? '' : childValue[_value] || '';
-
                 return '<span >'+ value +'</span>'
+            }
+
+            function convertWarning(array) {
+                if(!array.length === 3 || array[0] === '' || array[1] === ''){
+                    return '<span class="label label-warning">未设置</span>';
+                }
+                var unit = array[2] || '';
+                return '[' + array[0] + unit + ',' + array[1] + unit + ']';
             }
 
             utils.dataTable({
@@ -731,7 +771,7 @@
                 , $dataProvider : dataProvider
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
-                , aConverts : [convertTypeP, convertTypeC]
+                , aConverts : [convertTypeP, convertTypeC, convertWarning]
 
             });
         }
@@ -740,6 +780,7 @@
          * 初始化右侧
          */
         function initProductDetail(product) {
+            consts.product = product;
             var unSetting = '<span class="label label-danger">未设置</span>';
             var $detail = $('.initProductDetail');
             var $baseInfo = $detail.find('div[data-value="base1Info"], div[data-value="base2Info"]');
@@ -758,6 +799,17 @@
                 datailTypeC || unSetting
             );
 
+            function warningConvert() {
+                var alertLower = product.alertLower;
+                var alertUpper = product.alertUpper;
+                if(alertLower === '' || alertUpper === '') {
+                    return '<span class="label label-warning">未设置</span>';
+                }
+                var unit = product.unit ||  '';
+                return '[' + alertLower + unit + ',' + alertUpper + unit + ']';
+            }
+
+            $baseInfo.find('div[data-convert="convertWarning"]').html(warningConvert());
         }
 
         function initEvent(){
@@ -826,6 +878,7 @@
                 initBatchDeleteTable();
             });
 
+            //编辑详情
             consts.$editInfoModal.on('show.bs.modal', function () {
                 $('#myTab li:eq(0) a').tab('show');
                 var $this = $(this);
@@ -844,13 +897,49 @@
                             console.log("弹框大类="+value);
                             consts.typeC={};
                             utils.dropkick({ $holder : $('#_typeC'), data :  consts.typeAll[value] });
-
                         } });
                 }
             }).on('hidden.bs.modal', function () {
                 //清理数据
                 $(this).find('input[type="text"], #_typeP, #_typeC, #_remark, textarea').val('');
 
+            });
+            //预警阀值
+            consts.$warningModal.on('show.bs.modal', function () {
+                if(consts.product.id){
+                    $('#alertLower').val(consts.product.alertLower||'');
+                    $('#alertUpper').val(consts.product.alertUpper||'');
+                }
+            }).on('hidden.bs.modal', function () {
+                $('#alertLower').val('');
+                $('#alertUpper').val('');
+            });
+            //保存预警
+            $('#saveWarningBt').unbind('click').click(function (e) {
+                e.preventDefault();
+                var alertLower = $('#alertLower').val();
+                var alertUpper = $('#alertUpper').val();
+                try{
+                    parseInt(alertLower);
+                    parseInt(alertUpper)
+                } catch (e){
+                    layer.msg('请输入预警上下限的整数值！');
+                    return;
+                }
+                if(!consts.product.id){
+                    layer.msg('未选择成品！');
+                    return;
+                }
+                services.product.saveWarning(consts.product.id, alertLower, alertUpper)
+                    .then(function (product) {
+                        initProductDetail(product);
+                        consts.$warningModal.modal('hide');
+                        loadDataTable(true);
+                        layer.msg('保存成功');
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
             });
 
             //保存成品

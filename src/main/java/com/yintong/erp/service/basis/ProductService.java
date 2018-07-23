@@ -104,6 +104,8 @@ public class ProductService {
         Assert.notNull(inDb, "未找到模具");
         validateProductType(product);
         product.setBarCode(inDb.getBarCode());
+        product.setAlertLower(inDb.getAlertLower());
+        product.setAlertUpper(inDb.getAlertUpper());
         return erpBaseEndProductRepository.save(product);
     }
     /**

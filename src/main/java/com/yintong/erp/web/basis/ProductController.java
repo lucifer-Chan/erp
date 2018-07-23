@@ -69,6 +69,21 @@ public class ProductController {
     }
 
     /**
+     * 保存成品的上下限
+     * @param productId
+     * @param alertLower
+     * @param alertUpper
+     * @return
+     */
+    @PatchMapping("{productId}")
+    public BaseResult saveRawMaterialWarning(@PathVariable Long productId, Integer alertLower, Integer alertUpper){
+        ErpBaseEndProduct one = productService.one(productId);
+        one.setAlertLower(alertLower);
+        one.setAlertUpper(alertUpper);
+        return new BaseResult().addPojo(productRepository.save(one)).setErrmsg("保存成功");
+    }
+
+    /**
      * 新增成品
      * @param product
      * @return

@@ -38,6 +38,13 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String endProductTypeCode;
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
+
+    @Column(columnDefinition = "int(20) comment '预警上限'")
+    private Integer alertUpper;
+    @Column(columnDefinition = "int(20) comment '预警下限'")
+    private Integer alertLower;
+
+
     @Column(columnDefinition = "varchar(64) comment '客户图号'")
     private String custDrawingNo;
     @Column(columnDefinition = "varchar(64) comment '客户代码(旧)'")
