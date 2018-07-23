@@ -42,8 +42,8 @@ public class SaleService {
     public ErpSalePlan create(ErpSalePlan plan) {
         validatePlan(plan);
         ErpSalePlan ret = salePlanRepository.save(plan);
-        String content = "新建 计划销售金额：¥" + ret.getPlanMoney() + ", 计划时间：("
-                + DateUtil.getDateString(plan.getStartDate()) + ","
+        String content = "新建 计划销售金额：¥" + ret.getPlanMoney() + ", 计划时间：["
+                + DateUtil.getDateString(plan.getStartDate()) + " 至 "
                 + DateUtil.getDateString(plan.getEndDate()) + "]";
         salePlanOptLogRepository.save(ErpSalePlanOptLog.builder().planId(ret.getId()).content(content).build());
         return ret;
@@ -62,8 +62,8 @@ public class SaleService {
 
         if(!DateUtil.getDateString(old.getStartDate()).equals(DateUtil.getDateString(plan.getStartDate()))
                 || !DateUtil.getDateString(old.getEndDate()).equals(DateUtil.getDateString(plan.getEndDate()))) {
-            content += "计划时间调整为("
-                    + DateUtil.getDateString(plan.getStartDate()) + ","
+            content += "计划时间调整为：["
+                    + DateUtil.getDateString(plan.getStartDate()) + " 至 "
                     + DateUtil.getDateString(plan.getEndDate()) + "] ";
             old.setStartDate(plan.getStartDate());
             old.setEndDate(plan.getEndDate());
