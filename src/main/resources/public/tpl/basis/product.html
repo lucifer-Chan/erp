@@ -897,6 +897,8 @@
                             consts.typeC={};
                             utils.dropkick({ $holder : $('#_typeC'), data :  consts.typeAll[value] });
                         } });
+                    utils.dropkick({ $holder : $('#_typeC'), data :consts.typeAll[$("#_typeP").data("value")] });
+
                 }
             }).on('hidden.bs.modal', function () {
                 //清理数据
