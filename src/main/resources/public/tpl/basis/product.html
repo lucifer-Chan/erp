@@ -9,7 +9,6 @@
                 </li>
                 <li role="presentation" class="dropdown" id="typeC">
                 </li>
-
             </ul>
             <button type="button" class="btn btn-default btn-ms operation" id="batchOperationBt" data-toggle="modal" data-target="#_batchOperation">批量操作</button>
             <button style="right: 110px" type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editProduct">新增成品</button>
@@ -919,13 +918,11 @@
                 e.preventDefault();
                 var alertLower = $('#alertLower').val();
                 var alertUpper = $('#alertUpper').val();
-                try{
-                    parseInt(alertLower);
-                    parseInt(alertUpper)
-                } catch (e){
+                if(alertUpper === '' || alertLower === ''){
                     layer.msg('请输入预警上下限的整数值！');
                     return;
                 }
+
                 if(!consts.product.id){
                     layer.msg('未选择成品！');
                     return;

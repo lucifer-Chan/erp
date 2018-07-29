@@ -27,7 +27,7 @@ public class ErpBaseCustomer extends BaseEntityWithBarCode {
     private Long id;
     @Column(columnDefinition = "varchar(64) comment '客户编号'")
     private String customerNo;
-    @Column(columnDefinition = "varchar(20) comment '客户名称'")
+    @Column(columnDefinition = "varchar(40) comment '客户名称'")
     private String customerName;
     @BarCode
     @Column(columnDefinition = "varchar(20) comment '客户类别编码[公司部-C:UCC0,散户-S:UCS0]'")

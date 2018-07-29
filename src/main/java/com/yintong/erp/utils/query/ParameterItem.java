@@ -42,6 +42,7 @@ public @interface ParameterItem {
         greaterThan,
         equal,
         like,
+        in,
         notEqual,
         notLike
     }

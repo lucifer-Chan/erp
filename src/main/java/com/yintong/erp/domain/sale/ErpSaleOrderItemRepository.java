@@ -6,12 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ErpSaleOrderItemRepository extends JpaRepository<ErpSaleOrderItem, Long>{
     /**
-     * 根据产品id和订单状态查询
-     * @param productId
-     * @param statusCode
+     * 根据订单id查询
+     * @param orderId
      * @return
      */
-    List<ErpSaleOrderItem> findByProductIdAndStatusCode(Long productId, String statusCode);
+    List<ErpSaleOrderItem> findByOrderIdOrderByMoneyDesc(Long orderId);
 
     /**
      * 根据产品id、订单状态、时间段查询
@@ -22,4 +21,8 @@ public interface ErpSaleOrderItemRepository extends JpaRepository<ErpSaleOrderIt
      * @return
      */
     List<ErpSaleOrderItem> findByProductIdAndStatusCodeAndCreatedAtIsBetween(Long productId, String statusCode, Date start, Date end);
+
+    void deleteByOrderId(Long orderId);
+
+
 }

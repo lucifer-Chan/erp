@@ -1,6 +1,7 @@
 package com.yintong.erp.utils.query;
 
 import com.yintong.erp.utils.common.DateUtil;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.in;
 import com.yintong.erp.utils.query.ParameterItem.TRANSFORMER;
 import com.yintong.erp.utils.transform.ReflectUtil;
 import lombok.Data;
@@ -139,11 +140,10 @@ public class QueryParameterBuilder {
      * @param root
      * @param criteriaBuilder
      * @param <T>
-     * @throws ParseException
      * @throws IllegalAccessException
      * @throws NoSuchMethodException
      */
-    private <T> void buildSingleField(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws ParseException, IllegalAccessException, NoSuchMethodException {
+    private <T> void buildSingleField(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws IllegalAccessException, NoSuchMethodException {
         ParameterItem parameterItem = field.getAnnotation(ParameterItem.class);
         Object value = transValue(field, parameterItem.transformer());
         if(value == null) return;
@@ -153,6 +153,9 @@ public class QueryParameterBuilder {
             clazz = String.class;
         } else if (equal.equals(parameterItem.compare())){
             clazz = Object.class;
+        } else if(in.equals(parameterItem.compare())){
+            clazz = Collection.class;
+            if(((Collection)value).isEmpty()) return;
         }
         String [] fieldNames = parameterItem.mappingTo().length == 0 ?
                 new String[]{field.getName()} : parameterItem.mappingTo();
@@ -173,7 +176,6 @@ public class QueryParameterBuilder {
      * @param transformer
      * @return
      * @throws IllegalAccessException
-     * @throws ParseException
      */
     private Object transValue(Field field, TRANSFORMER transformer) throws IllegalAccessException {
         field.setAccessible(true);

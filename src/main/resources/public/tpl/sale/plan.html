@@ -378,7 +378,7 @@
                     consts.$editInfoModal.modal('hide');
                     layer.msg('保存销售计划单成功');
                 }).catch(function (reason) {
-                    console.log('保存客户', reason);
+                    console.log('销售计划单', reason);
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
@@ -404,8 +404,6 @@
                 });
             });
         }
-
-
 
         function init() {
             prepareData().then(function () {

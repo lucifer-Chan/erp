@@ -25,10 +25,10 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 /**
  * @author lucifer.chan
  * @create 2018-07-21 下午4:47
- * 销售模块服务
+ * 销售计划单服务
  **/
 @Service
-public class SaleService {
+public class SalePlanService {
 
     @Autowired ErpSalePlanOptLogRepository salePlanOptLogRepository;
 
@@ -62,15 +62,15 @@ public class SaleService {
 
         if(!DateUtil.getDateString(old.getStartDate()).equals(DateUtil.getDateString(plan.getStartDate()))
                 || !DateUtil.getDateString(old.getEndDate()).equals(DateUtil.getDateString(plan.getEndDate()))) {
-            content += "计划时间调整为：["
+            content += "时间：["
                     + DateUtil.getDateString(plan.getStartDate()) + " 至 "
-                    + DateUtil.getDateString(plan.getEndDate()) + "] ";
+                    + DateUtil.getDateString(plan.getEndDate()) + "];";
             old.setStartDate(plan.getStartDate());
             old.setEndDate(plan.getEndDate());
         }
 
         if(!old.getPlanMoney().equals(plan.getPlanMoney())){
-            content += "计划销售金额调整为：¥" + plan.getPlanMoney();
+            content += "金额：¥" + plan.getPlanMoney();
             old.setPlanMoney(plan.getPlanMoney());
         }
 
@@ -86,7 +86,6 @@ public class SaleService {
         if(!"更新 ".equals(content)){
             salePlanOptLogRepository.save(ErpSalePlanOptLog.builder().planId(ret.getId()).content(content).build());
         }
-
         return ret;
     }
 
@@ -130,7 +129,7 @@ public class SaleService {
     }
 
     /**
-     * 构造前端返回的参数
+     * 计划单查询入参dto
      */
     @Getter @Setter
     @OrderBy(fieldName = "startDate", method = asc)

@@ -414,6 +414,11 @@ define('services',['utils'],function (utils) {
     };
 
     var customer = {
+        //全部
+        all : function () {
+            return $.http.get('basis/customer/all');
+        },
+
         //分类
         types : function () {
             return $.http.get('basis/common/categories/children/direct?code=UC');
@@ -616,7 +621,7 @@ define('services',['utils'],function (utils) {
                 contentType : $.contentType.json
             })
         },
-        //新增
+        //更新
         update : function (data) {
             var plan = {};
             return $.http.put({
@@ -632,11 +637,10 @@ define('services',['utils'],function (utils) {
                 return plan;
             });
         },
-
+        //删除
         delete : function (planId) {
             return $.http.delete('sale/plan/' + planId);
         },
-
         //查询
         query : function (params) {
             return $.http.get({
@@ -644,15 +648,91 @@ define('services',['utils'],function (utils) {
                 data : params
             });
         },
-
         //单个获取
         one : function (planId) {
             return $.http.get('sale/plan/' + planId);
         },
-
         //计划单的操作记录
         optHistory : function (planId) {
             return $.http.get('sale/plan/' + planId + '/history/opt');
+        }
+    };
+
+    /**
+     * 销售订单
+     * @type {{}}
+     */
+    var saleOrder = {
+        //新增
+        create : function (data) {
+            return $.http.post({
+                url : 'sale/order',
+                data :data,
+                contentType : $.contentType.json
+            });
+        },
+        //更新
+        update : function (data) {
+            var order = {};
+            return $.http.put({
+                url : 'sale/order',
+                data :data,
+                contentType : $.contentType.json
+            }).then(function (ret) {
+                order = ret;
+                return $.http.get('sale/order/'+ ret.id +'/history/opt');
+            }).then(function (opts) {
+                //操作记录
+                order.opts = opts.list;
+                return $.http.get('sale/order/' + order.id + '/items');
+            }).then(function (items) {
+                order.items = items.list;
+                return order;
+            });
+        },
+        //更新状态
+        updateStatus : function (orderId, status, remark) {
+            return $.http.patch({
+                url : 'sale/order/' + orderId + '/' + status,
+                data : {
+                    remark : remark
+                }
+            });
+        },
+        //单个获取
+        one : function (orderId) {
+            return $.http.get('sale/order/' + orderId);
+        },
+        //组合查询
+        query : function (params) {
+            return $.http.get({
+                url : 'sale/order',
+                data : params
+            });
+        },
+        //删除
+        delete : function (orderId) {
+            return $.http.delete('sale/order/' + orderId);
+        },
+        //添加明细
+        addItem : function (item) {
+            return $.http.post({
+                url : 'sale/orderItem',
+                data : item,
+                contentType : $.contentType.json
+            });
+        },
+        //修改明细
+        updateItem : function (item) {
+            return $.http.put({
+                url : 'sale/orderItem',
+                data : item,
+                contentType : $.contentType.json
+            });
+        },
+        //删除明细
+        deleteItem : function (orderId, itemId) {
+            return $.http.delete('sale/orderItem/'+ orderId +'/' + itemId);
         }
     };
 
@@ -669,5 +749,6 @@ define('services',['utils'],function (utils) {
         , lookup : lookup
         , association : association
         , salePlan : salePlan
+        , saleOrder : saleOrder
     }
 });

@@ -5857,3 +5857,9 @@ span.openInfoPage ul li a i {
     /*-webkit-border-radius: 110px;*/
     /*}*/
 }
+
+.panel-heading > .tools {
+    display: inline-block;
+    margin-top: -16px;
+    float: right;
+}

@@ -33,4 +33,7 @@ public class ErpSaleOrderOptLog extends BaseEntity {
 
     @Column(columnDefinition = "varchar(20) comment '当前状态编码'")
     private String statusCode;
+
+    @Column(columnDefinition = "varchar(20) DEFAULT 'order' comment '类型：order-订单操作，item-明细修改， status-状态变更'")
+    private String optType;
 }

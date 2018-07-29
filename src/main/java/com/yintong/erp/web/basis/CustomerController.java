@@ -1,6 +1,7 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseCustomer;
+import com.yintong.erp.domain.basis.ErpBaseCustomerRepository;
 import com.yintong.erp.service.basis.CustomerService;
 import com.yintong.erp.utils.base.BaseResult;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired ErpBaseCustomerRepository customerRepository;
+
     /**
      * 组合查询
      * @param parameter
@@ -31,6 +34,15 @@ public class CustomerController {
     public BaseResult query(CustomerService.CustomerParameterBuilder parameter){
         Page<ErpBaseCustomer> page = customerService.query(parameter);
         return page2BaseResult(page);
+    }
+
+    /**
+     * 查找全部
+     * @return
+     */
+    @GetMapping("all")
+    public BaseResult findAll(){
+        return new BaseResult().addList(customerRepository.findAll());
     }
 
     /**

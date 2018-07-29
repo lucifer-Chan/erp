@@ -1,12 +1,11 @@
 package com.yintong.erp.domain.sale;
 
-import com.yintong.erp.service.basis.CustomerService;
-import com.yintong.erp.service.basis.EmployeeService;
 import com.yintong.erp.utils.bar.BarCode;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.X000;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
-import com.yintong.erp.utils.common.SpringUtil;
-import java.util.Objects;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,9 +16,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.X000;
-import org.springframework.util.StringUtils;
 
 /**
  * @author lucifer.chan
@@ -40,14 +36,32 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "bigint(20) comment '客户id'")
     private Long customerId;
 
+    @Column(columnDefinition = "varchar(40) comment '客户名称-冗余数据，方便查询'")
+    private String customerName;
+
     @Column(columnDefinition = "double(10,2) comment '销售金额-计算值'")
     private Double money;
 
     @Column(columnDefinition = "varchar(20) comment '状态编码'")
     private String statusCode;
 
+    @Column(columnDefinition = "date comment '订单日期'")
+    private Date orderDate;
+
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
+    private String remark;
+
+    /**
+     * 订单明细
+     */
     @Transient
-    private String customerName;
+    private List<ErpSaleOrderItem> items;
+
+    /**
+     * 操作记录
+     */
+    @Transient
+    private List<ErpSaleOrderOptLog> opts;
 
     public void setStatusCode(String statusCode){
         this.statusCode = statusCode;
@@ -56,23 +70,6 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     public ErpSaleOrder setStatusCode(Constants.SaleOrderStatus statusCode){
         this.statusCode = statusCode.name();
         return this;
-    }
-
-    /**
-     * 获取客户姓名
-     * @return
-     */
-    public String getCustomerName(){
-        if(StringUtils.hasText(customerName)) return customerName;
-
-        if(Objects.nonNull(customerId)){
-            try {
-                this.customerName = SpringUtil.getBean(CustomerService.class).one(customerId).getCustomerName();
-            } catch (Exception ignored){
-
-            }
-        }
-        return customerName;
     }
 
 }

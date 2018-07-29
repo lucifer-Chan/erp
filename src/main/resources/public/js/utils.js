@@ -34,14 +34,7 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
             return setting.div;
         }).then(function (div) {
             //右侧页面收起打开操作
-            $(div).find('#rightInfoPage .fa-angle-double-up, #rightInfoPage .fa-angle-double-down').click(function () {
-                var value = $(this).data("value") + "Info";
-                $(this).parents('.row').find('div[data-value="'+ value+'"]').toggle();
-                if($(this).hasClass('fa-angle-double-up'))
-                    $(this).removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
-                else if($(this).hasClass('fa-angle-double-down'))
-                    $(this).removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
-            });
+            initRightAngleEvent(div);
             //隐藏右侧页面事件
             $(div).find('.rightInfoBack').click(function () {
                 $('#rightInfoPage').attr('data-id', '').hide();
@@ -52,6 +45,19 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
             clearTimeout(loadIngTips);
             setting.div.html('<h4>页面' + setting.url +'尚未建设！</h4>')
             // layer.msg('请求'+ setting.url + '失败');
+        });
+    }
+
+    //右侧下收起-打开事件，动态生成的页面，需要在生成之后手动调用
+    function initRightAngleEvent(div) {
+        div = !!div ? div : $('body');
+        $(div).find('#rightInfoPage .fa-angle-double-up, #rightInfoPage .fa-angle-double-down').click(function () {
+            var value = $(this).data("value") + "Info";
+            $(this).parents('.row').find('div[data-value="'+ value+'"]').toggle();
+            if($(this).hasClass('fa-angle-double-up'))
+                $(this).removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+            else if($(this).hasClass('fa-angle-double-down'))
+                $(this).removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
         });
     }
 
@@ -593,6 +599,7 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
     //日期选择器的默认配置
     var datepickerConfig = {
         keyboardNavigation: false,
+        weekBeginMonday: false,
         forceParse: true,
         autoclose: true,
         clearBtn : true,
@@ -648,5 +655,6 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
         , uploadFile : uploadFile
         , datepickerConfig : datepickerConfig
         , datepicker : datepicker
+        , initRightAngleEvent : initRightAngleEvent
     }
 });

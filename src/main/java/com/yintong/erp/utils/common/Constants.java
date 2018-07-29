@@ -1,5 +1,7 @@
 package com.yintong.erp.utils.common;
 
+import org.springframework.util.StringUtils;
+
 public interface Constants {
 
     interface Roles{
@@ -34,22 +36,34 @@ public interface Constants {
      * 销售订单状态
      */
     enum SaleOrderStatus {
-        STATUS_001("未发布"),
-        STATUS_002("待审核"),
-        STATUS_003("审核通过"),
-        STATUS_004("审核退回"),
-        STATUS_005("已出库"),
-        STATUS_006("客户退货"),
-        STATUS_007("已完成");
+        STATUS_001("未发布", "新建"),
+        STATUS_002("待审核", "提交"),
+        STATUS_003("审核通过", "审核"),
+        STATUS_004("审核退回", "审核"),
+        STATUS_005("已出库", ""),
+        STATUS_006("客户退货", ""),
+        STATUS_007("已完成", "");
 
-        SaleOrderStatus(String description) {
+        SaleOrderStatus(String description, String operation) {
             this.description = description;
+            this.operation = operation;
         }
         
         private String description;
 
+        private String operation;
+
         public String description() {
             return description;
+        }
+
+        public String operation() {
+            return operation;
+        }
+
+        public String toLog(){
+            String prefix = StringUtils.hasLength(operation()) ? operation() + "-" : "";
+            return "【" + prefix + description() + "】";
         }
     }
 }

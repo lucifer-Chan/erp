@@ -2,6 +2,7 @@
  * 全局变量的定义
  */
 ;window.GLOBALS = {
+    // ctxPath : '/erp'//生产环境可能需要替换TODO
     ctxPath : '/'//生产环境可能需要替换TODO
     , debug : false
     , time : 500

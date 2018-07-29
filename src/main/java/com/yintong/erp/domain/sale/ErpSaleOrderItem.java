@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -91,8 +92,21 @@ public class ErpSaleOrderItem extends BaseEntity{
     @Transient
     public Date getOrderOptDate(){
         ErpSaleOrderOptLog orderOptLog =
-                SpringUtil.getBean(ErpSaleOrderOptLogRepository.class).findByOrderIdAndStatusCode(orderId, statusCode)
+                SpringUtil.getBean(ErpSaleOrderOptLogRepository.class).findByOrderIdAndStatusCodeOrderByCreatedAtDesc(orderId, statusCode)
                     .stream().findFirst().orElse(null);
         return Objects.isNull(orderOptLog) ? null : orderOptLog.getCreatedAt();
+    }
+
+    /**
+     * 必填项校验
+     */
+    public void validateRequired(){
+        Assert.notNull(getProductId(), "成品信息不能为空");
+        Assert.notNull(getStatusCode(), "状态码不能为空");
+        Assert.notNull(getMoney(), "总额不能为空");
+        Assert.notNull(getNum(), "数量不能为空");
+        Assert.notNull(getUnitPrice(), "单价不能为空");
+        Assert.notNull(getOrderId(), "销售订单id不能为空");
+        Assert.notNull(getOrderCode(), "销售订单编号不能为空");
     }
 }
