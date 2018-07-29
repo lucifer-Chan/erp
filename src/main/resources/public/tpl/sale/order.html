@@ -19,11 +19,11 @@
                             <thead>
                             <tr erp-id="{id}">
                                 <th style="width:50px" erp-data="{barCode}">订单编号<span id="allCount"></span></th>
+                                <th style="width:30px" erp-data="{statusCode}" erp-convert="convertStatus">状态</th>
                                 <th style="width:70px" erp-data="{description}" >描述</th>
                                 <th style="width:70px" erp-data="{customerName}">客户名称</th>
                                 <th style="width:30px" erp-data="{orderDate}" erp-convert="convertDate">订单日期</th>
                                 <th style="width:30px" erp-data="{money}" erp-convert="convertMoney">总额</th>
-                                <th style="width:30px" erp-data="{statusCode}" erp-convert="convertStatus">状态</th>
                             </tr>
                             </thead>
                         </table>

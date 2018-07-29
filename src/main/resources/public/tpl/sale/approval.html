@@ -1,10 +1,268 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!-- Main -->
+<div class="erp_content animated fadeInRight full_height"  id="sale_order_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述、客户名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+            <ul class="nav nav-pills">
+                <li role="presentation" class="dropdown" id="statusCollection">
+                </li>
+            </ul>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:50px" erp-data="{barCode}">订单编号<span id="allCount"></span></th>
+                                <th style="width:30px" erp-data="{statusCode}" erp-convert="convertStatus">状态</th>
+                                <th style="width:70px" erp-data="{description}" >描述</th>
+                                <th style="width:70px" erp-data="{customerName}">客户名称</th>
+                                <th style="width:30px" erp-data="{orderDate}" erp-convert="convertDate">订单日期</th>
+                                <th style="width:30px" erp-data="{money}" erp-convert="convertMoney">总额</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 右侧 -->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toApprovalPassBt">审核通过</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toApprovalRefuseBt">审核退回</button>
+        </span>
+    </div>
+    <div class="bugInfoContent initSaleOrderDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">基本信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">订单编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">订单日期</label>
+                                <div class="col-xs-8 txt pd0" data-name="orderDate" data-convert="convertDate"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">客户名称</label>
+                                <div class="col-xs-8 txt pd0" data-name="customerName"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">订单总额</label>
+                                <div class="col-xs-8 txt pd0" data-name="money" data-convert="convertMoney"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">当前状态</label>
+                                <div class="col-xs-8 txt pd0" data-name="statusCode" data-convert="convertStatus" ></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">创建时间</label>
+                                <div class="col-xs-8 txt pd0" data-name="createdAt"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">备注</label>
+                                <div class="col-xs-10 txt pd0" data-name="remark" data-convert="false"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#saleOrderItems" aria-controls="saleOrderItems" role="tab" data-toggle="tab">订单明细</span></li>
+                    <li role="presentation"><span href="#statusHistory" aria-controls="statusHistory" role="tab" data-toggle="tab">流程记录</span></li>
+                    <li role="presentation"><span href="#orderHistory" aria-controls="orderHistory" role="tab" data-toggle="tab">订单记录</span></li>
+                    <li role="presentation"><span href="#itemHistory" aria-controls="itemHistory" role="tab" data-toggle="tab">明细修改记录</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="saleOrderItems">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="statusHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="orderHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="itemHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- 状态变更 -->
+<div class="modal fade" id="_changeOrderStatus" role="dialog">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-arrow-circle-right defaultColor"></i> <span></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-horizontal pd210 pd410">
+                        <div class="row pd42 pd22">
+                            <div class="col-sm-12">
+                                <div class="cell pd32">
+                                    <p class="inline middle title pd21">备注</p>
+                                    <p class="inline middle nr" style="width: 300px">
+                                        <input type="text" class="form-control" placeholder="输入备注信息" id="changeStatusRemark" onfocus="checkStrNum(this,100)" oninput="checkStrNum(this,100)">
+                                    </p>
+                                    <button type="button" class="btn btn-info noborder" id="_changeOrderStatusBt">save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 明细的详情模版-->
+<div class="row" id="orderItemTemplate" style="display: none">
+    <div class="col-sm-12" style="margin-bottom:-20px">
+        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 13px">销售订单明细</h3>
+                <div class="tools">
+                    <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
+                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editSaleOrderItem">修改</button>
+                    <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
+                </div>
+            </div>
+            <div class="panel-body" data-value="">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <label class="col-xs-2 pd0">成品名称</label>
+                                    <div class="col-xs-10 txt pd0" data-name="productName"></div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label class="col-xs-4 pd0">总额</label>
+                                    <div class="col-xs-8 txt pd0" data-name="money"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <label class="col-xs-2 pd0">单价</label>
+                                    <div class="col-xs-10 txt pd0" data-name="unitPrice"></div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label class="col-xs-4 pd0">数量</label>
+                                    <div class="col-xs-8 txt pd0" data-name="num"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <label class="col-xs-2 pd0" style="width:12%">备注</label>
+                                    <div class="col-xs-10 txt pd0" data-name="remark" data-convert="false"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    requirejs(['order'],function (order) {
+        console.log('Hello approval.html');
+        var consts = {
+            //配置信息
+            config : {
+                //列表相关
+                dataTable : {
+                    id : 'dataTables'//列表id
+                    , codes : ['STATUS_002','STATUS_003','STATUS_005','STATUS_006','STATUS_007'] //搜索供选的状态
+                }
+                , oQueryParam : {}//查询参数
+                , initCustomers : false//是否初始化客户列表
+                , initProducts : false//是否初始化产品列表
+            }
+            , status : {
+                'STATUS_001' : '未发布',
+                'STATUS_002' : '待审核',
+                'STATUS_003' : '审核通过',
+                'STATUS_004' : '审核退回',
+                'STATUS_005' : '已出库',
+                'STATUS_006' : '客户退货',
+                'STATUS_007' : '已完成'
+            }
+            /******************** start buttons**************************/
+            , $changeOrderStatusBt : $('#_changeOrderStatusBt')//状态变更
+            /******************** end buttons**************************/
+
+            , toNewStatus : {}//要更新到的状态
+
+            , $statusDropDown : $('#statusCollection')//搜索：状态下拉
+            , $changeOrderStatusModal : $('#_changeOrderStatus')//提交审核modal
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $items : $('#saleOrderItems')//右侧-订单明细
+            , $statusHistory : $('#statusHistory')//右侧-流程记录
+            , $orderHistory : $('#orderHistory')//右侧-订单记录
+            , $itemHistory : $('#itemHistory')//右侧-明细修改记录
+
+            , itemCache : {}//明细缓存，每一次刷新右侧，将订单明细加入到这里 {id : obj}
+
+            , currentOrder : {}//当前订单
+            , currentOrderItem : {}//当前订单详情
+
+            , sessionKeys : {
+                customers : '_order_all_customers'//待使用-ajax获取后存储
+                , products : '_order_all_products'//待使用-ajax获取后存储
+            }
+            , template : {
+                optLog : '<p>' +
+                '<span class="name"><b>{name}</b></span>' +
+                '<span class="content"> {content}</span>  ' +
+                '<span class="right">{time}</span>' +
+                '</p>'//历史记录模版
+                , $orderItem : $('#orderItemTemplate')
+            }
+
+        };
+
+        order.init(consts);
+    });
+</script>

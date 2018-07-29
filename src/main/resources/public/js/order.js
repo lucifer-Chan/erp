@@ -82,7 +82,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
         }
 
         function convertStatus(array) {
-            return consts.status[array[0]];
+            return _convertStatus(array[0]);
         }
 
         utils.dataTable({
@@ -92,6 +92,15 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             , fClickTr : fClickTr
             , aConverts : [convertMoney, convertDate, convertStatus]
         });
+    }
+
+    function _convertStatus(code) {
+        var css = 'label-default';
+        if ('STATUS_002' === code) css = 'label-warning';
+        if ('STATUS_003' === code || 'STATUS_005' === code) css = 'label-success';
+        if ('STATUS_004' === code || 'STATUS_006' === code) css = 'label-danger';
+        if ('STATUS_007' === code) css = 'label-primary';
+        return '<span class="label '+ css +'">'+ consts.status[code] +'</span>';
     }
 
     //搜索的状态下拉
@@ -223,6 +232,8 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                         });
                         layer.msg('新增明细成功');
                     }
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
         }
@@ -246,6 +257,20 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             consts.toNewStatus = {
                 code : 'STATUS_007',
                 header : '订单归档',
+                bt : '保存'
+            };
+        });
+        $('#_toApprovalPassBt').bind('click', function () {
+            consts.toNewStatus = {
+                code : 'STATUS_003',
+                header : '审核通过',
+                bt : '保存'
+            };
+        });
+        $('#_toApprovalRefuseBt').bind('click', function () {
+            consts.toNewStatus = {
+                code : 'STATUS_004',
+                header : '审核退回',
                 bt : '保存'
             };
         });
@@ -378,7 +403,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             } else if(convert === 'convertMoney'){
                 value = '¥' + (value || 0).toFixed(2);
             } else if(convert === 'convertStatus'){
-                value = consts.status[value];
+                value = _convertStatus(value)
             } else if(convert === 'false'){
                 value = value || '无';
             }
@@ -423,10 +448,9 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
         }
         //订单明细
         var $itemTemplate = consts.template.$orderItem;
-        var $itemHolder = consts.$items.find('.bugInfoHistories');
-        $itemHolder.empty();
+        var $orderItems = consts.$items.empty();
         if(!tr.items || !tr.items.length){
-            $itemHolder.html('<p>暂无</p>');
+            $orderItems.html('<p>暂无</p>');
         } else {
             $.each(tr.items, function (i, item) {
                 if(typeof consts.itemCache === 'object'){
@@ -442,7 +466,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 $(body).find('div[data-name="unitPrice"]').text('¥' + (item.unitPrice||0).toFixed(2));
                 $(body).find('div[data-name="num"]').text(item.num);
                 $(body).find('div[data-name="remark"]').text(item.remark || '无');
-                $itemHolder.append($(clone).show());
+                $orderItems.append($(clone).show());
             })
         }
         utils.initRightAngleEvent();
@@ -451,6 +475,12 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             $('#rightInfoPage').find('#_addSaleOrderBt, #_addSaleOrderItemBt, #_toSubmitOrderBt, #_deleteSaleOrderBt, ._update, ._delete').show();
         } else {
             $('#rightInfoPage').find('#_addSaleOrderBt, #_addSaleOrderItemBt, #_toSubmitOrderBt, #_deleteSaleOrderBt, ._update, ._delete').hide();
+        }
+        //待审核 可操作：审核通过、审核退回
+        if(tr.statusCode === 'STATUS_002'){
+            $('#rightInfoPage').find('#_toApprovalPassBt, #_toApprovalRefuseBt').show();
+        } else {
+            $('#rightInfoPage').find('#_toApprovalPassBt, #_toApprovalRefuseBt').hide();
         }
         //已出库 可操作: 客户退回、完成
         if(tr.statusCode === 'STATUS_005'){

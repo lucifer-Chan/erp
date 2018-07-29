@@ -123,7 +123,6 @@ public class SaleOrderService {
         order.setMoney(old.getMoney());
         //不修改创建时间
         order.setCreatedAt(old.getCreatedAt());
-        ErpSaleOrder _order = saleOrderRepository.save(order);
 
         String content = "更新";
 
@@ -134,7 +133,7 @@ public class SaleOrderService {
         if(!old.getCustomerName().equals(order.getCustomerName())){
             content += "客户：" + order.getCustomerName();
         }
-
+        ErpSaleOrder _order = saleOrderRepository.save(order);
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(order.getStatusCode()).content(content).optType("order").orderId(order.getId()).build());
         return _order;
     }
@@ -179,16 +178,18 @@ public class SaleOrderService {
         if(status == STATUS_002){
             Assert.isTrue(Arrays.asList(STATUS_001.name(), STATUS_004.name()).contains(oldStatus)
                     , "只有" + STATUS_001.description() + "或" + STATUS_004.description() + "的订单可以变更为" + STATUS_002.description());
+            List<ErpSaleOrderItem> oldOrderItems = orderItemRepository.findByOrderIdOrderByMoneyDesc(orderId);
+            Assert.notEmpty(oldOrderItems, "请先维护订单明细再提交");
         }
-        //审核通过、审核退回
+        //->审核通过、审核退回
         if(status == STATUS_003 || status == STATUS_004){
             Assert.isTrue(STATUS_002.name().equals(oldStatus), "只有" + STATUS_002.description() + "的订单可以变更为" + status.description());
         }
-        //已出库
+        //->已出库
         if(status == STATUS_005){
             Assert.isTrue(STATUS_003.name().equals(oldStatus), "只有" + STATUS_003.description() + "的订单可以变更为" + status.description());
         }
-        //客户退货、已完成
+        //->客户退货、已完成
         if(status == STATUS_006 || status == STATUS_007){
             Assert.isTrue(STATUS_005.name().equals(oldStatus), "只有" + STATUS_005.description() + "的订单可以变更为" + status.description());
         }
@@ -210,11 +211,14 @@ public class SaleOrderService {
         ErpSaleOrder oldOrder = saleOrderRepository.findById(item.getOrderId()).orElse(null);
         Assert.notNull(oldOrder, "未找到销售订单[" + item.getOrderId() + "]");
         Assert.isTrue(Arrays.asList(STATUS_001, STATUS_004).contains(SaleOrderStatus.valueOf(item.getStatusCode())), "只有" + STATUS_001 + "或" + STATUS_004 + "的订单可以新增销售明细");
+
         item.setStatusCode(oldOrder.getStatusCode());
         item.validateRequired();
         item.setId(null);
+        boolean exist = orderItemRepository.findByOrderIdOrderByMoneyDesc(item.getOrderId()).stream()
+                .anyMatch(obj-> item.getProductId().equals(obj.getProductId()));
+        Assert.isTrue(!exist, "已存在成品[" + item.getProductName() + "]的明细，请重新选择");
         ErpSaleOrderItem ret = orderItemRepository.save(item);
-
         Double totalMoney = oldOrder.getMoney() + item.getMoney();
         oldOrder.setMoney(totalMoney);
         saleOrderRepository.save(oldOrder);
@@ -238,6 +242,9 @@ public class SaleOrderService {
         item.validateRequired();
         ErpSaleOrder oldOrder = saleOrderRepository.findById(item.getOrderId()).orElse(null);
         Assert.notNull(oldOrder, "未找到销售订单[" + item.getOrderId() + "]");
+        boolean exist = orderItemRepository.findByOrderIdOrderByMoneyDesc(item.getOrderId()).stream()
+                .anyMatch(obj-> item.getProductId().equals(obj.getProductId()) && !item.getId().equals(obj.getId()));
+        Assert.isTrue(!exist, "已存在成品[" + item.getProductName() + "]的明细，请重新选择");
 
         String content = "更新明细";
         Double totalMoney = oldOrder.getMoney() + item.getMoney() - oldItem.getMoney();
@@ -245,6 +252,9 @@ public class SaleOrderService {
             oldOrder.setMoney(totalMoney);
             saleOrderRepository.save(oldOrder);
             content += ", 总金额变化为：¥" + totalMoney;
+        }
+        if(!item.getProductId().equals(oldItem.getProductId())){
+            content += ", 成品调整为：" + item.getProductName();
         }
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(item.getStatusCode()).content(content).optType("item").orderId(item.getOrderId()).build());
         return orderItemRepository.save(item);
@@ -297,7 +307,7 @@ public class SaleOrderService {
      * 销售订单查询入参dto
      */
     @Getter @Setter
-    @OrderBy(fieldName = "createdAt")
+    @OrderBy(fieldName = "lastUpdatedAt")
     public static class OrderParameterDto extends QueryParameterBuilder {
         @ParameterItem(mappingTo = {"barCode", "description", "customerName"}, compare = like, group = OR)
         String cause;

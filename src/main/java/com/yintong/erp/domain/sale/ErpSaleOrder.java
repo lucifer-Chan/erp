@@ -72,4 +72,9 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
         return this;
     }
 
+    @Override
+    protected void prePersist(){
+        setLastUpdatedAt(new Date());
+    }
+
 }
