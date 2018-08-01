@@ -12,7 +12,9 @@ define('services',['utils'],function (utils) {
         },
         //退出登陆
         logout : function () {
-            return $.http.post('logout');
+            return $.http.post('logout').then(function () {
+                $.session();
+            });
         },
 
         //修改密码-self
@@ -250,6 +252,7 @@ define('services',['utils'],function (utils) {
     };
 
     var product = {
+        sessionKey : '_services_product_all_',
         //分类
         getTypeAll : function () {
             return $.http.get('basis/common/categories/tree?code=P');
@@ -274,10 +277,14 @@ define('services',['utils'],function (utils) {
         },
         //更新
         update : function (data) {
+            var $this = this;
             return $.http.put({
                 url : 'basis/product',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //查找
@@ -286,37 +293,71 @@ define('services',['utils'],function (utils) {
         },
         //新增模具
         create:function(data){
+            var $this = this;
             return $.http.post({
                 url : 'basis/product',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //删除
         delete : function (id) {
-            return $.http.delete('basis/product/' + id);
+            var $this = this;
+            return $.http.delete('basis/product/' + id)
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         },
         //导入的查询
         imported : function () {
-            return $.http.get('basis/product/group');
+            var $this = this;
+            return $.http.get('basis/product/group')
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         },
         //批量删除
         batchDelete : function (importedAt) {
-            return $.http.delete('basis/product/batch/' + importedAt);
+            var $this = this;
+            return $.http.delete('basis/product/batch/' + importedAt)
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         },
         //所有成品
         all : function () {
-            return $.http.get('basis/product/all');
+            var $this = this;
+            var value = $.session($this.sessionKey);
+            if (!!value){
+                return $.Promise.resolve().then(function () {
+                    return value;
+                })
+            }
+            return $.http.get('basis/product/all')
+                .then(function (ret) {
+                    $.session($this.sessionKey, ret);
+                    return ret;
+                });
         },
         //保存上下限 {supplierId}/product/{productId}
         saveWarning : function(id, alertLower, alertUpper){
+            var $this = this;
             return $.http.patch({
                 url : 'basis/product/'+ id,
                 data : {
                     alertLower : alertLower,
                     alertUpper : alertUpper
                 }
-            })
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
+            });
         }
     };
 
@@ -414,9 +455,21 @@ define('services',['utils'],function (utils) {
     };
 
     var customer = {
+        sessionKey : '_services_customer_all_',
         //全部
         all : function () {
-            return $.http.get('basis/customer/all');
+            var $this = this;
+            var value = $.session($this.sessionKey);
+            if (!!value){
+                return $.Promise.resolve().then(function () {
+                    return value;
+                })
+            }
+
+            return $.http.get('basis/customer/all').then(function (ret) {
+                $.session($this.sessionKey, ret);
+                return ret;
+            });
         },
 
         //分类
@@ -436,23 +489,35 @@ define('services',['utils'],function (utils) {
         },
         //新建
         create : function (data) {
+            var $this = this;
             return $.http.post({
                 url : 'basis/customer',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //更新
         update : function (data) {
+            var $this = this;
             return $.http.put({
                 url : 'basis/customer',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //删除
         delete : function (id) {
-            return $.http.delete('basis/customer/' + id);
+            var $this = this;
+            return $.http.delete('basis/customer/' + id).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
+            });
         }
     };
 
