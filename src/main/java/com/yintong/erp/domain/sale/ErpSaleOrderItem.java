@@ -59,17 +59,25 @@ public class ErpSaleOrderItem extends BaseEntity{
     private String remark;
 
     @Transient
+    private ErpBaseEndProduct product;
+
+    @Transient
     private String productName;
 
     public String getProductName(){
         if(StringUtils.hasText(productName)) return productName;
-        if(Objects.nonNull(productId)){
-            ErpBaseEndProduct product = SpringUtil.getBean(ErpBaseEndProductRepository.class)
-                    .findById(productId).orElse(null);
-            this.productName = Objects.isNull(product) ? "" : product.getEndProductName() + "-" + product.getSpecification();
-        }
-
+        ErpBaseEndProduct _product = getProduct();
+        this.productName = Objects.isNull(_product) ? "" : _product.getEndProductName() + "-" + _product.getSpecification();
         return productName;
+    }
+
+    public ErpBaseEndProduct getProduct(){
+        if(Objects.nonNull(product)) return product;
+        if(Objects.nonNull(productId)){
+            this.product = SpringUtil.getBean(ErpBaseEndProductRepository.class)
+                    .findById(productId).orElse(null);
+        }
+        return product;
     }
 
     public void setStatusCode(String statusCode){
@@ -86,7 +94,7 @@ public class ErpSaleOrderItem extends BaseEntity{
     }
 
     /**
-     * 订单操作时间
+     * 订单操作时间-对应状态的最近一次操作时间
      * @return
      */
     @Transient
@@ -96,6 +104,8 @@ public class ErpSaleOrderItem extends BaseEntity{
                     .stream().findFirst().orElse(null);
         return Objects.isNull(orderOptLog) ? null : orderOptLog.getCreatedAt();
     }
+
+
 
     /**
      * 必填项校验

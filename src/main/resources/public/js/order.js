@@ -238,6 +238,75 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             });
         }
 
+        //打印出库单
+        if(consts.$printToOutBt && consts.$printToOutBt.length && consts.template.$printToOut && consts.template.$printToOut.length){
+            consts.$printToOutBt.bind('click', function(){
+                var $clone = consts.template.$printToOut.clone();
+                //打印数据构建 - 表头
+                $clone.find('div[data-name]').each(function () {
+                    var value = consts.currentOrder[$(this).attr('data-name')] || '';
+                    var convert = $(this).attr('data-convert');
+                    if(convert === 'convertDate'){
+                        value = value.substr(0,10);
+                    }
+                    $(this).html(value);
+                });
+                //打印数据构建 - 条码
+                if(consts.currentOrder.barCode){
+                    $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + consts.currentOrder.barCode);
+                }
+                //打印数据构建 - 列表
+                if (consts.currentOrder.items && consts.currentOrder.items.length){
+                    var tbody = $clone.find('tbody').empty();
+                    var html = '';
+                    var calcTotalMoney = 0;
+                    consts.currentOrder.items.forEach(function (item) {
+                        var product = item.product;
+                        if(product){
+                            var calcMoney = ((item.unitPrice||0) * (item.num || 0)).toFixed(2);
+                            html += '<tr>' +
+                                '<td>'+ (product.endProductName || '') +'</td>' +
+                                '<td>'+ (product.specification || '')  +'</td>' +
+                                '<td>¥'+ (item.unitPrice||0).toFixed(2) +'</td>' +
+                                '<td>'+ (item.num || 0)  +'</td>' +
+                                '<td>'+ (product.unit || '') +'</td>' +
+                                '<td>¥'+ calcMoney +'</td>' +
+                                '<td>¥'+ (item.money || 0).toFixed(2)  +'</td></tr>';
+                            calcTotalMoney += parseFloat(calcMoney);
+                        }
+
+                    });
+                    if (html !== ''){
+                        var chineseMoney = utils.convertCurrency(calcTotalMoney.toFixed(2));
+                        html += '<tr>' +
+                            '<th colspan="5">' +
+                            '   <span class="pd44 pd22">合计：</span>' +
+                                chineseMoney +
+                            '</th>' +
+                            '<td>¥' + calcTotalMoney.toFixed(2) + '</td>' +
+                            '<td>¥' + (consts.currentOrder.money || 0).toFixed(2) + '</td>' +
+                            '</tr>';
+                    }
+                    tbody.html(html);
+                }
+                //打印数据构建 - 表尾
+                var statusLogs = consts.currentOrder.statusLogs || [];
+                var approvalPass = null;
+                for(var i = 0; i < statusLogs.length; i ++){
+                    if ('STATUS_003' === statusLogs[i].statusCode){
+                        approvalPass = statusLogs[i];
+                        break;
+                    }
+                }
+                if(approvalPass){
+                    $clone.find('.approvalName').text(approvalPass.createdName);
+                    $clone.find('.approvalDate').text((approvalPass.createdAt||'').substr(0,10));
+                }
+
+                $clone.show().print();
+            });
+        }
+
         //状态变更按钮事件
         $('#_toSubmitOrderBt').bind('click', function () {
             consts.toNewStatus = {
@@ -445,6 +514,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             initHistory($statusHolder, statusLogs);
             initHistory($orderHolder, orderLogs);
             initHistory($itemHolder, itemLogs);
+            tr.statusLogs = statusLogs;
         }
         //订单明细
         var $itemTemplate = consts.template.$orderItem;
@@ -481,6 +551,12 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             $('#rightInfoPage').find('#_toApprovalPassBt, #_toApprovalRefuseBt').show();
         } else {
             $('#rightInfoPage').find('#_toApprovalPassBt, #_toApprovalRefuseBt').hide();
+        }
+        //审核通过 可操作：打印出库单
+        if(tr.statusCode === 'STATUS_003'){
+            $('#rightInfoPage').find('#_printToOutBt').show();
+        } else {
+            $('#rightInfoPage').find('#_printToOutBt').hide();
         }
         //已出库 可操作: 客户退回、完成
         if(tr.statusCode === 'STATUS_005'){
@@ -545,7 +621,6 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
     function init(options) {
         console.log('in order.js');
         consts = options;
-        console.log(consts);
         prepareData().then(function () {
             initEvent();
             loadDataTable();

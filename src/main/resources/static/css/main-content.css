@@ -139,11 +139,55 @@ body.fluid-sidebar .main-content {
 .main-content .viewKanban .k-header .rightDiv span.check:hover i {
     color: #fff;
 }
-/* Â±Ã­Â¸Ã± */
+/** start 打印 **/
+
+.print-header{
+    text-align: center;
+}
+
+.print-right{
+    text-align: right;
+    width: 100%;
+}
+
+.print-line {
+    display: inline-flex;
+    vertical-align: bottom;
+    margin-bottom: -5px;
+    margin-top: -5px;
+    padding-left: 10px;
+}
+
+img.print-barcode{
+    width:300px;
+    height:80px;
+}
+
+.table-print {
+    border: 1px solid #030303;
+    margin-bottom: 0px;
+}
+.table-print>thead>tr{
+    border-bottom: 1px solid #030303!important;
+    background: #dcdcdc!important;
+}
+
+.table-print>thead>tr>th{
+    text-align: center;
+}
+
+.table-print>tbody>tr>td, .table-print>tbody>tr>th, .table-print>tfoot>tr>td, .table-print>tfoot>tr>th, .table-print>thead>tr>td, .table-print>thead>tr>th{
+    border: 1px solid #030303;
+}
+
+/** end 打印 **/
+
+/* table */
 .table {
     /*border: solid 1px #EEEEEE;*/
 }
-.table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+
+.table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
     border-bottom-width: 1px;
 }
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {

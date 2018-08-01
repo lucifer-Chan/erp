@@ -3,7 +3,10 @@ package com.yintong.erp.web.basis;
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseLookupRepository;
 import com.yintong.erp.service.basis.CategoryService;
+import com.yintong.erp.utils.bar.BarCodeUtil;
 import com.yintong.erp.utils.base.BaseResult;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,5 +76,18 @@ public class BasisCommonController {
                     .map(lookup -> lookup.filter("code", "name"))
                     .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * 获取条形码图像
+     * <img src='/basis/common/barcode/{code}'>
+     * @param response
+     * @param code
+     * @throws IOException
+     */
+    @GetMapping("barcode/{code}")
+    public void barCode(HttpServletResponse response, @PathVariable String code) throws IOException {
+        //将图片输出给浏览器
+        BarCodeUtil.generate(code, response.getOutputStream());
     }
 }

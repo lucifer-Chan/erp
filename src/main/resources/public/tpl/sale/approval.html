@@ -39,6 +39,7 @@
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toApprovalPassBt">审核通过</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toApprovalRefuseBt">审核退回</button>
+            <button class="btn btn-primary" id="_printToOutBt">打印出库单</button>
         </span>
     </div>
     <div class="bugInfoContent initSaleOrderDetail">
@@ -231,6 +232,7 @@
             }
             /******************** start buttons**************************/
             , $changeOrderStatusBt : $('#_changeOrderStatusBt')//状态变更
+            , $printToOutBt : $('#_printToOutBt')//打印出库单
             /******************** end buttons**************************/
 
             , toNewStatus : {}//要更新到的状态
@@ -258,7 +260,8 @@
                 '<span class="content"> {content}</span>  ' +
                 '<span class="right">{time}</span>' +
                 '</p>'//历史记录模版
-                , $orderItem : $('#orderItemTemplate')
+                , $orderItem : $('#orderItemTemplate')//订单明细模版
+                , $printToOut : $('#print_to_out_template')//出库单打印模版
             }
 
         };

@@ -195,6 +195,11 @@ public class SaleOrderService {
         }
         ErpSaleOrder order = saleOrderRepository.save(old.setStatusCode(status));
 
+        //修改明细的状态
+        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(orderId);
+        items.forEach(item -> item.setStatusCode(status.name()));
+        orderItemRepository.saveAll(items);
+
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(status.name()).content(status.toLog() + remark).optType("status").orderId(order.getId()).build());
         return order;
     }

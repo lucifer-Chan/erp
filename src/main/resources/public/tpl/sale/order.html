@@ -152,6 +152,7 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#_addSaleOrder" id="_addSaleOrderBt">修改订单信息</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSaleOrderItem" id="_addSaleOrderItemBt">新增订单明细</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toSubmitOrderBt">提交审核</button>
+            <button class="btn btn-primary" id="_printToOutBt">打印出库单</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toRefundsOrderBt">客户退货</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toFinishOrderBt">归档</button>
             <button class="btn btn-primary" data-name="delete" id="_deleteSaleOrderBt">删除</button>
@@ -352,10 +353,10 @@
             , $saveOrderItemBt : $('#_saveOrderItemBt')//保存订单明细按钮
             , $addOrderItemBt : $('#_addSaleOrderItemBt')//新增明细按钮
             , $changeOrderStatusBt : $('#_changeOrderStatusBt')//状态变更
+            , $printToOutBt: $('#_printToOutBt')//打印出库单
             /******************** end buttons**************************/
 
             , toNewStatus : {}//要更新到的状态
-
 
             , $statusDropDown : $('#statusCollection')//搜索：状态下拉
             , $addOrderModal : $('#_addSaleOrder')//新增订单modal
@@ -385,7 +386,8 @@
                 '<span class="content"> {content}</span>  ' +
                 '<span class="right">{time}</span>' +
                 '</p>'//历史记录模版
-                , $orderItem : $('#orderItemTemplate')
+                , $orderItem : $('#orderItemTemplate')//订单明细模版
+                , $printToOut : $('#print_to_out_template')//出库单打印模版
             }
 
         };

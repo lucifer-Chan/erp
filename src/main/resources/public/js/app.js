@@ -29,9 +29,9 @@ requirejs(['validate','utils','services','dropkick','slimScroll','metisMenu', 'm
         return $.Promise.all([
             utils.loadPage({ url : 'modals.html', div : $('#modals')}),
             utils.loadPage({ url : 'profile.html', div : $('#profile')}),
-            utils.loadPage({url : 'head.html', div : $('#header')})
+            utils.loadPage({url : 'head.html', div : $('#header')}),
+            utils.loadPage({url : 'print.html', div : $('#prints')})
         ])
-
         .then(function () {
             //2-加载登陆信息
             utils.initTheme();
