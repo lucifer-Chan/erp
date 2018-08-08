@@ -63,8 +63,6 @@ public class RawMaterialService {
         return material;
     }
 
-
-
     /**
      * 创建原材料
      * @param material
@@ -74,6 +72,9 @@ public class RawMaterialService {
     public ErpBaseRawMaterial create(ErpBaseRawMaterial material){
         material.setId(null);//防止假数据
         validateMaterialType(material);
+        String typeCode = material.getRawTypeCode();
+        String typeName = BarCodeConstants.BAR_CODE_PREFIX.valueOf(typeCode).description();
+        material.setRawName(typeName.substring("原材料-".length(), typeName.length()));
         return erpBaseRawMaterialRepository.save(material);
     }
     /**
@@ -87,6 +88,7 @@ public class RawMaterialService {
         Assert.notNull(inDb, "未找到原材料");
         validateMaterialType(material);
         material.setBarCode(inDb.getBarCode());
+        material.setRawName(inDb.getRawName());
         return erpBaseRawMaterialRepository.save(material);
     }
     /**
@@ -105,10 +107,9 @@ public class RawMaterialService {
      * @param material
      */
     private void validateMaterialType(ErpBaseRawMaterial material){
-        Assert.notNull(material, "原材料null");
+        Assert.notNull(material, "原材料不能为null");
         String type = material.getRawTypeCode();
         Assert.hasLength(type, "类型不能为空");
-        Assert.hasLength(material.getRawName(), "原材料名称不能为空");
         Assert.isTrue(
                 Arrays.asList(MA00,MZR0,MZY0,MZB0,MZN0,MZQ0,MM00,MF00)
                         .contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type))

@@ -23,6 +23,7 @@
                             <tr erp-id="{id}">
                                 <th style="width:50px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <th style="width:70px" erp-data="{rawName}" >名称</th>
+                                <th style="width:70px" erp-data="{unit}" >单位</th>
                                 <th style="width:70px" erp-data="{specification}">规格描述</th>
                                 <th style="width:40px" erp-data="{rawTypeCode}" erp-convert="convertTypeP">大类</th>
                                 <th style="width:40px" erp-data="{rawTypeCode}" erp-convert="convertTypeC">细类</th>
@@ -92,201 +93,48 @@
 
 </div>
 <!-- 修改成品信息 -->
-<div class="myErpModal modal fade" role="dialog" data-backdrop="static" id="_editMaterial">
-    <div class="modal-dialog modal-lg" role="document" style="z-index: 1040">
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editMaterial">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
                 <h4 class="modal-title"><i class="fa fa-bank defaultColor"></i> 编辑原材料信息</h4>
             </div>
+
             <div class="modal-body">
-                <!-- Nav tabs -->
-                <ul id='myTab' class="nav nav-tabs noborder" role="tablist">
-                    <li role="presentation" class="active"><a href="#_baseNewInfo" role="tab" data-toggle="tab"><span>基本信息</span></a></li>
-                    <li role="presentation"><a href="#_specificationInfo" role="tab" data-toggle="tab"><span>规格信息</span></a></li>
-                </ul>
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="_baseNewInfo">
-                        <div class="row">
-                            <form class="form-horizontal pd22 pd12">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">名称</label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="rawName" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-2 control-label">规格描述</label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="specification" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group _typeC">
-                                    <label class="col-sm-2 control-label">大类</label>
-                                    <div class="col-sm-4">
-                                        <div class="customDropkick _typeP" style="width: 100%;" id="_typeP" name="rawTypeCodeP" ></div>
-                                    </div>
-                                    <label class="col-sm-2 control-label">细类</label>
-                                    <div class="col-sm-4 ">
-                                        <div class="customDropkick" style="width: 100%;" id="_typeC" name="rawTypeCode" ></div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">自定义属性1</label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="userDefinedOne" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-2 control-label">自定义属性2</label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="userDefinedTwo" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">自定义属性3</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="userDefinedThree" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">备注</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="remark" placeholder="最多输入60个字符" autofocus onfocus="checkStrNum(this,60)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                            </form>
+                <form class="form-horizontal pd23">
+                    <div class="form-group _typeC">
+                        <label class="col-sm-2 control-label">大类</label>
+                        <div class="col-sm-4">
+                            <div class="customDropkick _typeP" style="width: 100%;" id="_typeP" name="rawTypeCodeP" ></div>
+                        </div>
+                        <label class="col-sm-2 control-label">细类</label>
+                        <div class="col-sm-4 ">
+                            <div class="customDropkick" style="width: 100%;" id="_typeC" name="rawTypeCode" ></div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane projectSetting" id="_specificationInfo">
-                        <div class="row">
-                            <form class="form-horizontal pd42 pd22 pd12">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">头径D(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHdmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">头径D(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHdmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">头厚T(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHtmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">头厚T(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHtmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">脚径d(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFtmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">脚径d(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFtmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">脚长L(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFlmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">脚长L(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFlmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">头径银层S1(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHdsmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">头径银层S1(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHdsmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">脱模角度θ(° )上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spTmammUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">脱模角度θ(° )下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spTmammLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">球半径SR(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spSrammUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">球半径SR(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spSrammLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">同轴度◎(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spAxlemmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">同轴度◎(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spAxlemmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">边缘S1(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spEdgemmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">边缘S1(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="speEdgeemmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">钉脚S2(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFdsmmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">钉脚S2(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="speFdsmmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">脚边缘S2(mm)上限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFaxlemmUpper" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">脚边缘S2(mm)下限</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="speFaxlemmLower" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">头部复合强度</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHCstrength" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                    <label class="col-sm-3 control-label">脚部复合强度</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spFCstrength" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
-                                    </div>
-                                </div>
-                                <div class="modal-footer noborder">
-                                    <button class="btn btn-info noborder" name="save">保存</button>
-                                </div>
-                            </form>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">单位</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="unit" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                         </div>
                     </div>
-                </div>
-
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">规格描述</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="specification" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" placeholder="最多输入100个字符" autofocus onfocus="checkStrNum(this,100)" oninput="checkStrNum(this,100)">备注</label>
+                        <div class="col-sm-10">
+                            <textarea rows="5" class="form-control" name="remark" id="remark"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -326,33 +174,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">大类</label>
-                                <div class="col-xs-8 txt pd0"   data-convert="rawTypeCodeCodeP"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">细类</label>
-                                <div class="col-xs-8 txt pd0"  data-convert="rawTypeCodeCode"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">规格描述</label>
-                                <div class="col-xs-8 txt pd0" data-name="specification"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">自定义属性1</label>
-                                <div class="col-xs-8 txt pd0" data-name="userDefinedOne"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">自定义属性2</label>
-                                <div class="col-xs-8 txt pd0" data-name="userDefinedTwo"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">自定义属性3</label>
-                                <div class="col-xs-8 txt pd0" data-name="userDefinedThree"></div>
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">规格描述</label>
+                                <div class="col-xs-10 txt pd0" data-name="specification"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -361,138 +185,6 @@
                                 <div class="col-xs-10 txt pd0" data-name="remark"></div>
                             </div>
 
-                        </div>
-                    </div>
-                </div>
-                <p class="pd23 pd43">
-                    <span class="col-xs-6 pd0">
-                        <span class="label label-info">规格信息</span>
-                    </span>
-                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base2"></i>
-                    </span>
-                </p>
-                <div class="col-xs-12" data-value="base2Info">
-                    <div class="pd43">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径D(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径D(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头厚T(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHtmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头厚T(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHtmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚径d(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFtmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚径d(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFtmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚长L(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFlmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚长L(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFlmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径银层S1(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdsmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径银层S1(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdsmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脱模角度θ(° )上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spTmammUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脱模角度θ(° )下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spTmammLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">球半径SR(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spSrammUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">球半径SR(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spSrammLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">同轴度◎(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spAxlemmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">同轴度◎(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spAxlemmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">边缘S1(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spEdgemmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">边缘S1(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="speEdgeemmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">钉脚S2(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFdsmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">钉脚S2(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="speFdsmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚边缘S2(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFaxlemmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚边缘S2(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="speFaxlemmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头部复合强度</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHCstrength"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚部复合强度</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFCstrength"></div>
-                            </div>
                         </div>
                     </div>
                 </div>

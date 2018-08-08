@@ -303,7 +303,11 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                     $clone.find('.approvalDate').text((approvalPass.createdAt||'').substr(0,10));
                 }
 
-                $clone.show().print();
+                $clone.show().print({
+                    deferred: $.Deferred().done(function() {
+                        services.saleOrder.afterPrint(consts.currentOrder.id);
+                    })
+                });
             });
         }
 

@@ -755,6 +755,11 @@ define('services',['utils'],function (utils) {
                 return order;
             });
         },
+        //打印回调
+        afterPrint : function (orderId) {
+            return $.http.patch('sale/order/' + orderId);
+        },
+
         //更新状态
         updateStatus : function (orderId, status, remark) {
             return $.http.patch({

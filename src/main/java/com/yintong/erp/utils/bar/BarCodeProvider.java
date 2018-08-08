@@ -159,7 +159,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
                 Object value = Unchecked.biFunction(ReflectUtil::getValue).apply(index, entity);
                 //2-2 构造出属性的计算值
                 ret.append(Objects.isNull(value) || !StringUtils.hasLength(value.toString()) ?
-                        EMPTY_REPLACE : wrapperAttribute(value.toString(), barCodeIndex.holder() ? 1 : barCodeIndex.length())
+                        (barCodeIndex.nullable() ? "" : EMPTY_REPLACE) : wrapperAttribute(value.toString(), barCodeIndex.holder() ? 1 : barCodeIndex.length())
                 );
             }
             return ret.toString();

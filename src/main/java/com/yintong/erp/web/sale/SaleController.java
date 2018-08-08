@@ -190,6 +190,16 @@ public class SaleController {
     }
 
     /**
+     * 准备出库-打印出库单之后调用
+     * @param orderId
+     * @return
+     */
+    @PatchMapping("order/{orderId}")
+    public BaseResult preStockOut(@PathVariable Long orderId){
+        return new BaseResult().addPojo(orderService.preStockOut(orderId));
+    }
+
+    /**
      * 新增销售订单明细-已有订单的情况下
      * 约束条件：订单状态为未发布、审核退回
      * ps：订单id、code校验，自身属性在service里校验

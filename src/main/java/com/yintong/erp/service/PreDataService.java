@@ -83,10 +83,10 @@ public class PreDataService {
                 , ErpMenu.builder().code("20").name("销售模块").build()
                     , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
                     , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/approval/**").uri("sale/approval.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/refunds/**").uri("sale/refunds.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/order/**").uri("sale/approval.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/order/**").uri("sale/refunds.html").parentCode("20").build()
                 , ErpMenu.builder().code("30").name("库存管理").build()
-                , ErpMenu.builder().code("3001").name("仓位维护").matches("/warehouse/maintain/**").uri("warehouse/maintain.html").parentCode("30").build()
+                , ErpMenu.builder().code("3001").name("仓位维护").matches("/stock/place/**").uri("stock/place.html").parentCode("30").build()
         );
         menuRepository.saveAll(menus);
     }
@@ -246,5 +246,33 @@ public class PreDataService {
                 .collect(Collectors.toList())
         );
 
+        //仓库类型
+        lookupRepository.saveAll(
+                Stream.of(Constants.StockPlaceType.values())
+                        .map(status ->
+                                ErpBaseLookup.builder()
+                                        .code(status.name())
+                                        .name(status.description())
+                                        .type("sp_type")
+                                        .description("仓位类型")
+                                        .tag(Integer.valueOf(status.ordinal()).longValue())
+                                        .build()
+                        )
+                        .collect(Collectors.toList())
+        );
+        //仓位状态
+        lookupRepository.saveAll(
+                Stream.of(Constants.StockPlaceStatus.values())
+                    .map(status ->
+                            ErpBaseLookup.builder()
+                                    .code(status.name())
+                                    .name(status.description())
+                                    .type("sp_status")
+                                    .description("仓位状态")
+                                    .tag(Integer.valueOf(status.ordinal()).longValue())
+                                    .build()
+                    )
+                .collect(Collectors.toList())
+        );
     }
 }

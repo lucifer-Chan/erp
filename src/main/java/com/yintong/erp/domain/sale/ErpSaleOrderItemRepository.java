@@ -22,6 +22,9 @@ public interface ErpSaleOrderItemRepository extends JpaRepository<ErpSaleOrderIt
      */
     List<ErpSaleOrderItem> findByProductIdAndStatusCodeAndCreatedAtIsBetween(Long productId, String statusCode, Date start, Date end);
 
+
+    List<ErpSaleOrderItem> findByProductId(Long productId);
+
     void deleteByOrderId(Long orderId);
 
 

@@ -8,6 +8,8 @@ import com.yintong.erp.domain.sale.ErpSaleOrderOptLogRepository;
 import com.yintong.erp.domain.sale.ErpSaleOrderRepository;
 
 import com.yintong.erp.utils.common.DateUtil;
+import com.yintong.erp.validator.OnDeleteCustomerValidator;
+import com.yintong.erp.validator.OnDeleteProductValidator;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +40,7 @@ import org.springframework.util.StringUtils;
  * 销售订单服务
  **/
 @Service
-public class SaleOrderService {
+public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProductValidator{
 
     @Autowired ErpSaleOrderRepository saleOrderRepository;
 
@@ -205,6 +207,19 @@ public class SaleOrderService {
     }
 
     /**
+     * 准备出库-打印出库单之后调用
+     * @param orderId
+     * @return
+     */
+    public ErpSaleOrder preStockOut(Long orderId){
+        ErpSaleOrder order = saleOrderRepository.findById(orderId).orElse(null);
+        Assert.notNull(order, "未找到销售订单[" + orderId + "]");
+        order.setPreStockOut(1);
+        return  saleOrderRepository.save(order);
+    }
+
+
+    /**
      * 新增销售订单明细-已有订单的情况下
      * 约束条件：订单状态为未发布、审核退回
      * ps：订单id、code校验，自身属性在service里校验
@@ -306,6 +321,20 @@ public class SaleOrderService {
      */
     public List<ErpSaleOrderItem> findOrderItems(Long orderId){
         return  orderItemRepository.findByOrderIdOrderByMoneyDesc(orderId);
+    }
+
+    @Override
+    public void onDeleteCustomer(Long employeeId) {
+        ErpSaleOrder order = saleOrderRepository.findByCustomerId(employeeId)
+                .stream().findAny().orElse(null);
+        Assert.isNull(order, "请先删除销售单[" + order.getBarCode() + "]");
+    }
+
+    @Override
+    public void onDeleteProduct(Long productId) {
+        ErpSaleOrderItem item = orderItemRepository.findByProductId(productId)
+                .stream().findAny().orElse(null);
+        Assert.isNull(item, "请先删除销售单[" + item.getOrderCode() + "]中的明细");
     }
 
     /**

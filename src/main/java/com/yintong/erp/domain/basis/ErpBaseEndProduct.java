@@ -126,6 +126,18 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Column(columnDefinition = "varchar(20) comment '导入时间,空值表示录入'")
     private String importedAt;
 
+
+    //20180808新增
+    @Column(columnDefinition = "varchar(20) comment '产品等级'")
+    private String level;
+
+    @Column(columnDefinition = "varchar(128) comment '材料名称'")
+    private String materialName;
+
+    @Column(columnDefinition = "varchar(20) comment '同心度'")
+    private String concentricity;
+
+
     @Transient
     private String endProductTypeName;
 

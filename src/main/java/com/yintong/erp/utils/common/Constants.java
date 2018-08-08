@@ -66,4 +66,68 @@ public interface Constants {
             return "【" + prefix + description() + "】";
         }
     }
+
+    /**
+     * 仓位状态
+     */
+    enum StockPlaceStatus {
+        ON("在役"), STOP("停役");
+
+        StockPlaceStatus(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
+
+    /**
+     * 仓位类型
+     */
+    enum StockPlaceType {
+        P("成品仓位"), M("原材料仓位");
+
+        StockPlaceType(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
+
+    /**
+     * 库存动作
+     */
+    enum StockOpt {
+        IN("入库"), OUT("出库");
+
+        StockOpt(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
+
+    /**
+     * 出入库宿主
+     */
+    enum StockHolder {
+        SALE("销售"), //出库
+        REFUNDS("退货"), //入库
+        PROD("生产"),  //出库 入库
+        BUY("采购"),  //入库
+        INIT("初始化");//入库
+
+        StockHolder(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
 }

@@ -51,6 +51,10 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;
 
+    @Column(columnDefinition = "integer DEFAULT 0 comment '是否可出库[1-可以|0-不可以]'")
+    private Integer preStockOut;
+
+
     /**
      * 订单明细
      */

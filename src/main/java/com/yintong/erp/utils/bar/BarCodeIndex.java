@@ -31,4 +31,10 @@ public @interface BarCodeIndex {
      * @return
      */
     int length() default BarCodeConstants.ID_LENGTH;
+
+    /**
+     * 是否可为空 true-> "" | false -> EMPTY_REPLACE
+     * @return
+     */
+    boolean nullable() default false;
 }
