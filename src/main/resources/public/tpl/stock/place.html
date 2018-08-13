@@ -1,10 +1,593 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-仓位维护
-</body>
-</html>
+<!-- Main -->
+<div class="erp_content animated fadeInRight full_height"  id="stock_place_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、仓位名称、可存物料" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+            <ul class="nav nav-pills">
+                <li role="presentation" class="dropdown" id="typeCollection"></li>
+            </ul>
+            <button type="button" class="btn btn-default btn-ms operation" id="addProductPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增成品仓位</button>
+            <button style="right: 140px" type="button" class="btn btn-default btn-ms operation" id="addMaterialPlaceBt" data-toggle="modal" data-target="#_addMaterialPlace">新增原材料仓位</button>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:50px" erp-data="{barCode}">仓位编号<span id="allCount"></span></th>
+                                <th style="width:30px" erp-data="{stockPlaceType}" erp-convert="convertType">类型</th>
+                                <th style="width:70px" erp-data="{name}" >名称</th>
+                                <th style="width:30px" erp-data="{statusCode}" erp-convert="convertStatus">仓位状态</th>
+                                <th style="width:30px" erp-data="{upperLimit}{currentStorageNum}" erp-convert="convertStorage">存储情况</th>
+                                <th style="width:70px" erp-data="{materialName}">可存物料</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑成品仓位 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addProductPlace">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-bank defaultColor"></i> 编辑成品仓位</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd23">
+                    <input type="hidden" name="stockPlaceType" value="P">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">仓位名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="name" placeholder="仓位名称：类似 一号仓位" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">库存上限</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" step="1" name="upperLimit" placeholder="请输入正整数" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" autofocus onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="savePbt">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑原材料仓位 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addMaterialPlace">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-bank defaultColor"></i> 编辑原材料仓位</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd23">
+                    <input type="hidden" name="stockPlaceType" value="M">
+                    <div class="form-group" id="editAssDiv">
+                        <label class="col-sm-2 control-label">原材料</label>
+                        <div class="col-sm-10">
+                            <div class="customDropkick" style="width: 100%;" id="_materialSupplierAssId"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">仓位名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="name" placeholder="仓位名称：类似 一号仓位" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">库存上限</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" step="1" name="upperLimit" placeholder="请输入正整数" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" autofocus onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="saveMbt">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 右侧-->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0">
+            <button class="btn btn-primary" id="editPlaceBt">修改基本信息</button>
+            <button class="btn btn-primary" id="stopPlaceBt">停役</button>
+            <button class="btn btn-primary" id="deletePlaceBt">删除</button>
+        </span>
+    </div>
+    <div class="bugInfoContent">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">基本信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base1"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">名称</label>
+                                <div class="col-xs-8 txt pd0" data-name="name"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">类型</label>
+                                <div class="col-xs-8 txt pd0" data-name="stockPlaceType" data-convert="convertType"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">仓位状态</label>
+                                <div class="col-xs-8 txt pd0" data-name="statusCode" data-convert="convertStatus"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">存储上限</label>
+                                <div class="col-xs-8 txt pd0" data-name="upperLimit"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">当前存量</label>
+                                <div class="col-xs-8 txt pd0" data-name="currentStorageNum"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">可存物料</label>
+                                <div class="col-xs-10 txt pd0" data-name="materialName"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">备注</label>
+                                <div class="col-xs-10 txt pd0" data-name="description"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <ul class="nav nav-tabs noborder" role="tablist">
+                        <li role="presentation" class="active"><span href="#stockHistory" role="tab" data-toggle="tab" id="stockHistorySpan">出入库记录</span></li>
+                        <li role="presentation"><span href="#stockInfo" role="tab" data-toggle="tab" id="stockInfoSpan">库存信息</span></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="stockHistory">
+                            <div class="col-sm-12" id="stockHistoryContent">
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="stockInfo">
+                            <div class="col-sm-12" id="stockInfoContent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    requirejs(['slimScroll', 'utils','services'],function (slimScroll, utils, services) {
+        console.log('hello stock place');
+        var consts = {
+            types : {"M" : "原材料仓位", "P" : "成品仓位"}//类型 成品|原材料
+            , source : {SALE : "销售", REFUNDS : "退货", PROD :"生产", BUY : "采购", INIT : "初始化"}//来源
+            , oQueryParam : {}//查询参数
+            , currentPlace : {}//当前仓位
+            , supplierMaterial : []//所有的原材料
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $editPModal : $('#_addProductPlace')//编辑成品仓位modal
+            , $editMModal : $('#_addMaterialPlace')//编辑原材料仓位modal
+            , $addPBt : $('#addProductPlaceBt')//新增成品仓位按钮
+            , $addMBt : $('#addMaterialPlaceBt')//新增原材料仓位按钮
+            , $savePBt : $('#savePbt')//保存成品仓位按钮
+            , $saveMBt : $('#saveMbt')//保存原材料仓位按钮
+
+            , $stockHistory : $('#stockHistory')//出入库记录
+            , $stockInfo : $('#stockInfo')//库存信息
+
+            ,template : {
+                stockLog : '<p>' +
+                    '<span class="name"><b>{name}</b></span>' +
+                    '<span class="content"> {content}</span>  ' +
+                    '<span class="right">{time}</span>' +
+                    '</p>'//出入库记录模版
+                , remain : '<p>' +
+                    '<span class="content"> {content}</span>  ' +
+                    '<span class="right">{num}</span>' +
+                    '</p>'//库存模版
+            }
+
+        };
+
+        init();
+
+        //预置数据
+        function prepareData() {
+            return $.Promise.resolve()
+                .then(function () {
+                    return services.common.ass.supplierMaterial().then(function (ret) {
+                        consts.supplierMaterial = [];
+                        consts.supplierMaterial.push({code : -1, name : '【请选择原材料】'});
+                        ret.list.forEach(function (value) {
+                            consts.supplierMaterial.push({code : value.key , name : value.value});
+                        });
+                    })
+                })
+                .catch(function (reason) {
+                    console.log('reason', reason);
+                });
+        }
+
+        /**
+         * 初始化右侧
+         */
+        function initTrDetail(tr) {
+            if (!tr) return;
+            console.log('点击列表', tr);
+            consts.currentPlace = tr;
+
+            var $detail = $('.bugInfoContent');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                var value = tr[$(this).attr('data-name')] || '';
+                var convert = $(this).attr('data-convert');
+                if(convert === 'convertStatus'){
+                    if ('STOP' === value) {
+                        value = '<span class="label label-danger">停役</span>';
+                        $('#stopPlaceBt,#editPlaceBt').hide();
+                    } else if ('ON' === value) {
+                        value = '<span class="label label-success">在役</span>';
+                        $('#stopPlaceBt,#editPlaceBt').show();
+                    }
+                } else if(convert === 'convertType'){
+                    if ('M' === value) {
+                        value = '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
+                        consts.$stockInfo.hide();
+                        $('#stockInfoSpan').hide();
+                    }else if ('P' === value) {
+                        value =  '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
+                        consts.$stockInfo.show();
+                        $('#stockInfoSpan').show();
+                    }
+                }
+                $(this).html(value || '<span class="label label-warning">无</span>');
+            });
+            $('#stockHistorySpan').click();
+            //初始化页面数据-出入库记录 && 库存信息（成品）
+            services.stock.place.ext(tr.id).then(function (ret) {
+                var $stockHistory = $('#stockHistoryContent');
+                var $stockInfo  = $('#stockInfoContent');
+                $stockHistory.empty();
+                $stockInfo.empty();
+
+                var history = ret.history || [];
+                var remain = ret.remain || [];
+                //库存信息
+                if ('M' !== tr.stockPlaceType){
+                    if (!remain.length){
+                        $stockInfo.html('<p>暂无</p>');
+                    } else {
+                        var html = '';
+                        remain.forEach(function (info) {
+                            html += consts.template.remain.replace('{content}', info.productName).replace('{num}', info.total);
+                        });
+                        $stockInfo.html(html);
+                    }
+                }
+                //出入库记录
+                if (!history.length){
+                    $stockHistory.html('<p>暂无</p>');
+                } else {
+                    var html2 = '';
+                    history.forEach(function (info) {
+                        var source = consts.source[info.holder] || '';
+                        var operation = info.operation === 'IN' ? '入库' : '出库';
+                        var name = '【' + operation + '-' + source + '】';
+                        var content = (info.productName || tr.materialName)+ '['+ info.num + ']';
+                        if('INIT' !== info.holder){
+                            content += ',对应单号：' + info.holderDescription;
+                        }
+
+                        html2 += consts.template.stockLog
+                            .replace('{name}', name)
+                            .replace('{content}', content)
+                            .replace('{time}', info.createdAt);
+                    });
+                    $stockHistory.html(html2);
+                }
+            })
+        }
+
+
+        /**
+         * 加载成品列表
+         */
+        function loadDataTable(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.stock.place.query(params);
+            }
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.stock.place.one(id).then(function (tr) {
+                    console.log('点击tr', tr);
+                    initTrDetail(tr);
+                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                    $rightPage.find('.fa-angle-double-down').click();
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            }
+
+            /**
+             * 客户化方法，
+             * @param array 待包装的数据
+             */
+            function convertType(array){
+                var _value = array.length ? array[0] : '';
+                if(!_value) return '';
+                if ('M' === _value) return '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
+                if ('P' === _value) return '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
+                return '';
+            }
+
+            function convertStatus(array) {
+                var _value = array.length ? array[0] : '';
+                if(!_value) return '';
+                if ('STOP' === _value) return '<span class="label label-danger">停役</span>';
+                if ('ON' === _value) return '<span class="label label-success">在役</span>';
+                return '';
+            }
+
+            function convertStorage(array) {
+                var limit = array[0] || 0;
+                var total = array[1] || 0;
+                if(!limit) return '<span class="label label-danger">' + total + '/' + limit + '</span>';
+                var percent = total/limit;
+                if(percent > 0.8){
+                    return '<span class="label label-warning">' + total + '/' + limit + '</span>';
+                } else {
+                    return '<span class="label label-success">' + total + '/' + limit + '</span>';
+                }
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : [convertType, convertStatus, convertStorage]
+
+            });
+        }
+
+        /**
+         * 按钮事件初始化
+         */
+        function init_button_event() {
+            //新增仓位按钮
+            consts.$addPBt.bind('click', function(){consts.currentPlace = {};});
+            consts.$addMBt.bind('click', function(){consts.currentPlace = {};});
+
+            //编辑成品仓位钮保存事件
+            consts.$savePBt.unbind('click').click(function (e) {
+                e.preventDefault();
+                var data = consts.$editPModal.find('form').serializeObject();
+                data.id = consts.currentPlace.id || '';
+                var _function = !!data.id ? services.stock.place.update : services.stock.place.create;
+
+                console.log('save product place Data', data);
+                _function(data).then(function (place) {
+                    consts.$editPModal.modal('hide');
+                    loadDataTable(true);
+                    if(data.id) {
+                        initTrDetail(place);
+                    }
+                    layer.msg('保存成品仓位成功');
+                }).catch(function (reason) {
+                    console.log('保存成品仓位失败', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+            //编辑原材料仓位按钮保存事件
+            consts.$saveMBt.unbind('click').click(function (e) {
+                e.preventDefault();
+                var data = consts.$editMModal.find('form').serializeObject();
+                data.materialSupplierAssId = $('#_materialSupplierAssId').attr('data-value');
+                data.materialName = consts.$editMModal.find('.dk_label').html();
+                if(data.materialSupplierAssId === '-1'){
+                    layer.msg('请选择原材料！');
+                    return;
+                }
+                data.id = consts.currentPlace.id || '';
+                var _function = !!data.id ? services.stock.place.update : services.stock.place.create;
+                console.log('save material place Data', data);
+                _function(data).then(function (place) {
+                    consts.$editMModal.modal('hide');
+                    //更新的情况
+                    loadDataTable(true);
+                    if(data.id) {
+                        initTrDetail(place);
+                    }
+                    layer.msg('保存原材料仓位成功');
+                }).catch(function (reason) {
+                    console.log('保存原材料仓位失败', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+
+            //更新仓位按钮
+            $('#editPlaceBt').unbind('click').click(function () {
+                if(consts.currentPlace.stockPlaceType === 'M') consts.$editMModal.modal('show');
+                if(consts.currentPlace.stockPlaceType === 'P') consts.$editPModal.modal('show');
+            });
+            //删除仓位按钮
+            $('#deletePlaceBt').unbind('click').click(function () {
+                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                    services.stock.place.delete(consts.currentPlace.id)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            loadDataTable(true);
+                            consts.currentPlace = {};
+                            consts.$rightPage.attr('data-id', '').hide();
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                        });
+                });
+            });
+
+            //停役
+            $('#stopPlaceBt').unbind('click').click(function () {
+                layer.confirm('停役后的仓位不可再进行入库操作，确定停役吗？',{title:'提示',move:false},function(){
+                    services.stock.place.stop(consts.currentPlace.id)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            initTrDetail(ret);
+                            loadDataTable(true);
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                        });
+                });
+            })
+        }
+
+        function init_modal() {
+            //成品仓位初始化
+            consts.$editPModal.on('show.bs.modal', function () {
+                var $this = $(this);
+                // 初始数据
+                $.each(consts.currentPlace, function (name, value) {
+                    $this.find('form [name="'+ name +'"]').val(value);
+                });
+            }).on('hidden.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"], input[type="number"]').val('');
+            });
+
+            //原材料仓位初始化
+            consts.$editMModal.on('show.bs.modal', function () {
+                var $this = $(this);
+                // 初始数据
+                $.each(consts.currentPlace, function (name, value) {
+                    $this.find('form [name="'+ name +'"]').val(value);
+                });
+                if(!consts.currentPlace.id){
+                    $('#editAssDiv').show();
+                    //供选原材料
+                    utils.dropkick({
+                        $holder : $('#_materialSupplierAssId'),
+                        data : consts.supplierMaterial,
+                        current : consts.currentPlace.materialSupplierAssId
+                    });
+                } else {
+                    $('#editAssDiv').hide();
+                }
+
+            }).on('hidden.bs.modal', function () {
+                //清理数据
+                $(this).find('input[type="text"], input[type="number"]').val('');
+            });
+        }
+
+        function initEvent() {
+            //1-搜索下拉
+            utils.dropdown({
+                $holder : $('#typeCollection'),
+                data : consts.types,
+                prefix : '类型',
+                callback : function (value) {
+                    consts.oQueryParam.type = value;
+                    console.log('oQueryParam', consts.oQueryParam);
+                    loadDataTable(true);
+                }
+            });
+
+            //1.2-搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                consts.oQueryParam.cause = $('#fastKeyword').val();
+                loadDataTable(true);
+            });
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13){
+                    consts.oQueryParam.cause = $('#fastKeyword').val();
+                    loadDataTable(true);
+                }
+            });
+
+            //2-按钮事件初始化
+            init_button_event();
+            //3-模态框初始化
+            init_modal();
+        }
+
+        function init() {
+            prepareData()
+                .then(function () {
+                    initEvent();
+                    loadDataTable();
+                });
+        }
+    });
+</script>

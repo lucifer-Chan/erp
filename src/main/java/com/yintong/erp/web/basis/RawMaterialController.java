@@ -1,10 +1,10 @@
 package com.yintong.erp.web.basis;
 
-import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterial;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterialRepository;
 import com.yintong.erp.service.basis.RawMaterialService;
 import com.yintong.erp.service.basis.RawMaterialService.RawMaterialParameterBuilder;
+import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +31,13 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 @RequestMapping("basis/rawMaterial")
 public class RawMaterialController {
 
-    @Autowired
-    private RawMaterialService rawMaterialService;
+    @Autowired RawMaterialService rawMaterialService;
 
-    @Autowired
-    private ErpBaseRawMaterialRepository awMaterialRepository;
+    @Autowired ErpBaseRawMaterialRepository rawMaterialRepository;
+
+    @Autowired SupplierRawMaterialService supplierRawMaterialService;
+
+
 
     @GetMapping
     public BaseResult query(RawMaterialParameterBuilder parameter){
@@ -54,13 +56,48 @@ public class RawMaterialController {
     }
 
     /**
-     * 根据成品id查找原材料
+     * 根据原材料id查找原材料
      * @param materialId
      * @return
      */
     @GetMapping("{materialId}")
     public BaseResult one(@PathVariable Long materialId){
         return new BaseResult().addPojo(rawMaterialService.one(materialId));
+    }
+
+    /**
+     * 根据原材料找已关联供应商
+     * @param materialId
+     * @return
+     */
+    @GetMapping("{materialId}/supplier")
+    public BaseResult findSuppliersByMaterialId(@PathVariable Long materialId){
+        return new BaseResult().addList(rawMaterialService.findSuppilersAss(materialId));
+    }
+
+    /**
+     * 根据原材料找未关联供应商
+     * @param materialId
+     * @return
+     */
+    @GetMapping("{materialId}/supplier/unassociated")
+    public BaseResult findUnassociatedSuppliers(@PathVariable Long materialId){
+        return new BaseResult().addList(rawMaterialService.findUnassociatedSuppliers(materialId));
+    }
+
+
+    /**
+     * 保存原材料和供应商的关联
+     * @param materialId
+     * @param supplierId
+     * @param up
+     * @param low
+     * @return
+     */
+    @PostMapping("{materialId}/supplier/{supplierId}")
+    public BaseResult saveAss(@PathVariable Long materialId, @PathVariable Long supplierId, Integer up, Integer low){
+        boolean result = supplierRawMaterialService.save(materialId, supplierId, up, low);
+        return new BaseResult().setErrmsg(result ? "保存成功" : "已存在关联");
     }
 
     /**
@@ -105,7 +142,7 @@ public class RawMaterialController {
      */
     @GetMapping("group")
     public BaseResult group(){
-        List<Map<String, Object>> ret = awMaterialRepository.groupByImportAt().stream()
+        List<Map<String, Object>> ret = rawMaterialRepository.groupByImportAt().stream()
                 .map(array-> new HashMap<String, Object>(){{
                     put("num", array[0]);
                     put("importedAt", array[1]);
@@ -123,7 +160,7 @@ public class RawMaterialController {
     public BaseResult batchDelete(@PathVariable String importedAt){
         log.info("importedAt", importedAt);
         Assert.hasLength(importedAt, "参数无效");
-        List<ErpBaseRawMaterial> products = awMaterialRepository.findByImportedAt(importedAt);
+        List<ErpBaseRawMaterial> products = rawMaterialRepository.findByImportedAt(importedAt);
         int sum = products.size();
         int count = 0;
         for(ErpBaseRawMaterial material : products){

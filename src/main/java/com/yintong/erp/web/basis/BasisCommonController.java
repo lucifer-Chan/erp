@@ -3,6 +3,7 @@ package com.yintong.erp.web.basis;
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseLookupRepository;
 import com.yintong.erp.service.basis.CategoryService;
+import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.bar.BarCodeUtil;
 import com.yintong.erp.utils.base.BaseResult;
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class BasisCommonController {
     @Autowired CategoryService categoryService;
 
     @Autowired ErpBaseLookupRepository lookupRepository;
+
+    @Autowired SupplierRawMaterialService supplierRawMaterialService;
 
     /**
      * 类别树
@@ -89,5 +92,14 @@ public class BasisCommonController {
     public void barCode(HttpServletResponse response, @PathVariable String code) throws IOException {
         //将图片输出给浏览器
         BarCodeUtil.generate(code, response.getOutputStream());
+    }
+
+    /**
+     * 获取所有供应商和成品的关联
+     * @return assId：供应商-名称-规格
+     */
+    @GetMapping("ass/supplier/material")
+    public BaseResult supplierMaterials(){
+        return new BaseResult().addList(supplierRawMaterialService.descriptions());
     }
 }

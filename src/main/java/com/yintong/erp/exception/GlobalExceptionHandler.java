@@ -168,6 +168,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String errorMsg = e.getMessage();
         if(!StringUtils.hasLength(errorMsg))
             errorMsg = status.getReasonPhrase();
+        if(errorMsg.contains(";")){
+            errorMsg = errorMsg.split(";")[0];
+        }
         BaseResult ret = new BaseResult(status, errorMsg);
         if(debug){
             ret.put("request", JsonWrapper.builder()
@@ -199,6 +202,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             } catch (IllegalArgumentException ex){
                 errorMsg = HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase();
             }
+        }
+        if(errorMsg.contains(";")){
+            errorMsg = errorMsg.split(";")[0];
         }
         BaseResult ret = new BaseResult(status, errorMsg);
         if(debug){

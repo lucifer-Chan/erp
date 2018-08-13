@@ -1,8 +1,38 @@
 package com.yintong.erp.service.stock;
 
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
+import com.yintong.erp.domain.stock.ErpStockOptLog;
+import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
+import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
+
+import com.yintong.erp.utils.common.Constants;
+import com.yintong.erp.utils.query.OrderBy;
+import com.yintong.erp.utils.query.ParameterItem;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
+import com.yintong.erp.utils.query.QueryParameterBuilder;
+import com.yintong.erp.validator.OnDeleteSupplierRawMaterialValidator;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
+import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
+import lombok.Getter;
+import lombok.Setter;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.Assert;
+
+import static com.yintong.erp.utils.common.Constants.StockPlaceStatus.*;
+import org.springframework.util.StringUtils;
+
 
 /**
  * @author lucifer.chan
@@ -10,8 +40,169 @@ import org.springframework.stereotype.Service;
  * 仓位服务
  **/
 @Service
-public class StockPlaceService {
+public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
     @Autowired ErpStockPlaceRepository stockPlaceRepository;
 
+    @Autowired ErpStockOptLogRepository stockOptLogRepository;
 
+    /**
+     * 查找是否有原材料对应的供应商
+     * @param materialSupplier
+     */
+    @Override
+    public void onDeleteSupplierRawMaterial(ErpRawMaterialSupplier materialSupplier) {
+        List<ErpStockPlace> placeList = stockPlaceRepository.findByMaterialSupplierAssId(materialSupplier.getId());
+        if(CollectionUtils.isEmpty(placeList)) return;
+        String placeNames = StringUtils.collectionToCommaDelimitedString(
+                placeList.stream().map(ErpStockPlace :: getName).collect(Collectors.toList())
+        );
+
+        Assert.isTrue(!StringUtils.hasText(placeNames), "仓位[" + placeNames + "]关联了该原材料，请先删除仓位关联");
+    }
+
+    /**
+     * 创建仓位
+     * @param place
+     * @return
+     */
+    public ErpStockPlace create(ErpStockPlace place){
+        place.setId(null);
+        place.setStatusCode(ON.name());
+        return stockPlaceRepository.save(place);
+    }
+
+    /**
+     * 更新仓位-库存上限、仓位描述
+     * @param placeId
+     * @param upperLimit
+     * @param name
+     * @param description
+     * @return
+     */
+    public ErpStockPlace update(Long placeId, Integer upperLimit, String name, String description){
+        ErpStockPlace place = one(placeId);
+        place.setUpperLimit(upperLimit);
+        place.setName(name);
+        place.setDescription(description);
+        return stockPlaceRepository.save(place);
+    }
+
+    /**
+     * 停役仓位
+     * @param placeId
+     * @return
+     */
+    public ErpStockPlace stop(Long placeId){
+        ErpStockPlace place = one(placeId);
+        place.setStatusCode(STOP.name());
+        return stockPlaceRepository.save(place);
+    }
+
+    /**
+     * 删除仓位
+     * @param placeId
+     */
+    public void delete(Long placeId){
+        Assert.isTrue(CollectionUtils.isEmpty(stockOptLogRepository.findByStockPlaceId(placeId)), "当前仓位有出入库记录，无法删除");
+        stockPlaceRepository.deleteById(placeId);
+    }
+
+    /**
+     * 查找单个仓位
+     * @param placeId
+     * @return
+     */
+    public ErpStockPlace one(Long placeId){
+        Assert.notNull(placeId, "仓位id不能为空");
+        ErpStockPlace place = stockPlaceRepository.findById(placeId).orElse(null);
+        Assert.notNull(place, "未找到id为[" + placeId + "]的仓位");
+        return place;
+    }
+
+    /**
+     * 根据条码查找仓位
+     * @param barCode
+     * @return
+     */
+    public ErpStockPlace one(String barCode){
+        ErpStockPlace place = stockPlaceRepository.findFirstByBarCode(barCode);
+        Assert.notNull(place, "未找到编号为[" + barCode + "]的仓位");
+        return place;
+    }
+
+    /**
+     * 组合查询
+     * @param parameters
+     * @return
+     */
+    public Page<ErpStockPlace> query(PlaceParameterDto parameters) {
+        return stockPlaceRepository.findAll(parameters.specification(), parameters.pageable());
+    }
+
+    /**
+     * 仓位信息
+     * @param placeId
+     * @return history ： optHistory
+     *         remain : 库存信息 （成品仓位时）
+     */
+    public Map<String, List<JSONObject>> placeExt(Long placeId){
+        ErpStockPlace place = one(placeId);
+        List<ErpStockOptLog> optHistory = optHistory(placeId);
+        Map<String, List<JSONObject>> map = new HashMap<>();
+        map.put("history", optHistory.stream().map(ErpStockOptLog::toJSONObject).collect(Collectors.toList()));
+        if(Constants.StockPlaceType.P.name().equals(place.getStockPlaceType())){
+            //按照成品分组
+            Map<Long, List<ErpStockOptLog>> infoMap =
+                    optHistory.stream().collect(Collectors.groupingBy(ErpStockOptLog::getProductId));
+
+            List<JSONObject> infoList = new ArrayList<>();
+
+            //计算每个成品的数量，叠加。
+            infoMap.forEach((k,list)->{
+                double total = list.stream().mapToDouble(log->{
+                    if(Constants.StockOpt.IN == log.getOperation()){
+                        return  -1 * log.getNum();
+                    }
+                    return log.getNum();
+                }).sum();
+                //搜集数量>0的成品
+                if(total > 0){
+                    JSONObject info = list.get(0).filter("productId", "productName");
+                    info.put("total", total);
+                    infoList.add(info);
+                }
+            });
+
+            map.put("remain", infoList);
+            return map;
+        }
+
+
+        return map;
+    }
+
+    /**
+     * 仓位查询入参dto
+     */
+    @Getter@Setter
+    @OrderBy(fieldName = "createdAt")
+    public static class PlaceParameterDto extends QueryParameterBuilder {
+        @ParameterItem(mappingTo = {"barCode", "name", "description", "materialName"}, compare = like, group = OR)
+        String cause;
+
+        @ParameterItem( mappingTo = "stockPlaceType", compare = equal, group = AND)
+        String type;
+    }
+
+    /**
+     * 仓位的出入库记录
+     * @param placeId
+     * @return
+     */
+    private List<ErpStockOptLog> optHistory(Long placeId){
+        return stockOptLogRepository.findByStockPlaceId(placeId)
+                .stream()
+                .sorted(Comparator.comparing(ErpStockOptLog::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
 }

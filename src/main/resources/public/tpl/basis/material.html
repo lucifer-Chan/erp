@@ -126,7 +126,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" placeholder="最多输入100个字符" autofocus onfocus="checkStrNum(this,100)" oninput="checkStrNum(this,100)">备注</label>
+                        <label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10">
                             <textarea rows="5" class="form-control" name="remark" id="remark"></textarea>
                         </div>
@@ -147,6 +147,7 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editMaterial">修改基本信息</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -184,7 +185,19 @@
                                 <label class="col-xs-2 pd0">备注</label>
                                 <div class="col-xs-10 txt pd0" data-name="remark"></div>
                             </div>
-
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#suppliers" role="tab" data-toggle="tab">供应商列表</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="suppliers">
+                        <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
                 </div>
@@ -192,16 +205,137 @@
         </div>
     </div>
 </div>
+
+<!-- 供应商详情模版-->
+<div class="row" id="supplierTemplate" style="display: none">
+    <div class="col-sm-12" style="margin-bottom:-20px">
+        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 13px"></h3>
+                <div class="tools">
+                    <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
+                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editWarning">修改</button>
+                    <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
+                </div>
+            </div>
+            <div class="panel-body" data-value="">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">预警下限</label>
+                                    <div class="col-xs-9 txt pd0" data-name="alertLower"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">预警上限</label>
+                                    <div class="col-xs-9 txt pd0" data-name="alertUpper"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">当前数量</label>
+                                    <div class="col-xs-9 txt pd0" data-name="totalNum"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">关联时间</label>
+                                    <div class="col-xs-9 txt pd0" data-name="associateAt"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 预警上下限 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editWarning">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 修改预警上下限</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警下限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="_alertLower">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警上限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="_alertUpper">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveWarningBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加供应商 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addAss">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 添加供应商</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">供应商</label>
+                        <div class="col-sm-10">
+                            <div class="customDropkick" style="width: 100%;" id="_supplier"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警下限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="__alertLower">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警上限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="__alertUpper">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveAssBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
     requirejs(['slimScroll','ztree','utils','services'],function (slimScroll,ztree, utils, services) {
         console.log('hello product');
         init();
 
         var consts = {
-            typeAll : {}//所有成品大类-{code:{code:name}}
-            ,typeP : {}//成品大类-code|name
+            typeAll : {}//原材料大类-{code:{code:name}}
+            , suppliersCache : {}//关联供应商缓存，每一次刷新右侧，将关联供应商加入到这里 {id : obj}
+            , currentAss : {}//当前的关联
+            , typeP : {}//原材料大类-code|name
             , typeC : {} //供应商等级-code|name
-            ,supplier:{}//供应商-code|name
+            , supplier:[]//供应商-code|name
             , material : {}//选中的成品
             , $typePHolder : $('#typeP')//成品大类别
             , $typeCHolder : $('#typeC')//成品细类别
@@ -209,8 +343,11 @@
             , oQueryParam : {}//查询参数
             , $editInfoMaterial : $('#_editMaterial')//编辑供应商modal
             , $rightPage : $('#rightInfoPage')//右侧页面
+            , $suppliers : $('#suppliers')//供应商列表
             , $batchModal : $('#_batchOperation')//批量操作modal
             , $uploadInput : $('#excelFile')//导入excel的input
+
+            , $supplierTemplate : $('#supplierTemplate')//关联供应商模版
 
         };
         //预置数据
@@ -329,6 +466,55 @@
                 datailTypeC || unSetting
             );
 
+            //查找供应商关联
+            services.association.materialSupplier(materialData.id)
+                .then(function (ret) {
+                    var $suppliersHolder = consts.$suppliers.find('.bugInfoHistories');
+                    if(!ret.list.length){
+                        $suppliersHolder.html('<p>暂无</p>');
+                    } else {
+                        $suppliersHolder.empty();
+                        $.each(ret.list, function (i, item) {
+                            consts.suppliersCache[item.id] = item;
+                            var clone = consts.$supplierTemplate.clone();
+                            $(clone).find('.panel-title').text(item.supplierName);
+                            $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._update, ._delete').attr('data-value', item.id);
+                            var body = $(clone).find('.panel-body');
+                            body.attr('data-value', (item.id + 'Info'));
+                            $(body).find('div[data-name="alertUpper"]').text(item.alertUpper || 0);
+                            $(body).find('div[data-name="alertLower"]').text(item.alertLower || 0);
+                            $(body).find('div[data-name="associateAt"]').text(item.associateAt);
+                            $(body).find('div[data-name="totalNum"]').text(item.totalNum || 0);
+                            $suppliersHolder.append($(clone).show());
+                        });
+
+                        utils.initRightAngleEvent();
+                        initBtEvent();
+                    }
+                });
+
+            //修改上下限-删除关联
+            function initBtEvent() {
+                $('#rightInfoPage').find('._update, ._delete').click(function () {
+                    var $bt = $(this);
+                    var item = consts.suppliersCache[$bt.attr('data-value')];
+                    if(!item) return;
+                    consts.currentAss = item;
+                    if ($bt.hasClass('_delete')){
+                        layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                            services.association.rawMaterial(item.supplierId)
+                                .delete(item.rawMaterId)
+                                .then(function (ret) {
+                                    layer.msg(ret._message);
+                                    initMaterialDetail(consts.material);
+                                })
+                                .catch(function (reason) {
+                                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                                });
+                        });
+                    }
+                });
+            }
         }
 
         function initEvent(){
@@ -426,7 +612,7 @@
 
             });
 
-            //保存成品
+            //保存原材料
             consts.$editInfoMaterial.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
                 var data = consts.$editInfoMaterial.find('form').serializeObject();
@@ -444,7 +630,7 @@
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
-            //删除成品
+            //删除原材料
             consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
                 layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
                     services.rawMaterial.delete(consts.material.id)
@@ -514,7 +700,89 @@
 
             });
 
+            //修改上下限
+            $('#_editWarning').on('show.bs.modal', function () {
+                if(!!consts.currentAss.id){
+                    $('#_alertUpper').val(consts.currentAss.alertUpper || 0);
+                    $('#_alertLower').val(consts.currentAss.alertLower || 0);
+                }
+            }).on('hidden.bs.modal', function () {
+                $('#_alertUpper').val('');
+                $('#_alertLower').val('');
+            });
 
+            //保存上下限
+            $('#_saveWarningBt').unbind('click').click(function () {
+                var materialId = consts.currentAss.rawMaterId;
+                var alertLower = $('#_alertLower').val() || 0;
+                var alertUpper = $('#_alertUpper').val() || 0;
+                if(parseInt(alertLower) >= parseInt(alertUpper)){
+                    layer.msg('预警下限必须小于上限');
+                    return false;
+                }
+                services.association.rawMaterial(consts.currentAss.supplierId)
+                    .saveWarning(materialId, alertLower, alertUpper)
+                    .then(function (ret){
+                        layer.msg(ret._message);
+                        consts.currentAss = ret;
+                        initMaterialDetail(consts.material);
+                        $('#_editWarning').modal('hide');
+                    })
+                    .catch(function (reason) {
+                        console.log(reason);
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+            });
+
+            //添加供应商
+            $('#_addAss').on('show.bs.modal', function () {
+                services.association.unassociatedSuppliers(consts.material.id)
+                    .then(function (ret) {
+                        consts.supplier = [];
+                        consts.supplier.push({code : -1, name : '【请选择供应商】'});
+                        ret.list.forEach(function (value) {
+                            consts.supplier.push({code : value.id , name : value.supplierName});
+                        });
+                        //供选供应商
+                        utils.dropkick({
+                            $holder : $('#_supplier'),
+                            data : consts.supplier
+                        });
+                        //初始化上下限值
+                        $('#__alertUpper, #__alertLower').val(0);
+                    })
+                    .catch(function (reason) {
+                        console.log('reason', reason);
+                    });
+            });
+
+            //保存关联
+            $('#_saveAssBt').unbind('click').click(function () {
+
+                var supplierId = $('#_supplier').attr('data-value') || -1;
+                var low =  $('#__alertLower').val() || 0;
+                var up =  $('#__alertUpper').val() || 0;
+                if(parseInt(low) >= parseInt(up)){
+                    layer.msg('预警下限必须小于上限');
+                    return false;
+                }
+
+                if(!supplierId || supplierId === -1){
+                    layer.msg('请选择供应商');
+                    return false;
+                }
+                services.association.rawMaterial(supplierId)
+                    .saveAss(consts.material.id, low, up)
+                    .then(function (ret) {
+                        layer.msg(ret._message);
+                        initMaterialDetail(consts.material);
+                        $('#_addAss').modal('hide');
+                    })
+                    .catch(function (reason) {
+                        console.log(reason);
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+            });
         }
 
         function init() {

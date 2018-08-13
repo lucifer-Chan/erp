@@ -170,7 +170,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
      */
     @Transactional
     public ErpSaleOrder updateOrderStatus(Long orderId, SaleOrderStatus status, String remark) {
-        remark = StringUtils.hasLength(remark) ? "," + remark : "";
+        remark = StringUtils.hasLength(remark) ? ",备注：" + remark : "";
         ErpSaleOrder old = saleOrderRepository.findById(orderId).orElse(null);
         Assert.notNull(old, "未找到销售订单[" + orderId + "]");
         Assert.isTrue(STATUS_001 != status , "状态不能变更为：" + STATUS_001.description());

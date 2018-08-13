@@ -11,7 +11,7 @@ requirejs.config({
     }
 });
 
-requirejs(['validate','utils','services','dropkick','slimScroll','metisMenu', 'modals', 'ztree', 'TimeObjectUtil'],function (val, utils, services, dropkick, slimScroll, metisMenu, modals, ztree, TimeObjectUtil) {
+requirejs(['validate','utils','services','dropkick','slimScroll','metisMenu', 'modals', 'ztree', 'timeObjectUtil'],function (val, utils, services, dropkick, slimScroll, metisMenu, modals, ztree, timeObjectUtil) {
 
     var menuTemplate = {
         first : '<li><a>{name}<span class="fa arrow"></span></a></li>'

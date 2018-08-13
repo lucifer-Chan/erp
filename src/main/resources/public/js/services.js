@@ -600,6 +600,15 @@ define('services',['utils'],function (utils) {
                         contentType : $.contentType.json
                     })
                 }
+                //保存关联  @PostMapping("{materialId}/supplier/{supplierId}")
+                , saveAss : function (materialId, low, up) {
+                    return $.http.post({
+                        url : 'basis/rawMaterial/' + materialId + '/supplier/' + supplierId,
+                        data : { low : low,  up : up }
+                    })
+                }
+
+
                 //删除关联//@DeleteMapping("{supplierId}/rawMaterial/{rawMaterialId}")
                 , delete : function (rawMaterialId) {
                     return $.http.delete('basis/supplier/'+ supplierId+'/rawMaterial/' + rawMaterialId);
@@ -670,6 +679,14 @@ define('services',['utils'],function (utils) {
                 }
 
             }
+        },
+        //根据原材料-找已关联的供应商
+        materialSupplier : function (materialId) {
+            return $.http.get('basis/rawMaterial/'+ materialId+'/supplier');
+        },
+        //找未关联的供应商
+        unassociatedSuppliers : function (materialId) {
+            return $.http.get('basis/rawMaterial/'+ materialId+'/supplier/unassociated');
         }
     };
 
@@ -806,6 +823,70 @@ define('services',['utils'],function (utils) {
         }
     };
 
+    /**
+     * 仓库管理
+     * @type {{place: {}}}
+     */
+    var stock = {
+        //1-仓位
+        place : {
+            //新增仓位
+            create : function (data) {
+                return $.http.post({
+                    url : 'stock/place',
+                    data : data,
+                    contentType : $.contentType.json
+                })
+            },
+
+            /**
+             * 修改仓位
+             * @param data {id, upperLimit, description}
+             * @returns {*}
+             */
+            update : function (data) {
+                return $.http.put({
+                    url : 'stock/place',
+                    data : data,
+                    contentType : $.contentType.json
+                })
+            },
+            //查询
+            query : function (params) {
+                return $.http.get({
+                    url : 'stock/place',
+                    data : params
+                });
+            },
+            //删除
+            delete : function (id) {
+                return $.http.delete('stock/place/' + id);
+            },
+            //获取单个
+            one : function (id) {
+                return $.http.get('stock/place/' + id);
+            },
+            //停役
+            stop : function (id) {
+                return $.http.patch('stock/place/stop/' + id);
+            },
+            //出入库记录和现存
+            ext : function (id) {
+                return $.http.get('stock/place/ext/' + id);
+            }
+        }
+    }
+
+    //常用
+    var common = {
+        ass : {
+            //供应商和原材料的所有关联
+            supplierMaterial : function () {
+                return $.http.get('basis/common/ass/supplier/material')
+            }
+        }
+    }
+
     return {
          account: account
         , menus : menus
@@ -820,5 +901,7 @@ define('services',['utils'],function (utils) {
         , association : association
         , salePlan : salePlan
         , saleOrder : saleOrder
+        , stock : stock
+        , common : common
     }
 });

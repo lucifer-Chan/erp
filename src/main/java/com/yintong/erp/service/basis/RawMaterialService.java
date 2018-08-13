@@ -2,6 +2,9 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseRawMaterial;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterialRepository;
+import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
@@ -9,6 +12,7 @@ import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteRawMaterialValidator;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +42,13 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 @Service
 public class RawMaterialService {
 
-    @Autowired
-    private ErpBaseRawMaterialRepository erpBaseRawMaterialRepository;
+    @Autowired ErpBaseRawMaterialRepository erpBaseRawMaterialRepository;
 
-    @Autowired(required = false)
-    private List<OnDeleteRawMaterialValidator> onDeleteRawMaterialValidator;
+    @Autowired ErpRawMaterialSupplierRepository rawMaterialSupplierRepository;
+
+    @Autowired ErpBaseSupplierRepository supplierRepository;
+
+    @Autowired(required = false) List<OnDeleteRawMaterialValidator> onDeleteRawMaterialValidator;
 
     /**
      *查询列表
@@ -53,7 +59,7 @@ public class RawMaterialService {
         return erpBaseRawMaterialRepository.findAll(parameter.specification(), parameter.pageable());
     }
     /**
-     * 根据模具id查找原材料
+     * 根据原材料id查找原材料
      * @param materialId
      * @return
      */
@@ -61,6 +67,26 @@ public class RawMaterialService {
         ErpBaseRawMaterial material = erpBaseRawMaterialRepository.findById(materialId).orElse(null);
         Assert.notNull(material, "未找到原材料");
         return material;
+    }
+
+    /**
+     * 根据原材料id查找供应商关联
+     * @param materialId
+     * @return
+     */
+    public List<ErpRawMaterialSupplier> findSuppilersAss(Long materialId){
+        return rawMaterialSupplierRepository.findByRawMaterId(materialId);
+    }
+
+    /**
+     * 根据原材料id查找未关联的供应商
+     * @param materialId
+     * @return
+     */
+    public Iterable findUnassociatedSuppliers(Long materialId) {
+        List<Long> associatedSupplierIds = rawMaterialSupplierRepository.findByRawMaterId(materialId).stream().map(ErpRawMaterialSupplier::getSupplierId).collect(Collectors.toList());
+        return CollectionUtils.isEmpty(associatedSupplierIds) ?
+                supplierRepository.findAll() : supplierRepository.findByIdNotIn(associatedSupplierIds);
     }
 
     /**

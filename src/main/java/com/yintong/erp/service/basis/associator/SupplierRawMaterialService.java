@@ -2,6 +2,7 @@ package com.yintong.erp.service.basis.associator;
 
 import com.yintong.erp.domain.basis.ErpBaseRawMaterial;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterialRepository;
+import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
 import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
 import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
@@ -9,13 +10,15 @@ import com.yintong.erp.dto.TreeNode;
 import com.yintong.erp.service.basis.CategoryService;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.validator.OnDeleteRawMaterialValidator;
-import com.yintong.erp.validator.OnDeleteSupplierRawMeterialValidator;
+import com.yintong.erp.validator.OnDeleteSupplierRawMaterialValidator;
 import com.yintong.erp.validator.OnDeleteSupplierValidator;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.KeyValue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +27,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by jianqiang on 2018/6/16.
@@ -41,18 +45,78 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
     @Autowired
     CategoryService categoryService;
     @Autowired(required = false)
-    List<OnDeleteSupplierRawMeterialValidator> onDeleteSupplierRawMeterials;
+    List<OnDeleteSupplierRawMaterialValidator> onDeleteSupplierRawMeterials;
 
     /**
      * 建立供应商和原材料的关联
-     * @param association
+     * @param materialId
+     * @param supplierId
+     * @param up
+     * @param low
+     * @return
      */
-    public void save(ErpRawMaterialSupplier association){
-        ErpRawMaterialSupplier shouldBeNull = rawMaterialSupplierRepository
-                .findByRawMaterIdAndSupplierId(association.getRawMaterId(), association.getSupplierId())
-                .orElse(null);
-        if(Objects.isNull(shouldBeNull))
-            rawMaterialSupplierRepository.save(association);
+    public boolean save(Long materialId, Long supplierId, Integer up, Integer low) {
+
+        String supplierTypeCode3 = supplierRepository.getOne(supplierId).getSupplierTypeCode().substring(2,3);
+
+        ErpRawMaterialSupplier association = ErpRawMaterialSupplier.builder()
+                .rawMaterType(rawMaterialRepository.getOne(materialId).getRawTypeCode())
+                .rawMaterId(materialId)
+                .supplierType(supplierTypeCode3)
+                .supplierId(supplierId)
+                .associateAt(new Date())
+                .alertLower(low)
+                .alertUpper(up)
+                .build();
+        return save(association);
+    }
+
+    /**
+     * 一个关联后的原材料的描述
+     * @param assId
+     * @return 供应商-名称-规格
+     */
+    public String description(Long assId){
+        try {
+            ErpRawMaterialSupplier ass = rawMaterialSupplierRepository.getOne(assId);
+            ErpBaseSupplier supplier = supplierRepository.getOne(ass.getSupplierId());
+            ErpBaseRawMaterial material = rawMaterialRepository.getOne(ass.getRawMaterId());
+            return supplier.getSupplierName() + "-" + material.getRawName() + "-" + material.getSpecification();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 所有关联的原材料-厂家
+     * @return assId：供应商-名称-规格
+     */
+    public List<KeyValue<Long, String>> descriptions(){
+
+        Map<Long, ErpBaseSupplier> supplierMap = supplierRepository.findAll().stream().collect(Collectors.toMap(ErpBaseSupplier::getId, supplier -> supplier));
+        Map<Long, ErpBaseRawMaterial> materialMap = rawMaterialRepository.findAll().stream().collect(Collectors.toMap(ErpBaseRawMaterial::getId, material -> material));
+
+        return rawMaterialSupplierRepository.findAll().stream()
+                .map(ass -> new KeyValue<Long, String>() {
+
+                    Long key; String value;
+
+                    @Override
+                    public Long getKey() {
+                        return ass.getId();
+                    }
+
+                    @Override
+                    public String getValue() {
+                        ErpBaseSupplier supplier = supplierMap.get(ass.getSupplierId());
+                        ErpBaseRawMaterial material = materialMap.get(ass.getRawMaterId());
+                        return (Objects.isNull(supplier) || Objects.isNull(material)) ? ""
+                                : supplier.getSupplierName() + "-" + material.getRawName() + "-" + material.getSpecification();
+                    }
+                })
+                .filter(keyValue -> StringUtils.hasText(keyValue.getValue()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -93,10 +157,10 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
      */
     public void delete(Long rawMaterId, Long supplierId){
         ErpRawMaterialSupplier one = rawMaterialSupplierRepository.findByRawMaterIdAndSupplierId(rawMaterId, supplierId).orElse(null);
+        Assert.notNull(one, "未找到关联");
         if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierRawMeterials))
             onDeleteSupplierRawMeterials
-                    .forEach(validator -> validator.onDeleteSupplierRawMeterial(supplierId, rawMaterId));
-        Assert.notNull(one, "未找到关联");
+                    .forEach(validator -> validator.onDeleteSupplierRawMaterial(one));
         rawMaterialSupplierRepository.delete(one);
     }
 
@@ -210,5 +274,21 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
                 .stream()
                 .map(category -> new TreeNode(category.getCode(), category.getName(), category.getParentCode(), true))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 建立供应商和原材料的关联
+     * @param association
+     * @return
+     */
+    private boolean save(ErpRawMaterialSupplier association){
+        ErpRawMaterialSupplier shouldBeNull = rawMaterialSupplierRepository
+                .findByRawMaterIdAndSupplierId(association.getRawMaterId(), association.getSupplierId())
+                .orElse(null);
+        if(Objects.nonNull(shouldBeNull)){
+            return false;
+        }
+        rawMaterialSupplierRepository.save(association);
+        return true;
     }
 }
