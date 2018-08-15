@@ -499,7 +499,9 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
             });
         }
         setting.$holder.empty().append($select);
-        setting.$holder.attr('data-value', setting.current || $select.find('option').eq(0).val() || '');
+        var value = setting.current || $select.find('option').eq(0).val() || '';
+        setting.$holder.attr('data-value', value);
+        callback(value);
         var $$ = $('#' + holderId+'_Select').dropkick({
             change : function(value){
                 setting.$holder.attr('data-value', value);

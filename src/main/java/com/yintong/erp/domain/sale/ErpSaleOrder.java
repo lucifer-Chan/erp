@@ -39,7 +39,7 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(40) comment '客户名称-冗余数据，方便查询'")
     private String customerName;
 
-    @Column(columnDefinition = "double(10,2) comment '销售金额-计算值'")
+    @Column(columnDefinition = "double(10,9) comment '销售金额-计算值'")
     private Double money;
 
     @Column(columnDefinition = "varchar(20) comment '状态编码'")

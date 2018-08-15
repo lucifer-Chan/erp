@@ -17,8 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-import static com.yintong.erp.utils.common.Constants.*;
 import org.springframework.util.StringUtils;
 
 /**
@@ -38,26 +36,35 @@ public class ErpStockOptLog extends BaseEntity{
     @Column(columnDefinition = "bigint(20) comment '成品id[当仓位为成品仓位时有值]'")
     private Long productId;
 
-    @Column(columnDefinition = "double(10,2) comment '出入库数量'")
+    @Column(columnDefinition = "varchar(100) comment '成品条码，可以为采购的成品'")
+    private String productCode;
+
+    @Column(columnDefinition = "double(10,9) comment '出入库数量'")
     private Double num;
 
     @Column(columnDefinition = "varchar(20) DEFAULT '' comment '出入库[IN|OUT]'")
-    private StockOpt operation;
+    private String operation;
 
     @Column(columnDefinition = "varchar(20) DEFAULT '' comment '来源或目的[销售|退货|采购|生产]'")
-    private StockHolder holder;
+    private String holder;
 
     @Column(columnDefinition = "bigint(20) comment '来源id：制令单id、销售订单id、采购单id'")
     private Long holderId;
 
-    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '来源描述：一般为来源barcode，初始入库为：初始化'")
-    private String holderDescription;
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '来源barcode，初始入库为：初始化'")
+    private String holderBarCode;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;
 
     @Transient
     private String productName;
+
+    @Transient
+    private String placeName;
+
+    @Transient
+    private ErpStockPlace place;
 
     public String getProductName(){
         if(StringUtils.hasText(productName)) return productName;
@@ -67,6 +74,20 @@ public class ErpStockOptLog extends BaseEntity{
                 productName = product.getEndProductName() + "-" + product.getSpecification();
             }
         }
-        return productName;
+        return StringUtils.hasText(productName) ? productName : "";
+    }
+
+
+    public ErpStockPlace getPlace(){
+        if(Objects.nonNull(place)) return place;
+        if(Objects.nonNull(stockPlaceId)){
+            this.place = SpringUtil.getBean(ErpStockPlaceRepository.class).findById(stockPlaceId).orElse(null);
+        }
+        return this.place;
+    }
+
+    public String getPlaceName(){
+        ErpStockPlace _place = getPlace();
+        return Objects.isNull(_place) ? "" : _place.getName();
     }
 }

@@ -26,4 +26,7 @@ public interface ErpBaseRawMaterialRepository extends JpaRepository<ErpBaseRawMa
 
     List<ErpBaseRawMaterial> findByRawNameAndSpecificationAndIdNot(String rawName, String specification, Long id);
 
+
+    List<ErpBaseRawMaterial> findByIdNotIn(List<Long> ids);
+
 }

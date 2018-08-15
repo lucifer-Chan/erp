@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Cons
                             .permitAll()
                         .and()
                             .authorizeRequests()
+                        .antMatchers("/m/**").permitAll()
                         .antMatchers("/", "/login.html").authenticated();
         //根据权限表中的信息制定权限规则
         employeeDetailService().matches().forEach(entry->

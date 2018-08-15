@@ -41,6 +41,7 @@ public interface Constants {
         STATUS_003("审核通过", "审核"),
         STATUS_004("审核退回", "审核"),
         STATUS_005("已出库", ""),
+        STATUS_049("正在出库", ""),
         STATUS_006("客户退货", ""),
         STATUS_007("已完成", "");
 
@@ -116,10 +117,10 @@ public interface Constants {
      * 出入库宿主
      */
     enum StockHolder {
-        SALE("销售"), //出库
-        REFUNDS("退货"), //入库
-        PROD("生产"),  //出库 入库
-        BUY("采购"),  //入库
+        SALE("销售订单"), //出库
+        REFUNDS("退货单"), //入库
+        PROD("制令单"),  //出库 入库
+        BUY("采购单"),  //入库
         INIT("初始化");//入库
 
         StockHolder(String description){

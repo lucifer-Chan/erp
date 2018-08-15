@@ -1,12 +1,14 @@
 package com.yintong.erp.utils.common;
 
 import com.yintong.erp.domain.basis.security.ErpEmployee;
+import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
 import com.yintong.erp.exception.SessionExpiryException;
 import com.yintong.erp.security.EmployeeDetails;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import java.util.Objects;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.util.StringUtils;
 
 /**
  * @author lucifer.chan
@@ -15,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
  **/
 public class SessionUtil {
     private static final String KEY_PREFIX = SessionUtil.class.getName()+ "_";
+
+    public static final String TOKEN_KEY = "accessToken";
+
+    private static SimpleCache<EmployeeDetails> employeeDetailsSimpleCache = new SimpleCache<>();
 
     public static <T> T get(String key){
         return get(null, key);
@@ -41,11 +47,58 @@ public class SessionUtil {
     }
 
     public static EmployeeDetails getEmployeeDetails(){
-        SecurityContext securityContext =
-                (SecurityContext)SpringUtil.getRequest().getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-        SessionExpiryException.notNull(securityContext, "会话过期！");
-        return (EmployeeDetails)securityContext.getAuthentication().getPrincipal();
+        EmployeeDetails ret = getEmployeeDetailsByToken();
+        if(Objects.nonNull(ret)) return ret;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(Objects.nonNull(principal) && principal instanceof EmployeeDetails){
+            return (EmployeeDetails)principal;
+        }
+
+        throw new SessionExpiryException("会话过期");
     }
+
+    private static EmployeeDetails getEmployeeDetailsByToken(){
+        HttpServletRequest request = SpringUtil.getRequest();
+        if(null == request) return null;
+        String accessToken = request.getParameter(TOKEN_KEY);
+        if(StringUtils.isEmpty(accessToken)) return null;
+
+        return employeeDetailsSimpleCache.getDataFromCache(KEY_PREFIX + accessToken, value -> {
+            try{
+                Long currentUserId = Long.parseLong(AESUtil.getInstance().decrypt(accessToken));
+                ErpEmployee employee = SpringUtil.getBean(ErpEmployeeRepository.class).findById(currentUserId).orElse(null);
+                return Objects.isNull(employee) ? null : new EmployeeDetails(employee);
+            }catch (Exception e){
+                return null;
+            }
+        });
+    }
+
+//    private static EmployeeDetails getEmployeeDetailsByToken(){
+//        HttpServletRequest request = SpringUtil.getRequest();
+//        if(null == request) return null;
+//        String accessToken = request.getParameter(TOKEN_KEY);
+//        if(StringUtils.isEmpty(accessToken)) return null;
+//
+//        EmployeeDetails ret = employeeDetailsSimpleCache.getDataFromCache(KEY_PREFIX + accessToken, value -> {
+//            try{
+//                Long currentUserId = Long.parseLong(AESUtil.getInstance().decrypt(accessToken));
+//                ErpEmployee employee = SpringUtil.getBean(ErpEmployeeRepository.class).findById(currentUserId).orElse(null);
+//                return Objects.isNull(employee) ? null : new EmployeeDetails(employee);
+//            }catch (Exception e){
+//                return null;
+//            }
+//        });
+//
+//        if(Objects.nonNull(ret)){
+//            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(ret, null, ret.getAuthorities());
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//        }
+//
+//        return ret;
+//    }
+
+
 
     @SuppressWarnings(value = "unchecked")
     public static <T> T get(HttpServletRequest request, String key){

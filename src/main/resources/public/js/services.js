@@ -291,7 +291,17 @@ define('services',['utils'],function (utils) {
         one : function (id) {
             return $.http.get('basis/product/' + id);
         },
-        //新增模具
+        //查找库存记录
+        stockHistory : function (id) {
+            return $.http.get('basis/product/' + id + '/stock');
+        },
+
+        //库存剩余： {safe,total}
+        stockRemain : function (id) {
+            return $.http.get('basis/product/' + id + '/stockRemain');
+        },
+
+        //新增成品
         create:function(data){
             var $this = this;
             return $.http.post({
@@ -358,6 +368,47 @@ define('services',['utils'],function (utils) {
                 $.session($this.sessionKey, null);
                 return value;
             });
+        },
+        //物料清单相关
+        bom : {
+            //列表
+            list : function (productId) {
+                return $.http.get('basis/product/' + productId + '/bom');
+            },
+            //单个
+            one : function (id) {
+                return $.http.get('basis/product/bom/' + id);
+            },
+            //供选的原材料
+            materials : function (productId) {
+                return $.http.get('basis/product/' + productId + '/materials');
+            },
+
+            /**
+             * 创建
+             * @param data - productId, materialId, materialNum
+             */
+            create : function (data) {
+                return $.http.post({
+                    url : 'basis/product/bom',
+                    data : data,
+                    contentType : $.contentType.json
+                });
+            },
+            /**
+             * 更新
+             * @param data id, materialNum
+             */
+            update : function (data) {
+                return $.http.patch({
+                    url : 'basis/product/bom/' + data.id,
+                    data : {materialNum : data.materialNum}
+                })
+            },
+            //删除
+            delete : function (id) {
+                return $.http.delete('basis/product/bom/' + id);
+            }
         }
     };
 

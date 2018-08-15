@@ -160,7 +160,7 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
             //计算每个成品的数量，叠加。
             infoMap.forEach((k,list)->{
                 double total = list.stream().mapToDouble(log->{
-                    if(Constants.StockOpt.IN == log.getOperation()){
+                    if(Constants.StockOpt.OUT.name().equals(log.getOperation())){
                         return  -1 * log.getNum();
                     }
                     return log.getNum();
@@ -176,7 +176,6 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
             map.put("remain", infoList);
             return map;
         }
-
 
         return map;
     }

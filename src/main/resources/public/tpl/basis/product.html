@@ -23,10 +23,7 @@
                                 <th style="width:50px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <th style="width:70px" erp-data="{endProductName}" >货物名称(客户)</th>
                                 <th style="width:70px" erp-data="{specification}">规格描述</th>
-                                <!--
-                                <th style="width:30px" erp-data="{endProductTypeCode}" erp-convert="convertTypeP">大类</th>
-                                <th style="width:30px" erp-data="{endProductTypeCode}" erp-convert="convertTypeC">细类</th>
-                                -->
+                                <th style="width:15px" erp-data="{totalNum}" erp-convert="convertTotalNum">库存</th>
                                 <th style="width:15px" erp-data="{unit}">单位</th>
                                 <th style="width:15px" erp-data="{level}">产品等级</th>
                                 <th style="width:40px" erp-data="{custDrawingNo}">客户图号</th>
@@ -379,6 +376,353 @@
         </div>
     </div>
 </div>
+
+<!-- 右侧-->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editProduct">修改基本信息</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editWarning">修改预警阀值</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#editBom" id="toAddBom">新增物料清单</button>
+            <button class="btn btn-primary" data-name="delete">删除</button>
+        </span>
+    </div>
+    <div class="bugInfoContent initProductDetail">
+        <div class="panel-default bugInfo">
+            <div>
+                <ul class="nav nav-tabs noborder pd14" role="tablist">
+                    <li role="presentation" class="active"><span href="#baseHolder"  role="tab" data-toggle="tab">基本信息</span></li>
+                    <li role="presentation"><span href="#specificationHolder"  role="tab" data-toggle="tab">规格信息</span></li>
+                    <li role="presentation"><span href="#bomHolder"  role="tab" data-toggle="tab">物料清单</span></li>
+                    <li role="presentation"><span href="#stockOptHistory"  role="tab" data-toggle="tab">库存记录</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="baseHolder">
+                        <div class="col-xs-12" data-value="base1Info">
+                            <div class="pd43 pd14">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label class="col-xs-3 pd0">货物名称(客户)</label>
+                                        <div class="col-xs-9 txt pd0" data-name="endProductName"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label class="col-xs-2 pd0">材料名称</label>
+                                        <div class="col-xs-10 txt pd0" data-name="materialName"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">库存</label>
+                                        <div class="col-xs-8 txt pd0" data-name="totalNum" data-convert="convertTotalNum"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">编号</label>
+                                        <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">预警阀值</label>
+                                        <div class="col-xs-8 txt pd0" data-convert="convertWarning"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">大类</label>
+                                        <div class="col-xs-8 txt pd0" data-convert="endProductTypeCodeP"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">细类</label>
+                                        <div class="col-xs-8 txt pd0" data-convert="endProductTypeCode"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">产品等级</label>
+                                        <div class="col-xs-8 txt pd0" data-name="level"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">客户名称</label>
+                                        <div class="col-xs-8 txt pd0" data-name="custName"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">规格描述</label>
+                                        <div class="col-xs-8 txt pd0" data-name="specification"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">客户图号</label>
+                                        <div class="col-xs-8 txt pd0" data-name="custDrawingNo"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">客户代码(旧)</label>
+                                        <div class="col-xs-8 txt pd0" data-name="custCodeOld"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">客户代码(新)</label>
+                                        <div class="col-xs-8 txt pd0" data-name="custCodeNew"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">只/KG</label>
+                                        <div class="col-xs-8 txt pd0" data-name="onlyOrKg"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">难度系数</label>
+                                        <div class="col-xs-8 txt pd0" data-name="courseRating"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">模具位</label>
+                                        <div class="col-xs-8 txt pd0" data-name="modelLocation"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">图纸编号</label>
+                                        <div class="col-xs-8 txt pd0" data-name="drawingNo"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">单粒银耗(g)</label>
+                                        <div class="col-xs-8 txt pd0" data-name="unitSilverLoss"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">单粒银铜(g)</label>
+                                        <div class="col-xs-8 txt pd0" data-name="unitSilverCopper"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">技术要求</label>
+                                        <div class="col-xs-8 txt pd0" data-name="technicalRequirements"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">自定义属性1</label>
+                                        <div class="col-xs-8 txt pd0" data-name="userDefinedOne"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">自定义属性2</label>
+                                        <div class="col-xs-8 txt pd0" data-name="userDefinedTwo"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">自定义属性3</label>
+                                        <div class="col-xs-8 txt pd0" data-name="userDefinedThree"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label class="col-xs-2 pd0">备注</label>
+                                        <div class="col-xs-10 txt pd0" data-name="remark"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="specificationHolder">
+                        <div class="col-xs-12" data-value="base2Info">
+                            <div class="pd43 pd14">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头径D(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHdmmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头径D(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHdmmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头厚T(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHtmmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头厚T(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHtmmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚径d(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFtmmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚径d(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFtmmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚长L(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFlmmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚长L(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFlmmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头径银层S1(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHdsmmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头径银层S1(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHdsmmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脱模角度θ(° )上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spTmammUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脱模角度θ(° )下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spTmammLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">球半径SR(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spSrammUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">球半径SR(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spSrammLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">同轴度◎(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spAxlemmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">同轴度◎(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spAxlemmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">边缘S1(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spEdgemmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">边缘S1(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="speEdgeemmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">钉脚S2(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFdsmmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">钉脚S2(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="speFdsmmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚边缘S2(mm)上限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFaxlemmUpper"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚边缘S2(mm)下限</label>
+                                        <div class="col-xs-3 txt pd0" data-name="speFaxlemmLower"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">头部复合强度</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spHCstrength"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">脚部复合强度</label>
+                                        <div class="col-xs-3 txt pd0" data-name="spFCstrength"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-7 pd0">同心度</label>
+                                        <div class="col-xs-3 txt pd0" data-name="concentricity"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="bomHolder">
+                        <div class="col-sm-12 bugInfoHistories" style="padding-top:15px;">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="stockOptHistory">
+                        <div class="col-sm-12 bugInfoHistories" style="padding-top:15px;">
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOM模版-->
+<div class="row" id="bomTemplate" style="display: none">
+    <div class="col-sm-12" style="margin-bottom:-20px">
+        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 13px"></h3>
+                <div class="tools">
+                    <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
+                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#editBom">修改</button>
+                    <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
+                </div>
+            </div>
+            <div class="panel-body" data-value="">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">原材料名称</label>
+                                    <div class="col-xs-9 txt pd0" data-name="rawName"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">规格</label>
+                                    <div class="col-xs-9 txt pd0" data-name="specification"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">数量</label>
+                                    <div class="col-xs-9 txt pd0" data-name="materialNum"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">单位</label>
+                                    <div class="col-xs-9 txt pd0" data-name="unit"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 预警阀值-->
 <div class="modal fade" role="dialog" id="_editWarning">
     <div class="modal-dialog" role="document" style="z-index: 1040">
@@ -408,293 +752,39 @@
     </div>
 </div>
 
-<!-- 右侧-->
-<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
-    <div class="bugInfoTop">
-        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
-        <span class="btn0 _operations">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_editProduct">修改基本信息</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_editWarning">修改预警阀值</button>
-            <button class="btn btn-primary" data-name="delete">删除</button>
-        </span>
-    </div>
-    <div class="bugInfoContent initProductDetail">
-        <div class="panel-default bugInfo">
-            <div class="row">
-                <p class="pd23 pd43">
-                    <span class="col-xs-6 pd0">
-                        <span class="label label-info">基本信息</span>
-                    </span>
-                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base1"></i>
-                    </span>
-                </p>
-                <div class="col-xs-12" data-value="base1Info">
-                    <div class="pd43">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <label class="col-xs-3 pd0">货物名称(客户)</label>
-                                <div class="col-xs-9 txt pd0" data-name="endProductName"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <label class="col-xs-2 pd0">材料名称</label>
-                                <div class="col-xs-10 txt pd0" data-name="materialName"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">编号</label>
-                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">预警阀值</label>
-                                <div class="col-xs-8 txt pd0" data-convert="convertWarning"></div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">大类</label>
-                                <div class="col-xs-8 txt pd0" data-convert="endProductTypeCodeP"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">细类</label>
-                                <div class="col-xs-8 txt pd0" data-convert="endProductTypeCode"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">产品等级</label>
-                                <div class="col-xs-8 txt pd0" data-name="level"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">客户名称</label>
-                                <div class="col-xs-8 txt pd0" data-name="custName"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">规格描述</label>
-                                <div class="col-xs-8 txt pd0" data-name="specification"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">客户图号</label>
-                                <div class="col-xs-8 txt pd0" data-name="custDrawingNo"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">客户代码(旧)</label>
-                                <div class="col-xs-8 txt pd0" data-name="custCodeOld"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">客户代码(新)</label>
-                                <div class="col-xs-8 txt pd0" data-name="custCodeNew"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">只/KG</label>
-                                <div class="col-xs-8 txt pd0" data-name="onlyOrKg"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">难度系数</label>
-                                <div class="col-xs-8 txt pd0" data-name="courseRating"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">模具位</label>
-                                <div class="col-xs-8 txt pd0" data-name="modelLocation"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">图纸编号</label>
-                                <div class="col-xs-8 txt pd0" data-name="drawingNo"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">单粒银耗(g)</label>
-                                <div class="col-xs-8 txt pd0" data-name="unitSilverLoss"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">单粒银铜(g)</label>
-                                <div class="col-xs-8 txt pd0" data-name="unitSilverCopper"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">技术要求</label>
-                                <div class="col-xs-8 txt pd0" data-name="technicalRequirements"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">自定义属性1</label>
-                                <div class="col-xs-8 txt pd0" data-name="userDefinedOne"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">自定义属性2</label>
-                                <div class="col-xs-8 txt pd0" data-name="userDefinedTwo"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">自定义属性3</label>
-                                <div class="col-xs-8 txt pd0" data-name="userDefinedThree"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <label class="col-xs-2 pd0">备注</label>
-                                <div class="col-xs-10 txt pd0" data-name="remark"></div>
-                            </div>
-
+<!-- 编辑BOM -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="editBom">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑物料清单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+                    <div class="form-group _materialDropkick">
+                        <label class="col-sm-3 control-label">原材料名称</label>
+                        <div class="col-sm-9">
+                            <div class="customDropkick" style="width: 100%;" id="_materialId"></div>
                         </div>
                     </div>
-                </div>
-                <p class="pd23 pd43">
-                    <span class="col-xs-6 pd0">
-                        <span class="label label-info">规格信息</span>
-                    </span>
-                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base2"></i>
-                    </span>
-                </p>
-                <div class="col-xs-12" data-value="base2Info">
-                    <div class="pd43">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径D(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径D(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdmmLower"></div>
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">原材料数量</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="0.000000001" class="form-control" placeholder="输入正数" id="materialNum">
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头厚T(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHtmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头厚T(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHtmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚径d(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFtmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚径d(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFtmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚长L(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFlmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚长L(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFlmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径银层S1(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdsmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头径银层S1(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHdsmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脱模角度θ(° )上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spTmammUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脱模角度θ(° )下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spTmammLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">球半径SR(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spSrammUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">球半径SR(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spSrammLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">同轴度◎(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spAxlemmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">同轴度◎(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spAxlemmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">边缘S1(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spEdgemmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">边缘S1(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="speEdgeemmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">钉脚S2(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFdsmmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">钉脚S2(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="speFdsmmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚边缘S2(mm)上限</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFaxlemmUpper"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚边缘S2(mm)下限</label>
-                                <div class="col-xs-3 txt pd0" data-name="speFaxlemmLower"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">头部复合强度</label>
-                                <div class="col-xs-3 txt pd0" data-name="spHCstrength"></div>
-                            </div>
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">脚部复合强度</label>
-                                <div class="col-xs-3 txt pd0" data-name="spFCstrength"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <label class="col-xs-7 pd0">同心度</label>
-                                <div class="col-xs-3 txt pd0" data-name="concentricity"></div>
-                            </div>
-                        </div>
+                    </div>
+
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" id="save">保存</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <script type="text/javascript">
     requirejs(['slimScroll', 'ztree','utils','services'],function (slimScroll, ztree, utils, services) {
         console.log('hello product');
@@ -702,10 +792,14 @@
         init();
         var consts = {
             typeAll : {}//所有成品大类-{code:{code:name}}
-            ,typeP : {}//成品大类-code|name
+            , bomCache : {}//bom缓存，每一次刷新右侧，将关联供应商加入到这里 {id : obj}
+            , currentBom : {}//当前的bom
+            , typeP : {}//成品大类-code|name
             , typeC : {} //供应商等级-code|name
-            ,supplier:{}//供应商-code|name
+            , supplier : {}//供应商-code|name
             , product : {}//选中的成品
+            , source : {SALE : "销售", REFUNDS : "退货", PROD :"生产", BUY : "采购", INIT : "初始化"}//来源
+            , $stockOptHistory : $('#stockOptHistory')//出入库记录
             , $typePHolder : $('#typeP')//成品大类别
             , $typeCHolder : $('#typeC')//成品细类别
             , $supplierHolder : $('#supplier')//供应商
@@ -715,7 +809,105 @@
             , $batchModal : $('#_batchOperation')//批量操作modal
             , $warningModal : $('#_editWarning')//预警modal
             , $uploadInput : $('#excelFile')//导入excel的input
+            , $bomTemplate : $('#bomTemplate')//bom template
+            , stockLog : '<p>' +
+                '<span class="name"><b>{name}</b></span>' +
+                '<span class="content"> {content}</span>  ' +
+                '<span class="right">{time}</span>' +
+                '</p>'//出入库记录模版
         };
+
+        /**
+         * 初始化BOM
+         */
+        function initBoms() {
+            var productId = consts.product.id;
+            if(!productId) return;
+            var $bom = services.product.bom;
+            var $bomContent = $('#bomHolder').find('.bugInfoHistories');
+            var unset = '<span class="label label-danger">未设置</span>';
+
+            $bom.list(productId).then(function (ret) {
+                if(!ret.list.length){
+                    $bomContent.html('<p>暂无</p>');
+                } else {
+                    $bomContent.empty();
+                    $.each(ret.list, function (i, item) {
+                        consts.bomCache[item.id] = item;
+                        var material = item.material || {};
+                        var clone = consts.$bomTemplate.clone();
+                        $(clone).find('.panel-title').text('物料清单-' + (i+1));
+                        $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._update, ._delete').attr('data-value', item.id);
+                        var body = $(clone).find('.panel-body');
+                        body.attr('data-value', (item.id + 'Info'));
+                        $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
+                        $(body).find('div[data-name="specification"]').html(material.specification || unset);
+                        $(body).find('div[data-name="materialNum"]').html(item.materialNum || unset);
+                        $(body).find('div[data-name="unit"]').html(material.unit || unset);
+                        $bomContent.append($(clone).show());
+                    });
+                    utils.initRightAngleEvent();
+                    initBtEvent();
+                }
+            });
+        }
+
+        /**
+         * 初始化库存记录
+         */
+        function initStockHistory() {
+            var productId = consts.product.id;
+            if(!productId) return;
+            services.product.stockHistory(productId)
+                .then(function (ret) {
+                    var $stockOptHistory = consts.$stockOptHistory.find('.bugInfoHistories');
+                    var history = ret.list || [];
+                    if (!history.length){
+                        $stockOptHistory.html('<p>暂无</p>');
+                    } else {
+                        var html2 = '';
+                        history.forEach(function (opt) {
+                            var source = consts.source[opt.holder] || '';
+                            var operation = opt.operation === 'IN' ? '入库' : '出库';
+                            var name = '【' + operation + '-' + source + '】';
+
+                            var content = '对应仓位【' + (opt.placeName || '无') + '】,' + operation + '数量【' + opt.num + '】';
+                            if('INIT' !== opt.holder){
+                                content += ',对应单号【' + opt.holderBarCode + '】';
+                            }
+
+                            html2 += consts.stockLog
+                                .replace('{name}', name)
+                                .replace('{content}', content)
+                                .replace('{time}', opt.createdAt);
+                        });
+                        $stockOptHistory.html(html2);
+                    }
+                });
+        }
+
+
+        //修改、删除bom
+        function initBtEvent() {
+            $('#rightInfoPage').find('._update, ._delete').click(function () {
+                var $bt = $(this);
+                var item = consts.bomCache[$bt.attr('data-value')];
+                if(!item) return;
+                consts.currentBom = item;
+                if ($bt.hasClass('_delete')){
+                    layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                        services.product.bom.delete(item.id)
+                            .then(function (ret) {
+                                layer.msg(ret._message);
+                                initBoms();
+                            })
+                            .catch(function (reason) {
+                                layer.msg(reason.caught ? reason.message : '请求失败！');
+                            });
+                    });
+                }
+            });
+        }
 
         //预置数据
         function prepareData() {
@@ -802,12 +994,17 @@
                 return '[' + array[0] + unit + ',' + array[1] + unit + ']';
             }
 
+            function convertTotalNum(array) {
+                var value = array.length ? array[0] : 0;
+                return value || 0;
+            }
+
             utils.dataTable({
                 holder: '#dataTables'
                 , $dataProvider : dataProvider
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
-                , aConverts : [convertTypeP, convertTypeC, convertWarning]
+                , aConverts : [convertTypeP, convertTypeC, convertWarning, convertTotalNum]
 
             });
         }
@@ -845,11 +1042,95 @@
                 return '[' + alertLower + unit + ',' + alertUpper + unit + ']';
             }
 
+            function convertTotalNum() {
+                return product.totalNum || 0;
+            }
+
             $baseInfo.find('div[data-convert="convertWarning"]').html(warningConvert());
+            $baseInfo.find('div[data-convert="convertTotalNum"]').html(convertTotalNum());
+
+            initBoms();
+
+            initStockHistory();
         }
 
-        function initEvent(){
+        /**
+         * 编辑bom初始化
+         */
+        function init_edit_bom_modal() {
+            //模态框
+            $('#editBom').on('show.bs.modal', function () {
+                var bomId = consts.currentBom.id;
+                var productId = consts.product.id;
+                if(!bomId){
+                    //新增
+                    $('._materialDropkick').show();
+                    $('#saveAndNext').show();
+                    services.product.bom.materials(productId).then(function (ret) {
+                        var data = [];
+                        data.push({code : -1, name : '【请选择原材料】'});
+                        ret.list.forEach(function (material) {
+                            data.push({code : material.id, name : (material.rawName + '-' + material.specification)});
+                        });
+                        //供选下拉
+                        utils.dropkick({
+                            $holder : $('#_materialId'),
+                            data : data
+                        });
 
+                    }).catch(function (reason) {
+                        console.log('reason', reason);
+                    });
+                } else {
+                    //更新
+                    $('._materialDropkick').hide();
+                    $('#saveAndNext').hide();
+                    //初始化数据
+                    $('#_materialId').attr('data-value', consts.currentBom.materialId);
+                    $('#materialNum').val(consts.currentBom.materialNum);
+                }
+            }).on('hidden.bs.modal', function () {
+                $('#_materialId').attr('data-value', -1);
+                $('#materialNum').val('');
+                consts.currentBom = {};
+                initBoms();
+            });
+            //新增物料按钮
+            $('#toAddBom').on('click', function () {
+                consts.currentBom = {};
+            });
+            //保存按钮
+            $('#save').unbind('click').click(function(){
+
+                var data = {
+                    id : consts.currentBom.id,
+                    productId : consts.product.id,
+                    materialId :  $('#_materialId').attr('data-value'),
+                    materialNum : $('#materialNum').val()
+                };
+
+                if(!data.materialNum){
+                    layer.msg('请输入原材料数量');
+                    return false;
+                }
+
+                if(data.materialId === '-1' || data.materialId === -1){
+                    layer.msg('请选择原材料');
+                    return false;
+                }
+
+                var _function = !!data.id ? services.product.bom.update : services.product.bom.create;
+                _function(data).then(function () {
+                    layer.msg('保存物料清单成功');
+                    $('#editBom').modal('hide');
+                });
+            });
+        }
+
+        /**
+         * 初始事件
+         */
+        function initEvent(){
             // {$input, uploadUrl, type, $modal}
             //导入Excel
             utils.uploadFile({
@@ -865,7 +1146,6 @@
                     layer.msg('导入'+ fileName + '失败！失败原因：' + (ret.message||ret.errmsg ||'请求失败'));
                 }
             });
-
             //初始化删除列表
             function initBatchDeleteTable() {
                 services.product.imported().then(function (ret) {
@@ -888,32 +1168,30 @@
                         });
                     }
                 })
-                    .then(function () {
-                        $('._delete').unbind('click').click(function () {
-                            var importedAt = $(this).parents('tr').attr('id');
-                            layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
-                                services.product.batchDelete(importedAt)
-                                    .then(function (ret) {
-                                        layer.msg(ret._message);
-                                        initBatchDeleteTable();
-                                        loadDataTable(true);
-                                    })
-                                    .catch(function (reason) {
-                                        layer.msg(reason.caught ? reason.message : '请求失败！');
-                                    });
-                            });
-                        })
+                .then(function () {
+                    $('._delete').unbind('click').click(function () {
+                        var importedAt = $(this).parents('tr').attr('id');
+                        layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                            services.product.batchDelete(importedAt)
+                                .then(function (ret) {
+                                    layer.msg(ret._message);
+                                    initBatchDeleteTable();
+                                    loadDataTable(true);
+                                })
+                                .catch(function (reason) {
+                                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                                });
+                        });
                     })
-                    .catch(function (reason) {
-                        layer.msg(reason.caught ? reason.message : '请求失败！');
-                    })
+                })
+                .catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                })
             }
-
             //批量删除
             consts.$batchModal.on('show.bs.modal', function () {
                 initBatchDeleteTable();
             });
-
             //编辑详情
             consts.$editInfoModal.on('show.bs.modal', function () {
                 $('#myTab li:eq(0) a').tab('show');
@@ -977,7 +1255,6 @@
                         layer.msg(reason.caught ? reason.message : '请求失败！');
                     });
             });
-
             //保存成品
             consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
@@ -1023,7 +1300,6 @@
                     loadDataTable(true);
                 }
             });
-
             //初始化搜索下拉列表
             utils.dropdown({
                 $holder : consts.$typePHolder,
@@ -1057,7 +1333,6 @@
                     loadDataTable(true);
                 }
             });
-
             //新增按钮绑定事件
             $('#addUserBt').bind('click', function(){
                 consts.product = {};
@@ -1065,6 +1340,8 @@
                 $('._typeC').show();
 
             });
+            //编辑bom
+            init_edit_bom_modal();
         }
 
         function init() {

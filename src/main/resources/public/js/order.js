@@ -96,7 +96,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
 
     function _convertStatus(code) {
         var css = 'label-default';
-        if ('STATUS_002' === code) css = 'label-warning';
+        if ('STATUS_002' === code || 'STATUS_049' === code) css = 'label-warning';
         if ('STATUS_003' === code || 'STATUS_005' === code) css = 'label-success';
         if ('STATUS_004' === code || 'STATUS_006' === code) css = 'label-danger';
         if ('STATUS_007' === code) css = 'label-primary';
@@ -377,7 +377,8 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             utils.dropkick({
                 $holder : $('#_editProductId'),
                 data : consts.products,
-                current : consts.currentOrderItem.productId
+                current : consts.currentOrderItem.productId,
+                callback : init_select_product_tip
             });
             consts.$saveOrderItemBt.text(!!consts.currentOrderItem.id ? '保存' : '继续添加');
 
@@ -531,11 +532,14 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                     consts.itemCache[item.id] = item;
                 }
                 var clone = $itemTemplate.clone();
-                $(clone).find('.panel-title').text('销售订单明细-' + (i + 1));
+                $(clone).find('.panel-title').text(item.productName);
                 $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._update, ._delete').attr('data-value', item.id);
                 var body = $(clone).find('.panel-body');
                 body.attr('data-value', (item.id + 'Info'));
-                $(body).find('div[data-name="productName"]').text(item.productName);
+                if(item.statusCode !== 'STATUS_049'){
+                    $(body).find('div[data-name="status"]').parent().hide();
+                }
+                $(body).find('div[data-name="status"]').html(_convertStatus(item.statusCode));
                 $(body).find('div[data-name="money"]').text('¥' + (item.money || 0).toFixed(2));
                 $(body).find('div[data-name="unitPrice"]').text('¥' + (item.unitPrice||0).toFixed(2));
                 $(body).find('div[data-name="num"]').text(item.num);
@@ -596,6 +600,21 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 });
             }
         })
+    }
+
+    //初始化选择成品的tip
+    function init_select_product_tip(productId) {
+        var $tip = $('#selectProductTip');
+        if(!$tip || !$tip.length) return;
+        if(!productId || productId === '-1'){
+            $tip.html('').hide();
+            return;
+        }
+
+        services.product.stockRemain(productId)
+            .then(function (map) {
+                $tip.html('总库存量：' + map.total + "，安全库存量：" + map.safe).show();
+            });
     }
 
     /**

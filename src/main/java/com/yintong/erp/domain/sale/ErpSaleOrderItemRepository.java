@@ -12,6 +12,8 @@ public interface ErpSaleOrderItemRepository extends JpaRepository<ErpSaleOrderIt
      */
     List<ErpSaleOrderItem> findByOrderIdOrderByMoneyDesc(Long orderId);
 
+    List<ErpSaleOrderItem> findByOrderId(Long orderId);
+
     /**
      * 根据产品id、订单状态、时间段查询
      * @param productId
@@ -22,8 +24,13 @@ public interface ErpSaleOrderItemRepository extends JpaRepository<ErpSaleOrderIt
      */
     List<ErpSaleOrderItem> findByProductIdAndStatusCodeAndCreatedAtIsBetween(Long productId, String statusCode, Date start, Date end);
 
-
     List<ErpSaleOrderItem> findByProductId(Long productId);
+
+    List<ErpSaleOrderItem> findByProductIdAndStatusCode(Long productId, String statusCode);
+
+    List<ErpSaleOrderItem> findByOrderIdAndStatusCodeNot(Long orderId, String statusCode);
+
+    List<ErpSaleOrderItem> findByOrderIdAndProductId(Long orderId, Long productId);
 
     void deleteByOrderId(Long orderId);
 

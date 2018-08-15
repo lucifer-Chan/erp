@@ -123,7 +123,7 @@
             <button class="btn btn-primary" id="deletePlaceBt">删除</button>
         </span>
     </div>
-    <div class="bugInfoContent">
+    <div class="bugInfoContent initPlaceDetail">
         <div class="panel-default bugInfo">
             <div class="row">
                 <p class="pd23 pd43">
@@ -131,7 +131,7 @@
                         <span class="label label-info">基本信息</span>
                     </span>
                     <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
-                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base1"></i>
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
                     </span>
                 </p>
                 <div class="col-xs-12" data-value="baseInfo">
@@ -183,21 +183,21 @@
                         </div>
                     </div>
                 </div>
-                <hr>
-                <div>
-                    <ul class="nav nav-tabs noborder" role="tablist">
-                        <li role="presentation" class="active"><span href="#stockHistory" role="tab" data-toggle="tab" id="stockHistorySpan">出入库记录</span></li>
-                        <li role="presentation"><span href="#stockInfo" role="tab" data-toggle="tab" id="stockInfoSpan">库存信息</span></li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="stockHistory">
-                            <div class="col-sm-12" id="stockHistoryContent">
-                            </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#stockOptHistory" aria-controls="stockOptHistory" role="tab" data-toggle="tab" id="stockOptHistorySpan">出入库记录</span></li>
+                    <li role="presentation"><span href="#stockRemain" aria-controls="stockRemain" role="tab" data-toggle="tab" id="stockRemainSpan">库存信息</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="stockOptHistory">
+                        <div class="col-sm-12 bugInfoHistories">
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="stockInfo">
-                            <div class="col-sm-12" id="stockInfoContent">
-                            </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="stockRemain">
+                        <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
                 </div>
@@ -205,7 +205,6 @@
         </div>
     </div>
 </div>
-
 
 <script type="text/javascript">
     requirejs(['slimScroll', 'utils','services'],function (slimScroll, utils, services) {
@@ -224,8 +223,8 @@
             , $savePBt : $('#savePbt')//保存成品仓位按钮
             , $saveMBt : $('#saveMbt')//保存原材料仓位按钮
 
-            , $stockHistory : $('#stockHistory')//出入库记录
-            , $stockInfo : $('#stockInfo')//库存信息
+            , $stockOptHistory : $('#stockOptHistory')//出入库记录
+            , $stockRemain : $('#stockRemain')//库存信息
 
             ,template : {
                 stockLog : '<p>' +
@@ -268,7 +267,7 @@
             console.log('点击列表', tr);
             consts.currentPlace = tr;
 
-            var $detail = $('.bugInfoContent');
+            var $detail = $('.initPlaceDetail');
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
@@ -285,41 +284,40 @@
                 } else if(convert === 'convertType'){
                     if ('M' === value) {
                         value = '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
-                        consts.$stockInfo.hide();
-                        $('#stockInfoSpan').hide();
+                        $('#stockRemainSpan').hide();
                     }else if ('P' === value) {
                         value =  '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
-                        consts.$stockInfo.show();
-                        $('#stockInfoSpan').show();
+                        $('#stockRemainSpan').show();
                     }
                 }
                 $(this).html(value || '<span class="label label-warning">无</span>');
             });
-            $('#stockHistorySpan').click();
+            //默认点击第一个tab
+            $('#stockOptHistorySpan').click();
             //初始化页面数据-出入库记录 && 库存信息（成品）
             services.stock.place.ext(tr.id).then(function (ret) {
-                var $stockHistory = $('#stockHistoryContent');
-                var $stockInfo  = $('#stockInfoContent');
-                $stockHistory.empty();
-                $stockInfo.empty();
+                var $stockOptHistory = consts.$stockOptHistory.find('.bugInfoHistories');
+                var $stockRemain  = consts.$stockRemain.find('.bugInfoHistories')
+                $stockOptHistory.empty();
+                $stockRemain.empty();
 
                 var history = ret.history || [];
                 var remain = ret.remain || [];
                 //库存信息
                 if ('M' !== tr.stockPlaceType){
                     if (!remain.length){
-                        $stockInfo.html('<p>暂无</p>');
+                        $stockRemain.html('<p>暂无</p>');
                     } else {
                         var html = '';
                         remain.forEach(function (info) {
                             html += consts.template.remain.replace('{content}', info.productName).replace('{num}', info.total);
                         });
-                        $stockInfo.html(html);
+                        $stockRemain.html(html);
                     }
                 }
                 //出入库记录
                 if (!history.length){
-                    $stockHistory.html('<p>暂无</p>');
+                    $stockOptHistory.html('<p>暂无</p>');
                 } else {
                     var html2 = '';
                     history.forEach(function (info) {
@@ -328,7 +326,7 @@
                         var name = '【' + operation + '-' + source + '】';
                         var content = (info.productName || tr.materialName)+ '['+ info.num + ']';
                         if('INIT' !== info.holder){
-                            content += ',对应单号：' + info.holderDescription;
+                            content += ',对应单号：' + info.holderBarCode;
                         }
 
                         html2 += consts.template.stockLog
@@ -336,7 +334,7 @@
                             .replace('{content}', content)
                             .replace('{time}', info.createdAt);
                     });
-                    $stockHistory.html(html2);
+                    $stockOptHistory.html(html2);
                 }
             })
         }

@@ -43,6 +43,8 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private Integer alertUpper;
     @Column(columnDefinition = "int(20) comment '预警下限'")
     private Integer alertLower;
+    @Column(columnDefinition = "double(10,9) comment '库存总量'")
+    private Double totalNum;
 
 
     @Column(columnDefinition = "varchar(64) comment '客户图号'")
@@ -140,6 +142,10 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
 
     @Transient
     private String endProductTypeName;
+
+    public Double getTotalNum(){
+        return Objects.isNull(totalNum) ? 0d :totalNum;
+    }
 
     public void setEndProductTypeName(String endProductTypeName){
         endProductTypeName = "成品-" + endProductTypeName;

@@ -12,6 +12,7 @@ import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.validator.OnDeleteRawMaterialValidator;
 import com.yintong.erp.validator.OnDeleteSupplierRawMaterialValidator;
 import com.yintong.erp.validator.OnDeleteSupplierValidator;
+import java.util.Comparator;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +82,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
             ErpRawMaterialSupplier ass = rawMaterialSupplierRepository.getOne(assId);
             ErpBaseSupplier supplier = supplierRepository.getOne(ass.getSupplierId());
             ErpBaseRawMaterial material = rawMaterialRepository.getOne(ass.getRawMaterId());
-            return supplier.getSupplierName() + "-" + material.getRawName() + "-" + material.getSpecification();
+            return supplier.getSupplierName() + "【" + material.getRawName() + "-" + material.getSpecification() + "】";
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -98,6 +99,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
         Map<Long, ErpBaseRawMaterial> materialMap = rawMaterialRepository.findAll().stream().collect(Collectors.toMap(ErpBaseRawMaterial::getId, material -> material));
 
         return rawMaterialSupplierRepository.findAll().stream()
+                .sorted(Comparator.comparing(ErpRawMaterialSupplier::getSupplierId))
                 .map(ass -> new KeyValue<Long, String>() {
 
                     Long key; String value;
@@ -112,7 +114,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
                         ErpBaseSupplier supplier = supplierMap.get(ass.getSupplierId());
                         ErpBaseRawMaterial material = materialMap.get(ass.getRawMaterId());
                         return (Objects.isNull(supplier) || Objects.isNull(material)) ? ""
-                                : supplier.getSupplierName() + "-" + material.getRawName() + "-" + material.getSpecification();
+                                : supplier.getSupplierName() + "【" + material.getRawName() + "-" + material.getSpecification() + "】";
                     }
                 })
                 .filter(keyValue -> StringUtils.hasText(keyValue.getValue()))

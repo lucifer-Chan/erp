@@ -3,11 +3,12 @@ package com.yintong.erp.web.basis;
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
+import com.yintong.erp.domain.basis.associator.ErpBaseProductBom;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.SupplierService;
-import com.yintong.erp.service.basis.associator.SupplierProductService;
+import com.yintong.erp.service.basis.associator.ProductBomService;
+import com.yintong.erp.service.stock.StockOptService;
 import com.yintong.erp.utils.base.BaseResult;
-import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,10 @@ public class ProductController {
 
     @Autowired SupplierService supplierService;
 
+    @Autowired ProductBomService bomService;
+
+    @Autowired StockOptService stockOptService;
+
     @Autowired ErpBaseEndProductRepository productRepository;
 
     @GetMapping("findSupplierAll")
@@ -51,6 +54,27 @@ public class ProductController {
     public BaseResult query(ProductService.ProductParameterBuilder parameter){
         Page<ErpBaseEndProduct> page = productService.query(parameter);
         return page2BaseResult(page);
+    }
+
+    /**
+     * 出入库历史
+     * @param productId
+     * @return
+     */
+    @GetMapping("{productId}/stock")
+    public BaseResult stockHistory(@PathVariable Long productId){
+        return new BaseResult().addList(stockOptService.findOptsByProductId(productId));
+    }
+
+    /**
+     * 余量
+     * @param productId
+     * @return safe,total
+     */
+    @GetMapping("{productId}/stockRemain")
+    public BaseResult stockRemain(@PathVariable Long productId) {
+        return new BaseResult().add(productService.stockRemain(productId));
+
     }
 
     @GetMapping("all")
@@ -165,5 +189,63 @@ public class ProductController {
         }
         return new BaseResult().setErrmsg("成功删除（" + count + "/" + sum + "）");
     }
+
+    /**
+     * 获取物料清单
+     * @param productId
+     * @return
+     */
+    @GetMapping("{productId}/bom")
+    public BaseResult findBoms(@PathVariable Long productId){
+        return new BaseResult().addList(bomService.findBomList(productId));
+    }
+
+    /**
+     * 获取单个物料清单Item
+     * @param bomId
+     * @return
+     */
+    @GetMapping("bom/{bomId}")
+    public BaseResult findOneBom(@PathVariable Long bomId){
+        return new BaseResult().addPojo(bomService.one(bomId));
+    }
+
+    /**
+     * 供选的原材料
+     * @param productId
+     * @return
+     */
+    @GetMapping("{productId}/materials")
+    public BaseResult findMaterials(@PathVariable Long productId){
+        return new BaseResult().addList(bomService.lookup(productId));
+    }
+
+    /**
+     * 创建单个bom
+     * @param bom
+     * @return
+     */
+    @PostMapping("bom")
+    public BaseResult createBom(@RequestBody ErpBaseProductBom bom){
+        return new BaseResult().addPojo(bomService.create(bom));
+    }
+
+    /**
+     * 更新bom的数量
+     * @param bomId
+     * @param materialNum
+     * @return
+     */
+    @PatchMapping("bom/{bomId}")
+    public BaseResult updateBom(@PathVariable Long bomId, double materialNum){
+        return new BaseResult().addPojo(bomService.update(bomId, materialNum));
+    }
+
+    @DeleteMapping("bom/{bomId}")
+    public BaseResult deleteBom(@PathVariable Long bomId){
+        bomService.delete(bomId);
+        return new BaseResult().setErrmsg("删除成功");
+    }
+
 
 }

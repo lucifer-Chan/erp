@@ -2,7 +2,10 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
+import com.yintong.erp.domain.sale.ErpSaleOrderItem;
+import com.yintong.erp.domain.sale.ErpSaleOrderItemRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import static com.yintong.erp.utils.common.Constants.SaleOrderStatus.STATUS_003;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
@@ -36,11 +39,11 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ErpBaseEndProductRepository erpBaseEndProductRepository;
+    @Autowired  ErpBaseEndProductRepository erpBaseEndProductRepository;
 
-    @Autowired(required = false)
-    private List<OnDeleteProductValidator> onDeleteProductalidator;
+    @Autowired ErpSaleOrderItemRepository orderItemRepository;
+
+    @Autowired(required = false) List<OnDeleteProductValidator> onDeleteProductValidators;
 
     /**
      *查询列表
@@ -51,14 +54,14 @@ public class ProductService {
         return erpBaseEndProductRepository.findAll(parameter.specification(), parameter.pageable());
     }
     /**
-     * 根据模具id查找供应商
+     * 根据id查找成品
      * @param productId
      * @return
      */
     public ErpBaseEndProduct one(Long productId){
-        ErpBaseEndProduct mould = erpBaseEndProductRepository.findById(productId).orElse(null);
-        Assert.notNull(mould, "未找到成品");
-        return mould;
+        ErpBaseEndProduct product = erpBaseEndProductRepository.findById(productId).orElse(null);
+        Assert.notNull(product, "未找到成品");
+        return product;
     }
 
     /**
@@ -99,7 +102,7 @@ public class ProductService {
      * @return
      */
     public ErpBaseEndProduct update(ErpBaseEndProduct product){
-        Assert.notNull(product.getId(), "模具id不能为空");
+        Assert.notNull(product.getId(), "成品id不能为空");
         ErpBaseEndProduct inDb = erpBaseEndProductRepository.findById(product.getId()).orElse(null);
         Assert.notNull(inDb, "未找到模具");
         validateProductType(product);
@@ -114,8 +117,8 @@ public class ProductService {
      */
     @Transactional
     public void delete(Long productId){
-        if(!CollectionUtils.isEmpty(onDeleteProductalidator))
-            onDeleteProductalidator.forEach(validator -> validator.onDeleteProduct(productId));
+        if(!CollectionUtils.isEmpty(onDeleteProductValidators))
+            onDeleteProductValidators.forEach(validator -> validator.onDeleteProduct(productId));
         erpBaseEndProductRepository.deleteById(productId);
     }
 
@@ -131,8 +134,6 @@ public class ProductService {
         Assert.hasLength(product.getEndProductName(), "成品名称不能为空");
         Assert.isTrue(Arrays.asList(PAF0, PAT0, PTD0, PTT0, PTW0, PTU0, PNR0, PNY0, PNM0, PNF0, PNX0)
                 .contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "成品类型不正确");
-
-
 //        Assert.isTrue(Arrays.asList(PTT0,PTD0,PTW0,PTU0,PNR0,
 //                PNY0,PNM0,PNF0,PRT0,PRD0,PRW0,PRU0,PRR0,PRY0,
 //                PRM0,PRF0).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "成品类型不正确");
@@ -140,11 +141,29 @@ public class ProductService {
     }
 
     /**
+     * 查询余量
+     * @param productId
+     * @return safe,total
+     */
+    public Map<String,Object> stockRemain(Long productId) {
+        ErpBaseEndProduct product = one(productId);
+        //审核通过的成品数量
+        double approval = orderItemRepository.findByProductIdAndStatusCode(productId, STATUS_003.name())
+                .stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(ErpSaleOrderItem::getNum)
+                .sum();
+        double total = product.getTotalNum();
+        return new HashMap<String, Object>(){{
+            put("total", total);
+            put("safe", (total - approval));
+        }};
+    }
+
+    /**
      * 构造前端返回的参数
      */
-    @Getter
-    @Setter
-    @OrderBy(fieldName = "id")
+    @Getter @Setter @OrderBy(fieldName = "id")
     public static class ProductParameterBuilder extends QueryParameterBuilder {
         @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo"}, compare = like, group = OR)
         String cause;
