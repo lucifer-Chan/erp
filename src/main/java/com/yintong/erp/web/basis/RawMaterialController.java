@@ -38,6 +38,10 @@ public class RawMaterialController {
     @Autowired SupplierRawMaterialService supplierRawMaterialService;
 
 
+    @GetMapping("all")
+    public BaseResult findAll(){
+        return new BaseResult().addList(rawMaterialRepository.findAllByOrderByRawTypeCode());
+    }
 
     @GetMapping
     public BaseResult query(RawMaterialParameterBuilder parameter){

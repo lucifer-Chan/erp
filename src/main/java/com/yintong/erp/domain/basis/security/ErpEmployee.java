@@ -47,6 +47,9 @@ public class ErpEmployee extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(40) comment '电话号码'")
     private String mobile;
 
+    @Column(columnDefinition = "varchar(100) comment '微信小程序的openId'")
+    private String openId;
+
     @Override
     protected void prePersist(){
         if(StringUtils.hasLength(password))

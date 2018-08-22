@@ -2,6 +2,7 @@ package com.yintong.erp.domain.basis;
 
 
 import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
@@ -12,6 +13,7 @@ import org.springframework.util.Assert;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by jianqiang on 2018/5/10 0010.
@@ -41,6 +43,22 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
 
     @Transient
     private String supplierTypeCode;
+
+    @Transient
+    private String description;
+
+    public String getDescription(){
+        if(StringUtils.hasText(description)) return description;
+        String _type;
+        try {
+            String prefix = BarCodeConstants.BAR_CODE_PREFIX.valueOf(modelToolTypeCode).description();
+            _type = prefix.substring("模具-".length(), prefix.length()) + "-";
+        } catch (Exception e){
+            _type = "";
+        }
+
+        return description = (_type + this.getModelToolName() + (StringUtils.hasText(specification)? ("-" + specification) : ""));
+    }
 
 
     @Override

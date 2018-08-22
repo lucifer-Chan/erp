@@ -2,6 +2,7 @@ package com.yintong.erp.domain.basis;
 
 
 import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
@@ -10,9 +11,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
@@ -43,7 +44,7 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private Integer alertUpper;
     @Column(columnDefinition = "int(20) comment '预警下限'")
     private Integer alertLower;
-    @Column(columnDefinition = "double(10,9) comment '库存总量'")
+    @Column(columnDefinition = "double(16,9) comment '库存总量'")
     private Double totalNum;
 
 
@@ -143,6 +144,24 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Transient
     private String endProductTypeName;
 
+    @Transient
+    private String description;
+
+    @Transient
+    private String supplierTypeCode;
+
+    public String getDescription(){
+        if(StringUtils.hasText(description)) return description;
+        String _type;
+        try {
+            String prefix = BarCodeConstants.BAR_CODE_PREFIX.valueOf(endProductTypeCode).description();
+            _type = prefix.substring("成品-".length(), prefix.length()) + "-";
+        } catch (Exception e){
+            _type = "";
+        }
+        return description = (_type + this.getEndProductName() + (StringUtils.hasText(specification) ? ("-" + specification) : ""));
+    }
+
     public Double getTotalNum(){
         return Objects.isNull(totalNum) ? 0d :totalNum;
     }
@@ -173,6 +192,5 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
         Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
     }
 
-    @Transient
-    private String supplierTypeCode;
+
 }

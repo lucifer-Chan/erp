@@ -40,8 +40,8 @@ public interface Constants {
         STATUS_002("待审核", "提交"),
         STATUS_003("审核通过", "审核"),
         STATUS_004("审核退回", "审核"),
-        STATUS_005("已出库", ""),
         STATUS_049("正在出库", ""),
+        STATUS_005("已出库", ""),
         STATUS_006("客户退货", ""),
         STATUS_007("已完成", "");
 
@@ -131,4 +131,55 @@ public interface Constants {
             return description;
         }
     }
+
+    /**
+     * 货物类型：成品|原材料|模具
+     */
+    enum WaresType {
+        P("成品"), M("原材料"),D("模具");
+        WaresType(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
+
+    /**
+     * 采购订单状态
+     */
+    enum PurchaseOrderStatus {
+        STATUS_001("未发布", "新建"),
+        STATUS_002("待审核", "提交"),
+        STATUS_003("审核通过", "审核"),
+        STATUS_004("审核退回", "审核"),
+        STATUS_049("正在入库", ""),
+        STATUS_005("已入库", ""),
+
+        STATUS_007("已完成", "");
+
+        PurchaseOrderStatus(String description, String operation) {
+            this.description = description;
+            this.operation = operation;
+        }
+
+        private String description;
+
+        private String operation;
+
+        public String description() {
+            return description;
+        }
+
+        public String operation() {
+            return operation;
+        }
+
+        public String toLog(){
+            String prefix = StringUtils.hasLength(operation()) ? operation() + "-" : "";
+            return "【" + prefix + description() + "】";
+        }
+    }
+
 }

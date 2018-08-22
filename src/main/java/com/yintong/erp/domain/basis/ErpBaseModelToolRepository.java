@@ -20,4 +20,6 @@ public interface ErpBaseModelToolRepository extends JpaRepository<ErpBaseModelTo
 
     List<ErpBaseModelTool> findByModelToolNameAndSpecificationAndIdNot(String modelToolName, String specification, Long id);
 
+    List<ErpBaseModelTool> findAllByOrderByModelToolTypeCode();
+
 }

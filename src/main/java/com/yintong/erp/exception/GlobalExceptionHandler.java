@@ -184,9 +184,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             )
             .put("error", error(e)
             );
-            log.error("异常{}", ret);
+            log.error("异常\t{}", ret);
         }
-        log.error("error", e);
+        log.error("error\t{}", debug ? e : e.getMessage());
         return ret;
     }
 
@@ -221,9 +221,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             )
             .put("error", error(e)
             );
-            log.error("异常{}", ret);
+            log.error("异常\t{}", ret);
         }
-        log.error("error", e);
+        log.error("error\t{}", debug ? e : e.getMessage());
         return ret;
     }
 

@@ -151,7 +151,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">客户图号</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="custDrawingNo" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                        <input type="text" class="form-control" name="custDrawingNo" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
                                     </div>
                                     <label class="col-sm-2 control-label">模具位</label>
                                     <div class="col-sm-4">
@@ -707,7 +707,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">数量</label>
+                                    <label class="col-xs-3 pd0">切丝长度</label>
                                     <div class="col-xs-9 txt pd0" data-name="materialNum"></div>
                                 </div>
                                 <div class="col-xs-6">
@@ -769,7 +769,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">原材料数量</label>
+                        <label class="col-sm-3 control-label">切丝长度</label>
                         <div class="col-sm-9">
                             <input type="number" step="0.000000001" class="form-control" placeholder="输入正数" id="materialNum">
                         </div>
@@ -843,7 +843,7 @@
                         $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
                         $(body).find('div[data-name="specification"]').html(material.specification || unset);
                         $(body).find('div[data-name="materialNum"]').html(item.materialNum || unset);
-                        $(body).find('div[data-name="unit"]').html(material.unit || unset);
+                        $(body).find('div[data-name="unit"]').html('mm');
                         $bomContent.append($(clone).show());
                     });
                     utils.initRightAngleEvent();
@@ -1108,11 +1108,6 @@
                     materialId :  $('#_materialId').attr('data-value'),
                     materialNum : $('#materialNum').val()
                 };
-
-                if(!data.materialNum){
-                    layer.msg('请输入原材料数量');
-                    return false;
-                }
 
                 if(data.materialId === '-1' || data.materialId === -1){
                     layer.msg('请选择原材料');

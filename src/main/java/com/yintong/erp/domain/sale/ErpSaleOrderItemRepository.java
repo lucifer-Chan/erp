@@ -14,6 +14,8 @@ public interface ErpSaleOrderItemRepository extends JpaRepository<ErpSaleOrderIt
 
     List<ErpSaleOrderItem> findByOrderId(Long orderId);
 
+    List<ErpSaleOrderItem> findByOrderIdInOrderByMoney(List<Long> ids);
+
     /**
      * 根据产品id、订单状态、时间段查询
      * @param productId

@@ -1,10 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!-- Main -->
+<div class="erp_content animated fadeInRight full_height"  id="sale_order_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述、客户名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+            <ul class="nav nav-pills">
+                <li role="presentation" class="dropdown" id="statusCollection">
+                </li>
+            </ul>
+            <button type="button" class="btn btn-default btn-ms operation" id="addSaleOrderBt" data-toggle="modal" data-target="#_addSaleOrder">新增销售订单</button>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div id="test"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+
+
+
+<script id="template-scan" type="text/template">
+    <div class="order">
+        <p class="order_id"><label>订单编号：</label><span>{{o.order_id}}</span></p>
+        <span class="scan-time">{{o.sac_checkout_scan_time}}</span>
+    </div>
+    <div class="customer">
+        <div class="headImg">
+            {{if o.headimgurl == "" || o.headimgurl == null || o.headimgurl == "undefined"}}
+            <img src="../../../resources/product/saler/headImg.png" />
+            {{else}}
+            <img src="{{o.headimgurl}}" />
+            {{/if}}
+        </div>
+        <p class="customer_name">{{o.customer_name}}</p>
+        <p class="customer_mobile">{{o.customer_mobile}}</p>
+    </div>
+    <div class="setup">
+        <p><label>安装时间：</label><span>{{o.setup_time}}</span></p>
+        <p class="list-item"><label>安装地点：</label><span class="layout-left">{{o.setup_address}}</span></p>
+    </div>
+    {{each model_infos as m}}
+    <div class="product">
+        <p><label>产品类别：</label><span>{{m.product_category}}</span></p>
+        <p><label>产品名称：</label><span class="product_name">{{m.product_name}}</span></p>
+        <p><label>产品型号：</label><span>{{m.product_model}}</span></p>
+        <!--<span class="num">x {{m.num}}</span>-->
+    </div>
+    <div class="product-code">
+        <p><label>产品S  N：</label><span>{{sn}}</span></p>
+        <p><label>产品PNC：</label><span>{{m.pnc}}</span></p>
+    </div>
+    {{/each}}
+    <div class="btn-group">
+        <a class="btn cancel">取消</a>
+        <a class="btn perfect">确定</a>
+    </div>
+</script>
+<script>
+    var data = {
+
+    }
+
+    var html = template("template-scan", {
+        model_infos: [{
+            product_category : '11',
+            product_name : '22',
+            product_model :'33',
+            pnc : 'pnc-1'
+        },{
+            product_category : '11-2',
+            product_name : '22-2',
+            product_model :'33-2',
+            pnc : 'pnc-2'
+        }],
+        o: {
+            order_id : 'order_id-1',
+            sac_checkout_scan_time : 'aaaaaaaa',
+            customer_name : 'customer_name',
+            customer_mobile : 'customer_mobile',
+            setup_time : 'setup_time',
+            setup_address : 'setup_address'
+        },
+        sn: 'sn-11111'
+    });
+    $("#test").html("").append(html).show();
+
+</script>

@@ -98,7 +98,8 @@ public class SpringUtil implements ApplicationContextAware, HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o)  {
         setRequest(request);
         //请求由/m/打头的必须要带参数accessToken=xxx xxx为员工id经过AES加密
-        if(request.getRequestURI().startsWith("/m/")){
+        String uri = request.getRequestURI();
+        if(uri.startsWith("/m/") && !uri.startsWith("/m/token")){
             SessionUtil.getCurrentUser();
         }
         return true;

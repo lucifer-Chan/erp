@@ -443,7 +443,8 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
      * @param setting -{$holder, -- dom
      *                  data, -- 数据 [{code, name}] or {a:b,c:d,e:f}
      *                  prefix, -- 前缀
-     *                  callback -- 点击a标签的回调函数，参数为a的data-value
+     *                  callback, -- 点击a标签的回调函数，参数为a的data-value
+     *                  init --初始时候调用callback
      *                  }
      */
     function dropdown(setting) {
@@ -468,6 +469,7 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
             $(this).parents('li.dropdown').children().eq(0).html(setting.prefix +'：' +$this.text()+' <span class="caret"></span>');
             callback($(this).attr('data-value'));
         });
+        (setting.init === true) && ul.find('li>a').first().click();
     }
 
     /**

@@ -153,7 +153,7 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
      * 根据供应商id获取所有的已关联的树
      * @param supplierId
      * @return
-     * TODO 修改为只显示拥有的类别，而非全类别
+     *
      */
     public List<TreeNode> associatedNodes(Long supplierId){
 

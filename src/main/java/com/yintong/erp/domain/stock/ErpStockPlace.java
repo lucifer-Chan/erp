@@ -55,7 +55,7 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "integer DEFAULT 0 comment '库存上限'")
     private Integer upperLimit;
 
-    @Column(columnDefinition = "double(10,9) DEFAULT 0 comment '当前存量'")
+    @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '当前存量'")
     private Double currentStorageNum;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '仓位描述'")

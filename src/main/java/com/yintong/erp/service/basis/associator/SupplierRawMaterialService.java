@@ -82,7 +82,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
             ErpRawMaterialSupplier ass = rawMaterialSupplierRepository.getOne(assId);
             ErpBaseSupplier supplier = supplierRepository.getOne(ass.getSupplierId());
             ErpBaseRawMaterial material = rawMaterialRepository.getOne(ass.getRawMaterId());
-            return supplier.getSupplierName() + "【" + material.getRawName() + "-" + material.getSpecification() + "】";
+            return supplier.getSupplierName() + "【" + material.getDescription() + "】";
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -114,7 +114,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
                         ErpBaseSupplier supplier = supplierMap.get(ass.getSupplierId());
                         ErpBaseRawMaterial material = materialMap.get(ass.getRawMaterId());
                         return (Objects.isNull(supplier) || Objects.isNull(material)) ? ""
-                                : supplier.getSupplierName() + "【" + material.getRawName() + "-" + material.getSpecification() + "】";
+                                : supplier.getSupplierName() + "【" + material.getDescription() + "】";
                     }
                 })
                 .filter(keyValue -> StringUtils.hasText(keyValue.getValue()))
@@ -217,10 +217,9 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
     }
 
     /**
-     * 根据供应商id获取所有的已关联的树
+     * 根据供应商id获取所有的已关联的树，只显示拥有的类别，而非全类别
      * @param supplierId
      * @return
-     * TODO 修改为只显示拥有的类别，而非全类别
      */
     public List<TreeNode> associatedNodes(Long supplierId){
 
@@ -230,7 +229,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
                     String parentCode = ass.getRawMaterType();
                     Long rawMaterId = ass.getRawMaterId();
                     ErpBaseRawMaterial rawMaterial = rawMaterialRepository.getOne(rawMaterId);
-                    TreeNode treeNode = new TreeNode(ass.getRawMaterId() + "", rawMaterial.getRawName() + "-" + rawMaterial.getSpecification(), parentCode, false)
+                    TreeNode treeNode = new TreeNode(ass.getRawMaterId() + "", rawMaterial.getDescription(), parentCode, false)
                             .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
                     return treeNode
                             .setFullName(treeNode.getName())
@@ -261,7 +260,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
         Stream<TreeNode> leafStream = rawMaterialRepository.findAll()
                 .stream()
                 .map(rawMaterial ->
-                        new TreeNode(rawMaterial.getId() + "", rawMaterial.getRawName() + "-" + rawMaterial.getSpecification(), rawMaterial.getRawTypeCode(), false)
+                        new TreeNode(rawMaterial.getId() + "", rawMaterial.getDescription(), rawMaterial.getRawTypeCode(), false)
                 );
         List<TreeNode> leaves =  Objects.isNull(filter) ?
                 leafStream.collect(Collectors.toList()) :

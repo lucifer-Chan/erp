@@ -81,6 +81,20 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
     }
 
     /**
+     * 获取单个可出库的销售订单
+     * @param barcode
+     * @return
+     */
+    public ErpSaleOrder findOrder4Out(String barcode){
+        ErpSaleOrder order = CommonUtil.single(saleOrderRepository.findByBarCode(barcode));
+        Assert.notNull(order, "未找到销售订单[" + barcode + "]");
+        Assert.isTrue(1 == order.getPreStockOut(), "该销售订单尚未打印出库单");
+        //添加明细
+        order.setItems(orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId()));
+        return order;
+    }
+
+    /**
      * 新增销售订单
      * @param order
      * @return
@@ -354,14 +368,18 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
     public void onDeleteCustomer(Long employeeId) {
         ErpSaleOrder order = saleOrderRepository.findByCustomerId(employeeId)
                 .stream().findAny().orElse(null);
-        Assert.isNull(order, "请先删除销售单[" + order.getBarCode() + "]");
+        if(null != order){
+           throw new IllegalArgumentException("请先删除销售单[" + order.getBarCode() + "]");
+        }
     }
 
     @Override
     public void onDeleteProduct(Long productId) {
         ErpSaleOrderItem item = orderItemRepository.findByProductId(productId)
                 .stream().findAny().orElse(null);
-        Assert.isNull(item, "请先删除销售单[" + item.getOrderCode() + "]中的明细");
+        if(null != item){
+            throw new IllegalArgumentException("请先删除销售单[" + item.getOrderCode() + "]");
+        }
     }
 
     @Override

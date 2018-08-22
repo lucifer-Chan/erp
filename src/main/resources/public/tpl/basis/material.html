@@ -114,6 +114,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="rawName" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">单位</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="unit" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
@@ -448,6 +454,9 @@
          * 初始化右侧
          */
         function initMaterialDetail(materialData) {
+            if(materialData) {
+                consts.material = materialData;
+            }
             var unSetting = '<span class="label label-danger">未设置</span>';
             var $detail = $('.initMaterialDetail');
             var $baseInfo = $detail.find('div[data-value="base1Info"], div[data-value="base2Info"]');
@@ -603,8 +612,6 @@
 
                     } });
                     utils.dropkick({ $holder : $('#_typeC'), data :consts.typeAll[$("#_typeP").data("value")] });
-
-
                 }
             }).on('hidden.bs.modal', function () {
                 //清理数据

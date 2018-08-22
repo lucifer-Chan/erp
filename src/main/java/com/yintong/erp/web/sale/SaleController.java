@@ -26,7 +26,7 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 /**
  * @author lucifer.chan
  * @create 2018-07-21 下午5:06
- * 销售模块入库
+ * 销售模块入口
  **/
 @RestController
 @RequestMapping("sale")

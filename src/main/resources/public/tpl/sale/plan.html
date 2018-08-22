@@ -2,7 +2,7 @@
     <div class="full_height">
         <div id="searchFilter">
             <div class="sidebar-search">
-                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、计划内容" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
             <button type="button" class="btn btn-default btn-ms operation" id="editSalePlanBt" data-toggle="modal" data-target="#_editSalePlan">新增销售计划</button>
         </div>
@@ -349,7 +349,7 @@
                 utils.dropkick({ $holder : $('#_productId'), data : consts.products , current : consts.currentPlan.productId});
             }).on('hidden.bs.modal', function () {
                 //清理数据
-                $(this).find('input[type="text"], textarea').val('');
+                $(this).find('input[type="text"], input[type="number"], textarea').val('');
             });
 
             //save salePlan

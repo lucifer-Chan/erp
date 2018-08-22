@@ -36,7 +36,7 @@ public class ErpBaseProductBom extends BaseEntity {
     @Column(columnDefinition = "bigint(20) comment '原材料id-未关联供应商'")
     private Long materialId;
 
-    @Column(columnDefinition = "double(10,9) comment '原材料数量'")
+    @Column(columnDefinition = "double(16,9) comment '原材料数量'")
     private Double materialNum;
 
     @Transient
@@ -65,6 +65,5 @@ public class ErpBaseProductBom extends BaseEntity {
     private void onPreCommit(){
         Assert.notNull(productId, "请选择成品");
         Assert.notNull(materialId , "请选择原材料");
-        Assert.isTrue(Objects.nonNull(materialNum) && materialNum > 0, "原材料数量必须大于0");
     }
 }

@@ -39,7 +39,7 @@ public class ErpStockOptLog extends BaseEntity{
     @Column(columnDefinition = "varchar(100) comment '成品条码，可以为采购的成品'")
     private String productCode;
 
-    @Column(columnDefinition = "double(10,9) comment '出入库数量'")
+    @Column(columnDefinition = "double(16,9) comment '出入库数量'")
     private Double num;
 
     @Column(columnDefinition = "varchar(20) DEFAULT '' comment '出入库[IN|OUT]'")

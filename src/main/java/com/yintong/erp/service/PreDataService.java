@@ -86,7 +86,14 @@ public class PreDataService {
                     , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/order/**").uri("sale/approval.html").parentCode("20").build()
                     , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/order/**").uri("sale/refunds.html").parentCode("20").build()
                 , ErpMenu.builder().code("30").name("库存管理").build()
-                , ErpMenu.builder().code("3001").name("仓位维护").matches("/stock/place/**").uri("stock/place.html").parentCode("30").build()
+                    , ErpMenu.builder().code("3001").name("仓位维护").matches("/stock/place/**").uri("stock/place.html").parentCode("30").build()
+
+
+                , ErpMenu.builder().code("40").name("采购管理").build()
+                    , ErpMenu.builder().code("4001").name("采购计划单").matches("/purchase/plan/**").uri("purchase/plan.html").parentCode("40").build()
+                    , ErpMenu.builder().code("4002").name("采购订单").matches("/purchase/order/**").uri("purchase/order.html").parentCode("20").build()
+                    , ErpMenu.builder().code("4003").name("采购审核").matches("/purchase/order/**").uri("purchase/approval.html").parentCode("20").build()
+
         );
         menuRepository.saveAll(menus);
     }
@@ -244,6 +251,21 @@ public class PreDataService {
                                         .build()
                         )
                 .collect(Collectors.toList())
+        );
+
+        //采购订单状态
+        lookupRepository.saveAll(
+                Stream.of(Constants.PurchaseOrderStatus.values())
+                        .map(status ->
+                                ErpBaseLookup.builder()
+                                        .code(status.name())
+                                        .name(status.description())
+                                        .type("purchase_order")
+                                        .description("采购订单状态")
+                                        .tag(Integer.valueOf(status.ordinal()).longValue())
+                                        .build()
+                        )
+                        .collect(Collectors.toList())
         );
 
         //仓库类型

@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 public class SessionUtil {
     private static final String KEY_PREFIX = SessionUtil.class.getName()+ "_";
 
-    public static final String TOKEN_KEY = "accessToken";
+    public static final String TOKEN_KEY = "token";
 
     private static SimpleCache<EmployeeDetails> employeeDetailsSimpleCache = new SimpleCache<>();
 
@@ -60,12 +60,12 @@ public class SessionUtil {
     private static EmployeeDetails getEmployeeDetailsByToken(){
         HttpServletRequest request = SpringUtil.getRequest();
         if(null == request) return null;
-        String accessToken = request.getParameter(TOKEN_KEY);
-        if(StringUtils.isEmpty(accessToken)) return null;
+        String token = request.getParameter(TOKEN_KEY);
+        if(StringUtils.isEmpty(token)) return null;
 
-        return employeeDetailsSimpleCache.getDataFromCache(KEY_PREFIX + accessToken, value -> {
+        return employeeDetailsSimpleCache.getDataFromCache(KEY_PREFIX + token, value -> {
             try{
-                Long currentUserId = Long.parseLong(AESUtil.getInstance().decrypt(accessToken));
+                Long currentUserId = Long.parseLong(AESUtil.getInstance().decrypt(token));
                 ErpEmployee employee = SpringUtil.getBean(ErpEmployeeRepository.class).findById(currentUserId).orElse(null);
                 return Objects.isNull(employee) ? null : new EmployeeDetails(employee);
             }catch (Exception e){

@@ -1,6 +1,7 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseModelTool;
+import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.SupplierService;
@@ -21,11 +22,16 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 @RequestMapping("basis/mould")
 public class MouldController {
 
-    @Autowired
-    private MouldService mouldService;
+    @Autowired MouldService mouldService;
 
-    @Autowired
-    private SupplierService supplierService;
+    @Autowired SupplierService supplierService;
+
+    @Autowired ErpBaseModelToolRepository modelToolRepository;
+
+    @GetMapping("all")
+    public BaseResult findAll(){
+        return new BaseResult().addList(modelToolRepository.findAllByOrderByModelToolTypeCode());
+    }
 
     @GetMapping("findSupplierAll")
     public BaseResult findSupplierAll(){

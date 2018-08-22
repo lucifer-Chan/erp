@@ -106,4 +106,14 @@ public class CustomerController {
     public BaseResult one(@PathVariable Long customerId){
         return new BaseResult().addPojo(customerService.one(customerId));
     }
+
+    /**
+     * 销售订单tree
+     * @param customerId
+     * @return
+     */
+    @GetMapping("{customerId}/orders")
+    public BaseResult orders(@PathVariable Long customerId){
+        return new BaseResult().addList(customerService.findSaleOrders(customerId));
+    }
 }

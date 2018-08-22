@@ -8,6 +8,7 @@ import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static com.yintong.erp.utils.query.OrderBy.METHOD.asc;
@@ -42,9 +44,9 @@ public class SalePlanService {
     public ErpSalePlan create(ErpSalePlan plan) {
         validatePlan(plan);
         ErpSalePlan ret = salePlanRepository.save(plan);
-        String content = "新建 计划销售金额：¥" + ret.getPlanMoney() + ", 计划时间：["
-                + DateUtil.getDateString(plan.getStartDate()) + " 至 "
-                + DateUtil.getDateString(plan.getEndDate()) + "]";
+
+        String content = "新建 金额：" + ret.getPlanMoney() +
+                ", 时间：["  + DateUtil.getDateString(plan.getStartDate()) + " 至 " + DateUtil.getDateString(plan.getEndDate()) + "]";
         salePlanOptLogRepository.save(ErpSalePlanOptLog.builder().planId(ret.getId()).content(content).build());
         return ret;
     }
@@ -59,19 +61,18 @@ public class SalePlanService {
         ErpSalePlan old = salePlanRepository.findById(plan.getId()).orElse(null);
         Assert.notNull(old, "未找到id为" + plan.getId() + "的销售计划单");
         String content = "更新 ";
+        List<String> contents = new ArrayList<>();
+
+        if(!old.getPlanMoney().equals(plan.getPlanMoney())){
+            contents.add("金额：¥" + plan.getPlanMoney());
+            old.setPlanMoney(plan.getPlanMoney());
+        }
 
         if(!DateUtil.getDateString(old.getStartDate()).equals(DateUtil.getDateString(plan.getStartDate()))
                 || !DateUtil.getDateString(old.getEndDate()).equals(DateUtil.getDateString(plan.getEndDate()))) {
-            content += "时间：["
-                    + DateUtil.getDateString(plan.getStartDate()) + " 至 "
-                    + DateUtil.getDateString(plan.getEndDate()) + "];";
+            contents.add("时间：[" + DateUtil.getDateString(plan.getStartDate()) + " 至 " + DateUtil.getDateString(plan.getEndDate()) + "]");
             old.setStartDate(plan.getStartDate());
             old.setEndDate(plan.getEndDate());
-        }
-
-        if(!old.getPlanMoney().equals(plan.getPlanMoney())){
-            content += "金额：¥" + plan.getPlanMoney();
-            old.setPlanMoney(plan.getPlanMoney());
         }
 
         if(!old.getRemark().equals(plan.getRemark())){
@@ -80,6 +81,10 @@ public class SalePlanService {
 
         if(!old.getDescription().equals(plan.getDescription())){
             old.setDescription(plan.getDescription());
+        }
+
+        if(!CollectionUtils.isEmpty(contents)){
+            content += StringUtils.collectionToDelimitedString(contents, ", ");
         }
 
         ErpSalePlan ret = salePlanRepository.save(old);

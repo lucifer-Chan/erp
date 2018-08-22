@@ -24,4 +24,7 @@ public interface ErpEmployeeRepository extends JpaRepository<ErpEmployee, Long> 
             countQuery = "select count(1) from erp_employee e where exists (select 1 from erp_employee_department d where d.employee_id = e.id and d.department_id = ?1)",
             nativeQuery = true)
     Page<ErpEmployee> findByDepartmentId(String departmentId, Pageable pageable);
+
+
+    List<ErpEmployee> findByOpenId(String openId);
 }

@@ -237,7 +237,7 @@ public class ProductController {
      * @return
      */
     @PatchMapping("bom/{bomId}")
-    public BaseResult updateBom(@PathVariable Long bomId, double materialNum){
+    public BaseResult updateBom(@PathVariable Long bomId, String materialNum){
         return new BaseResult().addPojo(bomService.update(bomId, materialNum));
     }
 

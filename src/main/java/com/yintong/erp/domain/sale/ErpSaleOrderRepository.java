@@ -11,4 +11,6 @@ public interface ErpSaleOrderRepository extends JpaRepository<ErpSaleOrder, Long
     Page<ErpSaleOrder> findAll(Specification<ErpSaleOrder> specification, Pageable pageable);
 
     List<ErpSaleOrder> findByCustomerId(Long customerId);
+
+    List<ErpSaleOrder> findByBarCode(String barCode);
 }

@@ -210,6 +210,23 @@ define('services',['utils'],function (utils) {
     };
 
     var mould = {
+        sessionKey : '_services_mould_all_',
+        //所有原材料
+        all : function () {
+            var $this = this;
+            var value = $.session($this.sessionKey);
+            if (!!value){
+                return $.Promise.resolve().then(function () {
+                    return value;
+                })
+            }
+            return $.http.get('basis/mould/all')
+                .then(function (ret) {
+                    $.session($this.sessionKey, ret);
+                    return ret;
+                });
+        },
+
         //分类
         types : function () {
             return $.http.get('basis/common/categories/children/direct?code=D');
@@ -227,10 +244,14 @@ define('services',['utils'],function (utils) {
         },
         //更新
         update : function (data) {
+            var $this = this;
             return $.http.put({
                 url : 'basis/mould',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //查找
@@ -239,15 +260,24 @@ define('services',['utils'],function (utils) {
         },
         //新增模具
         create:function(data){
+            var $this = this;
             return $.http.post({
                 url : 'basis/mould',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //删除
         delete : function (id) {
-            return $.http.delete('basis/mould/' + id);
+            var $this = this;
+            return $.http.delete('basis/mould/' + id)
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         }
     };
 
@@ -452,6 +482,23 @@ define('services',['utils'],function (utils) {
     };
 
     var rawMaterial = {
+        sessionKey : '_services_material_all_',
+        //所有原材料
+        all : function () {
+            var $this = this;
+            var value = $.session($this.sessionKey);
+            if (!!value){
+                return $.Promise.resolve().then(function () {
+                    return value;
+                })
+            }
+            return $.http.get('basis/rawMaterial/all')
+                .then(function (ret) {
+                    $.session($this.sessionKey, ret);
+                    return ret;
+                });
+        },
+
         //分类
         getTypeAll : function () {
             return $.http.get('basis/common/categories/tree?code=M');
@@ -473,35 +520,58 @@ define('services',['utils'],function (utils) {
         },
         //更新
         update : function (data) {
+            var $this = this;
             return $.http.put({
                 url : 'basis/rawMaterial',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //查找
         one : function (id) {
             return $.http.get('basis/rawMaterial/' + id);
         },
-        //新增模具
+        //新增原材料
         create:function(data){
+            var $this = this;
             return $.http.post({
                 url : 'basis/rawMaterial',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //删除
         delete : function (id) {
-            return $.http.delete('basis/rawMaterial/' + id);
+            var $this = this;
+            return $.http.delete('basis/rawMaterial/' + id)
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         },
         //导入的查询
         imported : function () {
-            return $.http.get('basis/rawMaterial/group');
+            var $this = this;
+            return $.http.get('basis/rawMaterial/group')
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         },
         //批量删除
         batchDelete : function (importedAt) {
-            return $.http.delete('basis/rawMaterial/batch/' + importedAt);
+            var $this = this;
+            return $.http.delete('basis/rawMaterial/batch/' + importedAt)
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    return value;
+                });
         }
     };
 
@@ -569,6 +639,10 @@ define('services',['utils'],function (utils) {
                 $.session($this.sessionKey, null);
                 return value;
             });
+        },
+        //查找销售订单
+        orders : function (id) {
+            return $.http.get('basis/customer/' + id + '/orders');
         }
     };
 
@@ -792,6 +866,56 @@ define('services',['utils'],function (utils) {
     };
 
     /**
+     * 采购计划
+     * @type {{}}
+     */
+    var purchasePlan = {
+        //新增
+        create : function (data) {
+            return $.http.post({
+                url : 'purchase/plan',
+                data : data,
+                contentType : $.contentType.json
+            })
+        },
+        //更新
+        update : function (data) {
+            var plan = {};
+            return $.http.put({
+                url : 'purchase/plan',
+                data : data,
+                contentType : $.contentType.json
+            }).then(function (ret) {
+                plan = ret;
+                return $.http.get('purchase/plan/' + ret.id + '/history/opt');
+            }).then(function (opts) {
+                //操作记录
+                plan.opts = opts.list;
+                return plan;
+            });
+        },
+        //删除
+        delete : function (planId) {
+            return $.http.delete('purchase/plan/' + planId);
+        },
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'purchase/plan',
+                data : params
+            });
+        },
+        //单个获取
+        one : function (planId) {
+            return $.http.get('purchase/plan/' + planId);
+        },
+        //计划单的操作记录
+        optHistory : function (planId) {
+            return $.http.get('purchase/plan/' + planId + '/history/opt');
+        }
+    }
+
+    /**
      * 销售订单
      * @type {{}}
      */
@@ -952,6 +1076,7 @@ define('services',['utils'],function (utils) {
         , association : association
         , salePlan : salePlan
         , saleOrder : saleOrder
+        , purchasePlan : purchasePlan
         , stock : stock
         , common : common
     }

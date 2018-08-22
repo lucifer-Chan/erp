@@ -31,8 +31,7 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 @Service
 public class MouldService {
 
-    @Autowired
-    private ErpBaseModelToolRepository modelToolRepositor;
+    @Autowired ErpBaseModelToolRepository modelToolRepository;
 
 
 
@@ -45,7 +44,7 @@ public class MouldService {
      * @return
      */
     public Page<ErpBaseModelTool> query(MouldParameterBuilder parameter){
-        return modelToolRepositor.findAll(parameter.specification(), parameter.pageable());
+        return modelToolRepository.findAll(parameter.specification(), parameter.pageable());
     }
     /**
      * 根据模具id查找供应商
@@ -53,7 +52,7 @@ public class MouldService {
      * @return
      */
     public ErpBaseModelTool one(Long mouldId){
-        ErpBaseModelTool mould = modelToolRepositor.findById(mouldId).orElse(null);
+        ErpBaseModelTool mould = modelToolRepository.findById(mouldId).orElse(null);
         Assert.notNull(mould, "未找到供应商");
         return mould;
     }
@@ -69,7 +68,7 @@ public class MouldService {
     public ErpBaseModelTool create(ErpBaseModelTool mould){
         mould.setId(null);//防止假数据
         validateModelType(mould);
-        return modelToolRepositor.save(mould);
+        return modelToolRepository.save(mould);
     }
     /**
      * 更新模具
@@ -78,11 +77,11 @@ public class MouldService {
      */
     public ErpBaseModelTool update(ErpBaseModelTool mould){
         Assert.notNull(mould.getId(), "模具id不能为空");
-        ErpBaseModelTool inDb = modelToolRepositor.findById(mould.getId()).orElse(null);
+        ErpBaseModelTool inDb = modelToolRepository.findById(mould.getId()).orElse(null);
         Assert.notNull(inDb, "未找到模具");
         validateModelType(mould);
         mould.setBarCode(inDb.getBarCode());
-        return modelToolRepositor.save(mould);
+        return modelToolRepository.save(mould);
     }
     /**
      * 删除供应商
@@ -92,7 +91,7 @@ public class MouldService {
     public void delete(Long mouldId){
         if(!CollectionUtils.isEmpty(onDeleteMouldValidator))
             onDeleteMouldValidator.forEach(validator -> validator.onDeleteMould(mouldId));
-        modelToolRepositor.deleteById(mouldId);
+        modelToolRepository.deleteById(mouldId);
 
     }
 

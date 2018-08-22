@@ -2,11 +2,22 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseCustomer;
 import com.yintong.erp.domain.basis.ErpBaseCustomerRepository;
+import com.yintong.erp.domain.sale.ErpSaleOrder;
+import com.yintong.erp.domain.sale.ErpSaleOrderItemRepository;
+import com.yintong.erp.domain.sale.ErpSaleOrderRepository;
+import com.yintong.erp.dto.TreeNode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import com.yintong.erp.utils.common.CommonUtil;
+import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteCustomerValidator;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,8 +42,14 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 @Service
 public class CustomerService {
 
-    @Autowired
-    private ErpBaseCustomerRepository erpBaseCustomerRepository;
+    @Autowired ErpBaseCustomerRepository erpBaseCustomerRepository;
+
+
+    @Autowired ErpSaleOrderRepository saleOrderRepository;
+
+    @Autowired ErpSaleOrderItemRepository saleOrderItemRepository;
+
+
 
     @Autowired(required = false)
     List<OnDeleteCustomerValidator> onDeleteCustomerValidator;
@@ -79,6 +96,39 @@ public class CustomerService {
         Assert.notNull(customer, "未找到客户");
         return customer;
     }
+
+    /**
+     * 根据客户id查找销售订单
+     * @param customerId
+     * @return
+     */
+    public List<TreeNode> findSaleOrders(Long customerId){
+
+        List<ErpSaleOrder> orders = saleOrderRepository.findByCustomerId(customerId);
+        if(CollectionUtils.isEmpty(orders)) return new ArrayList<>();
+        Map<Long, ErpSaleOrder> orderMap = orders.stream().collect(Collectors.toMap(ErpSaleOrder::getId, Function.identity()));
+
+
+        List<TreeNode> branch = orders.stream()
+                .map(order -> new TreeNode(order.getId().toString(), order.getBarCode() + "[" + Constants.SaleOrderStatus.valueOf(order.getStatusCode()).description() + "]" , null, true))
+                .collect(Collectors.toList());
+        List<TreeNode> leaves = saleOrderItemRepository.findByOrderIdInOrderByMoney(orders.stream().map(ErpSaleOrder::getId).collect(Collectors.toList()))
+                .stream()
+                .map(item->{
+                    ErpSaleOrder order = orderMap.get(item.getOrderId());
+                    if(Objects.isNull(order)) return null;
+                    return new TreeNode(item.getId().toString(),
+                            item.getProductName() + "[ ¥" + item.getUnitPrice() + "*" + item.getNum() + " = ¥" + item.getMoney() + "]", order.getId().toString(),
+                            false);
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        branch.addAll(leaves);
+        return branch;
+    }
+
+
+
 
     /**
      * 删除客户

@@ -1,6 +1,7 @@
 package com.yintong.erp.domain.basis;
 
 import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
@@ -11,6 +12,7 @@ import org.springframework.util.Assert;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by jianqiang on 2018/5/9 0009.
@@ -105,6 +107,21 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     private String rawTypeName;
 
     @Transient
+    private String description;
+
+    public String getRawTypeName() {
+         if(StringUtils.isEmpty(rawTypeCode)) return rawTypeName = "";
+         String prefix = BarCodeConstants.BAR_CODE_PREFIX.valueOf(rawTypeCode).description();
+         return rawTypeName = prefix.substring("原材料-".length(), prefix.length());
+    }
+
+    public String getDescription(){
+        if(StringUtils.hasText(description)) return description;
+        return description = (this.getRawTypeName() + "-" + this.getRawName() + "-" + this.getSpecification());
+    }
+
+
+    @Transient
     private String supplierTypeCode;
 
     public void setRawTypeName(String rawTypeName){
@@ -128,8 +145,8 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
         ErpBaseRawMaterialRepository repository = SpringUtil.getBean(ErpBaseRawMaterialRepository.class);
         List<ErpBaseRawMaterial> shouldBeEmpty
                 = Objects.isNull(id)
-                ? repository.findByRawNameAndSpecification(rawName, specification)
-                : repository.findByRawNameAndSpecificationAndIdNot(rawName, specification, id);
-        Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
+                ? repository.findByRawNameAndSpecificationAndRawTypeCode(rawName, specification, rawTypeCode)
+                : repository.findByRawNameAndSpecificationAndRawTypeCodeAndIdNot(rawName, specification, rawTypeCode, id);
+        Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-类别-规格重复");
     }
 }

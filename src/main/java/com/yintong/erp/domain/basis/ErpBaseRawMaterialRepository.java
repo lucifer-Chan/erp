@@ -22,11 +22,13 @@ public interface ErpBaseRawMaterialRepository extends JpaRepository<ErpBaseRawMa
 
     List<ErpBaseRawMaterial> findByImportedAt(String importedAt);
 
-    List<ErpBaseRawMaterial> findByRawNameAndSpecification(String rawName, String specification);
+    List<ErpBaseRawMaterial> findByRawNameAndSpecificationAndRawTypeCode(String rawName, String specification, String rawTypeCode);
 
-    List<ErpBaseRawMaterial> findByRawNameAndSpecificationAndIdNot(String rawName, String specification, Long id);
+    List<ErpBaseRawMaterial> findByRawNameAndSpecificationAndRawTypeCodeAndIdNot(String rawName, String specification, String rawTypeCode, Long id);
 
 
     List<ErpBaseRawMaterial> findByIdNotIn(List<Long> ids);
+
+    List<ErpBaseRawMaterial> findAllByOrderByRawTypeCode();
 
 }

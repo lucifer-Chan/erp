@@ -32,14 +32,13 @@ public class SupplierController {
 
     @Autowired ErpEndProductSupplierRepository productSupplierRepository;
 
-    @Autowired
-    SupplierRawMaterialService supplierRawMaterialService;
-    @Autowired
-    ErpRawMaterialSupplierRepository erpRawMaterialSupplierRepository;
-    @Autowired
-    SupplierMouldService supplierMouldService;
-    @Autowired
-    ErpModelSupplierRepository erpModelSupplierRepository;
+    @Autowired SupplierRawMaterialService supplierRawMaterialService;
+
+    @Autowired ErpRawMaterialSupplierRepository erpRawMaterialSupplierRepository;
+
+    @Autowired SupplierMouldService supplierMouldService;
+
+    @Autowired ErpModelSupplierRepository erpModelSupplierRepository;
 
     /**
      * 组合查询

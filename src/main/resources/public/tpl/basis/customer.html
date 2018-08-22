@@ -229,10 +229,35 @@
                 </div>
             </div>
             <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist" id="__assTabs">
+                    <li role="presentation"><span href="#_orders" role="tab" data-toggle="tab">销售记录</span></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="pd43 tab-pane" id="_orders">
+                        <div class="row">
+                            <div class="col-sm-12">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                                    <div class="panel-heading">
+                                    </div>
+                                    <div class="panel-body">
+                                        <p id="_ordersEmpty">暂无销售记录</p>
+                                        <div id="_ordersTree" class="ztree"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
-</div>
 </div>
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
@@ -251,6 +276,26 @@
             , $editInfoModal : $('#_editCustomer')//编辑客户modal
 
         };
+
+
+        var treeSetting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                    rootPId: 0
+                },
+                key : {
+                    title : 'title'
+                }
+            },
+
+            edit: {
+                enable: false
+            }
+        };
+
 
         //预置数据
         function prepareData() {
@@ -305,6 +350,7 @@
                         //TODO
                         $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
                         $rightPage.find('.fa-angle-double-down').click();
+                        $('#__assTabs').find('span').eq(0).click();
                     })
                     .catch(function (reason) {
                         layer.msg(reason.caught ? reason.message : '请求失败！');
@@ -356,6 +402,32 @@
             $baseInfo.find('div[data-convert="rank"]').html(
                 consts.ranks[customer.rank] || unSetting
             );
+
+
+
+
+        }
+
+        //显示历史销售记录
+        var initOrders = function () {
+            services.customer.orders(consts.customer.id)
+                .then(function (ret) {
+                    console.log('销售订单树', ret);
+                    if(!ret.list.length){
+                        $('#_ordersEmpty').show();//
+                    } else {
+                        $('#_ordersEmpty').hide();
+                    }
+                    $.fn.zTree
+                        .init($('#_ordersTree'), treeSetting, ret.list)
+                        .expandAll(true);
+                    $('.bugInfo').slimScroll({
+                        position:'left',
+                        height: '100%',
+                        railOpacity: 0.9
+                    });
+
+                });
         }
 
         /**
@@ -454,6 +526,14 @@
             $('#addUserBt').bind('click', function(){
                 consts.customer = {};
                 $('._type').show();
+            });
+
+            $('#__assTabs').find('span').bind('click', function () {
+                var target = $(this).attr('href');
+                console.log("====target="+target);
+                if(target === '#_orders')
+                    initOrders();
+
             })
         }
 

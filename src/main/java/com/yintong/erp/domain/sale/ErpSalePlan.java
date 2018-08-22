@@ -3,11 +3,9 @@ package com.yintong.erp.domain.sale;
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.utils.bar.BarCode;
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.J000;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.J000;
 
 /**
  * @author lucifer.chan
@@ -43,7 +43,7 @@ public class ErpSalePlan extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '计划单描述'")
     private String description;
 
-    @Column(columnDefinition = "double(10,9) comment '计划销售金额'")
+    @Column(columnDefinition = "double(16,9) comment '计划销售金额'")
     private Double planMoney;
 
     @Column(columnDefinition = "date comment '计划开始年月日'")
@@ -73,7 +73,7 @@ public class ErpSalePlan extends BaseEntityWithBarCode {
             ErpBaseEndProduct product = SpringUtil.getBean(ErpBaseEndProductRepository.class)
                     .findById(productId).orElse(null);
             this.productName = Objects.isNull(product) ? "" :
-                    product.getEndProductName() + "-" + product.getSpecification();
+                    product.getDescription();
         }
         return productName;
     }
