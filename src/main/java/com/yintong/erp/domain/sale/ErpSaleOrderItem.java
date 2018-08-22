@@ -74,7 +74,7 @@ public class ErpSaleOrderItem extends BaseEntity{
     public String getProductName(){
         if(StringUtils.hasText(productName)) return productName;
         ErpBaseEndProduct _product = getProduct();
-        this.productName = Objects.isNull(_product) ? "" : _product.getEndProductName() + "-" + _product.getSpecification();
+        this.productName = Objects.isNull(_product) ? "" : _product.getDescription();
         return productName;
     }
 

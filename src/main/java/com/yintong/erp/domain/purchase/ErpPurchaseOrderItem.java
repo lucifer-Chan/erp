@@ -34,7 +34,10 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Column(columnDefinition = "bigint(20) comment '货物id-模版'")
     private Long waresId;
 
-    @Column(columnDefinition = "varchar(20) DEFAULT '' comment '货物类型-原材料|成品|模具'")
+    @Column(columnDefinition = "bigint(20) comment '货物id-关联id'")
+    private Long waresAssId;
+
+    @Column(columnDefinition = "varchar(20) DEFAULT '' comment '货物类型-原材料|成品|模具->M|P|D'")
     private String waresType;
 
     @Column(columnDefinition = "double(16,9) comment '总额'")

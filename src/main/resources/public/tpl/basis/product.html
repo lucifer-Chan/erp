@@ -1070,7 +1070,7 @@
                         var data = [];
                         data.push({code : -1, name : '【请选择原材料】'});
                         ret.list.forEach(function (material) {
-                            data.push({code : material.id, name : (material.rawName + '-' + material.specification)});
+                            data.push({code : material.id, name : material.description});
                         });
                         //供选下拉
                         utils.dropkick({

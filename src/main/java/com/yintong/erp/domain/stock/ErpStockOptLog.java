@@ -71,7 +71,7 @@ public class ErpStockOptLog extends BaseEntity{
         if(Objects.nonNull(productId)){
             ErpBaseEndProduct product = SpringUtil.getBean(ErpBaseEndProductRepository.class).findById(productId).orElse(null);
             if(Objects.nonNull(product)){
-                productName = product.getEndProductName() + "-" + product.getSpecification();
+                productName = product.getDescription();
             }
         }
         return StringUtils.hasText(productName) ? productName : "";

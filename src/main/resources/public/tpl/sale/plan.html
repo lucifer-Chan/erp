@@ -38,7 +38,7 @@
                 <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑计划单信息</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal pd23">
+                <form class="form-horizontal pd28">
                     <div class="form-group">
                         <label class="col-sm-3 control-label">计划日期</label>
                         <div class="col-sm-9 projectPlanDate">
@@ -200,7 +200,7 @@
                 consts.products = [];
                 consts.products.push({code : -1, name : '【请选择成品】'});
                 ret.list.forEach(function (value) {
-                    consts.products.push({code : value.id , name : value.endProductName + '-' + value.specification});
+                    consts.products.push({code : value.id , name : value.description});
                 })
             }).catch(function (reason) {
                 console.log('reason', reason);

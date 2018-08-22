@@ -163,7 +163,7 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
                     String parentCode = ass.getEndProductType();
                     Long productId = ass.getEndProductId();
                     ErpBaseEndProduct product = productRepository.getOne(productId);
-                    TreeNode treeNode = new TreeNode(ass.getEndProductId() + "", product.getEndProductName() + "-" + product.getSpecification(), parentCode, false)
+                    TreeNode treeNode = new TreeNode(ass.getEndProductId() + "", product.getDescription(), parentCode, false)
                             .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
                     return treeNode
                             .setFullName(treeNode.getName())
@@ -194,7 +194,7 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
         Stream<TreeNode> leafStream = productRepository.findAll()
                 .stream()
                 .map(product ->
-                        new TreeNode(product.getId() + "", product.getEndProductName() + "-" + product.getSpecification(), product.getEndProductTypeCode(), false)
+                        new TreeNode(product.getId() + "", product.getDescription(), product.getEndProductTypeCode(), false)
                 );
         List<TreeNode> leaves =  Objects.isNull(filter) ?
                 leafStream.collect(Collectors.toList()) :

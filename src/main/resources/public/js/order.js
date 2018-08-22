@@ -11,7 +11,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                         consts.products = [];
                         consts.products.push({code : -1, name : '【请选择成品】'});
                         ret.list.forEach(function (value) {
-                            consts.products.push({code : value.id , name : value.endProductName + '-' + value.specification});
+                            consts.products.push({code : value.id , name : value.description});
                         });
 
                     });

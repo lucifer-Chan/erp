@@ -164,7 +164,7 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
                     String parentCode = ass.getModelType();
                     Long modelId = ass.getModelId();
                     ErpBaseModelTool model = modelToolRepository.getOne(modelId);
-                    TreeNode treeNode = new TreeNode(ass.getModelId() + "", model.getModelToolName()+ "-" + model.getSpecification(), parentCode, false)
+                    TreeNode treeNode = new TreeNode(ass.getModelId() + "", model.getDescription(), parentCode, false)
                             .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
                     return treeNode
                             .setFullName(treeNode.getName())
@@ -195,7 +195,7 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
         Stream<TreeNode> leafStream = modelToolRepository.findAll()
                 .stream()
                 .map(mould ->
-                        new TreeNode(mould.getId() + "", mould.getModelToolName() + "-" + mould.getSpecification(), mould.getModelToolTypeCode(), false)
+                        new TreeNode(mould.getId() + "", mould.getDescription(), mould.getModelToolTypeCode(), false)
                 );
         List<TreeNode> leaves =  Objects.isNull(filter) ?
                 leafStream.collect(Collectors.toList()) :
