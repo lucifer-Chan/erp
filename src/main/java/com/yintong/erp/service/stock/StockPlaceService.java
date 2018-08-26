@@ -5,12 +5,8 @@ import com.yintong.erp.domain.stock.ErpStockOptLog;
 import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
-
-import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
-import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
-import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteSupplierRawMaterialValidator;
 import java.util.ArrayList;
@@ -18,20 +14,27 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
-import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.Assert;
-
-import static com.yintong.erp.utils.common.Constants.StockPlaceStatus.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import static com.yintong.erp.utils.common.Constants.StockPlaceStatus.ON;
+import static com.yintong.erp.utils.common.Constants.StockPlaceStatus.STOP;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
+import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
+import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
+import static com.yintong.erp.utils.common.Constants.*;
 
 
 /**
@@ -47,11 +50,11 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
 
     /**
      * 查找是否有原材料对应的供应商
-     * @param materialSupplier
+     * @param id
      */
     @Override
-    public void onDeleteSupplierRawMaterial(ErpRawMaterialSupplier materialSupplier) {
-        List<ErpStockPlace> placeList = stockPlaceRepository.findByMaterialSupplierAssId(materialSupplier.getId());
+    public void onDeleteSupplierRawMaterial(Long id) {
+        List<ErpStockPlace> placeList = stockPlaceRepository.findByMaterialSupplierAssId(id);
         if(CollectionUtils.isEmpty(placeList)) return;
         String placeNames = StringUtils.collectionToCommaDelimitedString(
                 placeList.stream().map(ErpStockPlace :: getName).collect(Collectors.toList())
@@ -143,40 +146,31 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
      * 仓位信息
      * @param placeId
      * @return history ： optHistory
-     *         remain : 库存信息 （成品仓位时）
+     *         remain : 当前库存信息 （成品、模具、废品仓位时）
      */
     public Map<String, List<JSONObject>> placeExt(Long placeId){
         ErpStockPlace place = one(placeId);
         List<ErpStockOptLog> optHistory = optHistory(placeId);
         Map<String, List<JSONObject>> map = new HashMap<>();
         map.put("history", optHistory.stream().map(ErpStockOptLog::toJSONObject).collect(Collectors.toList()));
-        if(Constants.StockPlaceType.P.name().equals(place.getStockPlaceType())){
-            //按照成品分组
-            Map<Long, List<ErpStockOptLog>> infoMap =
-                    optHistory.stream().collect(Collectors.groupingBy(ErpStockOptLog::getProductId));
 
-            List<JSONObject> infoList = new ArrayList<>();
+        StockPlaceType placeType = StockPlaceType.valueOf(place.getStockPlaceType());
+        List<JSONObject> infoList = null;
 
-            //计算每个成品的数量，叠加。
-            infoMap.forEach((k,list)->{
-                double total = list.stream().mapToDouble(log->{
-                    if(Constants.StockOpt.OUT.name().equals(log.getOperation())){
-                        return  -1 * log.getNum();
-                    }
-                    return log.getNum();
-                }).sum();
-                //搜集数量>0的成品
-                if(total > 0){
-                    JSONObject info = list.get(0).filter("productId", "productName");
-                    info.put("total", total);
-                    infoList.add(info);
-                }
-            });
-
-            map.put("remain", infoList);
-            return map;
+        if(StockPlaceType.P == placeType){
+            //成品
+            infoList = collect(optHistory, log-> Objects.nonNull(log.getProductId()), ErpStockOptLog::getProductId, "productId", "productName");
+        } else if(StockPlaceType.D == placeType){
+            //模具
+            infoList = collect(optHistory, log-> Objects.nonNull(log.getMouldId()), ErpStockOptLog::getMouldId, "mouldId", "mouldName");
+        } else if(StockPlaceType.R == placeType){
+            //废品
+            infoList = collect(optHistory, log-> StringUtils.hasText(log.getRubbishName()), ErpStockOptLog::getRubbishName, "rubbishName");
         }
 
+        if(null != infoList){
+            map.put("remain", infoList);
+        }
         return map;
     }
 
@@ -204,4 +198,79 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
                 .sorted(Comparator.comparing(ErpStockOptLog::getCreatedAt).reversed())
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 搜集出入库日志里的有效信息 成品、模具、废品仓位
+     * @param optHistory 历史记录
+     * @param filter 无效值过滤
+     * @param groupingBy 分组
+     * @param attrs 搜集的属性
+     * @param <K>
+     * @return
+     */
+    private <K> List<JSONObject> collect(List<ErpStockOptLog> optHistory,
+                                         Predicate<? super ErpStockOptLog> filter,
+                                         Function<? super ErpStockOptLog, ? extends K> groupingBy,
+                                         String ... attrs){
+        Map<K, List<ErpStockOptLog>> infoMap =
+                optHistory.stream().filter(filter).collect(Collectors.groupingBy(groupingBy));
+        List<JSONObject> infoList = new ArrayList<>();
+        //计算每个成品的数量，叠加。
+        infoMap.forEach((k,list)->{
+            double total = list.stream().mapToDouble(log->{
+                if(StockOpt.OUT.name().equals(log.getOperation())){
+                    return  -1 * log.getNum();
+                }
+                return log.getNum();
+            }).sum();
+            //搜集数量>0的成品
+            if(total > 0){
+                JSONObject info = list.get(0).filter(attrs);
+                info.put("total", total);
+                infoList.add(info);
+            }
+        });
+        return infoList;
+    }
+
+    ///**
+    //     * 仓位信息
+    //     * @param placeId
+    //     * @return history ： optHistory
+    //     *         remain : 当前库存信息 （成品、模具、废品仓位时）
+    //     */
+    //    public Map<String, List<JSONObject>> placeExt(Long placeId){
+    //        ErpStockPlace place = one(placeId);
+    //        List<ErpStockOptLog> optHistory = optHistory(placeId);
+    //        Map<String, List<JSONObject>> map = new HashMap<>();
+    //        map.put("history", optHistory.stream().map(ErpStockOptLog::toJSONObject).collect(Collectors.toList()));
+    //        if(StockPlaceType.P.name().equals(place.getStockPlaceType())){
+    //            //按照成品分组
+    //            Map<Long, List<ErpStockOptLog>> infoMap =
+    //                    optHistory.stream().filter(log-> Objects.nonNull(log.getProductId())).collect(Collectors.groupingBy(ErpStockOptLog::getProductId));
+    //
+    //            List<JSONObject> infoList = new ArrayList<>();
+    //
+    //            //计算每个成品的数量，叠加。
+    //            infoMap.forEach((k,list)->{
+    //                double total = list.stream().mapToDouble(log->{
+    //                    if(StockOpt.OUT.name().equals(log.getOperation())){
+    //                        return  -1 * log.getNum();
+    //                    }
+    //                    return log.getNum();
+    //                }).sum();
+    //                //搜集数量>0的成品
+    //                if(total > 0){
+    //                    JSONObject info = list.get(0).filter("productId", "productName");
+    //                    info.put("total", total);
+    //                    infoList.add(info);
+    //                }
+    //            });
+    //
+    //            map.put("remain", infoList);
+    //            return map;
+    //        }
+    //
+    //        return map;
+    //    }
 }

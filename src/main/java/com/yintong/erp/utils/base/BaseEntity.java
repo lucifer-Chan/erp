@@ -57,6 +57,12 @@ public abstract class BaseEntity implements Filterable {
      */
     protected void preUpdate(){}
 
+    public void copyBase(BaseEntity old) {
+        this.setCreatedAt(old.getCreatedAt());
+        this.setCreatedBy(old.getCreatedBy());
+        this.setCreatedName(old.getCreatedName());
+    }
+
     @PrePersist
     private void _prePersist(){
         createdAt = new Date();

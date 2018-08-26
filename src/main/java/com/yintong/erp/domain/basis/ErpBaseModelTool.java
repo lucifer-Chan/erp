@@ -1,6 +1,5 @@
 package com.yintong.erp.domain.basis;
 
-
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
@@ -29,15 +28,20 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     @Id
     @GeneratedValue
     private Long id;
+
     @Column(columnDefinition = "varchar(64) comment '模具编号'")
     private String modelToolNo;
+
     @Column(columnDefinition = "varchar(20) comment '模具名称'")
     private String modelToolName;
+
     @BarCode
     @Column(columnDefinition = "varchar(20) comment '模具类别编码'")
     private String modelToolTypeCode;
+
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
+
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
 
@@ -75,6 +79,5 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
                 : repository.findByModelToolNameAndSpecificationAndIdNot(modelToolName, specification, id);
         Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
     }
-
 
 }

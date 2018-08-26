@@ -91,8 +91,8 @@ public class PreDataService {
 
                 , ErpMenu.builder().code("40").name("采购管理").build()
                     , ErpMenu.builder().code("4001").name("采购计划单").matches("/purchase/plan/**").uri("purchase/plan.html").parentCode("40").build()
-                    , ErpMenu.builder().code("4002").name("采购订单").matches("/purchase/order/**").uri("purchase/order.html").parentCode("20").build()
-                    , ErpMenu.builder().code("4003").name("采购审核").matches("/purchase/order/**").uri("purchase/approval.html").parentCode("20").build()
+                    , ErpMenu.builder().code("4002").name("采购订单").matches("/purchase/order/**").uri("purchase/order.html").parentCode("40").build()
+                    , ErpMenu.builder().code("4003").name("采购审核").matches("/purchase/order/**").uri("purchase/approval.html").parentCode("40").build()
 
         );
         menuRepository.saveAll(menus);

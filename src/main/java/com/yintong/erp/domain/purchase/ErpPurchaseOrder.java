@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.Assert;
 
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.V000;
 
@@ -51,11 +52,11 @@ public class ErpPurchaseOrder  extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;
 
-    @Column(columnDefinition = "integer DEFAULT 0 comment '是否可出库[1-可以|0-不可以]'")
-    private Integer preStockOut;
+    @Column(columnDefinition = "integer DEFAULT 0 comment '是否可入库[1-可以|0-不可以]'")
+    private Integer preStockIn;
 
     /**
-     * 订单明细
+     * 订单明细-controller传入
      */
     @Transient
     private List<ErpPurchaseOrderItem> items;
@@ -77,6 +78,18 @@ public class ErpPurchaseOrder  extends BaseEntityWithBarCode {
 
     @Override
     protected void prePersist(){
+        preCommit();
         setLastUpdatedAt(new Date());
+    }
+
+    @Override
+    protected void preUpdate(){
+        preCommit();
+    }
+
+    private void preCommit(){
+        Assert.hasText(description, "订单描述不能为空");
+        Assert.notNull(supplierId, "供应商不能为空");
+        Assert.notNull(orderDate, "订单日期不能为空");
     }
 }

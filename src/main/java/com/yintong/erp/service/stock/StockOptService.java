@@ -36,7 +36,7 @@ public class StockOptService {
 
     @Autowired ErpBaseEndProductRepository productRepository;
 
-    @Autowired SaleOrderService saleOrderService;//stockOuting TODO 销售出库
+    @Autowired SaleOrderService saleOrderService;
 
     @Autowired(required = false) List<StockInProduct4Holder> stockInProduct4Holders;
 
@@ -84,7 +84,7 @@ public class StockOptService {
                 .holder(holder.name())
                 .holderId(holderId)
                 .holderBarCode(holderBarCode)
-                .build();
+            .build();
         stockOptLogRepository.save(optLog);
         //3- product num +
         ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);
@@ -135,7 +135,7 @@ public class StockOptService {
                 .holder(holder.name())
                 .holderId(holderId)
                 .holderBarCode(holderBarCode)
-                .build();
+            .build();
         stockOptLogRepository.save(optLog);
         //3- product num -
         ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);

@@ -8,8 +8,10 @@
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="typeCollection"></li>
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addProductPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增成品仓位</button>
-            <button style="right: 140px" type="button" class="btn btn-default btn-ms operation" id="addMaterialPlaceBt" data-toggle="modal" data-target="#_addMaterialPlace">新增原材料仓位</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addMaterialPlaceBt" data-toggle="modal" data-target="#_addMaterialPlace">新增原材料仓位</button>
+            <button style="right:150px" type="button" class="btn btn-default btn-ms operation" id="addProductPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增成品仓位</button>
+            <button style="right:270px" type="button" class="btn btn-default btn-ms operation" id="addRubbishPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增废品仓位</button>
+            <button style="right:390px" type="button" class="btn btn-default btn-ms operation" id="addMouldPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增模具仓位</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -43,7 +45,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal pd23">
-                    <input type="hidden" name="stockPlaceType" value="P">
+                    <input type="hidden" name="stockPlaceType">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">仓位名称</label>
                         <div class="col-sm-10">
@@ -210,16 +212,19 @@
     requirejs(['slimScroll', 'utils','services'],function (slimScroll, utils, services) {
         console.log('hello stock place');
         var consts = {
-            types : {"M" : "原材料仓位", "P" : "成品仓位"}//类型 成品|原材料
+            types : {"M" : "原材料仓位", "P" : "成品仓位", "R" : "废品仓位", "D" : "模具仓位"}//类型 成品|原材料
             , source : {SALE : "销售", REFUNDS : "退货", PROD :"生产", BUY : "采购", INIT : "初始化"}//来源
             , oQueryParam : {}//查询参数
             , currentPlace : {}//当前仓位
             , supplierMaterial : []//所有的原材料
             , $rightPage : $('#rightInfoPage')//右侧页面
-            , $editPModal : $('#_addProductPlace')//编辑成品仓位modal
+            , $editPModal : $('#_addProductPlace')//编辑成品|废品|模具仓位modal
             , $editMModal : $('#_addMaterialPlace')//编辑原材料仓位modal
             , $addPBt : $('#addProductPlaceBt')//新增成品仓位按钮
             , $addMBt : $('#addMaterialPlaceBt')//新增原材料仓位按钮
+            , $addRBt : $('#addRubbishPlaceBt')//新增废品仓位按钮
+            , $addDBt : $('#addMouldPlaceBt')//新增模具仓位按钮
+
             , $savePBt : $('#savePbt')//保存成品仓位按钮
             , $saveMBt : $('#saveMbt')//保存原材料仓位按钮
 
@@ -285,8 +290,14 @@
                     if ('M' === value) {
                         value = '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
                         $('#stockRemainSpan').hide();
-                    }else if ('P' === value) {
+                    } else if ('P' === value) {
                         value =  '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
+                        $('#stockRemainSpan').show();
+                    } else if ('R' === value){
+                        value =  '<span class="label label-info fa fa-recycle"> 废品仓位</span>';
+                        $('#stockRemainSpan').show();
+                    } else if ('D' === value){
+                        value =  '<span class="label label-info fa fa-wrench"> 模具仓位</span>';
                         $('#stockRemainSpan').show();
                     }
                 }
@@ -310,7 +321,7 @@
                     } else {
                         var html = '';
                         remain.forEach(function (info) {
-                            html += consts.template.remain.replace('{content}', info.productName).replace('{num}', info.total);
+                            html += consts.template.remain.replace('{content}', (info.productName || info.mouldName || info.rubbishName)).replace('{num}', info.total);
                         });
                         $stockRemain.html(html);
                     }
@@ -324,7 +335,7 @@
                         var source = consts.source[info.holder] || '';
                         var operation = info.operation === 'IN' ? '入库' : '出库';
                         var name = '【' + operation + '-' + source + '】';
-                        var content = (info.productName || tr.materialName)+ '['+ info.num + ']';
+                        var content = (info.productName || info.mouldName || info.rubbishName || tr.materialName) + '['+ info.num + ']';//
                         if('INIT' !== info.holder){
                             content += ',对应单号：' + info.holderBarCode;
                         }
@@ -386,6 +397,8 @@
                 if(!_value) return '';
                 if ('M' === _value) return '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
                 if ('P' === _value) return '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
+                if ('R' === _value) return '<span class="label label-info fa fa-recycle"> 废品仓位</span>';
+                if ('D' === _value) return '<span class="label label-info fa fa-wrench"> 模具仓位</span>';
                 return '';
             }
 
@@ -424,8 +437,28 @@
          */
         function init_button_event() {
             //新增仓位按钮
-            consts.$addPBt.bind('click', function(){consts.currentPlace = {};});
-            consts.$addMBt.bind('click', function(){consts.currentPlace = {};});
+            consts.$addPBt.bind('click', function(){
+                consts.currentPlace = {};
+                consts.$editPModal.find('input[name="stockPlaceType"]').val('P');
+                consts.$editPModal.find('.modal-title').html('编辑成品仓位');
+
+            });
+
+            consts.$addDBt.bind('click', function(){
+                consts.currentPlace = {};
+                consts.$editPModal.find('input[name="stockPlaceType"]').val('D');
+                consts.$editPModal.find('.modal-title').html('编辑模具仓位');
+            });
+
+            consts.$addRBt.bind('click', function(){
+                consts.currentPlace = {};
+                consts.$editPModal.find('input[name="stockPlaceType"]').val('R');
+                consts.$editPModal.find('.modal-title').html('编辑废品仓位');
+            });
+
+            consts.$addMBt.bind('click', function(){
+                consts.currentPlace = {};
+            });
 
             //编辑成品仓位钮保存事件
             consts.$savePBt.unbind('click').click(function (e) {
@@ -441,9 +474,9 @@
                     if(data.id) {
                         initTrDetail(place);
                     }
-                    layer.msg('保存成品仓位成功');
+                    layer.msg('保存仓位成功');
                 }).catch(function (reason) {
-                    console.log('保存成品仓位失败', reason);
+                    console.log('保存仓位失败', reason);
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
@@ -476,8 +509,21 @@
 
             //更新仓位按钮
             $('#editPlaceBt').unbind('click').click(function () {
-                if(consts.currentPlace.stockPlaceType === 'M') consts.$editMModal.modal('show');
-                if(consts.currentPlace.stockPlaceType === 'P') consts.$editPModal.modal('show');
+                if(consts.currentPlace.stockPlaceType === 'M') {
+                    consts.$editMModal.modal('show');
+                } else if(consts.currentPlace.stockPlaceType === 'P') {
+                    consts.$editPModal.find('input[name="stockPlaceType"]').val('P');
+                    consts.$editPModal.find('.modal-title').html('编辑成品仓位');
+                    consts.$editPModal.modal('show');
+                } else if(consts.currentPlace.stockPlaceType === 'D') {
+                    consts.$editPModal.find('input[name="stockPlaceType"]').val('D');
+                    consts.$editPModal.find('.modal-title').html('编辑模具仓位');
+                    consts.$editPModal.modal('show');
+                } else if(consts.currentPlace.stockPlaceType === 'R') {
+                    consts.$editPModal.find('input[name="stockPlaceType"]').val('R');
+                    consts.$editPModal.find('.modal-title').html('编辑废品仓位');
+                    consts.$editPModal.modal('show');
+                }
             });
             //删除仓位按钮
             $('#deletePlaceBt').unbind('click').click(function () {

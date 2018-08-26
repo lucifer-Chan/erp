@@ -93,10 +93,10 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
      */
     public void delete(Long productId, Long supplierId){
         ErpEndProductSupplier one = productSupplierRepository.findByEndProductIdAndSupplierId(productId, supplierId).orElse(null);
-        if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierProductValidators))
-            onDeleteSupplierProductValidators
-                    .forEach(validator -> validator.onDeleteSupplierProduct(supplierId, productId));
         Assert.notNull(one, "未找到关联");
+        if(!CollectionUtils.isEmpty(onDeleteSupplierProductValidators))
+            onDeleteSupplierProductValidators
+                    .forEach(validator -> validator.onDeleteSupplierProduct(one.getId()));
         productSupplierRepository.delete(one);
     }
 

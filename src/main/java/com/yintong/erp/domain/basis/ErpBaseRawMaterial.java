@@ -48,6 +48,9 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
 
     @Column(columnDefinition = "varchar(20) comment '导入时间,空值表示录入'")
     private String importedAt;
+
+
+
 //    @Column(columnDefinition = "varchar(10) comment '头径D(mm)上限'")
 //    private String spHdmmUpper;
 //    @Column(columnDefinition = "varchar(10) comment '头径D(mm)下限'")
@@ -109,6 +112,9 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     @Transient
     private String description;
 
+    @Transient
+    private String supplierTypeCode;
+
     public String getRawTypeName() {
          if(StringUtils.isEmpty(rawTypeCode)) return rawTypeName = "";
          String prefix = BarCodeConstants.BAR_CODE_PREFIX.valueOf(rawTypeCode).description();
@@ -119,10 +125,6 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
         if(StringUtils.hasText(description)) return description;
         return description = (this.getRawTypeName() + "-" + this.getRawName() + "-" + this.getSpecification());
     }
-
-
-    @Transient
-    private String supplierTypeCode;
 
     public void setRawTypeName(String rawTypeName){
         rawTypeName = "原材料-" + rawTypeName;

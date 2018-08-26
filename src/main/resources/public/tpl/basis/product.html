@@ -886,7 +886,6 @@
                 });
         }
 
-
         //修改、删除bom
         function initBtEvent() {
             $('#rightInfoPage').find('._update, ._delete').click(function () {
@@ -1123,6 +1122,35 @@
         }
 
         /**
+         * 保存成品前的必填项校验
+         * @param data - $('form').serializeObject()
+         * @returns boolean
+         */
+        function validate(data) {
+            if (!data.endProductName){
+                layer.msg("货物名称不能为空");
+                return false;
+            }
+            if (!data.specification){
+                layer.msg("规格描述不能为空");
+                return false;
+            }
+            if (!data.materialName){
+                layer.msg("材料名称不能为空");
+                return false;
+            }
+            if (data.unitSilverLoss === ""){
+                layer.msg("单粒铜耗不能为空");
+                return false;
+            }
+            if (data.unitSilverCopper === ""){
+                layer.msg("单粒银耗不能为空");
+                return false;
+            }
+            return true;
+        }
+
+        /**
          * 初始事件
          */
         function initEvent(){
@@ -1254,10 +1282,11 @@
             consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
                 var data = consts.$editInfoModal.find('form').serializeObject();
+                if(!validate(data)) return;
                 var _function = !!consts.product.id ? services.product.update : services.product.create;
                 data.id = consts.product.id || '';
                 data.endProductTypeCode = $('#_typeC').attr('data-value');
-                console.log("save/update="+JSON.stringify(data));
+                console.log("save/update", data);
                 _function(data).then(function (product) {
                     loadDataTable(true);
                     if(consts.product.id)

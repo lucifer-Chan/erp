@@ -1,11 +1,12 @@
 package com.yintong.erp.domain.basis;
 
-
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.Assert;
@@ -185,11 +186,24 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Override
     public void uniqueValidate(){
         ErpBaseEndProductRepository repository = SpringUtil.getBean(ErpBaseEndProductRepository.class);
-        List<ErpBaseEndProduct> shouldBeEmpty
+        //候选
+        List<ErpBaseEndProduct> candidates
                 = Objects.isNull(id)
                 ? repository.findByEndProductNameAndSpecification(endProductName, specification)
                 : repository.findByEndProductNameAndSpecificationAndIdNot(endProductName, specification, id);
-        Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
+        if(CollectionUtils.isEmpty(candidates)) return;
+
+        Set<String> uniqueStrings = candidates.stream().map(ErpBaseEndProduct::toUniqueString).collect(Collectors.toSet());
+
+        Assert.isTrue(!uniqueStrings.contains(this.toUniqueString()), "货物名称-规格-材料名称-铜耗-银耗 重复");
+    }
+
+    /**
+     * 唯一性字符串 : 货物名称、规格描述、材料名称、铜耗、银耗
+     * @return
+     */
+    private String toUniqueString(){
+        return "N:" + endProductName + ",S:" + specification + ",M:" + materialName + ",A:" + unitSilverLoss + ",C:" + unitSilverCopper;
     }
 
 

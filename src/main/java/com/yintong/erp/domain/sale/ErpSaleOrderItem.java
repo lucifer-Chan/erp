@@ -67,6 +67,9 @@ public class ErpSaleOrderItem extends BaseEntity{
     @Transient
     private String productName;
 
+    @Transient
+    private Date orderOptDate;//订单操作时间-对应状态的最近一次操作时间
+
     public Double getOutedNum(){
         return Objects.isNull(outedNum) ? 0d : outedNum;
     }
@@ -104,15 +107,13 @@ public class ErpSaleOrderItem extends BaseEntity{
      * 订单操作时间-对应状态的最近一次操作时间
      * @return
      */
-    @Transient
     public Date getOrderOptDate(){
+        if(Objects.nonNull(orderOptDate)) return orderOptDate;
         ErpSaleOrderOptLog orderOptLog =
                 SpringUtil.getBean(ErpSaleOrderOptLogRepository.class).findByOrderIdAndStatusCodeOrderByCreatedAtDesc(orderId, statusCode)
                     .stream().findFirst().orElse(null);
-        return Objects.isNull(orderOptLog) ? null : orderOptLog.getCreatedAt();
+        return orderOptDate = (Objects.isNull(orderOptLog) ? null : orderOptLog.getCreatedAt());
     }
-
-
 
     /**
      * 必填项校验

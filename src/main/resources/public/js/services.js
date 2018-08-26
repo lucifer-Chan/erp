@@ -171,6 +171,22 @@ define('services',['utils'],function (utils) {
     };
 
     var supplier = {
+        sessionKey : '_services_supplier_all_',
+
+        //全部
+        all : function () {
+            var $this = this;
+            var value = $.session($this.sessionKey);
+            if (!!value){
+                return $.Promise.resolve().then(function () {
+                    return value;
+                })
+            }
+            return $.http.get('basis/supplier/all').then(function (ret) {
+                $.session($this.sessionKey, ret);
+                return ret;
+            });
+        },
         //分类
         types : function () {
             return $.http.get('basis/common/categories/children/direct?code=US');
@@ -189,28 +205,46 @@ define('services',['utils'],function (utils) {
 
         //新建
         create : function (data) {
+            var $this = this;
             return $.http.post({
                 url : 'basis/supplier',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //更新
         update : function (data) {
+            var $this = this;
             return $.http.put({
                 url : 'basis/supplier',
                 data : data,
                 contentType : $.contentType.json
+            }).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
             });
         },
         //删除
         delete : function (id) {
-            return $.http.delete('basis/supplier/' + id);
+            var $this = this;
+            return $.http.delete('basis/supplier/' + id).then(function (value) {
+                $.session($this.sessionKey, null);
+                return value;
+            });
         }
     };
 
     var mould = {
         sessionKey : '_services_mould_all_',
+
+        //库存剩余： total
+        stockRemain : function (id) {
+            return $.http.get('basis/mould/' + id + '/stockRemain');
+        },
+
         //所有原材料
         all : function () {
             var $this = this;
@@ -497,6 +531,11 @@ define('services',['utils'],function (utils) {
                     $.session($this.sessionKey, ret);
                     return ret;
                 });
+        },
+
+        //库存剩余： total
+        stockRemain : function (id) {
+            return $.http.get('basis/rawMaterial/' + id + '/stockRemain');
         },
 
         //分类
@@ -951,7 +990,6 @@ define('services',['utils'],function (utils) {
         afterPrint : function (orderId) {
             return $.http.patch('sale/order/' + orderId);
         },
-
         //更新状态
         updateStatus : function (orderId, status, remark) {
             return $.http.patch({
@@ -995,6 +1033,93 @@ define('services',['utils'],function (utils) {
         //删除明细
         deleteItem : function (orderId, itemId) {
             return $.http.delete('sale/orderItem/'+ orderId +'/' + itemId);
+        }
+    };
+
+    /**
+     * 采购订单
+     * @type {{}}
+     */
+    var purchaseOrder = {
+        //新增
+        create : function (data) {
+            return $.http.post({
+                url : 'purchase/order',
+                data :data,
+                contentType : $.contentType.json
+            });
+        },
+        //更新
+        update : function (data) {
+            var order = {};
+            return $.http.put({
+                url : 'purchase/order',
+                data :data,
+                contentType : $.contentType.json
+            }).then(function (ret) {
+                order = ret;
+                return $.http.get('purchase/order/'+ ret.id +'/history/opt');
+            }).then(function (opts) {
+                //操作记录
+                order.opts = opts.list;
+                return $.http.get('purchase/order/' + order.id + '/items');
+            }).then(function (items) {
+                order.items = items.list;
+                return order;
+            });
+        },
+        //打印回调
+        afterPrint : function (orderId) {
+            return $.http.patch('purchase/order/' + orderId);
+        },
+        //更新状态
+        updateStatus : function (orderId, status, remark) {
+            return $.http.patch({
+                url : 'purchase/order/' + orderId + '/' + status,
+                data : {
+                    remark : remark
+                }
+            });
+        },
+        //单个获取
+        one : function (orderId) {
+            return $.http.get('purchase/order/' + orderId);
+        },
+        //组合查询
+        query : function (params) {
+            return $.http.get({
+                url : 'purchase/order',
+                data : params
+            });
+        },
+        //删除
+        delete : function (orderId) {
+            return $.http.delete('purchase/order/' + orderId);
+        },
+        //添加明细
+        addItem : function (item) {
+            return $.http.post({
+                url : 'purchase/orderItem',
+                data : item,
+                contentType : $.contentType.json
+            });
+        },
+        //修改明细
+        updateItem : function (item) {
+            return $.http.put({
+                url : 'purchase/orderItem',
+                data : item,
+                contentType : $.contentType.json
+            });
+        },
+        //删除明细
+        deleteItem : function (orderId, itemId) {
+            return $.http.delete('purchase/orderItem/'+ orderId +'/' + itemId);
+        },
+
+        //货物的下拉列表
+        lookup : function (supplierId, type) {
+            return $.http.get('purchase/order/lookup/'+ supplierId + '/' + type);
         }
     };
 
@@ -1063,20 +1188,21 @@ define('services',['utils'],function (utils) {
     }
 
     return {
-         account: account
+         account : account
         , menus : menus
         , department : department
         , supplier : supplier
         , mould : mould
         , product : product
-        , equipment:equipment
-        , rawMaterial:rawMaterial
-        , customer:customer
+        , equipment : equipment
+        , rawMaterial : rawMaterial
+        , customer : customer
         , lookup : lookup
         , association : association
         , salePlan : salePlan
         , saleOrder : saleOrder
         , purchasePlan : purchasePlan
+        , purchaseOrder : purchaseOrder
         , stock : stock
         , common : common
     }

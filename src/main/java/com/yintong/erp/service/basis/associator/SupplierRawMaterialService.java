@@ -162,7 +162,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
         Assert.notNull(one, "未找到关联");
         if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierRawMeterials))
             onDeleteSupplierRawMeterials
-                    .forEach(validator -> validator.onDeleteSupplierRawMaterial(one));
+                    .forEach(validator -> validator.onDeleteSupplierRawMaterial(one.getId()));
         rawMaterialSupplierRepository.delete(one);
     }
 
@@ -291,5 +291,16 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
         }
         rawMaterialSupplierRepository.save(association);
         return true;
+    }
+
+    /**
+     * 查询余量
+     * @param materialAssId
+     * @return safe,total
+     */
+    public double stockRemain(Long materialAssId) {
+        ErpRawMaterialSupplier ass = rawMaterialSupplierRepository.findById(materialAssId).orElse(null);
+        Assert.notNull(ass, "未找到原材料");
+        return ass.getTotalNum();
     }
 }

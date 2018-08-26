@@ -56,7 +56,7 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
 
 
     /**
-     * 订单明细
+     * 订单明细-controller传入
      */
     @Transient
     private List<ErpSaleOrderItem> items;

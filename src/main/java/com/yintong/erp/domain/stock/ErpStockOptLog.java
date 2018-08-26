@@ -2,6 +2,8 @@ package com.yintong.erp.domain.stock;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
+import com.yintong.erp.domain.basis.ErpBaseModelTool;
+import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.Objects;
@@ -36,6 +38,15 @@ public class ErpStockOptLog extends BaseEntity{
     @Column(columnDefinition = "bigint(20) comment '成品id[当仓位为成品仓位时有值]'")
     private Long productId;
 
+    @Column(columnDefinition = "bigint(20) comment '模具id[当仓位为模具仓位时有值]'")
+    private Long mouldId;
+
+    @Column(columnDefinition = "varchar(100) comment '模具条码[当仓位为模具仓位时有值]'")
+    private String mouldCode;
+
+    @Column(columnDefinition = "varchar(500) comment '废品名称[当仓位为废品仓位时有值]'")
+    private String rubbishName;
+
     @Column(columnDefinition = "varchar(100) comment '成品条码，可以为采购的成品'")
     private String productCode;
 
@@ -61,6 +72,9 @@ public class ErpStockOptLog extends BaseEntity{
     private String productName;
 
     @Transient
+    private String mouldName;
+
+    @Transient
     private String placeName;
 
     @Transient
@@ -75,6 +89,18 @@ public class ErpStockOptLog extends BaseEntity{
             }
         }
         return StringUtils.hasText(productName) ? productName : "";
+    }
+
+    public String getMouldName(){
+        if(StringUtils.hasText(mouldName)) return mouldName;
+        if(Objects.nonNull(mouldId)){
+            ErpBaseModelTool mould = SpringUtil.getBean(ErpBaseModelToolRepository.class).findById(mouldId).orElse(null);
+            if(Objects.nonNull(mould)){
+                mouldName = mould.getDescription();
+            }
+        }
+        return StringUtils.hasText(mouldName) ? mouldName : "";
+
     }
 
 

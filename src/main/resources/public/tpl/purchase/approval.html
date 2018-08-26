@@ -3,13 +3,13 @@
     <div class="full_height">
         <div id="searchFilter">
             <div class="sidebar-search">
-                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述、客户名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述、供应商名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="statusCollection">
                 </li>
             </ul>
-            <button type="button" class="btn btn-default btn-ms operation" id="addSaleOrderBt" data-toggle="modal" data-target="#_addSaleOrder">新增销售订单</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addPurchaseOrderBt" data-toggle="modal" data-target="#_addPurchaseOrder">新增采购订单</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -21,7 +21,7 @@
                                 <th style="width:50px" erp-data="{barCode}">订单编号<span id="allCount"></span></th>
                                 <th style="width:30px" erp-data="{statusCode}" erp-convert="convertStatus">状态</th>
                                 <th style="width:70px" erp-data="{description}" >描述</th>
-                                <th style="width:70px" erp-data="{customerName}">客户名称</th>
+                                <th style="width:70px" erp-data="{supplierName}">供应商名称</th>
                                 <th style="width:30px" erp-data="{orderDate}" erp-convert="convertDate">订单日期</th>
                                 <th style="width:30px" erp-data="{money}" erp-convert="convertMoney">总额</th>
                             </tr>
@@ -34,131 +34,19 @@
     </div>
 </div>
 
-
-<!-- 编辑订单明细 -->
-<div class="modal fade" role="dialog" data-backdrop="static" id="_editSaleOrderItem">
-    <div class="modal-dialog" role="document" style="z-index: 1040">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑销售订单明细</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal pd28">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">成品</label>
-                        <div class="col-sm-10">
-                            <div class="customDropkick" style="width: 100%;" id="_editProductId"></div>
-                            <span id="selectProductTip" class="text-info"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">数量</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="1" class="form-control" name="num" placeholder="输入销售数量" id="_editItemNum">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">单价</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="0.01" class="form-control" name="unitPrice" placeholder="输入成品单价" id="_editItemUnitPrice">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">金额</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="0.01" class="form-control" name="money" placeholder="默认计算值，可修改" id="_editItemMoney">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">备注</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="remark" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
-                        </div>
-                    </div>
-                    <div class="modal-footer noborder">
-                        <button class="btn btn-info noborder" name="save" id="_saveOrderItemBt"></button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 编辑订单 -->
-<div class="modal fade" role="dialog" data-backdrop="static" id="_addSaleOrder">
-    <div class="modal-dialog" role="document" style="z-index: 1040">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑销售订单</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal pd28">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">订单日期</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="input-sm form-control" name="orderDate" id="_addOrderDate" placeholder="点击选择日期" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">订单描述</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">客户名称</label>
-                        <div class="col-sm-9">
-                            <div class="customDropkick" style="width: 100%;" id="_addCustomerId"></div>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">客户名称</label>
-                        <div class="input-group col-sm-9" style="padding-left: 15px;padding-right: 15px">
-                            <div class="customDropkick" style="width: 100%;" id="_addCustomerId"></div>
-                            <span class="input-group-btn">
-                                <div class="btn btn-default"><i class="fa fa-plus">添加</i></div>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">总金额</label>
-                        <div style="padding:6px 12px;" class="col-sm-9 txt totalMoney">
-                        </div>
-                    </div>
-                    -->
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">备注</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="remark" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
-                        </div>
-                    </div>
-                    <div class="modal-footer noborder">
-                        <button class="btn btn-info noborder" name="save" id="_saveOrderBt">保存</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- 右侧 -->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_addSaleOrder" id="_addSaleOrderBt">修改订单信息</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_editSaleOrderItem" id="_addSaleOrderItemBt">新增订单明细</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toSubmitOrderBt">提交审核</button>
-            <button class="btn btn-primary" id="_printToOutBt">打印入库单</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toRefundsOrderBt">客户退货</button>
-            <button class="btn btn-primary" data-name="delete" id="_deleteSaleOrderBt">删除</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toApprovalPassBt">审核通过</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toApprovalRefuseBt">审核退回</button>
+            <button class="btn btn-primary" id="_printToInBt">打印入库单</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toFinishOrderBt">归档</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toInvalidOrderBt">作废</button>
         </span>
     </div>
-    <div class="bugInfoContent initSaleOrderDetail">
+    <div class="bugInfoContent initPurchaseOrderDetail">
         <div class="panel-default bugInfo">
             <div class="row">
                 <p class="pd23 pd43">
@@ -183,8 +71,8 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">客户名称</label>
-                                <div class="col-xs-8 txt pd0" data-name="customerName"></div>
+                                <label class="col-xs-4 pd0">供应商名称</label>
+                                <div class="col-xs-8 txt pd0" data-name="supplierName"></div>
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">订单总额</label>
@@ -279,7 +167,7 @@
                 <h3 class="panel-title" style="font-size: 13px"></h3>
                 <div class="tools">
                     <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
-                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editSaleOrderItem">修改</button>
+                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editPurchaseOrderItem">修改</button>
                     <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
                 </div>
             </div>
@@ -321,48 +209,49 @@
     </div>
 </div>
 
-
 <script type="text/javascript">
-    requirejs(['order'],function (order) {
-        console.log('Hello order.html');
+    requirejs(['purchase'],function (purchase) {
+        console.log('Hello purchase/order.html');
         var consts = {
             //配置信息
             config : {
                 //列表相关
                 dataTable : {
                     id : 'dataTables'//列表id
-                    , codes : ['STATUS_001','STATUS_002','STATUS_003','STATUS_004','STATUS_049','STATUS_005','STATUS_006','STATUS_007', 'STATUS_008'] //搜索供选的状态
+                    , codes : ['STATUS_002','STATUS_003','STATUS_004','STATUS_049','STATUS_005','STATUS_006','STATUS_007', 'STATUS_008'] //搜索供选的状态
                 }
                 , oQueryParam : {}//查询参数
-                , initCustomers : true//是否初始化客户列表
-                , initProducts : true//是否初始化产品列表
+                , initSuppliers : true//是否初始化供应商列表
             }
+
+            , waresTypes : [{code : 'M', name : '原材料'},{code : 'P', name : '成品'},{code : 'D', name : '模具'}]//货物类型
+
             , status : {
                 'STATUS_001' : '未发布',
                 'STATUS_002' : '待审核',
                 'STATUS_003' : '审核通过',
                 'STATUS_004' : '审核退回',
-                'STATUS_049' : '出库中',
-                'STATUS_005' : '已出库',
-                'STATUS_006' : '客户退货',
+                'STATUS_049' : '入库中',
+                'STATUS_005' : '已入库',
+                'STATUS_006' : '供应商退货',
                 'STATUS_007' : '已完成',
                 'STATUS_008' : '作废'
             }
             /******************** start buttons**************************/
-            , $addSaleOrderBt : $('#addSaleOrderBt')//新增销售订单按钮
-            , $saveOrderBt : $('#_saveOrderBt')//保存销售订单按钮
-            , $deleteOrderBt : $('#_deleteSaleOrderBt')//删除订单按钮
+            , $addPurchaseOrderBt : $('#addPurchaseOrderBt')//新增采购订单按钮
+            , $saveOrderBt : $('#_saveOrderBt')//保存采购订单按钮
+            , $deleteOrderBt : $('#_deletePurchaseOrderBt')//删除订单按钮
             , $saveOrderItemBt : $('#_saveOrderItemBt')//保存订单明细按钮
-            , $addOrderItemBt : $('#_addSaleOrderItemBt')//新增明细按钮
+            , $addOrderItemBt : $('#_addPurchaseOrderItemBt')//新增明细按钮
             , $changeOrderStatusBt : $('#_changeOrderStatusBt')//状态变更
-            , $printToOutBt: $('#_printToOutBt')//打印出库单
+            , $printToOutBt: $('#_printToInBt')//打印入库单
             /******************** end buttons**************************/
 
             , toNewStatus : {}//要更新到的状态
 
             , $statusDropDown : $('#statusCollection')//搜索：状态下拉
-            , $addOrderModal : $('#_addSaleOrder')//新增订单modal
-            , $editOrderItemModal : $('#_editSaleOrderItem')//新增订单明细modal
+            , $addOrderModal : $('#_addPurchaseOrder')//新增订单modal
+            , $editOrderItemModal : $('#_editPurchaseOrderItem')//新增订单明细modal
             , $changeOrderStatusModal : $('#_changeOrderStatus')//提交审核modal
             , $rightPage : $('#rightInfoPage')//右侧页面
             , $items : $('#saleOrderItems')//右侧-订单明细
@@ -375,8 +264,7 @@
             , currentOrder : {}//当前订单
             , currentOrderItem : {}//当前订单详情
 
-            , customers : []//所有客户
-            , products : []//所有成品
+            , suppliers : []//所有供应商
 
             , template : {
                 optLog : '<p>' +
@@ -385,11 +273,11 @@
                 '<span class="right">{time}</span>' +
                 '</p>'//历史记录模版
                 , $orderItem : $('#orderItemTemplate')//订单明细模版
-                , $printToOut : $('#print_to_out_template')//出库单打印模版
+                , $printToOut : $('#print_to_out_template')//入库单打印模版
             }
 
         };
 
-        order.init(consts);
+        purchase.init(consts);
     });
 </script>

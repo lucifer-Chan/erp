@@ -5,6 +5,7 @@ import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.SupplierService;
+import com.yintong.erp.service.basis.associator.SupplierMouldService;
 import com.yintong.erp.utils.base.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,18 @@ public class MouldController {
     @Autowired SupplierService supplierService;
 
     @Autowired ErpBaseModelToolRepository modelToolRepository;
+
+    @Autowired SupplierMouldService supplierMouldService;
+
+    /**
+     * 余量
+     * @param mouldAssId
+     * @return total
+     */
+    @GetMapping("{mouldAssId}/stockRemain")
+    public BaseResult stockRemain(@PathVariable Long mouldAssId) {
+        return new BaseResult().put("total", supplierMouldService.stockRemain(mouldAssId));
+    }
 
     @GetMapping("all")
     public BaseResult findAll(){

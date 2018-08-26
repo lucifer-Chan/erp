@@ -5,5 +5,5 @@ package com.yintong.erp.validator;
  */
 public interface OnDeleteSupplierMouldValidator {
 
-    void onDeleteSupplierMould(Long supplierId, Long modelId);
+    void onDeleteSupplierMould(Long id);
 }

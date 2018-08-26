@@ -31,16 +31,11 @@ import java.util.stream.Stream;
 @Service
 public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSupplierValidator {
 
-    @Autowired
-    ErpBaseSupplierRepository supplierRepository;
-    @Autowired
-    ErpBaseModelToolRepository modelToolRepository;
-    @Autowired
-    ErpModelSupplierRepository modelSupplierRepository;
-    @Autowired
-    CategoryService categoryService;
-    @Autowired(required = false)
-    List<OnDeleteSupplierMouldValidator> onDeleteSupplierMouldValidator;
+    @Autowired ErpBaseSupplierRepository supplierRepository;
+    @Autowired ErpBaseModelToolRepository modelToolRepository;
+    @Autowired ErpModelSupplierRepository modelSupplierRepository;
+    @Autowired CategoryService categoryService;
+    @Autowired(required = false) List<OnDeleteSupplierMouldValidator> onDeleteSupplierMouldValidator;
 
     /**
      * 建立模具和供应商的关联
@@ -92,10 +87,10 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
      */
     public void delete(Long modelId, Long supplierId){
         ErpModelSupplier one = modelSupplierRepository.findByModelIdAndSupplierId(modelId, supplierId).orElse(null);
+        Assert.notNull(one, "未找到关联");
         if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierMouldValidator))
             onDeleteSupplierMouldValidator
-                    .forEach(validator -> validator.onDeleteSupplierMould(supplierId, modelId));
-        Assert.notNull(one, "未找到关联");
+                    .forEach(validator -> validator.onDeleteSupplierMould(one.getId()));
         modelSupplierRepository.delete(one);
     }
 
@@ -210,5 +205,16 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
                 .stream()
                 .map(category -> new TreeNode(category.getCode(), category.getName(), category.getParentCode(), true))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 余量
+     * @param mouldAssId
+     * @return
+     */
+    public double stockRemain(Long mouldAssId) {
+        ErpModelSupplier ass = modelSupplierRepository.findById(mouldAssId).orElse(null);
+        Assert.notNull(ass, "未找到模具");
+        return ass.getTotalNum();
     }
 }

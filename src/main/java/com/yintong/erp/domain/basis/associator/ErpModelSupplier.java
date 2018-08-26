@@ -4,6 +4,7 @@ import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import java.util.Objects;
 import lombok.*;
 import org.apache.commons.collections4.KeyValue;
 import org.springframework.util.Assert;
@@ -48,8 +49,9 @@ public class ErpModelSupplier extends BaseEntityWithBarCode {
     private Integer alertLower;
     @Column(columnDefinition = "datetime comment '关联时间'")
     private Date associateAt;
-    @Column(columnDefinition = "int(20) comment '数量'")
-    private Integer totalNum;
+
+    @Column(columnDefinition = "double(16,9) comment '库存总量'")
+    private Double totalNum;
 
     @Override
     protected void prePersist(){
@@ -80,5 +82,9 @@ public class ErpModelSupplier extends BaseEntityWithBarCode {
                         .contains(supplierType),
                 "供应商类型不正确"
         );
+    }
+
+    public double getTotalNum(){
+        return Objects.isNull(totalNum) ? 0d :totalNum;
     }
 }

@@ -37,6 +37,16 @@ public class RawMaterialController {
 
     @Autowired SupplierRawMaterialService supplierRawMaterialService;
 
+    /**
+     * 余量
+     * @param materialAssId 和供应商关联的原材料id
+     * @return total
+     */
+    @GetMapping("{materialAssId}/stockRemain")
+    public BaseResult stockRemain(@PathVariable Long materialAssId) {
+        return new BaseResult().put("total", supplierRawMaterialService.stockRemain(materialAssId));
+
+    }
 
     @GetMapping("all")
     public BaseResult findAll(){

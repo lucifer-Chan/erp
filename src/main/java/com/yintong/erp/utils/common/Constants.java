@@ -43,7 +43,8 @@ public interface Constants {
         STATUS_049("正在出库", ""),
         STATUS_005("已出库", ""),
         STATUS_006("客户退货", ""),
-        STATUS_007("已完成", "");
+        STATUS_007("已完成", ""),
+        STATUS_008("作废", "审核");
 
         SaleOrderStatus(String description, String operation) {
             this.description = description;
@@ -87,14 +88,22 @@ public interface Constants {
      * 仓位类型
      */
     enum StockPlaceType {
-        P("成品仓位"), M("原材料仓位");
+        P("成品仓位" ,"成品"),
+        M("原材料仓位" ,"原材料"),
+        R("废品仓位" ,"废品"),
+        D("模具仓位" ,"模具");
 
-        StockPlaceType(String description){
+        StockPlaceType(String description, String content){
             this.description = description;
+            this.content = content;
         }
         private String description;
+        private String content;
         public String description() {
             return description;
+        }
+        public String content() {
+            return content;
         }
     }
 
@@ -156,8 +165,8 @@ public interface Constants {
         STATUS_004("审核退回", "审核"),
         STATUS_049("正在入库", ""),
         STATUS_005("已入库", ""),
-
-        STATUS_007("已完成", "");
+        STATUS_007("已完成", ""),
+        STATUS_008("作废", "审核");
 
         PurchaseOrderStatus(String description, String operation) {
             this.description = description;

@@ -54,8 +54,9 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode {
     private Integer alertLower;
     @Column(columnDefinition = "datetime comment '关联时间'")
     private Date associateAt;
-    @Column(columnDefinition = "int(20) comment '数量'")
-    private Integer totalNum;
+
+    @Column(columnDefinition = "double(16,9) comment '库存总量'")
+    private Double totalNum;
 
     @Transient
     private String supplierName;
@@ -101,6 +102,10 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode {
         }
 
         return supplierName;
+    }
+
+    public double getTotalNum(){
+        return Objects.isNull(totalNum) ? 0d :totalNum;
     }
 
     

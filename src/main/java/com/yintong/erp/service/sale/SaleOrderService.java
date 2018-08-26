@@ -47,7 +47,7 @@ import static com.yintong.erp.utils.common.Constants.StockHolder.SALE;
  * 销售订单服务
  **/
 @Service
-public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProductValidator, StockOutProduct4Holder {
+public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustomerValidator, OnDeleteProductValidator {
 
     @Autowired ErpSaleOrderRepository saleOrderRepository;
 
@@ -56,6 +56,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
     @Autowired ErpSaleOrderOptLogRepository orderOptLogRepository;
 
     @Autowired ErpStockOutOrderRepository stockOutOrderRepository;
+
     /**
      * 组合查询
      * @param parameters
@@ -121,10 +122,10 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
         //3-日志
         String content = STATUS_001.toLog();
         if( totalMoney != 0.00d){
-            content += ",总额：¥" + totalMoney;
+            content += " 总额：¥" + totalMoney;
         }
         if(StringUtils.hasText(order.getRemark())){
-            content += "," + order.getRemark();
+            content += " 备注：" + order.getRemark();
         }
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().orderId(_order.getId()).content(content).optType("status").statusCode(_order.getStatusCode()).build());
         return _order;
@@ -132,7 +133,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
 
     /**
      * 修更新销售订单-不包含明细，不修改状态
-     * 更新内容： 时间、总额、客户、订单日期
+     * 更新内容： 客户、订单日期
      * 约束条件：状态为未发布、审核退回
      * @param order
      * @return
@@ -146,18 +147,16 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
         order.setStatusCode(old.getStatusCode());
         //不修改金额
         order.setMoney(old.getMoney());
-        //不修改创建时间
-        order.setCreatedAt(old.getCreatedAt());
 
         String content = "更新";
-
         if(!DateUtil.getDateString(old.getOrderDate()).equals(DateUtil.getDateString(order.getOrderDate()))) {
-            content += "订单时间："+ DateUtil.getDateString(order.getOrderDate()) + ";";
+            content += " 订单日期："+ DateUtil.getDateString(order.getOrderDate());
         }
 
         if(!old.getCustomerName().equals(order.getCustomerName())){
-            content += "客户：" + order.getCustomerName();
+            content += " 客户：" + order.getCustomerName();
         }
+        order.copyBase(old);
         ErpSaleOrder _order = saleOrderRepository.save(order);
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(order.getStatusCode()).content(content).optType("order").orderId(order.getId()).build());
         return _order;
@@ -165,7 +164,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
 
     /**
      * 删除销售订单-级联删除明细
-     * 约束条件：出库之前
+     * 约束条件：未发布,待审核,审核退回
      * @param orderId
      * @return
      */
@@ -173,7 +172,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
     public void deleteOrder(Long orderId) {
         ErpSaleOrder old = saleOrderRepository.findById(orderId).orElse(null);
         Assert.notNull(old, "未找到销售订单[" + orderId + "]");
-        Assert.isTrue(Arrays.asList(STATUS_001, STATUS_002, STATUS_003, STATUS_004).contains(SaleOrderStatus.valueOf(old.getStatusCode())), "订单状态:" + SaleOrderStatus.valueOf(old.getStatusCode()) +",无法删除");
+        Assert.isTrue(Arrays.asList(STATUS_001, STATUS_002, STATUS_004).contains(SaleOrderStatus.valueOf(old.getStatusCode())), "订单状态:" + SaleOrderStatus.valueOf(old.getStatusCode()) +",无法删除");
         saleOrderRepository.deleteById(orderId);
         orderItemRepository.deleteByOrderId(orderId);
         orderOptLogRepository.deleteByOrderId(orderId);
@@ -193,7 +192,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
      */
     @Transactional
     public ErpSaleOrder updateOrderStatus(Long orderId, SaleOrderStatus status, String remark) {
-        remark = StringUtils.hasLength(remark) ? ",备注：" + remark : "";
+        remark = StringUtils.hasLength(remark) ? " 备注：" + remark : "";
         ErpSaleOrder old = saleOrderRepository.findById(orderId).orElse(null);
         Assert.notNull(old, "未找到销售订单[" + orderId + "]");
         Assert.isTrue(STATUS_001 != status , "状态不能变更为：" + STATUS_001.description());
@@ -218,6 +217,12 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
         if(status == STATUS_006 || status == STATUS_007){
             Assert.isTrue(STATUS_005.name().equals(oldStatus), "只有" + STATUS_005.description() + "的订单可以变更为" + status.description());
         }
+
+        //->作废
+        if(status == STATUS_008){
+            Assert.isTrue(STATUS_003.name().equals(oldStatus), "只有" + STATUS_003.description() + "的订单可以" + status.description());
+        }
+
         ErpSaleOrder order = saleOrderRepository.save(old.setStatusCode(status));
 
         //修改明细的状态
@@ -257,7 +262,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
                     .build()
             );
         }
-        return  saleOrderRepository.save(order);
+        return saleOrderRepository.save(order);
     }
 
     /**
@@ -318,6 +323,7 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
             content += ", 成品调整为：" + item.getProductName();
         }
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(item.getStatusCode()).content(content).optType("item").orderId(item.getOrderId()).build());
+        item.copyBase(oldItem);
         return orderItemRepository.save(item);
     }
 
@@ -337,13 +343,11 @@ public class SaleOrderService implements OnDeleteCustomerValidator, OnDeleteProd
         Assert.notNull(oldOrder, "未找到销售订单[" + orderId + "]");
         Assert.isTrue(orderId.equals(oldItem.getOrderId()), "查询参数订单id和明细实际对应的订单id不相符");
         List<ErpSaleOrderItem> oldOrderItems = orderItemRepository.findByOrderIdOrderByMoneyDesc(orderId);
-
-        Assert.isTrue(!CollectionUtils.isEmpty(oldOrderItems) && oldOrderItems.size() > 1, "总明细不能少于" + oldOrderItems.size() + "条,无法删除");
-        Double totalMoney = oldOrder.getMoney() - oldItem.getMoney();
+        Double totalMoney = oldOrderItems.size() <=1 ? 0.00d : (oldOrder.getMoney() - oldItem.getMoney());
         oldOrder.setMoney(totalMoney);
         saleOrderRepository.save(oldOrder);
         orderItemRepository.deleteById(orderItemId);
-        orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(oldOrder.getStatusCode()).content("删除明细, 总金额变化为：¥" + totalMoney).optType("item").orderId(orderId).build());
+        orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(oldOrder.getStatusCode()).content("删除明细[" + oldItem.getProductName() + "], 总金额变化为：¥" + totalMoney).optType("item").orderId(orderId).build());
     }
 
     /**

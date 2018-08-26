@@ -4,7 +4,6 @@ import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
-import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -16,10 +15,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
+import static com.yintong.erp.utils.common.Constants.StockPlaceType;
+import static com.yintong.erp.utils.common.Constants.StockPlaceStatus;
 
 /**
  * @author lucifer.chan
@@ -46,7 +47,7 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "bigint(20) comment '关联供应商之后的原材料id，当stock_place_type为M时有效'")
     private Long materialSupplierAssId;
 
-    @Column(columnDefinition = "varchar(40) comment '可存物料名称，当stock_place_type为M时为原材料明细，否则为\"成品\"'")
+    @Column(columnDefinition = "varchar(40) comment '可存物料名称，当stock_place_type为M时为原材料明细，否则为:成品|模具|废品'")
     private String materialName;
 
     @Column(columnDefinition = "varchar(20) DEFAULT 'ON' comment '状态编码[STOP-停役|ON-在役]，停役之后不许再入库'")
@@ -82,25 +83,24 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
         Assert.isTrue(Objects.isNull(upperLimit) || upperLimit > 0 , "库存上限不能小于0");
         Assert.isTrue(Objects.isNull(currentStorageNum) || currentStorageNum > 0, "当前存量不能小于0");
 
-        if(Constants.StockPlaceType.P.name().equals(stockPlaceType)){
-            this.setMaterialSupplierAssId(null);
-            this.setMaterialName("成品");
-        }
-
-        if(Constants.StockPlaceType.M.name().equals(stockPlaceType)){
-            Assert.notNull(materialSupplierAssId, "原材料仓位需要选择原材料");
-            if(StringUtils.isEmpty(materialName)){
-                materialName = SpringUtil.getBean(SupplierRawMaterialService.class).description(materialSupplierAssId);
-            }
-        }
-
+        StockPlaceType currentType;
         try{
-            Constants.StockPlaceType.valueOf(stockPlaceType);
-            Constants.StockPlaceStatus.valueOf(statusCode);
+            currentType = StockPlaceType.valueOf(stockPlaceType);
+            StockPlaceStatus.valueOf(statusCode);
         } catch (IllegalArgumentException e){
             throw new IllegalArgumentException("仓位类型或仓位状态不能为空");
         } catch (NullPointerException e){
             throw new IllegalArgumentException("仓位类型或仓位状态不正确");
+        }
+
+        if(StockPlaceType.M == currentType){
+            Assert.notNull(materialSupplierAssId, "原材料仓位需要选择原材料");
+            if(StringUtils.isEmpty(materialName)){
+                materialName = SpringUtil.getBean(SupplierRawMaterialService.class).description(materialSupplierAssId);
+            }
+        } else {
+            this.setMaterialSupplierAssId(null);
+            this.setMaterialName(currentType.content());
         }
     }
 

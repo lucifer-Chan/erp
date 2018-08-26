@@ -166,12 +166,11 @@ public class RawMaterialService {
         return importer.setSuccessData(count);
     }
 
-
     @Getter
     @Setter
     @OrderBy(fieldName = "id")
     public static class RawMaterialParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "rawName"}, compare = like, group = OR)
+        @ParameterItem(mappingTo = {"barCode", "rawName", "specification"}, compare = like, group = OR)
         String cause;
         @ParameterItem(mappingTo = "rawTypeCode", compare = like)
         String typeC;

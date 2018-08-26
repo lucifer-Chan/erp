@@ -1,6 +1,7 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
+import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
 import com.yintong.erp.domain.basis.associator.*;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.SupplierService.SupplierParameterBuilder;
@@ -26,6 +27,8 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 @RequestMapping("basis/supplier")
 public class SupplierController {
 
+    @Autowired ErpBaseSupplierRepository supplierRepository;
+
     @Autowired SupplierService supplierService;
 
     @Autowired SupplierProductService supplierProductService;
@@ -39,6 +42,16 @@ public class SupplierController {
     @Autowired SupplierMouldService supplierMouldService;
 
     @Autowired ErpModelSupplierRepository erpModelSupplierRepository;
+
+    /**
+     * 查找全部
+     * @return
+     */
+    @GetMapping("all")
+    public BaseResult findAll(){
+        return new BaseResult().addList(supplierRepository.findAll());
+    }
+
 
     /**
      * 组合查询
@@ -151,9 +164,6 @@ public class SupplierController {
         supplierProductService.delete(productId, supplierId);
         return new BaseResult().setErrmsg("删除成功");
     }
-
-
-
 
     /**
      * 根据供应商id获取所有的未关联的原材料树[包括类别节点]->ztree
