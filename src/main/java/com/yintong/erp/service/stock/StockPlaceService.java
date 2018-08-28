@@ -123,7 +123,7 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
     }
 
     /**
-     * 根据条码查找仓位
+     * 根据条形码查找仓位
      * @param barCode
      * @return
      */

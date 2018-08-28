@@ -1,5 +1,6 @@
 package com.yintong.erp.domain.basis;
 
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,4 +32,5 @@ public interface ErpBaseRawMaterialRepository extends JpaRepository<ErpBaseRawMa
 
     List<ErpBaseRawMaterial> findAllByOrderByRawTypeCode();
 
+    Optional<ErpBaseRawMaterial> findByBarCode(String barcode);
 }

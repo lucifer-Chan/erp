@@ -51,6 +51,9 @@ public class ErpStockOutOrder extends BaseEntityWithBarCode implements StockPlac
     @Column(columnDefinition = "varchar(1000) comment '出库实际原材料名称列表,英文逗号隔开'")
     private String materialNames;
 
+    @Column(columnDefinition = "int(20) DEFAULT 0 comment '是否完成-0：未完成，1：完成'")
+    private Integer complete;
+
     @Transient
     private String placeNames;//仓位列表，由于仓位和物料的弱关联，所以不入数据库
 

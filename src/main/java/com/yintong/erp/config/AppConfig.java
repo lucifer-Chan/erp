@@ -2,6 +2,7 @@ package com.yintong.erp.config;
 
 import com.yintong.erp.utils.bar.BarCodeProvider;
 import com.yintong.erp.utils.common.SimpleCache;
+import com.yintong.erp.utils.common.SimpleRemote;
 import com.yintong.erp.utils.common.SpringUtil;
 import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
@@ -28,6 +29,11 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public SimpleCache simpleCache(){
         return new SimpleCache();
+    }
+
+    @Bean
+    public SimpleRemote simpleRemote(){
+        return SimpleRemote.instance();
     }
 
     @Bean

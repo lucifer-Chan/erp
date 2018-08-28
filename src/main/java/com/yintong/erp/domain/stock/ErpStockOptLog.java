@@ -38,17 +38,17 @@ public class ErpStockOptLog extends BaseEntity{
     @Column(columnDefinition = "bigint(20) comment '成品id[当仓位为成品仓位时有值]'")
     private Long productId;
 
+    @Column(columnDefinition = "varchar(100) comment '成品条形码，可以为采购的成品'")
+    private String productCode;
+
     @Column(columnDefinition = "bigint(20) comment '模具id[当仓位为模具仓位时有值]'")
     private Long mouldId;
 
-    @Column(columnDefinition = "varchar(100) comment '模具条码[当仓位为模具仓位时有值]'")
+    @Column(columnDefinition = "varchar(100) comment '模具条形码[当仓位为模具仓位时有值]'")
     private String mouldCode;
 
     @Column(columnDefinition = "varchar(500) comment '废品名称[当仓位为废品仓位时有值]'")
     private String rubbishName;
-
-    @Column(columnDefinition = "varchar(100) comment '成品条码，可以为采购的成品'")
-    private String productCode;
 
     @Column(columnDefinition = "double(16,9) comment '出入库数量'")
     private Double num;

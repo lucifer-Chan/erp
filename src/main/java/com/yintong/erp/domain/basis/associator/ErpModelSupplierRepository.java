@@ -16,6 +16,8 @@ public interface ErpModelSupplierRepository extends JpaRepository<ErpModelSuppli
 
     Optional<ErpModelSupplier> findByModelIdAndSupplierId(Long modelId, Long supplierId);
 
+    Optional<ErpModelSupplier> findByBarCode(String barcode);
+
     void deleteBySupplierId(Long supplierId);
 
     void deleteByModelId(Long rawMaterId);

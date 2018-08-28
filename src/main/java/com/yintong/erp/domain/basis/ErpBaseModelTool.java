@@ -1,8 +1,10 @@
 package com.yintong.erp.domain.basis;
 
+import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
 import lombok.*;
@@ -24,7 +26,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importable {
+public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseModelTool>{
     @Id
     @GeneratedValue
     private Long id;
@@ -45,6 +47,9 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
 
+    @Column(columnDefinition = "double(16,9) comment '库存总量'")
+    private Double totalNum;
+
     @Transient
     private String supplierTypeCode;
 
@@ -64,6 +69,9 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
         return description = (_type + this.getModelToolName() + (StringUtils.hasText(specification)? ("-" + specification) : ""));
     }
 
+    public double getTotalNum(){
+        return Objects.isNull(totalNum) ? 0d :totalNum;
+    }
 
     @Override
     public void requiredValidate(){
@@ -80,4 +88,35 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
         Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
     }
 
+    @Override
+    public ErpBaseModelTool stockIn(double num) {
+        setTotalNum(this.getTotalNum() + num);
+        return this;
+    }
+
+    @Override
+    public ErpBaseModelTool stockOut(double num) {
+        setTotalNum(this.getTotalNum() - num);
+        return this;
+    }
+
+    @Override
+    public ErpBaseModelTool entity() {
+        return this;
+    }
+
+    @Override
+    public Long templateId() {
+        return id;
+    }
+
+    @Override
+    public Long realityId() {
+        return id;
+    }
+
+    @Override
+    public Constants.WaresType waresType() {
+        return Constants.WaresType.D;
+    }
 }

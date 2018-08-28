@@ -86,7 +86,7 @@ public class RawMaterialController {
      */
     @GetMapping("{materialId}/supplier")
     public BaseResult findSuppliersByMaterialId(@PathVariable Long materialId){
-        return new BaseResult().addList(rawMaterialService.findSuppilersAss(materialId));
+        return new BaseResult().addList(rawMaterialService.findSuppliersAss(materialId));
     }
 
     /**

@@ -21,7 +21,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.*;
 /**
  * @author lucifer.chan
  * @create 2018-05-08 下午8:54
- * 条码自动生成器
+ * 条形码自动生成器
  **/
 public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventListener {
 
@@ -84,7 +84,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
         private BarCode barCode;
         //barCodeIndex列表
         private List<Field> indexes;
-        //最终存条码的Field
+        //最终存条形码的Field
         private Field targetField;
 
         private BarCodeEntity(Class<?> entityClass){
@@ -117,7 +117,7 @@ public class BarCodeProvider implements PreInsertEventListener, PreUpdateEventLi
         }
 
         /**
-         * 计算条码
+         * 计算条形码
          * @param event
          * @return
          */

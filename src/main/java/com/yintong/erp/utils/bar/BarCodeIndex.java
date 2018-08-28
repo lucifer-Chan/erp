@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * @author lucifer.chan
  * @create 2018-05-10 上午12:10
- * 多个列的值作为条码序列
+ * 多个列的值作为条形码序列
  **/
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

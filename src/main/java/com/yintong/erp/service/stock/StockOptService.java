@@ -2,11 +2,21 @@ package com.yintong.erp.service.stock;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
+import com.yintong.erp.domain.basis.ErpBaseModelTool;
+import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
+import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
+import com.yintong.erp.domain.basis.associator.ErpModelSupplierRepository;
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
 import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
+import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.service.sale.SaleOrderService;
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,36 +38,43 @@ import org.springframework.util.StringUtils;
 @Service
 public class StockOptService {
 
-    public static final String KEY_PREFIX = StockOptService.class.getName();
-
     @Autowired ErpStockOptLogRepository stockOptLogRepository;
 
     @Autowired ErpStockPlaceRepository stockPlaceRepository;
 
     @Autowired ErpBaseEndProductRepository productRepository;
 
+    @Autowired ErpEndProductSupplierRepository productSupplierRepository;
+
+    @Autowired ErpBaseModelToolRepository mouldRepository;
+
+    @Autowired ErpModelSupplierRepository mouldSupplierRepository;
+
+    @Autowired ErpRawMaterialSupplierRepository materialSupplierRepository;
+
     @Autowired SaleOrderService saleOrderService;
 
-    @Autowired(required = false) List<StockInProduct4Holder> stockInProduct4Holders;
+    @Autowired(required = false) List<StockIn4Holder> stockIn4Holders;
 
-    @Autowired(required = false) List<StockOutProduct4Holder> stockOutProduct4Holders;
+    @Autowired(required = false) List<StockOut4Holder> stockOut4Holders;
 
 
     /**
-     * 成品入库
+     * 货物入库 : 仓位表、成品[原材料|模具]表、库存操作日志表
      * @param stockPlaceId - 仓位id
-     * @param productId - 成品id
-     * @param productCode - 成品条码
+     * @param stockEntity - 货物实体
      * @param holder - 来源
-     * @param holderId - 来源id ：holder为INIT时，holderId为null
-     * @param holderBarCode 来源条码 ：holder为INIT时，holderBarCode为null
+     * @param holderId  - 来源id ：holder为INIT时，holderId为null
+     * @param holderBarCode 来源条形码 ：holder为INIT时，holderBarCode为null
      * @param num - 数量 > 0
      * @return 仓位
      */
     @Transactional
-    public ErpStockPlace stockInProduct(Long stockPlaceId, Long productId, String productCode, StockHolder holder, Long holderId, String holderBarCode, double num){
+    public ErpStockPlace stockIn(Long stockPlaceId, StockEntity stockEntity,
+                                 StockHolder holder, Long holderId, String holderBarCode,
+                                 double num){
         Assert.notNull(stockPlaceId, "请选择仓位");
-        Assert.isTrue(Objects.nonNull(productId) && StringUtils.hasText(productCode), "请选择成品");
+        stockEntity.stockValidate();
         Assert.notNull(holder, "来源不能为空");
         Assert.isTrue(num > 0, "入库数量需大于0");
         if(holder != INIT){
@@ -69,86 +86,86 @@ public class StockOptService {
         //1- stockPlace +
         ErpStockPlace place = stockPlaceRepository.findById(stockPlaceId).orElse(null);
         Assert.notNull(place, "未找到仓位");
+
+        WaresType waresType = stockEntity.waresType();
+        Long waresId = stockEntity.templateId();
+        String waresBarcode = stockEntity.entity().getBarCode();
+        BaseEntityWithBarCode entity = stockEntity.entity();
+
         //1.1 计算仓位空闲
         double remain = place.getUpperLimit() - place.getCurrentStorageNum();
-        Assert.isTrue((remain - num) > 0, place.getName() + "剩余空间为" + remain + ",无法入库数量为" + num + "的成品");
+        Assert.isTrue((remain - num) > 0, place.getName() + "剩余空间为" + remain + ",无法入库数量为" + num + "的" + waresType.description());
         place.setCurrentStorageNum(place.getCurrentStorageNum() + num);
         stockPlaceRepository.save(place);
+
         //2- stockOptLog
         ErpStockOptLog optLog = ErpStockOptLog.builder()
                 .stockPlaceId(stockPlaceId)
-                .productId(productId)
-                .productCode(productCode)
                 .num(num)
                 .operation(StockOpt.IN.name())
                 .holder(holder.name())
                 .holderId(holderId)
                 .holderBarCode(holderBarCode)
-            .build();
-        stockOptLogRepository.save(optLog);
-        //3- product num +
-        ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);
-        Assert.notNull(product, "未找到成品");
-        product.setTotalNum(product.getTotalNum() + num);
-        productRepository.save(product);
+                .build();
+        if(entity instanceof ErpBaseEndProduct){
+            //a - 自产成品
+            optLog.setProductId(waresId);
+            optLog.setProductCode(waresBarcode);
+            productRepository.save( ((ErpBaseEndProduct) entity).stockIn(num));
+        } else if (entity instanceof ErpEndProductSupplier){
+            //b - 供应商成品
+            optLog.setProductId(waresId);
+            optLog.setProductCode(waresBarcode);
+            productSupplierRepository.save(((ErpEndProductSupplier) entity).stockIn(num));
+        } else if (entity instanceof ErpBaseModelTool){
+            //c - 不区分供应商的模具
+            optLog.setMouldId(waresId);
+            optLog.setMouldCode(waresBarcode);
+            mouldRepository.save(((ErpBaseModelTool) entity).stockIn(num));
+        } else if (entity instanceof ErpModelSupplier){
+            //d - 供应商的模具
+            optLog.setMouldId(waresId);
+            optLog.setMouldCode(waresBarcode);
+            mouldSupplierRepository.save(((ErpModelSupplier) entity).stockIn(num));
+        } else if (entity instanceof ErpRawMaterialSupplier){
+            //e - 原材料
+            materialSupplierRepository.save(((ErpRawMaterialSupplier) entity).stockIn(num));
+        }
+
         //4- 对应的单据
         final Long _holderId = holderId;
-        if(holder != INIT && !CollectionUtils.isEmpty(stockInProduct4Holders)){
-            stockInProduct4Holders.forEach(service-> service.handle(holder, _holderId, productId, num));
+        if(holder != INIT && !CollectionUtils.isEmpty(stockIn4Holders)){
+            stockIn4Holders.forEach(service-> service.handleIn(holder, _holderId, stockEntity, num));
         }
 
         return place;
+
+
+
+
+
     }
 
-    /**
-     * 成品出库
-     * @param stockPlaceId - 仓位id
-     * @param productId - 成品id
-     * @param productCode - 成品条码
-     * @param holder - 目的
-     * @param holderId - 目的id
-     * @param holderBarCode 目的条码
-     * @param num - 数量 > 0
-     * @return 仓位
-     */
-    @Transactional
-    public ErpStockPlace stockOutProduct(Long stockPlaceId, Long productId, String productCode, StockHolder holder, Long holderId, String holderBarCode, double num){
 
-        Assert.notNull(stockPlaceId, "请选择仓位");
-        Assert.isTrue(Objects.nonNull(productId) && StringUtils.hasText(productCode), "请选择成品");
-        Assert.isTrue(Objects.nonNull(holder) && Objects.nonNull(holderId) && Objects.nonNull(holderBarCode), "来源不能为空");
-        Assert.isTrue(num > 0, "出库数量需大于0");
-        //1- stockPlace -
-        ErpStockPlace place = stockPlaceRepository.findById(stockPlaceId).orElse(null);
-        Assert.notNull(place, "未找到仓位");
-        //1.1 计算仓位余量
-        Assert.isTrue(num < place.getCurrentStorageNum(), place.getName() + "剩余库存为" + place.getCurrentStorageNum() + ",无法出库数量为" + num + "的成品");
-        place.setCurrentStorageNum(place.getCurrentStorageNum() - num);
-        stockPlaceRepository.save(place);
-        //2- stockOptLog
-        ErpStockOptLog optLog = ErpStockOptLog.builder()
-                .stockPlaceId(stockPlaceId)
-                .productId(productId)
-                .productCode(productCode)
-                .num(num)
-                .operation(StockOpt.OUT.name())
-                .holder(holder.name())
-                .holderId(holderId)
-                .holderBarCode(holderBarCode)
-            .build();
-        stockOptLogRepository.save(optLog);
-        //3- product num -
-        ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);
-        Assert.notNull(product, "未找到成品");
-        product.setTotalNum(product.getTotalNum() - num);
-        productRepository.save(product);
-        //4- 对应的单据
-        if(!CollectionUtils.isEmpty(stockOutProduct4Holders)){
-            stockOutProduct4Holders.forEach(service-> service.handle(holder, holderId, productId, num));
-        }
 
-        return place;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 查找成品的出入库记录
@@ -158,5 +175,113 @@ public class StockOptService {
     public List<ErpStockOptLog> findOptsByProductId(Long productId) {
         return stockOptLogRepository.findByProductIdOrderByCreatedAtDesc(productId);
     }
+
+
+//    /**
+//     * 成品入库 : 仓位表、成品表、库存操作日志表
+//     * @param stockPlaceId - 仓位id
+//     * @param productId - 成品id
+//     * @param productCode - 成品条形码
+//     * @param holder - 来源
+//     * @param holderId - 来源id ：holder为INIT时，holderId为null
+//     * @param holderBarCode 来源条形码 ：holder为INIT时，holderBarCode为null
+//     * @param num - 数量 > 0
+//     * @return 仓位
+//     */
+//    @Transactional
+//    public ErpStockPlace stockInProduct(Long stockPlaceId, Long productId, String productCode, StockHolder holder, Long holderId, String holderBarCode, double num){
+//        Assert.notNull(stockPlaceId, "请选择仓位");
+//        Assert.isTrue(Objects.nonNull(productId) && StringUtils.hasText(productCode), "请选择成品");
+//        Assert.notNull(holder, "来源不能为空");
+//        Assert.isTrue(num > 0, "入库数量需大于0");
+//        if(holder != INIT){
+//            Assert.isTrue(Objects.nonNull(holderId) && StringUtils.hasText(holderBarCode), holder.description() + "不能为空");
+//        } else {
+//            holderId = null;
+//            holderBarCode = "初始化";
+//        }
+//        //1- stockPlace +
+//        ErpStockPlace place = stockPlaceRepository.findById(stockPlaceId).orElse(null);
+//        Assert.notNull(place, "未找到仓位");
+//        //1.1 计算仓位空闲
+//        double remain = place.getUpperLimit() - place.getCurrentStorageNum();
+//        Assert.isTrue((remain - num) > 0, place.getName() + "剩余空间为" + remain + ",无法入库数量为" + num + "的成品");
+//        place.setCurrentStorageNum(place.getCurrentStorageNum() + num);
+//        stockPlaceRepository.save(place);
+//        //2- stockOptLog
+//        ErpStockOptLog optLog = ErpStockOptLog.builder()
+//                .stockPlaceId(stockPlaceId)
+//                .productId(productId)
+//                .productCode(productCode)
+//                .num(num)
+//                .operation(StockOpt.IN.name())
+//                .holder(holder.name())
+//                .holderId(holderId)
+//                .holderBarCode(holderBarCode)
+//                .build();
+//        stockOptLogRepository.save(optLog);
+//        //3- product num +
+//        ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);
+//        Assert.notNull(product, "未找到成品");
+//        product.setTotalNum(product.getTotalNum() + num);
+//        productRepository.save(product);
+//        //4- 对应的单据
+//        final Long _holderId = holderId;
+//        if(holder != INIT && !CollectionUtils.isEmpty(stockInProduct4Holders)){
+//            stockInProduct4Holders.forEach(service-> service.handleInProduct(holder, _holderId, productId, productCode, num));
+//        }
+//
+//        return place;
+//    }
+
+//    /**
+//     * 成品出库 : 仓位表、成品表、库存操作日志表
+//     * @param stockPlaceId - 仓位id
+//     * @param productId - 成品id
+//     * @param productCode - 成品条形码
+//     * @param holder - 目的
+//     * @param holderId - 目的id
+//     * @param holderBarCode 目的条形码
+//     * @param num - 数量 > 0
+//     * @return 仓位
+//     */
+//    @Transactional
+//    public ErpStockPlace stockOutProduct(Long stockPlaceId, Long productId, String productCode, StockHolder holder, Long holderId, String holderBarCode, double num){
+//        Assert.notNull(stockPlaceId, "请选择仓位");
+//        Assert.isTrue(Objects.nonNull(productId) && StringUtils.hasText(productCode), "请选择成品");
+//        Assert.isTrue(Objects.nonNull(holder) && Objects.nonNull(holderId) && Objects.nonNull(holderBarCode), "来源不能为空");
+//        Assert.isTrue(num > 0, "出库数量需大于0");
+//        //1- stockPlace -
+//        ErpStockPlace place = stockPlaceRepository.findById(stockPlaceId).orElse(null);
+//        Assert.notNull(place, "未找到仓位");
+//        //1.1 计算仓位余量
+//        Assert.isTrue(num < place.getCurrentStorageNum(), place.getName() + "剩余库存为" + place.getCurrentStorageNum() + ",无法出库数量为" + num + "的成品");
+//        place.setCurrentStorageNum(place.getCurrentStorageNum() - num);
+//        stockPlaceRepository.save(place);
+//        //2- stockOptLog
+//        ErpStockOptLog optLog = ErpStockOptLog.builder()
+//                .stockPlaceId(stockPlaceId)
+//                .productId(productId)
+//                .productCode(productCode)
+//                .num(num)
+//                .operation(StockOpt.OUT.name())
+//                .holder(holder.name())
+//                .holderId(holderId)
+//                .holderBarCode(holderBarCode)
+//                .build();
+//        stockOptLogRepository.save(optLog);
+//        //3- product num -
+//        ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);
+//        Assert.notNull(product, "未找到成品");
+//        product.setTotalNum(product.getTotalNum() - num);
+//        productRepository.save(product);
+//        //4- 对应的单据
+//        if(!CollectionUtils.isEmpty(stockOutProduct4Holders)){
+//            stockOutProduct4Holders.forEach(service-> service.handleOutProduct(holder, holderId, productId, productCode, num));
+//        }
+//        return place;
+//    }
+
+
 
 }

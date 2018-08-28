@@ -1,5 +1,6 @@
 package com.yintong.erp.domain.basis;
 
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,4 +25,6 @@ public interface ErpBaseEndProductRepository extends JpaRepository<ErpBaseEndPro
     List<ErpBaseEndProduct> findByEndProductNameAndSpecification(String endProductName, String specification);
 
     List<ErpBaseEndProduct> findByEndProductNameAndSpecificationAndIdNot(String endProductName, String specification, Long id);
+
+    Optional<ErpBaseEndProduct> findByBarCode(String barcode);
 }

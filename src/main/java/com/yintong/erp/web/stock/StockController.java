@@ -3,6 +3,7 @@ package com.yintong.erp.web.stock;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.base.BaseResult;
+import com.yintong.erp.utils.common.CommonUtil;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -90,12 +91,7 @@ public class StockController {
      */
     @GetMapping("place/{idOrCode}")
     public BaseResult one(@PathVariable String idOrCode){
-        Long placeId = null;
-        try {
-            placeId = Long.parseLong(idOrCode);
-        } catch (NumberFormatException ignored){
-
-        }
+        Long placeId = CommonUtil.parseLong(idOrCode);
         ErpStockPlace place = Objects.isNull(placeId) ?
                 placeService.one(idOrCode) : placeService.one(placeId);
         return new BaseResult().addPojo(place);

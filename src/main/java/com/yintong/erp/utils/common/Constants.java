@@ -145,7 +145,7 @@ public interface Constants {
      * 货物类型：成品|原材料|模具
      */
     enum WaresType {
-        P("成品"), M("原材料"),D("模具");
+        P("成品"), M("原材料"), D("模具"), R("废品");
         WaresType(String description){
             this.description = description;
         }

@@ -143,4 +143,12 @@ public class CommonUtil {
             return null;
         }
     }
+
+    public static Long parseLong(String s){
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException e){
+            return null;
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package com.yintong.erp.domain.basis;
 
+import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
 import java.util.Set;
@@ -26,7 +28,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importable{
+public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseEndProduct> {
 
     @Id
     @GeneratedValue
@@ -206,5 +208,46 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
         return "N:" + endProductName + ",S:" + specification + ",M:" + materialName + ",A:" + unitSilverLoss + ",C:" + unitSilverCopper;
     }
 
+    /**
+     * 入库
+     * @param num
+     * @return
+     */
+    @Override
+    public ErpBaseEndProduct stockIn(double num){
+        setTotalNum(this.getTotalNum() + num);
+        return this;
+    }
+
+    /**
+     * 出库
+     * @param num
+     * @return
+     */
+    @Override
+    public ErpBaseEndProduct stockOut(double num){
+        setTotalNum(this.getTotalNum() - num);
+        return this;
+    }
+
+    @Override
+    public ErpBaseEndProduct entity() {
+        return this;
+    }
+
+    @Override
+    public Long templateId() {
+        return id;
+    }
+
+    @Override
+    public Long realityId() {
+        return id;
+    }
+
+    @Override
+    public Constants.WaresType waresType() {
+        return Constants.WaresType.P;
+    }
 
 }

@@ -44,9 +44,9 @@ public class RawMaterialService {
 
     @Autowired ErpBaseRawMaterialRepository erpBaseRawMaterialRepository;
 
-    @Autowired ErpRawMaterialSupplierRepository rawMaterialSupplierRepository;
-
     @Autowired ErpBaseSupplierRepository supplierRepository;
+
+    @Autowired ErpRawMaterialSupplierRepository rawMaterialSupplierRepository;
 
     @Autowired(required = false) List<OnDeleteRawMaterialValidator> onDeleteRawMaterialValidator;
 
@@ -74,7 +74,7 @@ public class RawMaterialService {
      * @param materialId
      * @return
      */
-    public List<ErpRawMaterialSupplier> findSuppilersAss(Long materialId){
+    public List<ErpRawMaterialSupplier> findSuppliersAss(Long materialId){
         return rawMaterialSupplierRepository.findByRawMaterId(materialId);
     }
 

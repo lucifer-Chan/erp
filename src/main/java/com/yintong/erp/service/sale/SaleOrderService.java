@@ -9,7 +9,8 @@ import com.yintong.erp.domain.sale.ErpSaleOrderRepository;
 
 import com.yintong.erp.domain.stock.ErpStockOutOrder;
 import com.yintong.erp.domain.stock.ErpStockOutOrderRepository;
-import com.yintong.erp.service.stock.StockOutProduct4Holder;
+import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.service.stock.StockOut4Holder;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.validator.OnDeleteCustomerValidator;
@@ -47,7 +48,7 @@ import static com.yintong.erp.utils.common.Constants.StockHolder.SALE;
  * 销售订单服务
  **/
 @Service
-public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustomerValidator, OnDeleteProductValidator {
+public class SaleOrderService implements StockOut4Holder, OnDeleteCustomerValidator, OnDeleteProductValidator {
 
     @Autowired ErpSaleOrderRepository saleOrderRepository;
 
@@ -89,8 +90,32 @@ public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustome
     public ErpSaleOrder findOrder4Out(String barcode){
         ErpSaleOrder order = CommonUtil.single(saleOrderRepository.findByBarCode(barcode));
         Assert.notNull(order, "未找到销售订单[" + barcode + "]");
-        Assert.isTrue(1 == order.getPreStockOut(), "该销售订单尚未打印出库单");
+        Assert.isTrue(1 == order.getPreStockOut(), "该销售订单尚不可出库");
         //添加明细
+        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+                .stream().filter(item -> item.getOutedNum() < item.getNum())
+                .collect(Collectors.toList());
+        Assert.notEmpty(items, "无可出库的明细");
+        order.setItems(items);
+        return order;
+    }
+
+    /**
+     *  获取单个可入库的销售订单【退货单】
+     * @param barcode
+     * @return
+     */
+    public ErpSaleOrder findOrder4In(String barcode){
+        ErpSaleOrder order = CommonUtil.single(saleOrderRepository.findByBarCode(barcode));
+        Assert.notNull(order, "未找到销售订单[" + barcode + "]");
+        Assert.isTrue(1 == order.getPreStockIn(), "该销售订单尚不可入库");
+        SaleOrderStatus currentStatus = SaleOrderStatus.valueOf(order.getStatusCode());
+        Assert.isTrue(STATUS_006 == currentStatus, "当前订单状态为" + currentStatus.description() + "，不可入库");
+        //添加明细
+        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+                .stream().filter(item -> item.getInNum() < item.getNum())
+                .collect(Collectors.toList());
+        Assert.notEmpty(items, "无可入库的明细");
         order.setItems(orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId()));
         return order;
     }
@@ -211,7 +236,7 @@ public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustome
         }
 //        //->已出库
 //        if(status == STATUS_005){
-//            Assert.isTrue(STATUS_003.name().equals(oldStatus), "只有" + STATUS_003.description() + "的订单可以变更为" + status.description());
+//            Assert.isTrue(STATUS_049.name().equals(oldStatus), "只有" + STATUS_049.description() + "的订单可以变更为" + status.description());
 //        }
         //->客户退货、已完成
         if(status == STATUS_006 || status == STATUS_007){
@@ -221,6 +246,12 @@ public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustome
         //->作废
         if(status == STATUS_008){
             Assert.isTrue(STATUS_003.name().equals(oldStatus), "只有" + STATUS_003.description() + "的订单可以" + status.description());
+        }
+
+        // 客户退货 修改preStockOut属性为0 即不允许再出库，允许入库
+        if(status == STATUS_006){
+            old.setPreStockOut(0);
+            old.setPreStockIn(1);
         }
 
         ErpSaleOrder order = saleOrderRepository.save(old.setStatusCode(status));
@@ -259,6 +290,7 @@ public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustome
                         .holderBarCode(order.getBarCode())
                         .productIds(StringUtils.collectionToCommaDelimitedString(productIds))
                         .productNames(StringUtils.collectionToCommaDelimitedString(productNames))
+                        .complete(0)
                     .build()
             );
         }
@@ -387,48 +419,65 @@ public class SaleOrderService implements StockOutProduct4Holder, OnDeleteCustome
     }
 
     @Override
-    public boolean matchesOutProductHolder(StockHolder holder) {
-        return SALE == holder;
+    public boolean matchesOut(StockHolder holder, StockEntity stockEntity) {
+        return SALE == holder && WaresType.P == stockEntity.waresType();
     }
 
     /**
-     * 对订单明细进行出库
+     * 对订单明细进行出库 计算出库情况，当明细全部出库完成，修改订单状态为"已出库"
      * @param holder
      * @param saleOrderId 销售订单id
-     * @param productId 产品id
+     * @param stockEntity 出库实例
      * @param outNum 数量
      */
     @Override
     @Transactional
-    public void stockOutProduct(StockHolder holder, Long saleOrderId, Long productId, double outNum) {
+    public void stockOut(StockHolder holder, Long saleOrderId, StockEntity stockEntity, double outNum) {
         //1-检查订单
         ErpSaleOrder order = saleOrderRepository.findById(saleOrderId).orElse(null);
         Assert.notNull(order, "未找到销售订单[" + saleOrderId + "]");
         Assert.isTrue( 1 == order.getPreStockOut(), "尚未打印出库单");
 
-        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdAndProductId(saleOrderId, productId);
+        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdAndProductId(saleOrderId, stockEntity.templateId());
         ErpSaleOrderItem item = CommonUtil.single(items, "销售订单[" + saleOrderId + "存在脏数据");
         if(Objects.isNull(item)) return;
 
         Assert.isTrue(!STATUS_005.name().equals(item.getStatusCode()), item.getProductName() + "已完成出库");
         SaleOrderStatus status = STATUS_049;//出库中
-        if((outNum + item.getOutedNum()) >= item.getNum()){
+        double currentOutedNum = outNum + item.getOutedNum();
+        String content = item.getProductName() + " 完成出库,出库数量【" + currentOutedNum + "/" + item.getNum() + "】";
+        if(currentOutedNum >= item.getNum()){
             status = STATUS_005;
+            content = item.getProductName() + " 全部完成出库,出库数量【" + currentOutedNum + "/" + item.getNum() + "】";
         }
         //2-保存订单明细
         item.setStatusCode(status.name());
         item.setOutedNum(outNum + item.getOutedNum());
         orderItemRepository.save(item);
         //3-明细日志
-        String content = item.getProductName() + "完成出库,出库数量【" + item.getOutedNum() + "/" + item.getNum() + "】";
-        orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(status.name()).content(content).optType("item").orderId(saleOrderId).build());
+        orderOptLogRepository.save(
+                ErpSaleOrderOptLog.builder()
+                        .statusCode(status.name())
+                        .content(content)
+                        .optType("item")
+                        .orderId(saleOrderId)
+                        .productId(stockEntity.templateId())
+                        .productCode(stockEntity.entity().getBarCode())
+                    .build()
+        );
 
         //4 未完成出库的订单明细
         List<ErpSaleOrderItem> unOutItems = orderItemRepository.findByOrderIdAndStatusCodeNot(saleOrderId, STATUS_005.name());
         if(CollectionUtils.isEmpty(unOutItems)){
-            //不存在未完成出库的明细->修改订单状态为：已出库
+            //全部入库成功->修改订单状态为：已出库
             saleOrderRepository.save(order.setStatusCode(STATUS_005));
             orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(STATUS_005.name()).content(STATUS_005.toLog()).optType("status").orderId(saleOrderId).build());
+            //出库单-完成
+            ErpStockOutOrder outOrder = CommonUtil.single(stockOutOrderRepository.findByHolderAndHolderId(SALE.name(), saleOrderId));
+            if(Objects.nonNull(outOrder)){
+                outOrder.setComplete(1);
+                stockOutOrderRepository.save(outOrder);
+            }
         } else if(!STATUS_049.name().equals(order.getStatusCode())){
             //存在未完成出库的明细，且自身状态不为：出库中
             saleOrderRepository.save(order.setStatusCode(STATUS_049));

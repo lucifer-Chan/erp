@@ -2,6 +2,7 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseModelTool;
 import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
+import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
@@ -33,8 +34,6 @@ public class MouldService {
 
     @Autowired ErpBaseModelToolRepository modelToolRepository;
 
-
-
     @Autowired(required = false)
     private List<OnDeleteMouldValidator> onDeleteMouldValidator;
 
@@ -54,6 +53,17 @@ public class MouldService {
     public ErpBaseModelTool one(Long mouldId){
         ErpBaseModelTool mould = modelToolRepository.findById(mouldId).orElse(null);
         Assert.notNull(mould, "未找到供应商");
+        return mould;
+    }
+
+    /**
+     * 根据barcode查找模具
+     * @param barcode
+     * @return
+     */
+    public ErpBaseModelTool findByBarcode(String barcode){
+        ErpBaseModelTool mould = modelToolRepository.findByBarCode(barcode).orElse(null);
+        Assert.notNull(mould, "未找到模具");
         return mould;
     }
 

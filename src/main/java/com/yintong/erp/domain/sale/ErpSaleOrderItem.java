@@ -40,7 +40,7 @@ public class ErpSaleOrderItem extends BaseEntity{
     @Column(columnDefinition = "varchar(100) comment '销售订单编号'")
     private String orderCode;
 
-    @Column(columnDefinition = "bigint(20) comment '成品id'")
+    @Column(columnDefinition = "bigint(20) comment '成品id-模版id|供应商关联的id'")
     private Long productId;
 
     @Column(columnDefinition = "double(16,9) comment '总额'")
@@ -51,6 +51,9 @@ public class ErpSaleOrderItem extends BaseEntity{
 
     @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已出库数量'")
     private Double outedNum;
+
+    @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已入库数量-退货'")
+    private Double inNum;
 
     @Column(columnDefinition = "double(16,9) comment '单价'")
     private Double unitPrice;
@@ -72,6 +75,10 @@ public class ErpSaleOrderItem extends BaseEntity{
 
     public Double getOutedNum(){
         return Objects.isNull(outedNum) ? 0d : outedNum;
+    }
+
+    public Double getInNum(){
+        return Objects.isNull(inNum) ? 0d : inNum;
     }
 
     public String getProductName(){

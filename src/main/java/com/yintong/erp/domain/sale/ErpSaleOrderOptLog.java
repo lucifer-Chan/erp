@@ -15,7 +15,7 @@ import lombok.Setter;
 /**
  * @author lucifer.chan
  * @create 2018-07-22 下午12:25
- * 订单操作记录
+ * 销售订单操作记录
  **/
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -36,4 +36,10 @@ public class ErpSaleOrderOptLog extends BaseEntity {
 
     @Column(columnDefinition = "varchar(20) DEFAULT 'order' comment '类型：order-订单操作，item-明细修改， status-状态变更'")
     private String optType;
+
+    @Column(columnDefinition = "bigint(20) comment '成品id-optType为item时有值'")
+    private Long productId;
+
+    @Column(columnDefinition = "varchar(100) comment '成品条形码-optType为item时有值'")
+    private String productCode;
 }

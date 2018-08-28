@@ -37,14 +37,10 @@ import org.springframework.util.StringUtils;
 @Service
 public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator, OnDeleteSupplierValidator {
 
-    @Autowired
-    ErpBaseSupplierRepository supplierRepository;
-    @Autowired
-    ErpBaseRawMaterialRepository rawMaterialRepository;
-    @Autowired
-    ErpRawMaterialSupplierRepository rawMaterialSupplierRepository;
-    @Autowired
-    CategoryService categoryService;
+    @Autowired ErpBaseSupplierRepository supplierRepository;
+    @Autowired ErpBaseRawMaterialRepository rawMaterialRepository;
+    @Autowired ErpRawMaterialSupplierRepository rawMaterialSupplierRepository;
+    @Autowired CategoryService categoryService;
     @Autowired(required = false)
     List<OnDeleteSupplierRawMaterialValidator> onDeleteSupplierRawMeterials;
 
@@ -70,6 +66,17 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
                 .alertUpper(up)
                 .build();
         return save(association);
+    }
+
+    /**
+     * 根据barcode查找供应商和原材料的关联
+     * @param barcode
+     * @return
+     */
+    public ErpRawMaterialSupplier findByBarcode(String barcode){
+        ErpRawMaterialSupplier association = rawMaterialSupplierRepository.findByBarCode(barcode).orElse(null);
+        Assert.notNull(association, "未找到成品和供应商的关联");
+        return association;
     }
 
     /**

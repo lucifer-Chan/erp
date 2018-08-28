@@ -176,4 +176,11 @@ public interface BarCodeConstants {
      */
     String EMPTY_REPLACE = "K";
 
+    /**
+     * 模版货物的条码长度
+     */
+    int WARES_BAR_CODE_TPL_LENGTH = ID_LENGTH + 4;
+
+    int WARES_BAR_CODE_ASS_LENGTH = ID_LENGTH + 4 + 1 + ID_LENGTH;
+
 }

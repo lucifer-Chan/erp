@@ -2,10 +2,12 @@ package com.yintong.erp.domain.basis.associator;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
+import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.Objects;
 import javax.persistence.Transient;
@@ -31,7 +33,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @Builder
 @Entity
-public class ErpRawMaterialSupplier extends BaseEntityWithBarCode {
+public class ErpRawMaterialSupplier extends BaseEntityWithBarCode implements StockEntity<ErpRawMaterialSupplier> {
 
     @Id
     @GeneratedValue
@@ -108,5 +110,36 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode {
         return Objects.isNull(totalNum) ? 0d :totalNum;
     }
 
-    
+
+    @Override
+    public ErpRawMaterialSupplier stockIn(double num) {
+        setTotalNum(this.getTotalNum() + num);
+        return this;
+    }
+
+    @Override
+    public ErpRawMaterialSupplier stockOut(double num) {
+        setTotalNum(this.getTotalNum() - num);
+        return this;
+    }
+
+    @Override
+    public ErpRawMaterialSupplier entity() {
+        return this;
+    }
+
+    @Override
+    public Long templateId() {
+        return this.rawMaterId;
+    }
+
+    @Override
+    public Long realityId() {
+        return id;
+    }
+
+    @Override
+    public Constants.WaresType waresType() {
+        return Constants.WaresType.M;
+    }
 }

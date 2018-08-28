@@ -271,7 +271,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     }
                     $(this).html(value);
                 });
-                //打印数据构建 - 条码
+                //打印数据构建 - 条形码
                 if(consts.currentOrder.barCode){
                     $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + consts.currentOrder.barCode);
                 }

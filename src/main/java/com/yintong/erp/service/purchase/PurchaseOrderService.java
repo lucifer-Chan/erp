@@ -17,7 +17,8 @@ import com.yintong.erp.domain.purchase.ErpPurchaseOrderOptLogRepository;
 import com.yintong.erp.domain.purchase.ErpPurchaseOrderRepository;
 import com.yintong.erp.domain.stock.ErpStockInOrder;
 import com.yintong.erp.domain.stock.ErpStockInOrderRepository;
-import com.yintong.erp.service.stock.StockInProduct4Holder;
+import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.service.stock.StockIn4Holder;
 import com.yintong.erp.utils.base.JsonWrapper;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants.PurchaseOrderStatus;
@@ -67,7 +68,7 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * 采购订单服务
  **/
 @Service
-public class PurchaseOrderService implements StockInProduct4Holder,
+public class PurchaseOrderService implements StockIn4Holder,
         OnDeleteSupplierRawMaterialValidator, OnDeleteSupplierMouldValidator, OnDeleteSupplierProductValidator {
 
     @Autowired ErpPurchaseOrderRepository orderRepository;
@@ -124,10 +125,13 @@ public class PurchaseOrderService implements StockInProduct4Holder,
         Assert.notNull(order, "未找到采购订单[" + barcode + "]");
         Assert.isTrue(1 == order.getPreStockIn(), "该采购订单尚未打印入库单");
         //添加明细
-        order.setItems(orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId()));
+        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+                .stream().filter(item -> item.getInNum() < item.getNum())
+                .collect(Collectors.toList());
+        Assert.notEmpty(items, "无可出库的明细");
         return order;
     }
-    
+
     /**
      * 新增采购订单
      * @param order
@@ -402,12 +406,14 @@ public class PurchaseOrderService implements StockInProduct4Holder,
 
 
     @Override
-    public boolean matchesInProductHolder(StockHolder holder) {
-        return BUY == holder;
+    public boolean matchesIn(StockHolder holder, StockEntity stockEntity) {
+//        return BUY == holder;
+        //TODO
+        return false;
     }
 
     @Override
-    public void stockInProduct(StockHolder holder, Long holderId, Long productId, double num) {
+    public void stockIn(StockHolder holder, Long holderId, StockEntity stockEntity, double num) {
         //TODO
     }
 

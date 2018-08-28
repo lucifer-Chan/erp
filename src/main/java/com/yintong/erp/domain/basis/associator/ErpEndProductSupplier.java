@@ -1,9 +1,11 @@
 package com.yintong.erp.domain.basis.associator;
 
+import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.Constants;
 import java.util.Objects;
 import lombok.*;
 import org.apache.commons.collections4.KeyValue;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 @Entity
-public class ErpEndProductSupplier extends BaseEntityWithBarCode{
+public class ErpEndProductSupplier extends BaseEntityWithBarCode implements StockEntity<ErpEndProductSupplier> {
     @Id
     @GeneratedValue
     private Long id;
@@ -88,4 +90,35 @@ public class ErpEndProductSupplier extends BaseEntityWithBarCode{
         return Objects.isNull(totalNum) ? 0d :totalNum;
     }
 
+    @Override
+    public ErpEndProductSupplier stockIn(double num) {
+        setTotalNum(this.getTotalNum() + num);
+        return this;
+    }
+
+    @Override
+    public ErpEndProductSupplier stockOut(double num) {
+        setTotalNum(this.getTotalNum() - num);
+        return this;
+    }
+
+    @Override
+    public ErpEndProductSupplier entity() {
+        return this;
+    }
+
+    @Override
+    public Long templateId() {
+        return endProductId;
+    }
+
+    @Override
+    public Long realityId() {
+        return id;
+    }
+
+    @Override
+    public Constants.WaresType waresType() {
+        return Constants.WaresType.P;
+    }
 }

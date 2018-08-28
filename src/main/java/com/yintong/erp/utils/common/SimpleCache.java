@@ -52,6 +52,7 @@ public class SimpleCache<R> {
      * @param key
      * @return
      */
+    @SuppressWarnings("unchecked")
     public R from(String key){
         return (R)cache.get(key);
     }
@@ -61,6 +62,7 @@ public class SimpleCache<R> {
      * @param key
      * @param value
      */
+    @SuppressWarnings("unchecked")
     public void to(String key, R value){
         if(null != value)
             cache.put(key, value);

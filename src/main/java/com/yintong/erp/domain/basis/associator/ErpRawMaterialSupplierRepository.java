@@ -16,6 +16,8 @@ public interface ErpRawMaterialSupplierRepository extends JpaRepository<ErpRawMa
 
     Optional<ErpRawMaterialSupplier> findByRawMaterIdAndSupplierId(Long rawMaterId, Long supplierId);
 
+    Optional<ErpRawMaterialSupplier> findByBarCode(String barcode);
+
     void deleteBySupplierId(Long supplierId);
 
     void deleteByRawMaterId(Long rawMaterId);

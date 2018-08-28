@@ -6,7 +6,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 
 
 /**
- * 条码注解
+ * 条形码注解
  *  功能：在数据新增的时候生成"前缀+id+@BarCodeIndex[...]"保存到拥有@BarCodeColumn注解的列中
  *  如果BarCodeIndex注解的值为null，则用"K"暂时替代
  */
@@ -16,7 +16,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 public @interface BarCode {
 
     /**
-     * 条码前缀
+     * 条形码前缀
      * @return
      */
     BAR_CODE_PREFIX [] prefix() default {};

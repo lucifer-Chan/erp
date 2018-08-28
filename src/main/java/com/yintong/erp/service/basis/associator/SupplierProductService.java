@@ -56,6 +56,17 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
     }
 
     /**
+     * 根据barcode查找供应商和成品的关联
+     * @param barcode
+     * @return
+     */
+    public ErpEndProductSupplier findByBarcode(String barcode){
+        ErpEndProductSupplier association = productSupplierRepository.findByBarCode(barcode).orElse(null);
+        Assert.notNull(association, "未找到成品和供应商的关联");
+        return association;
+    }
+
+    /**
      * 批量保存
      * @param associations
      */

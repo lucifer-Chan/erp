@@ -54,6 +54,9 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "integer DEFAULT 0 comment '是否可出库[1-可以|0-不可以]'")
     private Integer preStockOut;
 
+    @Column(columnDefinition = "integer DEFAULT 0 comment '是否可入库[1-可以|0-不可以]'")
+    private Integer preStockIn;
+
 
     /**
      * 订单明细-controller传入

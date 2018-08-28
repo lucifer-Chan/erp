@@ -50,6 +50,17 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
     }
 
     /**
+     * 根据barcode查找供应商和模具的关联
+     * @param barcode
+     * @return
+     */
+    public ErpModelSupplier findByBarcode(String barcode){
+        ErpModelSupplier association = modelSupplierRepository.findByBarCode(barcode).orElse(null);
+        Assert.notNull(association, "未找到模具和供应商的关联");
+        return association;
+    }
+
+    /**
      * 批量保存
      * @param associations
      */

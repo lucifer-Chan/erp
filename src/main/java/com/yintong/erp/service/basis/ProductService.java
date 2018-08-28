@@ -2,10 +2,14 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
 import com.yintong.erp.domain.sale.ErpSaleOrderItem;
 import com.yintong.erp.domain.sale.ErpSaleOrderItemRepository;
+import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import static com.yintong.erp.utils.common.Constants.SaleOrderStatus.STATUS_003;
+
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
@@ -39,9 +43,11 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 @Service
 public class ProductService {
 
-    @Autowired  ErpBaseEndProductRepository erpBaseEndProductRepository;
+    @Autowired  ErpBaseEndProductRepository productRepository;
 
     @Autowired ErpSaleOrderItemRepository orderItemRepository;
+    
+    @Autowired SupplierProductService supplierProductService;
 
     @Autowired(required = false) List<OnDeleteProductValidator> onDeleteProductValidators;
 
@@ -51,7 +57,7 @@ public class ProductService {
      * @return
      */
     public Page<ErpBaseEndProduct> query(ProductService.ProductParameterBuilder parameter){
-        return erpBaseEndProductRepository.findAll(parameter.specification(), parameter.pageable());
+        return productRepository.findAll(parameter.specification(), parameter.pageable());
     }
     /**
      * 根据id查找成品
@@ -59,7 +65,18 @@ public class ProductService {
      * @return
      */
     public ErpBaseEndProduct one(Long productId){
-        ErpBaseEndProduct product = erpBaseEndProductRepository.findById(productId).orElse(null);
+        ErpBaseEndProduct product = productRepository.findById(productId).orElse(null);
+        Assert.notNull(product, "未找到成品");
+        return product;
+    }
+
+    /**
+     * 根据barcode查找成品
+     * @param barcode
+     * @return
+     */
+    public ErpBaseEndProduct findByBarcode(String barcode){
+        ErpBaseEndProduct product = productRepository.findByBarCode(barcode).orElse(null);
         Assert.notNull(product, "未找到成品");
         return product;
     }
@@ -94,7 +111,7 @@ public class ProductService {
     public ErpBaseEndProduct create(ErpBaseEndProduct product){
         product.setId(null);//防止假数据
         validateProductType(product);
-        return erpBaseEndProductRepository.save(product);
+        return productRepository.save(product);
     }
     /**
      * 更新成品
@@ -103,13 +120,13 @@ public class ProductService {
      */
     public ErpBaseEndProduct update(ErpBaseEndProduct product){
         Assert.notNull(product.getId(), "成品id不能为空");
-        ErpBaseEndProduct inDb = erpBaseEndProductRepository.findById(product.getId()).orElse(null);
+        ErpBaseEndProduct inDb = productRepository.findById(product.getId()).orElse(null);
         Assert.notNull(inDb, "未找到模具");
         validateProductType(product);
         product.setBarCode(inDb.getBarCode());
         product.setAlertLower(inDb.getAlertLower());
         product.setAlertUpper(inDb.getAlertUpper());
-        return erpBaseEndProductRepository.save(product);
+        return productRepository.save(product);
     }
     /**
      * 删除成品
@@ -119,7 +136,7 @@ public class ProductService {
     public void delete(Long productId){
         if(!CollectionUtils.isEmpty(onDeleteProductValidators))
             onDeleteProductValidators.forEach(validator -> validator.onDeleteProduct(productId));
-        erpBaseEndProductRepository.deleteById(productId);
+        productRepository.deleteById(productId);
     }
 
 
