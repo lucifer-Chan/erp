@@ -17,4 +17,6 @@ public interface ErpPurchaseOrderItemRepository extends JpaRepository<ErpPurchas
     List<ErpPurchaseOrderItem> findByOrderIdAndWaresAssIdAndWaresType(Long orderId, Long waresAssId, String waresType);
 
     List<ErpPurchaseOrderItem> findByWaresAssIdAndWaresType(Long waresAssId, String waresType);
+
+    List<ErpPurchaseOrderItem> findByOrderIdAndStatusCodeNot(Long purchaseOrderId, String statusCode);
 }

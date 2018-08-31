@@ -1,4 +1,5 @@
 <!-- Main -->
+<!--
 <div class="erp_content animated fadeInRight full_height"  id="sale_order_page">
     <div class="full_height">
         <div id="searchFilter">
@@ -14,14 +15,13 @@
         <div class="pd23 pd43">
             <div class="row">
                 <div id="test"></div>
+
             </div>
         </div>
     </div>
 </div>
-
-
-
-
+-->
+<!--
 <script id="template-scan" type="text/template">
     <div class="order">
         <p class="order_id"><label>订单编号：</label><span>{{o.order_id}}</span></p>
@@ -47,7 +47,6 @@
         <p><label>产品类别：</label><span>{{m.product_category}}</span></p>
         <p><label>产品名称：</label><span class="product_name">{{m.product_name}}</span></p>
         <p><label>产品型号：</label><span>{{m.product_model}}</span></p>
-        <!--<span class="num">x {{m.num}}</span>-->
     </div>
     <div class="product-code">
         <p><label>产品S  N：</label><span>{{sn}}</span></p>
@@ -86,6 +85,32 @@
         },
         sn: 'sn-11111'
     });
-    $("#test").html("").append(html).show();
+    //$("#test").html("").append(html).show();
 
 </script>
+-->
+
+<div id="print_to_product_xxxx">
+    <div class="panel-default bugInfo">
+        <div class="row">
+            <span class="print-header">
+                <img src="/basis/common/barcode/PNX0000000226S000000785" class="print-barcode">
+            </span>
+        </div>
+        <div class="row">
+            <span class="print-header">
+                <img src="/basis/common/barcode/PTD0000000096" class="print-barcode">
+            </span>
+        </div>
+        <div style="padding-top: 15px;"></div>
+        <div class="row">
+            <div><label>成品名称：</label><span>复合银点</span></div>
+        </div>
+        <div class="row">
+            <div><label>供应商：</label><span>任丘市大通硬质合金有限公司</span></div>
+        </div>
+        <div class="row">
+            <div><label>规格描述：</label><span>9*1.8+4*3.5F</span></div>
+        </div>
+    </div>
+</div>

@@ -1175,7 +1175,7 @@ define('services',['utils'],function (utils) {
                 return $.http.get('stock/place/ext/' + id);
             }
         }
-    }
+    };
 
     //常用
     var common = {
@@ -1183,9 +1183,13 @@ define('services',['utils'],function (utils) {
             //供应商和原材料的所有关联
             supplierMaterial : function () {
                 return $.http.get('basis/common/ass/supplier/material')
+            },
+            //获取条形码文本
+            barcode : function (waresType, waresAssId) {
+                return $.http.get('basis/common/barcode/'+ waresType + '/' + waresAssId);
             }
         }
-    }
+    };
 
     return {
          account : account

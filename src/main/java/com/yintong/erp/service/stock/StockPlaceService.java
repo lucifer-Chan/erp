@@ -54,11 +54,8 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
      */
     @Override
     public void onDeleteSupplierRawMaterial(Long id) {
-        List<ErpStockPlace> placeList = stockPlaceRepository.findByMaterialSupplierAssId(id);
-        if(CollectionUtils.isEmpty(placeList)) return;
-        String placeNames = StringUtils.collectionToCommaDelimitedString(
-                placeList.stream().map(ErpStockPlace :: getName).collect(Collectors.toList())
-        );
+        String placeNames = stockPlaceRepository.findByMaterialSupplierAssId(id)
+                .stream().map(ErpStockPlace::getName).collect(Collectors.joining(","));
 
         Assert.isTrue(!StringUtils.hasText(placeNames), "仓位[" + placeNames + "]关联了该原材料，请先删除仓位关联");
     }

@@ -562,12 +562,17 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 }
                 var clone = $itemTemplate.clone();
                 $(clone).find('.panel-title').text(item.waresName);
-                $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._update, ._delete').attr('data-value', item.id);
+                $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._print, ._update, ._delete').attr('data-value', item.id);
                 var body = $(clone).find('.panel-body');
+                var tools =  $(clone).find('.tools');
                 body.attr('data-value', (item.id + 'Info'));
                 if(item.statusCode !== 'STATUS_049'){
                     $(body).find('div[data-name="status"]').parent().hide();
                 }
+                if(item.waresType === 'M' || item.waresType === 'R'){
+                    $(tools).find('._print').hide();
+                }
+
                 $(body).find('div[data-name="status"]').html(_convertStatus(item.statusCode));
                 $(body).find('div[data-name="money"]').text('¥' + (item.money || 0).toFixed(2));
                 $(body).find('div[data-name="unitPrice"]').text('¥' + (item.unitPrice||0).toFixed(2));
@@ -611,7 +616,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
 
 
         //明细操作按钮
-        $('#rightInfoPage').find('._update, ._delete').click(function () {
+        $('#rightInfoPage').find('._print, ._update, ._delete').click(function () {
             var $bt = $(this);
             var item = consts.itemCache[$bt.attr('data-value')];
             if(!item) return;
@@ -635,8 +640,39 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                             layer.msg(reason.caught ? reason.message : '请求失败！');
                         });
                 });
+            } else if($bt.hasClass('_print')){
+                services.common.ass.barcode(item.waresType, item.waresAssId)
+                    .then(function (data) {
+                        //条形码模版
+                        var $printTemplate = $('#print_to_wares');
+                        var $clone = $printTemplate.clone();
+                        //条形码
+                        $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + data.barcode);
+                        //基本信息
+                        $clone.find('label[data-name="label_1"]').html('供应商：');
+                        $clone.find('span[data-name="content_1"]').html(consts.currentOrder.supplierName);
+                        $clone.find('label[data-name="label_2"]').html('名称：');
+                        $clone.find('span[data-name="content_2"]').html(sub_wares_name(item.waresName));
+                        $clone.show().print();
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+
+                console.log(consts.currentOrderItem);
             }
         })
+    }
+
+    function sub_wares_name(name) {
+        if(!name) return '';
+        var prefix = ["【模具】 ", "【成品】 "];
+        for(var index in prefix){
+            if (name.indexOf(prefix[index]) > -1){
+                return name.substr(prefix[index].length);
+            }
+        }
+        return name;
     }
 
     //根据货物类型初始化货物列表

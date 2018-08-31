@@ -8,10 +8,12 @@
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="typeCollection"></li>
             </ul>
+        </div>
+        <div class="sidebar-operations">
+            <button type="button" class="btn btn-default btn-ms operation" id="addProductPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增成品仓位</button>
             <button type="button" class="btn btn-default btn-ms operation" id="addMaterialPlaceBt" data-toggle="modal" data-target="#_addMaterialPlace">新增原材料仓位</button>
-            <button style="right:150px" type="button" class="btn btn-default btn-ms operation" id="addProductPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增成品仓位</button>
-            <button style="right:270px" type="button" class="btn btn-default btn-ms operation" id="addRubbishPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增废品仓位</button>
-            <button style="right:390px" type="button" class="btn btn-default btn-ms operation" id="addMouldPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增模具仓位</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addMouldPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增模具仓位</button>
+            <button type="button" class="btn btn-default btn-ms operation" id="addRubbishPlaceBt" data-toggle="modal" data-target="#_addProductPlace">新增废品仓位</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -120,6 +122,7 @@
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0">
+            <button class="btn btn-primary" id="printPlaceBt">打印信息</button>
             <button class="btn btn-primary" id="editPlaceBt">修改基本信息</button>
             <button class="btn btn-primary" id="stopPlaceBt">停役</button>
             <button class="btn btn-primary" id="deletePlaceBt">删除</button>
@@ -212,7 +215,16 @@
     requirejs(['slimScroll', 'utils','services'],function (slimScroll, utils, services) {
         console.log('hello stock place');
         var consts = {
-            types : {"M" : "原材料仓位", "P" : "成品仓位", "R" : "废品仓位", "D" : "模具仓位"}//类型 成品|原材料
+           // types : {"M" : "原材料仓位", "P" : "成品仓位", "R" : "废品仓位", "D" : "模具仓位"}//类型 成品|原材料
+            types : [{
+                code : 'M', name : '原材料仓位', icon : 'fa-circle-o-notch'
+            },{
+                code : 'P', name : '废品仓位', icon : 'fa-barcode'
+            },{
+                code : 'D', name : '模具仓位', icon : 'fa-wrench'
+            },{
+                code : 'R', name : '废品仓位', icon : 'fa-recycle'
+            }]
             , source : {SALE : "销售", REFUNDS : "退货", PROD :"生产", BUY : "采购", INIT : "初始化"}//来源
             , oQueryParam : {}//查询参数
             , currentPlace : {}//当前仓位
@@ -264,6 +276,12 @@
                 });
         }
 
+        function findPlaceType(code) {
+            return consts.types.find(function(item){
+                return item.code === code;
+            });
+        }
+
         /**
          * 初始化右侧
          */
@@ -281,23 +299,18 @@
                 if(convert === 'convertStatus'){
                     if ('STOP' === value) {
                         value = '<span class="label label-danger">停役</span>';
-                        $('#stopPlaceBt,#editPlaceBt').hide();
+                        $('#stopPlaceBt, #editPlaceBt, #printPlaceBt').hide();
                     } else if ('ON' === value) {
                         value = '<span class="label label-success">在役</span>';
-                        $('#stopPlaceBt,#editPlaceBt').show();
+                        $('#stopPlaceBt, #editPlaceBt, #printPlaceBt').show();
                     }
                 } else if(convert === 'convertType'){
-                    if ('M' === value) {
-                        value = '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
+                    var obj = findPlaceType(value);
+                    value = '<span class="label label-info fa ' + obj.icon + '">' + obj.name + '</span>';
+
+                    if(obj.code === 'M'){
                         $('#stockRemainSpan').hide();
-                    } else if ('P' === value) {
-                        value =  '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
-                        $('#stockRemainSpan').show();
-                    } else if ('R' === value){
-                        value =  '<span class="label label-info fa fa-recycle"> 废品仓位</span>';
-                        $('#stockRemainSpan').show();
-                    } else if ('D' === value){
-                        value =  '<span class="label label-info fa fa-wrench"> 模具仓位</span>';
+                    } else {
                         $('#stockRemainSpan').show();
                     }
                 }
@@ -395,11 +408,8 @@
             function convertType(array){
                 var _value = array.length ? array[0] : '';
                 if(!_value) return '';
-                if ('M' === _value) return '<span class="label label-info fa fa-circle-o-notch"> 原材料仓位</span>';
-                if ('P' === _value) return '<span class="label label-info fa fa-barcode"> 成品仓位</span>';
-                if ('R' === _value) return '<span class="label label-info fa fa-recycle"> 废品仓位</span>';
-                if ('D' === _value) return '<span class="label label-info fa fa-wrench"> 模具仓位</span>';
-                return '';
+                var obj = findPlaceType(_value);
+                return !obj ? '' : '<span class="label label-info fa '+ obj.icon +'">' + obj.name +'</span>';
             }
 
             function convertStatus(array) {
@@ -505,6 +515,32 @@
                     console.log('保存原材料仓位失败', reason);
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
+            });
+
+            //打印仓位按钮
+            $('#printPlaceBt').unbind('click').click(function () {
+                //条形码模版
+                var $printTemplate = $('#print_to_wares');
+                var $clone = $printTemplate.clone();
+                //条形码
+                $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + consts.currentPlace.barCode);
+
+                //基本信息 2号供应商【铁丝-铁丝-规格描述-8】
+                var typeCode = consts.currentPlace.stockPlaceType;
+                var oType = findPlaceType(typeCode);
+                var splits = consts.currentPlace.materialName.split('【');
+                var supplierName = splits.length === 2 ? splits[0] : '';
+                var materialName = splits.length === 2 ? splits[1].substr(0, splits[1].length - 1) : splits[0];
+
+                $clone.find('label[data-name="label_1"]').html('仓位类型：');
+                $clone.find('span[data-name="content_1"]').html(oType.name);
+                if(!!supplierName){
+                    $clone.find('label[data-name="label_2"]').html('供应商：');
+                    $clone.find('span[data-name="content_2"]').html(supplierName);
+                }
+                $clone.find('label[data-name="label_3"]').html('可存货物：');
+                $clone.find('span[data-name="content_3"]').html(materialName);
+                $clone.show().print();
             });
 
             //更新仓位按钮

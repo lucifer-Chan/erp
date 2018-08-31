@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
+import org.krysalis.barcode4j.impl.AbstractBarcodeBean;
+import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
@@ -57,22 +59,20 @@ public class BarCodeUtil {
         if (StringUtils.isEmpty(barcode) || out == null) {
             return;
         }
+        AbstractBarcodeBean bean ;
 
-        Code39Bean bean = new Code39Bean();
+        if(barcode.length() < BarCodeConstants.WARES_BAR_CODE_ASS_LENGTH){
+            bean = code39Bean();
+        } else {
+            bean = code128Bean();
+        }
 
         // 精细度
         final int dpi = 500;
-        // module宽度
-        final double moduleWidth = UnitConv.in2mm(1.0f / 150);
-
-        // 配置对象
-        bean.setModuleWidth(moduleWidth);
-        bean.setWideFactor(3);
         bean.doQuietZone(false);
 
         String format = "image/png";
         try {
-
             // 输出到流
             BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, format, dpi,
                     BufferedImage.TYPE_BYTE_BINARY, false, 0);
@@ -84,6 +84,22 @@ public class BarCodeUtil {
             throw new RuntimeException(e);
         }
     }
+
+    private static AbstractBarcodeBean code39Bean(){
+        Code39Bean bean = new Code39Bean();
+        final double moduleWidth = UnitConv.in2mm(1.0f / 150);
+        // 配置对象
+        bean.setModuleWidth(moduleWidth);
+        bean.setWideFactor(3);
+        return bean;
+    }
+
+    private static AbstractBarcodeBean code128Bean(){
+        return new Code128Bean();
+    }
+
+
+
 
     public static void main(String[] args) {
         String msg = "PTD0000000096";

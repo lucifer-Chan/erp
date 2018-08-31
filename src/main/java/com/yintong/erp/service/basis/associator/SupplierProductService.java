@@ -175,7 +175,7 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
                     Long productId = ass.getEndProductId();
                     ErpBaseEndProduct product = productRepository.getOne(productId);
                     TreeNode treeNode = new TreeNode(ass.getEndProductId() + "", product.getDescription(), parentCode, false)
-                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
+                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"));
                     return treeNode
                             .setFullName(treeNode.getName())
                             .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");

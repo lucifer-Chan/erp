@@ -2,13 +2,19 @@ package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseLookupRepository;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
+import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
+import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
+import com.yintong.erp.domain.basis.associator.ErpModelSupplierRepository;
 import com.yintong.erp.service.basis.CategoryService;
 import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.bar.BarCodeUtil;
 import com.yintong.erp.utils.base.BaseResult;
+import com.yintong.erp.utils.common.Constants;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +39,10 @@ public class BasisCommonController {
     @Autowired ErpBaseLookupRepository lookupRepository;
 
     @Autowired SupplierRawMaterialService supplierRawMaterialService;
+
+    @Autowired ErpEndProductSupplierRepository productSupplierRepository;
+
+    @Autowired ErpModelSupplierRepository mouldSupplierRepository;
 
     /**
      * 类别树
@@ -93,6 +103,27 @@ public class BasisCommonController {
         //将图片输出给浏览器
         BarCodeUtil.generate(code, response.getOutputStream());
     }
+
+    /**
+     * 根据货物类型和关联id查找
+     * @param waresType
+     * @param waresAssId
+     * @return
+     */
+    @GetMapping("barcode/{waresType}/{waresAssId}")
+    public BaseResult findBarCode(@PathVariable Constants.WaresType waresType, @PathVariable Long waresAssId){
+        if(Constants.WaresType.P == waresType){
+            ErpEndProductSupplier ass = productSupplierRepository.findById(waresAssId).orElse(null);
+            Assert.notNull(ass, "未找到成品和供应商的关联[" + waresAssId + "]");
+            return new BaseResult().put("barcode", ass.getBarCode());
+        } else if(Constants.WaresType.D == waresType){
+            ErpModelSupplier ass = mouldSupplierRepository.findById(waresAssId).orElse(null);
+            Assert.notNull(ass, "未找到模具和供应商的关联[" + waresAssId + "]");
+            return new BaseResult().put("barcode", ass.getBarCode());
+        }
+        throw new IllegalArgumentException("货物类型不合法");
+    }
+
 
     /**
      * 获取所有供应商和成品的关联

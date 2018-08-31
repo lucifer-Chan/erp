@@ -30,6 +30,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.util.StringUtils;
 
+import static com.yintong.erp.utils.bar.BarCodeConstants.*;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
+
 /**
  * Created by jianqiang on 2018/6/16.
  * 供应商原材料关联的服务
@@ -69,15 +72,23 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
     }
 
     /**
-     * 根据barcode查找供应商和原材料的关联
-     * @param barcode
+     * 根据仓位的barCode查找供应商和原材料的关联
+     * @param placeBarcode
      * @return
      */
-    public ErpRawMaterialSupplier findByBarcode(String barcode){
-        ErpRawMaterialSupplier association = rawMaterialSupplierRepository.findByBarCode(barcode).orElse(null);
-        Assert.notNull(association, "未找到成品和供应商的关联");
+    public ErpRawMaterialSupplier findByPlaceBarcode(String placeBarcode){
+        Assert.isTrue(WARES_BAR_CODE_ASS_LENGTH == placeBarcode.length() && placeBarcode.startsWith(S000.name()), "该条形码["+ placeBarcode +"]非原材料仓位条码");
+
+        Long id = Long.parseLong(placeBarcode.substring(WARES_BAR_CODE_TPL_LENGTH + 1, WARES_BAR_CODE_ASS_LENGTH));
+        ErpRawMaterialSupplier association = rawMaterialSupplierRepository.findById(id).orElse(null);
+        Assert.notNull(association, "未找到原材料和供应商的关联");
         return association;
     }
+//    public ErpRawMaterialSupplier findByBarcode(String barcode){
+//        ErpRawMaterialSupplier association = rawMaterialSupplierRepository.findByBarCode(barcode).orElse(null);
+//        Assert.notNull(association, "未找到成品和供应商的关联");
+//        return association;
+//    }
 
     /**
      * 一个关联后的原材料的描述
@@ -237,7 +248,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
                     Long rawMaterId = ass.getRawMaterId();
                     ErpBaseRawMaterial rawMaterial = rawMaterialRepository.getOne(rawMaterId);
                     TreeNode treeNode = new TreeNode(ass.getRawMaterId() + "", rawMaterial.getDescription(), parentCode, false)
-                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
+                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"));
                     return treeNode
                             .setFullName(treeNode.getName())
                             .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");

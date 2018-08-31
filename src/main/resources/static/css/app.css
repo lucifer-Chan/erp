@@ -439,6 +439,12 @@
     max-width: 180px;
 }
 
+.sidebar-operations{
+    margin-top: -38px;
+    padding-right: 5px;
+    float: right;
+}
+
 /* ËÑË÷ */
 .sidebar-search,
 .company-search {

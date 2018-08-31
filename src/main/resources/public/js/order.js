@@ -98,7 +98,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
         var css = 'label-default';
         if ('STATUS_002' === code || 'STATUS_049' === code) css = 'label-warning';
         if ('STATUS_003' === code || 'STATUS_005' === code) css = 'label-success';
-        if ('STATUS_004' === code || 'STATUS_006' === code || 'STATUS_008' === code) css = 'label-danger';
+        if ('STATUS_004' === code || 'STATUS_006' === code || 'STATUS_061' === code || 'STATUS_008' === code) css = 'label-danger';
         if ('STATUS_007' === code) css = 'label-primary';
         return '<span class="label '+ css +'">'+ consts.status[code] +'</span>';
     }
@@ -552,7 +552,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 }
                 var clone = $itemTemplate.clone();
                 $(clone).find('.panel-title').text(item.productName);
-                $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._update, ._delete').attr('data-value', item.id);
+                $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._print, ._update, ._delete').attr('data-value', item.id);
                 var body = $(clone).find('.panel-body');
                 body.attr('data-value', (item.id + 'Info'));
                 if(item.statusCode !== 'STATUS_049'){
@@ -600,7 +600,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
         }
 
         //明细操作按钮
-        $('#rightInfoPage').find('._update, ._delete').click(function () {
+        $('#rightInfoPage').find('._print, ._update, ._delete').click(function () {
             var $bt = $(this);
             var item = consts.itemCache[$bt.attr('data-value')];
             if(!item) return;
@@ -624,6 +624,18 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                             layer.msg(reason.caught ? reason.message : '请求失败！');
                         });
                 });
+            } else if($bt.hasClass('_print')){
+                //条形码模版
+                var $printTemplate = $('#print_to_wares');
+                console.log(consts.currentOrderItem);
+                var product = consts.currentOrderItem.product;
+                var $clone = $printTemplate.clone();
+                //条形码
+                $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + product.barCode);
+                //基本信息
+                $clone.find('label[data-name="label_1"]').html('名称：');
+                $clone.find('span[data-name="content_1"]').html(product.description);
+                $clone.show().print();
             }
         })
     }

@@ -44,15 +44,12 @@ public class ProductBomService implements OnDeleteProductValidator, OnDeleteRawM
 
     @Override
     public void onDeleteMaterial(Long rawMaterialId) {
-
-        List<String> productNameList = productBomRepository.findByMaterialId(rawMaterialId)
+        String productNames = productBomRepository.findByMaterialId(rawMaterialId)
                 .stream()
                 .map(ass -> productRepository.findById(ass.getProductId()).orElse(null))
                 .filter(Objects::nonNull)
                 .map(ErpBaseEndProduct::getEndProductName)
-                .collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(productNameList)) return;
-        String productNames = StringUtils.collectionToCommaDelimitedString(productNameList);
+                .collect(Collectors.joining(","));
         Assert.isTrue(StringUtils.isEmpty(productNames),
                 "请先删除该原材料在成品[" + productNames +"]中物料清单信息。");
     }

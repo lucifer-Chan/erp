@@ -171,7 +171,7 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
                     Long modelId = ass.getModelId();
                     ErpBaseModelTool model = modelToolRepository.getOne(modelId);
                     TreeNode treeNode = new TreeNode(ass.getModelId() + "", model.getDescription(), parentCode, false)
-                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum"));
+                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"));
                     return treeNode
                             .setFullName(treeNode.getName())
                             .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");

@@ -34,6 +34,21 @@ public class ErpPurchaseOrderOptLog extends BaseEntity {
     @Column(columnDefinition = "varchar(20) comment '当前状态编码'")
     private String statusCode;
 
+    @Column(columnDefinition = "bigint(20) comment '货物id-模版'")
+    private Long waresId;
+
+    @Column(columnDefinition = "bigint(20) comment '货物id-关联id'")
+    private Long waresAssId;
+
+    @Column(columnDefinition = "varchar(20) DEFAULT '' comment '货物类型-原材料|成品|模具->M|P|D'")
+    private String waresType;
+
+    @Column(columnDefinition = "varchar(200) DEFAULT '' comment '货物名称'")
+    private String waresName;
+
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物条形码-可为空'")
+    private String waresBarcode;
+
     @Column(columnDefinition = "varchar(20) DEFAULT 'order' comment '类型：order-订单操作，item-明细修改， status-状态变更'")
     private String optType;
 }

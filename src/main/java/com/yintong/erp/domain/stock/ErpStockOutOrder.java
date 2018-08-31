@@ -26,8 +26,9 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.O000;
 @Entity
 @BarCode(prefix = O000)
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class ErpStockOutOrder extends BaseEntityWithBarCode implements StockPlaceFinder{
-    @Id @GeneratedValue
+public class ErpStockOutOrder extends BaseEntityWithBarCode implements StockPlaceFinder {
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Column(columnDefinition = "varchar(20) DEFAULT '' comment '来源或目的[销售|生产]'")
@@ -59,48 +60,14 @@ public class ErpStockOutOrder extends BaseEntityWithBarCode implements StockPlac
 
     /**
      * 获取仓位名称，逗号隔开 - 出库时便于查找
+     *
      * @return
      */
-    public String getPlaceNames(){
+    public String getPlaceNames() {
         if(StringUtils.hasText(placeNames)) return placeNames;
 
         List<ErpStockPlace> places = this.getPlaces(productIds, materialIds);
 
-        return this.placeNames = places.isEmpty() ? "" :
-                StringUtils.collectionToCommaDelimitedString(
-                        places.stream().map(ErpStockPlace::getName).collect(Collectors.toList())
-                );
+        return this.placeNames = places.isEmpty() ? "" : places.stream().map(ErpStockPlace::getName).collect(Collectors.joining(","));
     }
-
-//    public String getPlaceNames(){
-//        if(StringUtils.hasText(placeNames)) return placeNames;
-//
-//        if(StringUtils.isEmpty(productIds) && StringUtils.isEmpty(materialIds)){
-//            return this.placeNames = "";
-//        }
-//        //成品出库单
-//        if(StringUtils.hasText(productIds)){
-//            List<Long> _productIds = Arrays.stream(productIds.split(",")).map(Long::parseLong).collect(Collectors.toList());
-//            //仓位id列表
-//            List<Long> placeIds = SpringUtil.getBean(ErpStockOptLogRepository.class)
-//                    .findByProductIdIn(_productIds).stream().map(ErpStockOptLog::getStockPlaceId).collect(Collectors.toList());
-//            return this.placeNames = CollectionUtils.isEmpty(placeIds) ? "" :
-//                    StringUtils.collectionToCommaDelimitedString(
-//                            SpringUtil.getBean(ErpStockPlaceRepository.class).findByIdIn(placeIds).stream()
-//                                    .map(ErpStockPlace::getName)
-//                                    .collect(Collectors.toList())
-//                    );
-//        }
-//        //原材料出库单
-//        if(StringUtils.hasText(materialIds)){
-//            List<Long> _materialIds = Arrays.stream(materialIds.split(",")).map(Long::parseLong).collect(Collectors.toList());
-//
-//            return this.placeNames = StringUtils.collectionToCommaDelimitedString(
-//                    SpringUtil.getBean(ErpStockPlaceRepository.class).findByMaterialSupplierAssIdIn(_materialIds).stream()
-//                            .map(ErpStockPlace::getName)
-//                            .collect(Collectors.toList())
-//            );
-//        }
-//        return this.placeNames = "";
-//    }
 }

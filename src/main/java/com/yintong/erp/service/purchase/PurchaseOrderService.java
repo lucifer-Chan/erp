@@ -49,12 +49,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.common.Constants.*;
-import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.STATUS_001;
-import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.STATUS_002;
-import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.STATUS_003;
-import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.STATUS_004;
-import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.STATUS_007;
-import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.STATUS_008;
+import static com.yintong.erp.utils.common.Constants.PurchaseOrderStatus.*;
 import static com.yintong.erp.utils.common.Constants.StockHolder.BUY;
 import static com.yintong.erp.utils.common.Constants.WaresType;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
@@ -128,7 +123,7 @@ public class PurchaseOrderService implements StockIn4Holder,
         List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
                 .stream().filter(item -> item.getInNum() < item.getNum())
                 .collect(Collectors.toList());
-        Assert.notEmpty(items, "无可出库的明细");
+        Assert.notEmpty(items, "无可入库的明细");
         return order;
     }
 
@@ -323,7 +318,14 @@ public class PurchaseOrderService implements StockIn4Holder,
         Double totalMoney = oldOrder.getMoney() + item.getMoney();
         oldOrder.setMoney(totalMoney);
         orderRepository.save(oldOrder);
-        orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(item.getStatusCode()).content("新增明细：" + item.getWaresName() + ", 总金额变化为：¥" + totalMoney).optType("item").orderId(item.getOrderId()).build());
+        orderOptLogRepository.save(
+                ErpPurchaseOrderOptLog.builder()
+                        .statusCode(item.getStatusCode())
+                        .content("新增明细：" + item.getWaresName() + ", 总金额变化为：¥" + totalMoney)
+                        .optType("item")
+                        .orderId(item.getOrderId())
+                    .build()
+        );
         return ret;
     }
 
@@ -357,7 +359,14 @@ public class PurchaseOrderService implements StockIn4Holder,
         if(!item.getWaresId().equals(oldItem.getWaresId())){
             content += ", 货物调整为：" + item.getWaresName();
         }
-        orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(item.getStatusCode()).content(content).optType("item").orderId(item.getOrderId()).build());
+        orderOptLogRepository.save(
+                ErpPurchaseOrderOptLog.builder()
+                        .statusCode(item.getStatusCode())
+                        .content(content)
+                        .optType("item")
+                        .orderId(item.getOrderId()).
+                    build()
+        );
         item.copyBase(oldItem);
         return orderItemRepository.save(item);
     }
@@ -382,7 +391,13 @@ public class PurchaseOrderService implements StockIn4Holder,
         oldOrder.setMoney(totalMoney);
         orderRepository.save(oldOrder);
         orderItemRepository.deleteById(orderItemId);
-        orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(oldOrder.getStatusCode()).content("删除明细["+ oldItem.getWaresName() + "], 总金额变化为：¥" + totalMoney).optType("item").orderId(orderId).build());
+        orderOptLogRepository.save(
+                ErpPurchaseOrderOptLog.builder()
+                        .statusCode(oldOrder.getStatusCode())
+                        .content("删除明细["+ oldItem.getWaresName() + "], 总金额变化为：¥" + totalMoney)
+                        .optType("item").orderId(orderId)
+                    .build()
+        );
     }
 
     /**
@@ -403,18 +418,82 @@ public class PurchaseOrderService implements StockIn4Holder,
         return  orderItemRepository.findByOrderIdOrderByMoneyDesc(orderId);
     }
 
-
-
+    /**
+     * 采购入库 成品|原材料|模具
+     * @param holder
+     * @param stockEntity
+     * @return
+     */
     @Override
     public boolean matchesIn(StockHolder holder, StockEntity stockEntity) {
-//        return BUY == holder;
-        //TODO
-        return false;
+        WaresType waresType = stockEntity.waresType();
+        return BUY == holder && Arrays.asList(WaresType.P, WaresType.M, WaresType.D).contains(waresType);
     }
 
+    /**
+     * 对订单明细进行入库：采购入库
+     * @param holder
+     * @param purchaseOrderId - 采购单id
+     * @param stockEntity
+     * @param inNum 入库数量
+     */
     @Override
-    public void stockIn(StockHolder holder, Long holderId, StockEntity stockEntity, double num) {
-        //TODO
+    @Transactional
+    public void stockIn(StockHolder holder, Long purchaseOrderId, StockEntity stockEntity, double inNum) {
+
+        //1-检查订单
+        ErpPurchaseOrder order = orderRepository.findById(purchaseOrderId).orElse(null);
+        Assert.notNull(order, "未找到采购订单[" + purchaseOrderId + "]");
+        Assert.isTrue( 1 == order.getPreStockIn(), "尚未打印入库单");
+
+        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdAndWaresAssIdAndWaresType(purchaseOrderId, stockEntity.realityId(), stockEntity.waresType().name());
+
+        ErpPurchaseOrderItem item = CommonUtil.single(items, "采购订单[" + purchaseOrderId + "存在脏数据");
+        if(Objects.isNull(item)) return;
+
+        Assert.isTrue(!STATUS_005.name().equals(item.getStatusCode()), item.getWaresName() + "已完成入库");
+        PurchaseOrderStatus status = STATUS_049;//入库中
+        double currentInNum = inNum + item.getInNum();
+        String content = item.getWaresName() + " 完成入库,入库数量【" + currentInNum + "/" + item.getNum() + "】";
+        if(currentInNum >= item.getNum()){
+            status = STATUS_005;
+            content = item.getWaresName() + " 全部完成入库,入库数量【" + currentInNum + "/" + item.getNum() + "】";
+        }
+        //2-保存订单明细
+        item.setStatusCode(status.name());
+        item.setInNum(currentInNum);
+        orderItemRepository.save(item);
+        //3-明细日志
+        orderOptLogRepository.save(
+                ErpPurchaseOrderOptLog.builder()
+                        .statusCode(status.name())
+                        .content(content)
+                        .optType("item")
+                        .orderId(purchaseOrderId)
+                        .waresId(stockEntity.templateId())
+                        .waresAssId(stockEntity.realityId())
+                        .waresType(stockEntity.waresType().name())
+                        .waresBarcode(stockEntity.entity().getBarCode())
+                    .build()
+        );
+
+        //4 未完成入库的订单明细
+        List<ErpPurchaseOrderItem> unOutItems = orderItemRepository.findByOrderIdAndStatusCodeNot(purchaseOrderId, STATUS_005.name());
+        if(CollectionUtils.isEmpty(unOutItems)){
+            //全部入库成功->修改订单状态为：已入库
+            orderRepository.save(order.setStatusCode(STATUS_005));
+            orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(STATUS_005.name()).content(STATUS_005.toLog()).optType("status").orderId(purchaseOrderId).build());
+            //入库单-完成
+            ErpStockInOrder inOrder = CommonUtil.single(stockInOrderRepository.findByHolderAndHolderId(BUY.name(), purchaseOrderId));
+            if(Objects.nonNull(inOrder)){
+                inOrder.setComplete(1);
+                stockInOrderRepository.save(inOrder);
+            }
+        } else if(!STATUS_049.name().equals(order.getStatusCode())){
+            //存在未完成入库的明细，且自身状态不为：入库中
+            orderRepository.save(order.setStatusCode(STATUS_049));
+            orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(STATUS_049.name()).content(STATUS_049.toLog()).optType("status").orderId(purchaseOrderId).build());
+        }
     }
 
     @Override
@@ -430,7 +509,6 @@ public class PurchaseOrderService implements StockIn4Holder,
     @Override
     public void onDeleteSupplierRawMaterial(Long id) {
         onDeleteAss(id, WaresType.M);
-
     }
 
     /**
@@ -493,23 +571,18 @@ public class PurchaseOrderService implements StockIn4Holder,
         return new ArrayList<>();
     }
 
-
-
-
-
     /**
      * 其他地方删除关联时的校验
      * @param assId
      * @param type
      */
     private void onDeleteAss(Long assId, WaresType type){
-        List<String> codes =  orderItemRepository.findByWaresAssIdAndWaresType(assId, type.name())
-                .stream().map(ErpPurchaseOrderItem::getOrderCode).collect(Collectors.toList());
-        if(!CollectionUtils.isEmpty(codes)){
-            throw new IllegalArgumentException("请先删除采购单[" + StringUtils.collectionToCommaDelimitedString(codes) + "]对应的明细");
+        String codes =  orderItemRepository.findByWaresAssIdAndWaresType(assId, type.name())
+                .stream().map(ErpPurchaseOrderItem::getOrderCode).collect(Collectors.joining(","));
+        if(StringUtils.hasText(codes)){
+            throw new IllegalArgumentException("请先删除采购单[" + codes + "]对应的明细");
         }
     }
-
 
     /**
      * 采购订单查询入参dto
@@ -547,66 +620,18 @@ public class PurchaseOrderService implements StockIn4Holder,
             };
         }
 
-        List<Long> ids = orderItems.stream().map(ErpPurchaseOrderItem::getWaresAssId).filter(Objects::nonNull).collect(Collectors.toList());
-        List<String> names = orderItems.stream().map(ErpPurchaseOrderItem::getWaresName).filter(Objects::nonNull).collect(Collectors.toList());
-
+        String ids = orderItems.stream().map(ErpPurchaseOrderItem::getWaresAssId).filter(Objects::nonNull).map(Object::toString).collect(Collectors.joining(","));
+        String names = orderItems.stream().map(ErpPurchaseOrderItem::getWaresName).filter(StringUtils::hasText).collect(Collectors.joining(","));
         return new KeyValue<String, String>() {
             @Override
             public String getKey() {
-                return StringUtils.collectionToCommaDelimitedString(ids);
+                return ids;
             }
 
             @Override
             public String getValue() {
-                return StringUtils.collectionToCommaDelimitedString(names);
+                return names;
             }
         };
     }
-
-    //@Transactional
-    //    public ErpPurchaseOrder preStockIn(Long orderId){
-    //        ErpPurchaseOrder order = orderRepository.findById(orderId).orElse(null);
-    //        Assert.notNull(order, "未找到采购订单[" + orderId + "]");
-    //        order.setPreStockIn(1);
-    //        //入库单
-    //        ErpStockInOrder inOrder = CommonUtil.single(stockInOrderRepository.findByHolderAndHolderId(BUY.name(), orderId), "采购订单[" + orderId + "]对应的入库单存在脏数据");
-    //        if(Objects.isNull(inOrder)){
-    //            Map<WaresType, List<ErpPurchaseOrderItem>> orderItemsMap =
-    //                    orderItemRepository.findByOrderId(orderId).stream().collect(Collectors.groupingBy(item -> WaresType.valueOf(item.getWaresType())));
-    //            //成品
-    //            List<ErpPurchaseOrderItem> productItems = orderItemsMap.getOrDefault(WaresType.P, new ArrayList<>());
-    //            //原材料
-    //            List<ErpPurchaseOrderItem> materialItems = orderItemsMap.getOrDefault(WaresType.M, new ArrayList<>());
-    //            //模具
-    //            List<ErpPurchaseOrderItem> mouldItems = orderItemsMap.getOrDefault(WaresType.D, new ArrayList<>());
-    //
-    //            //成品 id & name
-    //            List<Long> productIds = productItems.stream().map(ErpPurchaseOrderItem::getWaresAssId).filter(Objects::nonNull).collect(Collectors.toList());
-    //            List<String> productNames = productItems.stream().map(ErpPurchaseOrderItem::getWaresName).filter(Objects::nonNull).collect(Collectors.toList());
-    //
-    //            //原材料 id & name
-    //            List<Long> materialIds = materialItems.stream().map(ErpPurchaseOrderItem::getWaresAssId).filter(Objects::nonNull).collect(Collectors.toList());
-    //            List<String> materialNames = materialItems.stream().map(ErpPurchaseOrderItem::getWaresName).filter(Objects::nonNull).collect(Collectors.toList());
-    //
-    //            //模具 id & name
-    //            List<Long> mouldIds = mouldItems.stream().map(ErpPurchaseOrderItem::getWaresAssId).filter(Objects::nonNull).collect(Collectors.toList());
-    //            List<String> mouldNames = mouldItems.stream().map(ErpPurchaseOrderItem::getWaresName).filter(Objects::nonNull).collect(Collectors.toList());
-    //
-    //            stockInOrderRepository.save(
-    //                    ErpStockInOrder.builder()
-    //                            .holder(BUY.name())
-    //                            .holderId(orderId)
-    //                            .holderBarCode(order.getBarCode())
-    //                            .productIds(StringUtils.collectionToCommaDelimitedString(productIds))
-    //                            .productNames(StringUtils.collectionToCommaDelimitedString(productNames))
-    //                            .materialIds(StringUtils.collectionToCommaDelimitedString(materialIds))
-    //                            .materialNames(StringUtils.collectionToCommaDelimitedString(materialNames))
-    //                            .mouldIds(StringUtils.collectionToCommaDelimitedString(mouldIds))
-    //                            .mouldNames(StringUtils.collectionToCommaDelimitedString(mouldNames))
-    //                        .build()
-    //            );
-    //        }
-    //
-    //        return orderRepository.save(order);
-    //    }
 }

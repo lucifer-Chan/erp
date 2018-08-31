@@ -19,6 +19,12 @@ public interface ErpStockOptLogRepository extends JpaRepository<ErpStockOptLog, 
      */
     List<ErpStockOptLog> findByProductIdOrderByCreatedAtDesc(Long productId);
 
+    /**
+     * 根据模具id查询
+     * @param mouldId
+     * @return
+     */
+    List<ErpStockOptLog> findByMouldIdOrderByCreatedAtDesc(Long mouldId);
 
     List<ErpStockOptLog> findByProductIdIn(List<Long> productIds);
 }

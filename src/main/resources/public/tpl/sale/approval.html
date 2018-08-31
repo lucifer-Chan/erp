@@ -6,8 +6,7 @@
                 <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、描述、客户名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
             <ul class="nav nav-pills">
-                <li role="presentation" class="dropdown" id="statusCollection">
-                </li>
+                <li role="presentation" class="dropdown" id="statusCollection"></li>
             </ul>
         </div>
         <div class="pd23 pd43">
@@ -165,10 +164,7 @@
                 <h3 class="panel-title" style="font-size: 13px"></h3>
                 <div class="tools">
                     <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
-                    <!--
-                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editSaleOrderItem">修改</button>
-                    <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
-                    -->
+                    <!--<button type="button" class="btn btn-info btn-xs _print">打印条形码</button>-->
                 </div>
             </div>
             <div class="panel-body" data-value="">
@@ -219,7 +215,7 @@
                 //列表相关
                 dataTable : {
                     id : 'dataTables'//列表id
-                    , codes : ['STATUS_002','STATUS_003','STATUS_049','STATUS_005','STATUS_006','STATUS_007', 'STATUS_008'] //搜索供选的状态
+                    , codes : ['STATUS_002','STATUS_003','STATUS_049','STATUS_005','STATUS_006', 'STATUS_061', 'STATUS_007', 'STATUS_008'] //搜索供选的状态
                 }
                 , oQueryParam : {}//查询参数
                 , initCustomers : false//是否初始化客户列表
@@ -233,6 +229,7 @@
                 'STATUS_005' : '已出库',
                 'STATUS_049' : '出库中',
                 'STATUS_006' : '客户退货',
+                'STATUS_061' : '完成退货',
                 'STATUS_007' : '已完成',
                 'STATUS_008' : '作废'
             }

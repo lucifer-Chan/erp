@@ -10,6 +10,8 @@
                 <li role="presentation" class="dropdown" id="rank">
                 </li>
             </ul>
+        </div>
+        <div class="sidebar-operations">
             <button class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editSupplier">新增供应商</button>
         </div>
         <div class="pd23 pd43">
@@ -265,6 +267,7 @@
                                             预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
                                             &nbsp&nbsp&nbsp&nbsp
                                             预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            <button class="btn btn-info btn-xs productPrintBt" style="margin-left: 10px;margin-bottom: 5px;">打印条形码</button>
                                             <button class="btn btn-success btn-xs alertSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
                                             <button class="btn btn-danger btn-xs alertDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
                                         </div>
@@ -291,6 +294,7 @@
                                             预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
                                             &nbsp&nbsp&nbsp&nbsp
                                             预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
+                                            <button class="btn btn-info btn-xs modelPrintBt" style="margin-left: 10px;margin-bottom: 5px;">打印条形码</button>
                                             <button class="btn btn-success btn-xs alertModelSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
                                             <button class="btn btn-danger btn-xs alertModelDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
                                         </div>
@@ -459,6 +463,7 @@
             , $productAssModal : $('#_productAss')//成品关联Modal
             , $rawMaterialAssModal : $('#_rawMaterialAss')//原材料关联Modal
             , $modelAssModal : $('#_modelAss')//模具关联Modal
+            , $printTemplate : $('#print_to_wares')//条形码打印
             , targetProductTree : null
             , edProductTree : null
             , targetRawMaterialTree : null
@@ -575,7 +580,6 @@
             );
         }
 
-        //TODO
         var treeSetting = {
             data: {
                 simpleData: {
@@ -615,6 +619,19 @@
             }
         };
 
+        var printWares = function (treeNode) {
+            console.log(treeNode.source);
+            var $clone = consts.$printTemplate.clone();
+            //条形码
+            $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + treeNode.source.barCode);
+            //基本信息
+            $clone.find('label[data-name="label_1"]').html('供应商：');
+            $clone.find('span[data-name="content_1"]').html(consts.supplier.supplierName);
+            $clone.find('label[data-name="label_2"]').html('名称：');
+            $clone.find('span[data-name="content_2"]').html(treeNode.fullName);
+            $clone.show().print();
+        };
+
         var targetTreeSetting = $.extend({}, treeSetting, {
             edit: {
                 enable: true,
@@ -634,8 +651,9 @@
                     alertLower.val(treeNode.source.alertLower);
                     alertUpper.val(treeNode.source.alertUpper);
                     if(treeNode.source){
-                        editDiv.show().find('.alertSaveBt, .alertDeleteBt')
-                            .attr('data-id', treeNode.code).unbind('click');
+                        editDiv.show().find('.alertSaveBt, .alertDeleteBt, .productPrintBt').attr('data-id', treeNode.code).unbind('click');
+                        //打印 条形码
+                        editDiv.find('.productPrintBt').click(function () { printWares(treeNode);});
                         //保存上下限
                         editDiv.find('.alertSaveBt')
                             .click(function () {
@@ -705,8 +723,7 @@
                     alertLower.val(treeNode.source.alertLower);
                     alertUpper.val(treeNode.source.alertUpper);
                     if(treeNode.source){
-                        editDiv.show().find('.alertRawmaterialSaveBt, .alertRawmaterialDeleteBt')
-                            .attr('data-id', treeNode.code).unbind('click');
+                        editDiv.show().find('.alertRawmaterialSaveBt, .alertRawmaterialDeleteBt').attr('data-id', treeNode.code).unbind('click');
                         //保存上下限
                         editDiv.find('.alertRawmaterialSaveBt')
                             .click(function () {
@@ -776,8 +793,10 @@
                     alertLower.val(treeNode.source.alertLower);
                     alertUpper.val(treeNode.source.alertUpper);
                     if(treeNode.source){
-                        editDiv.show().find('.alertModelSaveBt, .alertModelDeleteBt')
-                            .attr('data-id', treeNode.code).unbind('click');
+                        editDiv.show().find('.alertModelSaveBt, .alertModelDeleteBt, .modelPrintBt').attr('data-id', treeNode.code).unbind('click');
+                        //打印 条形码
+                        editDiv.find('.modelPrintBt').click(function () { printWares(treeNode);});
+
                         //保存上下限
                         editDiv.find('.alertModelSaveBt')
                             .click(function () {

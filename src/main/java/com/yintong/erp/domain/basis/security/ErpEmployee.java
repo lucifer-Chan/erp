@@ -94,10 +94,8 @@ public class ErpEmployee extends BaseEntityWithBarCode {
         if(Objects.isNull(id)) return "";
         if(StringUtils.hasLength(departmentNames)) return departmentNames;
         try {
-            List<String> names =SpringUtil.getBean(ErpBaseDepartmentRepository.class).findByIdIn(getDepartmentIds()).stream()
-                    .map(ErpBaseDepartment::getName)
-                    .collect(Collectors.toList());
-            departmentNames = StringUtils.collectionToCommaDelimitedString(names);
+            departmentNames = SpringUtil.getBean(ErpBaseDepartmentRepository.class).findByIdIn(getDepartmentIds()).stream()
+                    .map(ErpBaseDepartment::getName).collect(Collectors.joining(","));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -121,10 +119,8 @@ public class ErpEmployee extends BaseEntityWithBarCode {
         if(Objects.isNull(id)) return "";
         if(StringUtils.hasLength(menuNames)) return menuNames;
         try{
-            List<String> names = SpringUtil.getBean(ErpMenuRepository.class).findByCodeInOrderByCode(getMenuCodes()).stream()
-                    .map(ErpMenu::getName)
-                    .collect(Collectors.toList());
-            menuNames = StringUtils.collectionToCommaDelimitedString(names);
+            menuNames = SpringUtil.getBean(ErpMenuRepository.class).findByCodeInOrderByCode(getMenuCodes()).stream()
+                    .map(ErpMenu::getName).collect(Collectors.joining(","));
         } catch (Exception e){
             e.printStackTrace();
         }

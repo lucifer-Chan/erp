@@ -57,6 +57,9 @@ public class ErpStockInOrder extends BaseEntityWithBarCode implements StockPlace
     @Column(columnDefinition = "varchar(1000) comment '入库实际模具名称列表,英文逗号隔开'")
     private String mouldNames;
 
+    @Column(columnDefinition = "int(20) DEFAULT 0 comment '是否完成-0：未完成，1：完成'")
+    private Integer complete;
+
     @Transient
     private List<ErpStockPlace> referencePlaces;
 

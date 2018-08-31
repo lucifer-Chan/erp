@@ -9,6 +9,8 @@
                 <li role="presentation" class="dropdown" id="statusCollection">
                 </li>
             </ul>
+        </div>
+        <div class="sidebar-operations">
             <button type="button" class="btn btn-default btn-ms operation" id="addSaleOrderBt" data-toggle="modal" data-target="#_addSaleOrder">新增销售订单</button>
         </div>
         <div class="pd23 pd43">
@@ -153,7 +155,7 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#_addSaleOrder" id="_addSaleOrderBt">修改订单信息</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSaleOrderItem" id="_addSaleOrderItemBt">新增订单明细</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toSubmitOrderBt">提交审核</button>
-            <button class="btn btn-primary" id="_printToOutBt">打印入库单</button>
+            <button class="btn btn-primary" id="_printToOutBt">打印出库单</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toRefundsOrderBt">客户退货</button>
             <button class="btn btn-primary" data-name="delete" id="_deleteSaleOrderBt">删除</button>
         </span>
@@ -279,7 +281,8 @@
                 <h3 class="panel-title" style="font-size: 13px"></h3>
                 <div class="tools">
                     <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
-                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editSaleOrderItem">修改</button>
+                    <!--<button type="button" class="btn btn-info btn-xs _print">打印条形码</button>-->
+                    <button type="button" class="btn btn-success btn-xs _update" data-toggle="modal" data-target="#_editSaleOrderItem">修改</button>
                     <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
                 </div>
             </div>
@@ -331,7 +334,7 @@
                 //列表相关
                 dataTable : {
                     id : 'dataTables'//列表id
-                    , codes : ['STATUS_001','STATUS_002','STATUS_003','STATUS_004','STATUS_049','STATUS_005','STATUS_006','STATUS_007', 'STATUS_008'] //搜索供选的状态
+                    , codes : ['STATUS_001','STATUS_002','STATUS_003','STATUS_004','STATUS_049','STATUS_005','STATUS_006', 'STATUS_061', 'STATUS_007', 'STATUS_008'] //搜索供选的状态
                 }
                 , oQueryParam : {}//查询参数
                 , initCustomers : true//是否初始化客户列表
@@ -345,6 +348,7 @@
                 'STATUS_049' : '出库中',
                 'STATUS_005' : '已出库',
                 'STATUS_006' : '客户退货',
+                'STATUS_061' : '完成退货',
                 'STATUS_007' : '已完成',
                 'STATUS_008' : '作废'
             }
