@@ -1,5 +1,6 @@
 package com.yintong.erp.web.basis;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseLookupRepository;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
@@ -12,7 +13,6 @@ import com.yintong.erp.utils.bar.BarCodeUtil;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.common.Constants;
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import sun.misc.BASE64Encoder;
 
 /**
  * @author lucifer.chan
@@ -93,16 +94,22 @@ public class BasisCommonController {
 
     /**
      * 获取条形码图像
-     * <img src='/basis/common/barcode/{code}'>
-     * @param response
+     * <img src='...'>
      * @param code
      * @throws IOException
      */
     @GetMapping("barcode/{code}")
-    public void barCode(HttpServletResponse response, @PathVariable String code) throws IOException {
-        //将图片输出给浏览器
-        BarCodeUtil.generate(code, response.getOutputStream());
+    public BaseResult barCode(@PathVariable String code) {
+        ByteOutputStream out = new ByteOutputStream();
+        BarCodeUtil.generate(code, out);
+        String base64 = "data:image/png;base64," + new BASE64Encoder().encode(out.getBytes());
+        return new BaseResult().put("base64", base64);
     }
+//    @GetMapping("barcode/{code}")
+//    public void barCode(HttpServletResponse response, @PathVariable String code) throws IOException {
+//        //将图片输出给浏览器
+//        BarCodeUtil.generate(code, response.getOutputStream());
+//    }
 
     /**
      * 根据货物类型和关联id查找

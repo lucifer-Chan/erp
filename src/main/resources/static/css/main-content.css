@@ -163,9 +163,14 @@ img.print-barcode{
     height:80px;
 }
 
+div.table-print-holder {
+    display: flex;
+}
+
 .table-print {
     border: 1px solid #030303;
     margin-bottom: 0px;
+    margin-right: 5px;
 }
 .table-print>thead>tr{
     border-bottom: 1px solid #030303!important;
@@ -178,6 +183,11 @@ img.print-barcode{
 
 .table-print>tbody>tr>td, .table-print>tbody>tr>th, .table-print>tfoot>tr>td, .table-print>tfoot>tr>th, .table-print>thead>tr>td, .table-print>thead>tr>th{
     border: 1px solid #030303;
+}
+
+.table-print-right {
+    max-width: 1px;
+    padding-top: 10px;
 }
 
 /** end 打印 **/

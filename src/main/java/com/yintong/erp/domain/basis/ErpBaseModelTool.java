@@ -41,6 +41,9 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     @Column(columnDefinition = "varchar(20) comment '模具类别编码'")
     private String modelToolTypeCode;
 
+    @Column(columnDefinition = "varchar(64) comment '单位'")
+    private String unit;
+
     @Column(columnDefinition = "varchar(64) comment '规格描述'")
     private String specification;
 

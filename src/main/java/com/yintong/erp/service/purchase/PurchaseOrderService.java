@@ -56,6 +56,7 @@ import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.in;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
+import static com.yintong.erp.utils.bar.BarCodeConstants.*;
 
 /**
  * @author lucifer.chan
@@ -529,6 +530,10 @@ public class PurchaseOrderService implements StockIn4Holder,
                                         .add("code", ass.getId())
                                         .add("name",product.getDescription())
                                         .add("waresId", product.getId())
+                                        .add("unit", product.getUnit())
+                                        .add("simpleName", product.getEndProductName())
+                                        .add("specification", product.getSpecification())
+                                        .add("category", BAR_CODE_PREFIX.valueOf(product.getEndProductTypeCode()).description())
                                     .build();
                     })
                     .filter(Objects::nonNull)
@@ -546,6 +551,10 @@ public class PurchaseOrderService implements StockIn4Holder,
                                         .add("code", ass.getId())
                                         .add("name", material.getDescription())
                                         .add("waresId", material.getId())
+                                        .add("unit", material.getUnit())
+                                        .add("simpleName", material.getRawName())
+                                        .add("specification", material.getSpecification())
+                                        .add("category", BAR_CODE_PREFIX.valueOf(material.getRawTypeCode()).description())
                                     .build();
                     })
                     .filter(Objects::nonNull)
@@ -563,6 +572,10 @@ public class PurchaseOrderService implements StockIn4Holder,
                                         .add("code", ass.getId())
                                         .add("name", mould.getDescription())
                                         .add("waresId", mould.getId())
+                                        .add("unit", mould.getUnit())
+                                        .add("simpleName", mould.getModelToolName())
+                                        .add("specification", mould.getSpecification())
+                                        .add("category", BAR_CODE_PREFIX.valueOf(mould.getModelToolTypeCode()).description())
                                     .build();
                     })
                     .filter(Objects::nonNull)

@@ -51,6 +51,9 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Column(columnDefinition = "double(16,9) comment '数量'")
     private Double num;
 
+    @Column(columnDefinition = "varchar(64) comment '单位'")
+    private String unit;
+
     @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已入库数量'")
     private Double inNum;
 
@@ -62,6 +65,15 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '描述'")
     private String remark;
+
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物名称-实际名称-冗余数据-打印用'")
+    private String simpleName;
+
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物规格-冗余数据-打印用'")
+    private String specification;
+
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物类别-冗余数据-打印用'")
+    private String category;
 
     /**
      * 必填项校验

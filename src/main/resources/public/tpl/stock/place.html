@@ -522,8 +522,6 @@
                 //条形码模版
                 var $printTemplate = $('#print_to_wares');
                 var $clone = $printTemplate.clone();
-                //条形码
-                $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + consts.currentPlace.barCode);
 
                 //基本信息 2号供应商【铁丝-铁丝-规格描述-8】
                 var typeCode = consts.currentPlace.stockPlaceType;
@@ -540,7 +538,18 @@
                 }
                 $clone.find('label[data-name="label_3"]').html('可存货物：');
                 $clone.find('span[data-name="content_3"]').html(materialName);
-                $clone.show().print();
+
+                //条形码
+                services.common.barcode(consts.currentPlace.barCode)
+                    .then(function (ret) {
+                        $clone.find('.print-barcode').attr('src', ret.base64);
+                    })
+                    .then(function () {
+                        $clone.show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
             });
 
             //更新仓位按钮

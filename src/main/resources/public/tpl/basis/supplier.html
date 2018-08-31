@@ -622,14 +622,23 @@
         var printWares = function (treeNode) {
             console.log(treeNode.source);
             var $clone = consts.$printTemplate.clone();
-            //条形码
-            $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + treeNode.source.barCode);
             //基本信息
             $clone.find('label[data-name="label_1"]').html('供应商：');
             $clone.find('span[data-name="content_1"]').html(consts.supplier.supplierName);
             $clone.find('label[data-name="label_2"]').html('名称：');
             $clone.find('span[data-name="content_2"]').html(treeNode.fullName);
-            $clone.show().print();
+
+            //打印数据构建 - 条形码
+            services.common.barcode(treeNode.source.barCode)
+                .then(function (ret) {
+                    $clone.find('.print-barcode').attr('src', ret.base64);
+                })
+                .then(function () {
+                    $clone.show().print();
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                });
         };
 
         var targetTreeSetting = $.extend({}, treeSetting, {

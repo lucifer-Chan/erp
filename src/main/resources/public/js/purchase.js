@@ -6,7 +6,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
 
     var consts = {};
 
-    var waresData = {};//货物数据 key:{waresType}{assId}, value : {waresId}
+    var waresData = {};//货物数据 key:{waresType}{assId}, value : {wares}
 
     var waresService = {
         D : services.mould,
@@ -235,8 +235,13 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     layer.msg('请输入单价');
                     return;
                 }
-                data.waresId = waresData[data.waresType  + data.waresAssId];
+                var wares = waresData[data.waresType  + data.waresAssId] || {};
                 data.waresName = $('#_editWaresAssId').find('.dk_label').html();
+                data.waresId = wares.waresId || '';
+                data.unit = wares.unit || '';
+                data.simpleName = wares.simpleName || '';
+                data.specification = wares.specification || '';
+                data.category = wares.category || '';
                 var _function = !!consts.currentOrderItem.id ? services.purchaseOrder.updateItem : services.purchaseOrder.addItem;
                 console.log('save orderItem Data', data);
                 _function(data).then(function () {
@@ -259,9 +264,9 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
         }
 
         //打印入库单
-        if(consts.$printToOutBt && consts.$printToOutBt.length && consts.template.$printToOut && consts.template.$printToOut.length){
-            consts.$printToOutBt.bind('click', function(){
-                var $clone = consts.template.$printToOut.clone();
+        if(consts.$printToInBt && consts.$printToInBt.length && consts.template.$printToIn && consts.template.$printToIn.length){
+            consts.$printToInBt.bind('click', function(){
+                var $clone = consts.template.$printToIn.clone();
                 //打印数据构建 - 表头
                 $clone.find('div[data-name]').each(function () {
                     var value = consts.currentOrder[$(this).attr('data-name')] || '';
@@ -271,40 +276,39 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     }
                     $(this).html(value);
                 });
-                //打印数据构建 - 条形码
-                if(consts.currentOrder.barCode){
-                    $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + consts.currentOrder.barCode);
-                }
+
                 //打印数据构建 - 列表
                 if (consts.currentOrder.items && consts.currentOrder.items.length){
                     var tbody = $clone.find('tbody').empty();
                     var html = '';
-                    var calcTotalMoney = 0;
                     consts.currentOrder.items.forEach(function (item) {
-                        var product = item.product;
-                        if(product){
-                            var calcMoney = ((item.unitPrice||0) * (item.num || 0)).toFixed(2);
-                            html += '<tr>' +
-                                '<td>'+ (product.endProductName || '') +'</td>' +
-                                '<td>'+ (product.specification || '')  +'</td>' +
-                                '<td>¥'+ (item.unitPrice||0).toFixed(2) +'</td>' +
-                                '<td>'+ (item.num || 0)  +'</td>' +
-                                '<td>'+ (product.unit || '') +'</td>' +
-                                '<td>¥'+ calcMoney +'</td>' +
-                                '<td>¥'+ (item.money || 0).toFixed(2)  +'</td></tr>';
-                            calcTotalMoney += parseFloat(calcMoney);
-                        }
+                        html += '<tr>' +
+                            '<td>'+ (item.category || '') +'</td>' +
+                            '<td>'+ (item.simpleName || '') +'</td>' +
+                            '<td>'+ (item.specification || '')  +'</td>' +
+                            '<td style="text-align: center">'+ (item.unit || '') +'</td>' +
+                            '<td style="text-align: right">'+ (item.num || 0)  +'</td>' +
+                            '<td style="text-align: right">'+ (item.unitPrice||0).toFixed(2) +'</td>' +
+                            '<td style="text-align: right">'+ (item.money || 0).toFixed(2)  +'</td>' +
+                            '<td>'+ (item.remark || '') +'</td>' +
+                            '</tr>';
 
                     });
                     if (html !== ''){
-                        var chineseMoney = utils.convertCurrency(calcTotalMoney.toFixed(2));
+                        //不足5行的补足5行
+                        var emptyLines = 5 - consts.currentOrder.items.length;
+                        for(var index = 0; emptyLines > 0 && index < emptyLines; index ++){
+                            html += '<tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+                        }
+                        //合计
+                        var chineseMoney = utils.convertCurrency((consts.currentOrder.money || 0).toFixed(2));
                         html += '<tr>' +
-                            '<th colspan="5">' +
-                            '   <span class="pd44 pd22">合计：</span>' +
+                            '<th colspan="4">' +
+                            '   <span class="pd44 pd22">合计金额（大写）：</span>' +
                             chineseMoney +
                             '</th>' +
-                            '<td>¥' + calcTotalMoney.toFixed(2) + '</td>' +
-                            '<td>¥' + (consts.currentOrder.money || 0).toFixed(2) + '</td>' +
+                            '<th colspan="3" style="text-align: center">（小写）¥' + (consts.currentOrder.money || 0).toFixed(2) + '</th>' +
+                            '<td></td>' +
                             '</tr>';
                     }
                     tbody.html(html);
@@ -323,11 +327,21 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     $clone.find('.approvalDate').text((approvalPass.createdAt||'').substr(0,10));
                 }
 
-                $clone.show().print({
-                    deferred: $.Deferred().done(function() {
-                        services.purchaseOrder.afterPrint(consts.currentOrder.id);
+                //条形码
+                services.common.barcode(consts.currentOrder.barCode)
+                    .then(function (ret) {
+                        $clone.find('.print-barcode').attr('src', ret.base64);
                     })
-                });
+                    .then(function () {
+                        $clone.show().print({
+                            deferred: $.Deferred().done(function() {
+                                services.purchaseOrder.afterPrint(consts.currentOrder.id);
+                            })
+                        });
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
             });
         }
 
@@ -614,7 +628,6 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
             $('#rightInfoPage').find('#_deletePurchaseOrderBt').hide();
         }
 
-
         //明细操作按钮
         $('#rightInfoPage').find('._print, ._update, ._delete').click(function () {
             var $bt = $(this);
@@ -646,14 +659,26 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                         //条形码模版
                         var $printTemplate = $('#print_to_wares');
                         var $clone = $printTemplate.clone();
-                        //条形码
-                        $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + data.barcode);
                         //基本信息
                         $clone.find('label[data-name="label_1"]').html('供应商：');
                         $clone.find('span[data-name="content_1"]').html(consts.currentOrder.supplierName);
-                        $clone.find('label[data-name="label_2"]').html('名称：');
-                        $clone.find('span[data-name="content_2"]').html(sub_wares_name(item.waresName));
-                        $clone.show().print();
+                        $clone.find('label[data-name="label_2"]').html('类别：');
+                        $clone.find('span[data-name="content_2"]').html(sub_wares_name(item.category));
+                        $clone.find('label[data-name="label_3"]').html('名称：');
+                        $clone.find('span[data-name="content_3"]').html(sub_wares_name(item.simpleName));
+                        $clone.find('label[data-name="label_4"]').html('规格：');
+                        $clone.find('span[data-name="content_4"]').html(sub_wares_name(item.specification));
+                        //条形码
+                        services.common.barcode(data.barcode)
+                            .then(function (ret) {
+                                $clone.find('.print-barcode').attr('src', ret.base64);
+                            })
+                            .then(function () {
+                                $clone.show().print();
+                            })
+                            .catch(function () {
+                                layer.msg('生成条形码失败！');
+                            });
                     })
                     .catch(function (reason) {
                         layer.msg(reason.caught ? reason.message : '请求失败！');
@@ -687,7 +712,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 var data = [{code : '-1', name : '【请选择' + label + '】'}];
                 ret.list.forEach(function (item) {
                     data.push(item);
-                    waresData[waresType + item.code] = item.waresId;
+                    waresData[waresType + item.code] = item;
                 });
                 //供选货物类型
                 utils.dropkick({
@@ -702,7 +727,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                             return;
                         }
                         //如果是成品，查找成品模版库存，否则查找当前供应商的货物库存
-                        var _id = 'P' === waresType ? waresData[waresType + id] : id;
+                        var _id = 'P' === waresType ? waresData[waresType + id].waresId : id;
 
                         waresService[waresType].stockRemain(_id)
                             .then(function (map) {

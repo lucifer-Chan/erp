@@ -1184,10 +1184,18 @@ define('services',['utils'],function (utils) {
             supplierMaterial : function () {
                 return $.http.get('basis/common/ass/supplier/material')
             },
-            //获取条形码文本
+            //获取供应商货物条形码文本
             barcode : function (waresType, waresAssId) {
                 return $.http.get('basis/common/barcode/'+ waresType + '/' + waresAssId);
             }
+        },
+        /**
+         *
+         * @param barcode
+         * @returns {*} base64 直接放到img的src里
+         */
+        barcode : function (barcode) {
+            return $.http.get('basis/common/barcode/'+ barcode);
         }
     };
 

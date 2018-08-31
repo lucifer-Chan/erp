@@ -251,19 +251,14 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                     }
                     $(this).html(value);
                 });
-                //打印数据构建 - 条形码
-                if(consts.currentOrder.barCode){
-                    $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + consts.currentOrder.barCode);
-                }
+
                 //打印数据构建 - 列表
                 if (consts.currentOrder.items && consts.currentOrder.items.length){
                     var tbody = $clone.find('tbody').empty();
                     var html = '';
-                    var calcTotalMoney = 0;
                     consts.currentOrder.items.forEach(function (item) {
                         var product = item.product;
                         if(product){
-                            var calcMoney = ((item.unitPrice||0) * (item.num || 0)).toFixed(2);
                             html += '<tr>' +
                                 '<td>'+ (product.endProductName || '') +'</td>' +
                                 '<td>'+ (product.specification || '')  +'</td>' +
@@ -274,7 +269,6 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                                 '<td style="text-align: right">'+ (item.money || 0).toFixed(2)  +'</td>' +
                                 '<td>'+ (item.remark || '') +'</td>' +
                                 '</tr>';
-                            calcTotalMoney += parseFloat(calcMoney);
                         }
 
                     });
@@ -285,7 +279,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                             html += '<tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
                         }
                         //合计
-                        var chineseMoney = utils.convertCurrency(calcTotalMoney.toFixed(2));
+                        var chineseMoney = utils.convertCurrency((consts.currentOrder.money || 0).toFixed(2));
                         html += '<tr>' +
                             '<th colspan="3">' +
                             '   <span class="pd44 pd22">合计金额（大写）：</span>' +
@@ -314,11 +308,23 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                     $clone.find('.approvalDate').text((approvalPass.createdAt||'').substr(0,10));
                 }
 
-                $clone.show().print({
-                    deferred: $.Deferred().done(function() {
-                        services.saleOrder.afterPrint(consts.currentOrder.id);
-                    })
-                });
+                //打印数据构建 - 条形码
+                if(consts.currentOrder.barCode){
+                    services.common.barcode(consts.currentOrder.barCode)
+                        .then(function (ret) {
+                            $clone.find('.print-barcode').attr('src', ret.base64);
+                        })
+                        .then(function () {
+                            $clone.show().print({
+                                deferred: $.Deferred().done(function() {
+                                    services.saleOrder.afterPrint(consts.currentOrder.id);
+                                })
+                            });
+                        })
+                        .catch(function () {
+                            layer.msg('生成条形码失败！');
+                        });
+                }
             });
         }
 
@@ -630,12 +636,20 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 console.log(consts.currentOrderItem);
                 var product = consts.currentOrderItem.product;
                 var $clone = $printTemplate.clone();
-                //条形码
-                $clone.find('.print-barcode').attr('src', window.GLOBALS.ctxPath + 'basis/common/barcode/' + product.barCode);
                 //基本信息
                 $clone.find('label[data-name="label_1"]').html('名称：');
                 $clone.find('span[data-name="content_1"]').html(product.description);
-                $clone.show().print();
+                //条形码
+                services.common.barcode(product.barCode)
+                    .then(function (ret) {
+                        $clone.find('.print-barcode').attr('src', ret.base64);
+                    })
+                    .then(function () {
+                        $clone.show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
             }
         })
     }

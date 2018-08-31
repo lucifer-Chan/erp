@@ -32,22 +32,25 @@
                 </div>
             </div>
         </div>
-        <table class="table table-print">
-            <thead>
-            <tr>
-                <th>产品名称</th>
-                <th>规格型号</th>
-                <th>单位</th>
-                <th>数量</th>
-                <th>单价</th>
-                <!--<th>计算金额</th>-->
-                <th>金额</th>
-                <th>备注</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="table-print-holder">
+            <table class="table table-print">
+                <thead>
+                <tr>
+                    <th>产品名称</th>
+                    <th>规格型号</th>
+                    <th>单位</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>金额</th>
+                    <th>备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="right table-print-right">白存根红财务蓝客户黄仓库</div>
+        </div>
+
         <div class="row">
             <div class="col-xs-2">
                 <div class="print-line" >
@@ -81,6 +84,93 @@
     </div>
 </div>
 
+<!-- 入库单打印模版 -->
+<div id="print_to_in_template">
+    <div class="panel-default bugInfo">
+        <div class="row">
+            <span class="print-header">
+                <h3>瑞安市银通电器有限公司-入库单</h3>
+            </span>
+        </div>
+        <div class="row pd22">
+            <div class="col-xs-12 print-right">
+                <img src="/img/null.png" class="print-barcode">
+            </div>
+        </div>
+        <div class="pd13"></div>
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>订单日期:</label>
+                    <div class="pd42" data-name="orderDate" data-convert="convertDate"></div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="print-line" >
+                    <label>供应商:</label>
+                    <div class="pd42" data-name="supplierName"></div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>采购人员:</label>
+                    <div class="pd42" data-name="createdName"></div>
+                </div>
+            </div>
+        </div>
+        <div class="table-print-holder">
+            <table class="table table-print">
+                <thead>
+                <tr>
+                    <th>产品类型</th>
+                    <th>名称</th>
+                    <th>规格型号</th>
+                    <th>单位</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>金额</th>
+                    <th>备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="right table-print-right">白存根红财务蓝客户黄仓库</div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="print-line" >
+                    <label>会计:</label>
+                    <div class="pd42"></div>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="print-line" >
+                    <label>审核人:</label>
+                    <div class="pd42 approvalName"></div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>审核日期:</label>
+                    <div class="pd42 approvalDate"></div>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="print-line" >
+                    <label>提货人:</label>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="print-line" >
+                    <label>仓库验收:</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 货物条码模版 -->
 <div id="print_to_wares">
     <div class="panel-default bugInfo">
@@ -98,6 +188,12 @@
         </div>
         <div class="row">
             <div><label data-name="label_3"></label><span data-name="content_3"></span></div>
+        </div>
+        <div class="row">
+            <div><label data-name="label_4"></label><span data-name="content_4"></span></div>
+        </div>
+        <div class="row">
+            <div><label data-name="label_5"></label><span data-name="content_5"></span></div>
         </div>
     </div>
 </div>
