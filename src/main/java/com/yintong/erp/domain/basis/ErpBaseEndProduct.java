@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseEndProduct> {
+public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseEndProduct>, TemplateWares {
 
     @Id
     @GeneratedValue
@@ -163,6 +163,21 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
             _type = "";
         }
         return description = (_type + this.getEndProductName() + (StringUtils.hasText(specification) ? ("-" + specification) : ""));
+    }
+
+    @Override
+    public Long getWaresId() {
+        return id;
+    }
+
+    @Override
+    public String getSimpleName() {
+        return endProductName;
+    }
+
+    @Override
+    public String getCategoryCode() {
+        return endProductTypeCode;
     }
 
     public Double getTotalNum(){

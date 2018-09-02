@@ -354,7 +354,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">头部复合强度</label>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control" name="spHCstrength" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,30)">
+                                        <input type="text" class="form-control" name="spHCstrength" placeholder="最多10个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
                                     </div>
                                     <label class="col-sm-3 control-label">脚部复合强度</label>
                                     <div class="col-sm-3">
@@ -385,8 +385,9 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editProduct">修改基本信息</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_editWarning">修改预警阀值</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#__editWarning">修改预警阀值</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#editBom" id="toAddBom">新增物料清单</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -398,6 +399,7 @@
                     <li role="presentation"><span href="#specificationHolder"  role="tab" data-toggle="tab">规格信息</span></li>
                     <li role="presentation"><span href="#bomHolder"  role="tab" data-toggle="tab">物料清单</span></li>
                     <li role="presentation"><span href="#stockOptHistory"  role="tab" data-toggle="tab">库存记录</span></li>
+                    <li role="presentation"><span href="#suppliers" role="tab" data-toggle="tab">供应商列表</span></li>
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content">
@@ -672,7 +674,10 @@
                         <div class="col-sm-12 bugInfoHistories" style="padding-top:15px;">
                         </div>
                     </div>
-
+                    <div role="tabpanel" class="tab-pane" id="suppliers">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
 
 
                 </div>
@@ -689,8 +694,8 @@
                 <h3 class="panel-title" style="font-size: 13px"></h3>
                 <div class="tools">
                     <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
-                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#editBom">修改</button>
-                    <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
+                    <button type="button" class="btn btn-info btn-xs _bomUpdate" data-toggle="modal" data-target="#editBom">修改</button>
+                    <button type="button" class="btn btn-danger btn-xs _bomDelete" data-value="">删除</button>
                 </div>
             </div>
             <div class="panel-body" data-value="">
@@ -726,7 +731,7 @@
 </div>
 
 <!-- 预警阀值-->
-<div class="modal fade" role="dialog" id="_editWarning">
+<div class="modal fade" role="dialog" id="__editWarning">
     <div class="modal-dialog" role="document" style="z-index: 1040">
         <div class="modal-content">
             <div class="modal-header">
@@ -786,6 +791,31 @@
     </div>
 </div>
 
+<!-- 添加供应商 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addAss">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 添加供应商</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">供应商</label>
+                        <div class="col-sm-10">
+                            <div class="customDropkick" style="width: 100%;" id="_supplier"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveAssBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
     requirejs(['slimScroll', 'ztree','utils','services'],function (slimScroll, ztree, utils, services) {
@@ -794,8 +824,10 @@
         init();
         var consts = {
             typeAll : {}//所有成品大类-{code:{code:name}}
+            , suppliersCache : {}//关联供应商缓存，每一次刷新右侧，将关联供应商加入到这里 {id : obj}
             , bomCache : {}//bom缓存，每一次刷新右侧，将关联供应商加入到这里 {id : obj}
             , currentBom : {}//当前的bom
+            , currentAss : {}//当前的关联
             , typeP : {}//成品大类-code|name
             , typeC : {} //供应商等级-code|name
             , supplier : {}//供应商-code|name
@@ -808,8 +840,9 @@
             , oQueryParam : {}//查询参数
             , $editInfoModal : $('#_editProduct')//编辑供应商modal
             , $rightPage : $('#rightInfoPage')//右侧页面
+            , $suppliers : $('#suppliers')//供应商列表
             , $batchModal : $('#_batchOperation')//批量操作modal
-            , $warningModal : $('#_editWarning')//预警modal
+            , $warningModal : $('#__editWarning')//预警modal
             , $uploadInput : $('#excelFile')//导入excel的input
             , $bomTemplate : $('#bomTemplate')//bom template
             , stockLog : '<p>' +
@@ -817,6 +850,8 @@
                 '<span class="content"> {content}</span>  ' +
                 '<span class="right">{time}</span>' +
                 '</p>'//出入库记录模版
+
+            , $supplierTemplate : $('#supplierTemplate')//关联供应商模版
         };
 
         /**
@@ -839,7 +874,7 @@
                         var material = item.material || {};
                         var clone = consts.$bomTemplate.clone();
                         $(clone).find('.panel-title').text('物料清单-' + (i+1));
-                        $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._update, ._delete').attr('data-value', item.id);
+                        $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._bomUpdate, ._bomDelete').attr('data-value', item.id);
                         var body = $(clone).find('.panel-body');
                         body.attr('data-value', (item.id + 'Info'));
                         $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
@@ -888,14 +923,46 @@
                 });
         }
 
-        //修改、删除bom
+        /**
+         * 查询供应商关联
+         */
+        function initSuppliers(productId) {
+            services.association.productSupplier(productId)
+                .then(function (ret) {
+                    var $suppliersHolder = consts.$suppliers.find('.bugInfoHistories');
+                    if(!ret.list.length){
+                        $suppliersHolder.html('<p>暂无</p>');
+                    } else {
+                        $suppliersHolder.empty();
+                        $.each(ret.list, function (i, item) {
+                            consts.suppliersCache[item.id] = item;
+                            var clone = consts.$supplierTemplate.clone();
+                            $(clone).find('.panel-title').text(item.supplierName);
+                            $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._delete').attr('data-value', item.id);
+                            $(clone).find('._update, ._t_w_l, ._t_w_u').hide();
+                            var body = $(clone).find('.panel-body');
+                            body.attr('data-value', (item.id + 'Info'));
+                            $(body).find('div[data-name="alertUpper"]').text(item.alertUpper || 0);
+                            $(body).find('div[data-name="alertLower"]').text(item.alertLower || 0);
+                            $(body).find('div[data-name="associateAt"]').text(item.associateAt);
+                            $(body).find('div[data-name="totalNum"]').text(item.totalNum || 0);
+                            $suppliersHolder.append($(clone).show());
+                        });
+
+                        utils.initRightAngleEvent();
+                        initBtEvent();
+                    }
+                });
+        }
+
+        //修改、删除bom - 修改、删除供应商关联
         function initBtEvent() {
-            $('#rightInfoPage').find('._update, ._delete').click(function () {
+            consts.$rightPage.find('._bomUpdate, ._bomDelete').click(function () {
                 var $bt = $(this);
                 var item = consts.bomCache[$bt.attr('data-value')];
                 if(!item) return;
                 consts.currentBom = item;
-                if ($bt.hasClass('_delete')){
+                if ($bt.hasClass('_bomDelete')){
                     layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
                         services.product.bom.delete(item.id)
                             .then(function (ret) {
@@ -907,6 +974,24 @@
                             });
                     });
                 }
+            });
+
+            consts.$rightPage.find('._delete').click(function () {
+                var $bt = $(this);
+                var item = consts.suppliersCache[$bt.attr('data-value')];
+                if(!item) return;
+                consts.currentAss = item;
+                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                    services.association.supplier(item.supplierId)
+                        .delete(item.endProductId)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            initProductDetail(consts.product);
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                        });
+                });
             });
         }
 
@@ -1051,8 +1136,8 @@
             $baseInfo.find('div[data-convert="convertTotalNum"]').html(convertTotalNum());
 
             initBoms();
-
             initStockHistory();
+            initSuppliers(product.id);
         }
 
         /**
@@ -1184,7 +1269,7 @@
                                 '<tr id="'+ row.importedAt +'">'
                                 + '<td>' + row.num + '</td>'
                                 + '<td>' + row.importedAt + '</td>'
-                                + '<td><span type="button" class="btn btn-danger btn-xs _delete">删除</span></td>'
+                                + '<td><span type="button" class="btn btn-danger btn-xs _bomDelete">删除</span></td>'
                             );
                         });
                         $('#batchDeleteTable').parent().slimScroll({
@@ -1194,7 +1279,7 @@
                     }
                 })
                 .then(function () {
-                    $('._delete').unbind('click').click(function () {
+                    $('._bomDelete').unbind('click').click(function () {
                         var importedAt = $(this).parents('tr').attr('id');
                         layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
                             services.product.batchDelete(importedAt)
@@ -1366,6 +1451,51 @@
                 $('._typeC').show();
 
             });
+
+            //添加供应商
+            $('#_addAss').on('show.bs.modal', function () {
+                services.association.unProductSupplier(consts.product.id)
+                    .then(function (ret) {
+                        consts.supplier = [];
+                        consts.supplier.push({code : -1, name : '【请选择供应商】'});
+                        ret.list.forEach(function (value) {
+                            consts.supplier.push({code : value.id , name : value.supplierName});
+                        });
+                        //供选供应商
+                        utils.dropkick({
+                            $holder : $('#_supplier'),
+                            data : consts.supplier
+                        });
+                    })
+                    .catch(function (reason) {
+                        console.log('reason', reason);
+                    });
+            });
+
+            //保存关联
+            $('#_saveAssBt').unbind('click').click(function () {
+
+                var supplierId = $('#_supplier').attr('data-value') || -1;
+
+                if(!supplierId || supplierId == -1){
+                    layer.msg('请选择供应商');
+                    return false;
+                }
+
+                services.association.supplier(supplierId)
+                    .saveProducts([consts.product.id])
+                    .then(function (ret) {
+                        layer.msg(ret._message);
+                        initProductDetail(consts.product);
+                        $('#_addAss').modal('hide');
+                    })
+                    .catch(function (reason) {
+                        console.log(reason);
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+            });
+
+
             //编辑bom
             init_edit_bom_modal();
         }

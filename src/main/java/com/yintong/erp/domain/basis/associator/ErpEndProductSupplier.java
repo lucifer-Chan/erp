@@ -1,13 +1,21 @@
 package com.yintong.erp.domain.basis.associator;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
+import com.yintong.erp.domain.basis.ErpBaseSupplier;
+import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
+import com.yintong.erp.domain.basis.TemplateWares;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
+import com.yintong.erp.utils.common.SpringUtil;
 import java.util.Objects;
+import javax.persistence.Transient;
 import lombok.*;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections4.KeyValue;
 import org.springframework.util.Assert;
 
@@ -17,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 import java.util.stream.Collectors;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by jianqiang on 2018/5/12.
@@ -55,6 +64,12 @@ public class ErpEndProductSupplier extends BaseEntityWithBarCode implements Stoc
     @Column(columnDefinition = "double(16,9) comment '库存总量'")
     private Double totalNum;
 
+    @Transient
+    private JSONObject wares;
+
+    @Transient
+    private String supplierName;
+
     @Override
     protected void prePersist(){
         validate();
@@ -90,15 +105,40 @@ public class ErpEndProductSupplier extends BaseEntityWithBarCode implements Stoc
         return Objects.isNull(totalNum) ? 0d :totalNum;
     }
 
+    //供应商名称
+    public String getSupplierName(){
+        if(StringUtils.hasText(supplierName)) return supplierName;
+
+        if(Objects.nonNull(supplierId)){
+            ErpBaseSupplier supplier = SpringUtil.getBean(ErpBaseSupplierRepository.class).findById(supplierId).orElse(null);
+            supplierName = Objects.isNull(supplier) ? "" : supplier.getSupplierName();
+        }
+
+        return supplierName;
+    }
+
     @Override
     public ErpEndProductSupplier stockIn(double num) {
         setTotalNum(this.getTotalNum() + num);
+        ErpBaseEndProductRepository productRepository = SpringUtil.getBean(ErpBaseEndProductRepository.class);
+
+        ErpBaseEndProduct product = productRepository.findById(templateId()).orElse(null);
+        if(Objects.nonNull(product)){
+            productRepository.save(product.stockIn(num));
+        }
+
         return this;
     }
 
     @Override
     public ErpEndProductSupplier stockOut(double num) {
         setTotalNum(this.getTotalNum() - num);
+        ErpBaseEndProductRepository productRepository = SpringUtil.getBean(ErpBaseEndProductRepository.class);
+
+        ErpBaseEndProduct product = productRepository.findById(templateId()).orElse(null);
+        if(Objects.nonNull(product)){
+            productRepository.save(product.stockOut(num));
+        }
         return this;
     }
 
@@ -120,5 +160,11 @@ public class ErpEndProductSupplier extends BaseEntityWithBarCode implements Stoc
     @Override
     public Constants.WaresType waresType() {
         return Constants.WaresType.P;
+    }
+
+    public JSONObject getWares(){
+        if(Objects.nonNull(wares)) return wares;
+        TemplateWares templateWares = template();
+        return wares = (Objects.isNull(templateWares) ? null : templateWares.getTemplate());
     }
 }

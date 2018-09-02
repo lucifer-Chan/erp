@@ -1,17 +1,24 @@
 package com.yintong.erp.domain.purchase;
 
+import com.yintong.erp.domain.basis.TemplateWares;
+import com.yintong.erp.service.purchase.PurchaseOrderService;
 import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.common.Constants;
+import com.yintong.erp.utils.common.SpringUtil;
+import java.util.Objects;
+import java.util.function.Function;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.sf.json.JSONObject;
 import org.springframework.util.Assert;
 
 /**
@@ -51,8 +58,6 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Column(columnDefinition = "double(16,9) comment '数量'")
     private Double num;
 
-    @Column(columnDefinition = "varchar(64) comment '单位'")
-    private String unit;
 
     @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已入库数量'")
     private Double inNum;
@@ -66,14 +71,20 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '描述'")
     private String remark;
 
-    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物名称-实际名称-冗余数据-打印用'")
-    private String simpleName;
+    @Transient
+    private JSONObject wares;
 
-    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物规格-冗余数据-打印用'")
-    private String specification;
-
-    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物类别-冗余数据-打印用'")
-    private String category;
+//    @Column(columnDefinition = "varchar(64) comment '单位'")
+//    private String unit;
+//
+//    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物名称-实际名称-冗余数据-打印用'")
+//    private String simpleName;
+//
+//    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物规格-冗余数据-打印用'")
+//    private String specification;
+//
+//    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物类别-冗余数据-打印用'")
+//    private String category;
 
     /**
      * 必填项校验
@@ -90,6 +101,15 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
         Assert.notNull(getOrderCode(), "采购订单编号不能为空");
         return this;
     }
+
+    public JSONObject getWares(){
+        if(Objects.nonNull(wares)) return wares;
+        if(null == waresType) return wares = null;
+        Function<Long, TemplateWares> function = SpringUtil.getBean(PurchaseOrderService.class).findWaresById().get(Constants.WaresType.valueOf(waresType));
+        TemplateWares templateWares = function.apply(waresId);
+        return wares = (Objects.isNull(templateWares) ? null : templateWares.getTemplate());
+    }
+
 
     /**
      * 从采购订单里复制信息

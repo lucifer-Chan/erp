@@ -24,6 +24,7 @@
                                 <th style="width:70px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <th style="width:90px" erp-data="{modelToolName}" >名称</th>
                                 <th style="width:40px" erp-data="{modelToolTypeCode}" erp-convert="convertType">类型</th>
+                                <th style="width:40px" erp-data="{totalNum}">库存</th>
                                 <th style="width:40px" erp-data="{unit}">单位</th>
                                 <th style="width:40px" erp-data="{specification}">规格描述</th>
                                 <!--<th style="width:40px" erp-data="{supplierTypeCode}">供应商</th>-->
@@ -83,12 +84,37 @@
         </div>
     </div>
 </div>
+<!-- 添加供应商 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addAss">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 添加供应商</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">供应商</label>
+                        <div class="col-sm-10">
+                            <div class="customDropkick" style="width: 100%;" id="_supplier"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveAssBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 右侧-->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editMould">修改模具信息</button>
+             <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -144,6 +170,19 @@
                     </div>
                 </div>
             </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#suppliers" role="tab" data-toggle="tab">供应商列表</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="suppliers">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -152,17 +191,19 @@
         //初始页面
         init();
 
-
-
         var consts = {
             types : {}//模具类型-code|name
-            ,supplier:{}//供应商-code|name
+            , supplier:{}//供应商-code|name
+            , suppliersCache : {}//关联供应商缓存，每一次刷新右侧，将关联供应商加入到这里 {id : obj}
+            , currentAss : {}//当前的关联
             , oQueryParam : {}//查询参数
             , selectedMould : {} //选中的模具
             , $rightPage : $('#rightInfoPage')//右侧页面
             , $categoryHolder : $('#mould_category')//模具类别
             , $supplierHolder : $('#mould_supplier')//供应商
             , $editMouldModal : $('#_editMould')//编辑人员的modal
+            , $suppliers : $('#suppliers')//供应商列表
+            , $supplierTemplate : $('#supplierTemplate')//关联供应商模版
         };
         //预置数据
         function prepareData() {
@@ -179,6 +220,59 @@
             }).catch(function (reason) {
                 console.log('reason', reason);
             })
+        }
+
+        /**
+         * 查询供应商关联
+         */
+        function initSuppliers(mouldId) {
+            services.association.mouldSupplier(mouldId)
+                .then(function (ret) {
+                    var $suppliersHolder = consts.$suppliers.find('.bugInfoHistories');
+                    if(!ret.list.length){
+                        $suppliersHolder.html('<p>暂无</p>');
+                    } else {
+                        $suppliersHolder.empty();
+                        $.each(ret.list, function (i, item) {
+                            consts.suppliersCache[item.id] = item;
+                            var clone = consts.$supplierTemplate.clone();
+                            $(clone).find('.panel-title').text(item.supplierName);
+                            $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._delete').attr('data-value', item.id);
+                            $(clone).find('._update, ._t_w_l, ._t_w_u').hide();
+                            var body = $(clone).find('.panel-body');
+                            body.attr('data-value', (item.id + 'Info'));
+                            $(body).find('div[data-name="alertUpper"]').text(item.alertUpper || 0);
+                            $(body).find('div[data-name="alertLower"]').text(item.alertLower || 0);
+                            $(body).find('div[data-name="associateAt"]').text(item.associateAt);
+                            $(body).find('div[data-name="totalNum"]').text(item.totalNum || 0);
+                            $suppliersHolder.append($(clone).show());
+                        });
+
+                        utils.initRightAngleEvent();
+                        initBtEvent();
+                    }
+                });
+        }
+
+        //删除关联
+        function initBtEvent() {
+            $('#rightInfoPage').find('._delete').click(function () {
+                var $bt = $(this);
+                var item = consts.suppliersCache[$bt.attr('data-value')];
+                if(!item) return;
+                consts.currentAss = item;
+                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                    services.association.model(item.supplierId)
+                        .delete(item.modelId)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            initMouldDetail(consts.selectedMould);
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.message || '请求失败！');
+                        });
+                });
+            });
         }
 
         /**
@@ -220,9 +314,9 @@
                     $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
                     $rightPage.find('.fa-angle-double-down').click();
                 })
-                    .catch(function (reason) {
-                        layer.msg(reason.caught ? reason.message : '请求失败！');
-                    })
+                .catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                })
             }
             /**
              * 模具列表初始化方法，
@@ -258,6 +352,8 @@
             $baseInfo.find('div[data-convert="modelToolTypeCode"]').html(
                 consts.types[mould.modelToolTypeCode] || unSetting
             );
+
+            initSuppliers(mould.id)
         /*    $baseInfo.find('div[data-convert="supplierTypeCode"]').html(
                 consts.types[mould.supplierTypeCode] || unSetting
             );*/
@@ -343,7 +439,7 @@
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
             });
-            //删除供应商
+            //删除模具
             consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
                 layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
                     services.mould.delete(consts.selectedMould.id)
@@ -370,7 +466,49 @@
             $('#addUserBt').bind('click', function(){
                 consts.selectedMould = {};
                 $('._type').show();
-            })
+            });
+
+            //添加供应商
+            $('#_addAss').on('show.bs.modal', function () {
+                services.association.unMouldSupplier(consts.selectedMould.id)
+                    .then(function (ret) {
+                        consts.supplier = [];
+                        consts.supplier.push({code : -1, name : '【请选择供应商】'});
+                        ret.list.forEach(function (value) {
+                            consts.supplier.push({code : value.id , name : value.supplierName});
+                        });
+                        //供选供应商
+                        utils.dropkick({
+                            $holder : $('#_supplier'),
+                            data : consts.supplier
+                        });
+                    })
+                    .catch(function (reason) {
+                        console.log('reason', reason);
+                    });
+            });
+
+            //保存关联
+            $('#_saveAssBt').unbind('click').click(function () {
+
+                var supplierId = $('#_supplier').attr('data-value') || -1;
+
+                if(!supplierId || supplierId == -1){
+                    layer.msg('请选择供应商');
+                    return false;
+                }
+                services.association.model(supplierId)
+                    .saveMould([consts.selectedMould.id])
+                    .then(function (ret) {
+                        layer.msg(ret._message);
+                        initMouldDetail(consts.selectedMould);
+                        $('#_addAss').modal('hide');
+                    })
+                    .catch(function (reason) {
+                        console.log(reason);
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+            });
         }
 
         function init() {

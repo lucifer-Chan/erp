@@ -383,7 +383,7 @@
                     console.error('http-返回错误[' + settings.url + ']', br);
 
                     return $.Promise.reject({
-                        message: (br.errmsg && br.errmsg.length > 40) ? '请求失败' : br.errmsg,
+                        message: (br.errmsg && br.errmsg.length > 100) ? '请求失败' : br.errmsg,
                         caught: br.errmsg && br.errmsg.length <= 40,
                         error: '调用' + settings.url + '[' + settings.type + ']返回错误，错误码：[' + br.errcode + ']',
                         detail: br

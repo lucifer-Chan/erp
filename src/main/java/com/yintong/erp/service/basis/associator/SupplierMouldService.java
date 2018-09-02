@@ -170,11 +170,13 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
                     String parentCode = ass.getModelType();
                     Long modelId = ass.getModelId();
                     ErpBaseModelTool model = modelToolRepository.getOne(modelId);
-                    TreeNode treeNode = new TreeNode(ass.getModelId() + "", model.getDescription(), parentCode, false)
-                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"));
-                    return treeNode
-                            .setFullName(treeNode.getName())
-                            .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");
+                    return new TreeNode(ass.getModelId() + "", model.getDescription(), parentCode, false)
+                            .setSource(CommonUtil.join(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"), ass.templateJson()));
+//                    TreeNode treeNode = new TreeNode(ass.getModelId() + "", model.getDescription(), parentCode, false)
+//                            .setSource(CommonUtil.join(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"), ass.templateJson()));
+//                    return treeNode
+//                            .setFullName(treeNode.getName())
+//                            .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");
                 })
                 .collect(Collectors.toList());
         List<TreeNode> branch = branch().stream()
@@ -227,5 +229,25 @@ public class SupplierMouldService implements OnDeleteMouldValidator , OnDeleteSu
         ErpModelSupplier ass = modelSupplierRepository.findById(mouldAssId).orElse(null);
         Assert.notNull(ass, "未找到模具");
         return ass.getTotalNum();
+    }
+
+    /**
+     * 根据模具id查找供应商关联
+     * @param mouldId
+     * @return
+     */
+    public List<ErpModelSupplier> findSuppliersAss(Long mouldId){
+        return modelSupplierRepository.findByModelId(mouldId);
+    }
+
+    /**
+     * 根据模具id查找未关联的供应商
+     * @param mouldId
+     * @return
+     */
+    public Iterable findUnassociatedSuppliers(Long mouldId) {
+        List<Long> associatedSupplierIds = modelSupplierRepository.findByModelId(mouldId).stream().map(ErpModelSupplier::getSupplierId).collect(Collectors.toList());
+        return CollectionUtils.isEmpty(associatedSupplierIds) ?
+                supplierRepository.findAll() : supplierRepository.findByIdNotIn(associatedSupplierIds);
     }
 }

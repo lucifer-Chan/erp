@@ -145,7 +145,78 @@
             </div>
         </div>
     </div>
+</div>
 
+<!-- 添加供应商 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addAss">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 添加供应商</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">供应商</label>
+                        <div class="col-sm-10">
+                            <div class="customDropkick" style="width: 100%;" id="_supplier"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警下限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="__alertLower">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警上限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="__alertUpper">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveAssBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 预警上下限 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editWarning">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 修改预警上下限</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd23">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警下限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="_alertLower">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">预警上限</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="_alertUpper">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveWarningBt">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- 右侧-->
@@ -212,124 +283,6 @@
         </div>
     </div>
 </div>
-
-<!-- 供应商详情模版-->
-<div class="row" id="supplierTemplate" style="display: none">
-    <div class="col-sm-12" style="margin-bottom:-20px">
-        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
-            <div class="panel-heading">
-                <h3 class="panel-title" style="font-size: 13px"></h3>
-                <div class="tools">
-                    <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
-                    <button type="button" class="btn btn-info btn-xs _update" data-toggle="modal" data-target="#_editWarning">修改</button>
-                    <button type="button" class="btn btn-danger btn-xs _delete" data-value="">删除</button>
-                </div>
-            </div>
-            <div class="panel-body" data-value="">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">预警下限</label>
-                                    <div class="col-xs-9 txt pd0" data-name="alertLower"></div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">预警上限</label>
-                                    <div class="col-xs-9 txt pd0" data-name="alertUpper"></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">当前数量</label>
-                                    <div class="col-xs-9 txt pd0" data-name="totalNum"></div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">关联时间</label>
-                                    <div class="col-xs-9 txt pd0" data-name="associateAt"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- 预警上下限 -->
-<div class="modal fade" role="dialog" data-backdrop="static" id="_editWarning">
-    <div class="modal-dialog" role="document" style="z-index: 1040">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 修改预警上下限</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-horizontal pd23">
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">预警下限</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="_alertLower">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">预警上限</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="_alertUpper">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer noborder">
-                        <button class="btn btn-info noborder" name="save" id="_saveWarningBt">保存</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 添加供应商 -->
-<div class="modal fade" role="dialog" data-backdrop="static" id="_addAss">
-    <div class="modal-dialog" role="document" style="z-index: 1040">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 添加供应商</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-horizontal pd23">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">供应商</label>
-                        <div class="col-sm-10">
-                            <div class="customDropkick" style="width: 100%;" id="_supplier"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">预警下限</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="__alertLower">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">预警上限</label>
-                        <div class="col-sm-10">
-                            <input type="number" step="1" class="form-control" name="num" placeholder="输入正整数" id="__alertUpper">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer noborder">
-                        <button class="btn btn-info noborder" name="save" id="_saveAssBt">保存</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <script type="text/javascript">
     requirejs(['slimScroll','ztree','utils','services'],function (slimScroll,ztree, utils, services) {

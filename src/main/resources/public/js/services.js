@@ -848,9 +848,25 @@ define('services',['utils'],function (utils) {
         materialSupplier : function (materialId) {
             return $.http.get('basis/rawMaterial/'+ materialId+'/supplier');
         },
-        //找未关联的供应商
+        //找原材料未关联的供应商
         unassociatedSuppliers : function (materialId) {
             return $.http.get('basis/rawMaterial/'+ materialId+'/supplier/unassociated');
+        },
+        //根据成品-找已关联的供应商
+        productSupplier : function (productId) {
+            return $.http.get('basis/product/' + productId + '/supplier');
+        },
+        //找成品未关联的供应商
+        unProductSupplier : function (productId) {
+            return $.http.get('basis/product/'+ productId+'/supplier/unassociated');
+        },
+        //根据模具-找已关联的供应商
+        mouldSupplier : function (mouldId) {
+            return $.http.get('basis/mould/' + mouldId + '/supplier');
+        },
+        //找模具未关联的供应商
+        unMouldSupplier : function (mouldId) {
+            return $.http.get('basis/mould/'+ mouldId+'/supplier/unassociated');
         }
     };
 

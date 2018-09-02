@@ -252,6 +252,8 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         //->作废
         if(status == STATUS_008){
             Assert.isTrue(STATUS_003.name().equals(oldStatus), "只有" + STATUS_003.description() + "的订单可以" + status.description());
+            old.setPreStockOut(0);
+            old.setPreStockIn(1);
         }
 
         // 客户退货 修改preStockOut属性为0 即不允许再出库，允许入库

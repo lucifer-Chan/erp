@@ -43,6 +43,29 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
 
     @Autowired(required = false) List<OnDeleteSupplierProductValidator> onDeleteSupplierProductValidators;
 
+
+
+    /**
+     * 根据成品id查找供应商关联
+     * @param productId
+     * @return
+     */
+    public List<ErpEndProductSupplier> findSuppliersAss(Long productId){
+        return productSupplierRepository.findByEndProductId(productId);
+    }
+
+    /**
+     * 根据成品id查找未关联的供应商
+     * @param productId
+     * @return
+     */
+    public Iterable findUnassociatedSuppliers(Long productId) {
+        List<Long> associatedSupplierIds = productSupplierRepository.findByEndProductId(productId).stream().map(ErpEndProductSupplier::getSupplierId).collect(Collectors.toList());
+        return CollectionUtils.isEmpty(associatedSupplierIds) ?
+                supplierRepository.findAll() : supplierRepository.findByIdNotIn(associatedSupplierIds);
+    }
+
+
     /**
      * 建立供应商和成品的关联
      * @param association
@@ -174,11 +197,13 @@ public class SupplierProductService implements OnDeleteProductValidator, OnDelet
                     String parentCode = ass.getEndProductType();
                     Long productId = ass.getEndProductId();
                     ErpBaseEndProduct product = productRepository.getOne(productId);
-                    TreeNode treeNode = new TreeNode(ass.getEndProductId() + "", product.getDescription(), parentCode, false)
-                            .setSource(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"));
-                    return treeNode
-                            .setFullName(treeNode.getName())
-                            .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");
+                    return new TreeNode(ass.getEndProductId() + "", product.getDescription(), parentCode, false)
+                            .setSource(CommonUtil.join(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"), ass.templateJson()));
+//                    TreeNode treeNode = new TreeNode(ass.getEndProductId() + "", product.getDescription(), parentCode, false)
+//                            .setSource(CommonUtil.join(ass.filter("alertUpper", "alertLower", "associateAt", "totalNum", "barCode"), ass.templateJson()));
+//                    return treeNode
+//                            .setFullName(treeNode.getName())
+//                            .setName(treeNode.getName() + "[" + CommonUtil.ifNotPresent(ass.getAlertLower(), 0) + "," + CommonUtil.ifNotPresent(ass.getAlertUpper(),0) + "]");
                 })
                 .collect(Collectors.toList());
         List<TreeNode> branch = branch().stream()

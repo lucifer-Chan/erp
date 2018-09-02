@@ -264,11 +264,7 @@
                                 <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
                                     <div class="panel-heading">
                                         <div id="__productAssEdit">
-                                            预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
-                                            &nbsp&nbsp&nbsp&nbsp
-                                            预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
                                             <button class="btn btn-info btn-xs productPrintBt" style="margin-left: 10px;margin-bottom: 5px;">打印条形码</button>
-                                            <button class="btn btn-success btn-xs alertSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
                                             <button class="btn btn-danger btn-xs alertDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
                                         </div>
                                     </div>
@@ -291,11 +287,7 @@
                                 <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
                                     <div class="panel-heading">
                                         <div id="__modelAssEdit">
-                                            预警下限 <input type="number" class="form-control alertLower" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
-                                            &nbsp&nbsp&nbsp&nbsp
-                                            预警上限 <input type="number" class="form-control alertUpper" placeholder="填写数字" style="width: 85px;height: 25px;display: inline;">
                                             <button class="btn btn-info btn-xs modelPrintBt" style="margin-left: 10px;margin-bottom: 5px;">打印条形码</button>
-                                            <button class="btn btn-success btn-xs alertModelSaveBt" style="margin-left: 10px;margin-bottom: 5px;">保存</button>
                                             <button class="btn btn-danger btn-xs alertModelDeleteBt" style="margin-left: 10px;margin-bottom: 5px;">删除关联</button>
                                         </div>
                                     </div>
@@ -623,10 +615,24 @@
             console.log(treeNode.source);
             var $clone = consts.$printTemplate.clone();
             //基本信息
+            // $clone.find('label[data-name="label_1"]').html('供应商：');
+            // $clone.find('span[data-name="content_1"]').html(consts.supplier.supplierName);
+            // $clone.find('label[data-name="label_2"]').html('名称：');
+            // $clone.find('span[data-name="content_2"]').html(treeNode.fullName);
+
+            //基本信息
             $clone.find('label[data-name="label_1"]').html('供应商：');
             $clone.find('span[data-name="content_1"]').html(consts.supplier.supplierName);
-            $clone.find('label[data-name="label_2"]').html('名称：');
-            $clone.find('span[data-name="content_2"]').html(treeNode.fullName);
+            $clone.find('label[data-name="label_2"]').html('类别：');
+            $clone.find('span[data-name="content_2"]').html(treeNode.source.category);
+            $clone.find('label[data-name="label_3"]').html('名称：');
+            $clone.find('span[data-name="content_3"]').html(treeNode.source.simpleName);
+            $clone.find('label[data-name="label_4"]').html('规格：');
+            $clone.find('span[data-name="content_4"]').html(treeNode.source.specification);
+
+
+
+
 
             //打印数据构建 - 条形码
             services.common.barcode(treeNode.source.barCode)
@@ -655,47 +661,10 @@
                 onClick : function (event, treeId, treeNode) {
                     console.log('选中节点',treeNode);
                     var editDiv = $("#__productAssEdit");
-                    var alertLower = editDiv.find('.alertLower');
-                    var alertUpper = editDiv.find('.alertUpper');
-                    alertLower.val(treeNode.source.alertLower);
-                    alertUpper.val(treeNode.source.alertUpper);
                     if(treeNode.source){
-                        editDiv.show().find('.alertSaveBt, .alertDeleteBt, .productPrintBt').attr('data-id', treeNode.code).unbind('click');
+                        editDiv.show().find('.alertDeleteBt, .productPrintBt').attr('data-id', treeNode.code).unbind('click');
                         //打印 条形码
                         editDiv.find('.productPrintBt').click(function () { printWares(treeNode);});
-                        //保存上下限
-                        editDiv.find('.alertSaveBt')
-                            .click(function () {
-                                var productId = $(this).attr('data-id');
-                                if (!alertLower.val()|| !alertUpper.val()){
-                                    layer.msg('预警上下限必须>=0');
-                                    return false;
-                                }
-                                var iLower = parseInt(alertLower.val());
-                                var iUpper = parseInt(alertUpper.val());
-                                if (iLower >= iUpper){
-                                    layer.msg('预警下限必须小于上限');
-                                    return false;
-                                }
-                                //保存上下限
-                                //productId, alertLower, alertUpper
-                                services.association.supplier(consts.supplier.id)
-                                    .saveWarning(productId, iLower, iUpper)
-                                    .then(function (ret) {
-                                        layer.msg(ret._message);
-                                        console.log(treeId, treeNode);
-                                        //刷新值
-                                        treeNode.source.alertLower = iLower;
-                                        treeNode.source.alertUpper = iUpper;
-                                        treeNode.title = treeNode.fullName + '[' + iLower + ',' + iUpper + ']';
-                                        treeNode.name = treeNode.title.length > 50 ? treeNode.title.substring(0, 48) + '...' : treeNode.title;
-                                        $.fn.zTree.getZTreeObj(treeId).updateNode(treeNode);
-                                    })
-                                    .catch(function (reason) {
-                                        console.log(reason);
-                                        layer.msg(reason.caught ? reason.message : '请求失败！');
-                                    });
-                            });
                         //删除关联
                         editDiv.find('.alertDeleteBt')
                             .click(function () {
@@ -715,7 +684,7 @@
                                 });
                             });
                     } else {
-                        editDiv.hide().find('.alertSaveBt, alertDeleteBt').removeAttr('data-id');
+                        editDiv.hide().find('.productPrintBt, .alertDeleteBt').removeAttr('data-id');
                     }
                 }
             }
@@ -797,48 +766,10 @@
                 onClick : function (event, treeId, treeNode) {
                     console.log('选中节点',treeNode);
                     var editDiv = $("#__modelAssEdit");
-                    var alertLower = editDiv.find('.alertLower');
-                    var alertUpper = editDiv.find('.alertUpper');
-                    alertLower.val(treeNode.source.alertLower);
-                    alertUpper.val(treeNode.source.alertUpper);
                     if(treeNode.source){
-                        editDiv.show().find('.alertModelSaveBt, .alertModelDeleteBt, .modelPrintBt').attr('data-id', treeNode.code).unbind('click');
+                        editDiv.show().find('.alertModelDeleteBt, .modelPrintBt').attr('data-id', treeNode.code).unbind('click');
                         //打印 条形码
                         editDiv.find('.modelPrintBt').click(function () { printWares(treeNode);});
-
-                        //保存上下限
-                        editDiv.find('.alertModelSaveBt')
-                            .click(function () {
-                                var modelId = $(this).attr('data-id');
-                                if (!alertLower.val()|| !alertUpper.val()){
-                                    layer.msg('预警上下限必须>=0');
-                                    return false;
-                                }
-                                var iLower = parseInt(alertLower.val());
-                                var iUpper = parseInt(alertUpper.val());
-                                if (iLower >= iUpper){
-                                    layer.msg('预警下限必须小于上限');
-                                    return false;
-                                }
-                                //保存上下限
-                                //modelId, alertLower, alertUpper
-                                services.association.model(consts.supplier.id)
-                                    .saveWarning(modelId, iLower, iUpper)
-                                    .then(function (ret) {
-                                        layer.msg(ret._message);
-                                        console.log(treeId, treeNode);
-                                        //刷新值
-                                        treeNode.source.alertLower = iLower;
-                                        treeNode.source.alertUpper = iUpper;
-                                        treeNode.title = treeNode.fullName + '[' + iLower + ',' + iUpper + ']';
-                                        treeNode.name = treeNode.title.length > 50 ? treeNode.title.substring(0, 48) + '...' : treeNode.title;
-                                        $.fn.zTree.getZTreeObj(treeId).updateNode(treeNode);
-                                    })
-                                    .catch(function (reason) {
-                                        console.log(reason);
-                                        layer.msg(reason.caught ? reason.message : '请求失败！');
-                                    });
-                            });
                         //删除关联
                         editDiv.find('.alertModelDeleteBt')
                             .click(function () {
@@ -858,7 +789,7 @@
                                 });
                             });
                     } else {
-                        editDiv.hide().find('.alertModelSaveBt, .alertModelDeleteBt').removeAttr('data-id');
+                        editDiv.hide().find('.alertModelDeleteBt, .modelPrintBt').removeAttr('data-id');
                     }
                 }
             }

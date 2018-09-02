@@ -84,7 +84,7 @@ public class PreDataService {
                     , ErpMenu.builder().code("2001").name("销售计划单").matches("/sale/plan/**").uri("sale/plan.html").parentCode("20").build()
                     , ErpMenu.builder().code("2002").name("销售订单").matches("/sale/order/**").uri("sale/order.html").parentCode("20").build()
                     , ErpMenu.builder().code("2003").name("销售审核").matches("/sale/order/**").uri("sale/approval.html").parentCode("20").build()
-                    , ErpMenu.builder().code("2004").name("退货单管理").matches("/sale/order/**").uri("sale/refunds.html").parentCode("20").build()
+                    , ErpMenu.builder().code("2004").name("测试打印").matches("/sale/order/**").uri("sale/refunds.html").parentCode("20").build()
                 , ErpMenu.builder().code("30").name("库存管理").build()
                     , ErpMenu.builder().code("3001").name("仓位维护").matches("/stock/place/**").uri("stock/place.html").parentCode("30").build()
 
@@ -93,6 +93,10 @@ public class PreDataService {
                     , ErpMenu.builder().code("4001").name("采购计划单").matches("/purchase/plan/**").uri("purchase/plan.html").parentCode("40").build()
                     , ErpMenu.builder().code("4002").name("采购订单").matches("/purchase/order/**").uri("purchase/order.html").parentCode("40").build()
                     , ErpMenu.builder().code("4003").name("采购审核").matches("/purchase/order/**").uri("purchase/approval.html").parentCode("40").build()
+
+                , ErpMenu.builder().code("50").name("生产管理").build()
+                    , ErpMenu.builder().code("5001").name("生产计划单").matches("/prod/plan/**").uri("prod/plan.html").parentCode("50").build()
+                    , ErpMenu.builder().code("5002").name("生产制令单").matches("/prod/order/**").uri("prod/order.html").parentCode("50").build()
 
         );
         menuRepository.saveAll(menus);

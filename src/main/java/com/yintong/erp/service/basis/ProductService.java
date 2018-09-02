@@ -2,14 +2,9 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
-import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
 import com.yintong.erp.domain.sale.ErpSaleOrderItem;
 import com.yintong.erp.domain.sale.ErpSaleOrderItemRepository;
-import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.utils.bar.BarCodeConstants;
-import static com.yintong.erp.utils.common.Constants.SaleOrderStatus.STATUS_003;
-
-import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
@@ -17,6 +12,15 @@ import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteProductValidator;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
+import static com.yintong.erp.utils.common.Constants.SaleOrderStatus.STATUS_003;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 
@@ -43,11 +44,9 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 @Service
 public class ProductService {
 
-    @Autowired  ErpBaseEndProductRepository productRepository;
+    @Autowired ErpBaseEndProductRepository productRepository;
 
     @Autowired ErpSaleOrderItemRepository orderItemRepository;
-    
-    @Autowired SupplierProductService supplierProductService;
 
     @Autowired(required = false) List<OnDeleteProductValidator> onDeleteProductValidators;
 
@@ -59,6 +58,7 @@ public class ProductService {
     public Page<ErpBaseEndProduct> query(ProductService.ProductParameterBuilder parameter){
         return productRepository.findAll(parameter.specification(), parameter.pageable());
     }
+
     /**
      * 根据id查找成品
      * @param productId

@@ -238,10 +238,10 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 var wares = waresData[data.waresType  + data.waresAssId] || {};
                 data.waresName = $('#_editWaresAssId').find('.dk_label').html();
                 data.waresId = wares.waresId || '';
-                data.unit = wares.unit || '';
-                data.simpleName = wares.simpleName || '';
-                data.specification = wares.specification || '';
-                data.category = wares.category || '';
+                // data.unit = wares.unit || '';
+                // data.simpleName = wares.simpleName || '';
+                // data.specification = wares.specification || '';
+                // data.category = wares.category || '';
                 var _function = !!consts.currentOrderItem.id ? services.purchaseOrder.updateItem : services.purchaseOrder.addItem;
                 console.log('save orderItem Data', data);
                 _function(data).then(function () {
@@ -282,11 +282,12 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     var tbody = $clone.find('tbody').empty();
                     var html = '';
                     consts.currentOrder.items.forEach(function (item) {
+                        var w = item.wares;
                         html += '<tr>' +
-                            '<td>'+ (item.category || '') +'</td>' +
-                            '<td>'+ (item.simpleName || '') +'</td>' +
-                            '<td>'+ (item.specification || '')  +'</td>' +
-                            '<td style="text-align: center">'+ (item.unit || '') +'</td>' +
+                            '<td>'+ (w.category || '') +'</td>' +
+                            '<td>'+ (w.simpleName || '') +'</td>' +
+                            '<td>'+ (w.specification || '')  +'</td>' +
+                            '<td style="text-align: center">'+ (w.unit || '') +'</td>' +
                             '<td style="text-align: right">'+ (item.num || 0)  +'</td>' +
                             '<td style="text-align: right">'+ (item.unitPrice||0).toFixed(2) +'</td>' +
                             '<td style="text-align: right">'+ (item.money || 0).toFixed(2)  +'</td>' +
@@ -659,15 +660,16 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                         //条形码模版
                         var $printTemplate = $('#print_to_wares');
                         var $clone = $printTemplate.clone();
+                        var w = item.wares;
                         //基本信息
                         $clone.find('label[data-name="label_1"]').html('供应商：');
                         $clone.find('span[data-name="content_1"]').html(consts.currentOrder.supplierName);
                         $clone.find('label[data-name="label_2"]').html('类别：');
-                        $clone.find('span[data-name="content_2"]').html(sub_wares_name(item.category));
+                        $clone.find('span[data-name="content_2"]').html(w.category);
                         $clone.find('label[data-name="label_3"]').html('名称：');
-                        $clone.find('span[data-name="content_3"]').html(sub_wares_name(item.simpleName));
+                        $clone.find('span[data-name="content_3"]').html(w.simpleName);
                         $clone.find('label[data-name="label_4"]').html('规格：');
-                        $clone.find('span[data-name="content_4"]').html(sub_wares_name(item.specification));
+                        $clone.find('span[data-name="content_4"]').html(w.specification);
                         //条形码
                         services.common.barcode(data.barcode)
                             .then(function (ret) {

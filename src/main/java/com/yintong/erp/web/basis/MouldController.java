@@ -89,6 +89,26 @@ public class MouldController {
         return new BaseResult();
     }
 
+    /**
+     * 根据成品找已关联供应商
+     * @param mouldId
+     * @return
+     */
+    @GetMapping("{mouldId}/supplier")
+    public BaseResult findSuppliersByMaterialId(@PathVariable Long mouldId){
+        return new BaseResult().addList(supplierMouldService.findSuppliersAss(mouldId));
+    }
+
+    /**
+     * 根据成品找未关联供应商
+     * @param mouldId
+     * @return
+     */
+    @GetMapping("{mouldId}/supplier/unassociated")
+    public BaseResult findUnassociatedSuppliers(@PathVariable Long mouldId){
+        return new BaseResult().addList(supplierMouldService.findUnassociatedSuppliers(mouldId));
+    }
+
 
     /**
      * 更新供应商

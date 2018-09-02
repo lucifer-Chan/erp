@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importable {
+public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importable, TemplateWares {
 
     @Id
     @GeneratedValue
@@ -124,6 +124,21 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
     public String getDescription(){
         if(StringUtils.hasText(description)) return description;
         return description = (this.getRawTypeName() + "-" + this.getRawName() + "-" + this.getSpecification());
+    }
+
+    @Override
+    public Long getWaresId() {
+        return id;
+    }
+
+    @Override
+    public String getSimpleName() {
+        return rawName;
+    }
+
+    @Override
+    public String getCategoryCode() {
+        return rawTypeCode;
     }
 
     public void setRawTypeName(String rawTypeName){

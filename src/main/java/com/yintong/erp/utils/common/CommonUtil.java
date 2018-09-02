@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import net.sf.json.JSONObject;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -150,5 +152,11 @@ public class CommonUtil {
         } catch (NumberFormatException e){
             return null;
         }
+    }
+
+    public static JSONObject join(JSONObject ... jsons){
+        JSONObject ret = new JSONObject();
+        Stream.of(jsons).forEach(ret::putAll);
+        return ret;
     }
 }

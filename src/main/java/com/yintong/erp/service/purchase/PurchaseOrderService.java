@@ -1,11 +1,9 @@
 package com.yintong.erp.service.purchase;
 
-import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
-import com.yintong.erp.domain.basis.ErpBaseModelTool;
 import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
-import com.yintong.erp.domain.basis.ErpBaseRawMaterial;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterialRepository;
+import com.yintong.erp.domain.basis.TemplateWares;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
 import com.yintong.erp.domain.basis.associator.ErpModelSupplierRepository;
 import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
@@ -19,7 +17,6 @@ import com.yintong.erp.domain.stock.ErpStockInOrder;
 import com.yintong.erp.domain.stock.ErpStockInOrderRepository;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.service.stock.StockIn4Holder;
-import com.yintong.erp.utils.base.JsonWrapper;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants.PurchaseOrderStatus;
 import com.yintong.erp.utils.common.DateUtil;
@@ -32,9 +29,11 @@ import com.yintong.erp.validator.OnDeleteSupplierRawMaterialValidator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,7 +55,6 @@ import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.in;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
-import static com.yintong.erp.utils.bar.BarCodeConstants.*;
 
 /**
  * @author lucifer.chan
@@ -523,18 +521,8 @@ public class PurchaseOrderService implements StockIn4Holder,
             return productSupplierRepository.findBySupplierId(supplierId)
                     .stream()
                     .map(ass -> {
-                        ErpBaseEndProduct product = productRepository.findById(ass.getEndProductId()).orElse(null);
-
-                        return Objects.isNull(product) ?  null :
-                                JsonWrapper.builder()
-                                        .add("code", ass.getId())
-                                        .add("name",product.getDescription())
-                                        .add("waresId", product.getId())
-                                        .add("unit", product.getUnit())
-                                        .add("simpleName", product.getEndProductName())
-                                        .add("specification", product.getSpecification())
-                                        .add("category", BAR_CODE_PREFIX.valueOf(product.getEndProductTypeCode()).description())
-                                    .build();
+                        TemplateWares wares = findWaresById().get(WaresType.P).apply(ass.getEndProductId());
+                        return Objects.isNull(wares) ? null : wares.getTemplate(ass.getId());
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
@@ -544,18 +532,8 @@ public class PurchaseOrderService implements StockIn4Holder,
             return materialSupplierRepository.findBySupplierId(supplierId)
                     .stream()
                     .map(ass -> {
-                        ErpBaseRawMaterial material = materialRepository.findById(ass.getRawMaterId()).orElse(null);
-
-                        return Objects.isNull(material) ? null :
-                                JsonWrapper.builder()
-                                        .add("code", ass.getId())
-                                        .add("name", material.getDescription())
-                                        .add("waresId", material.getId())
-                                        .add("unit", material.getUnit())
-                                        .add("simpleName", material.getRawName())
-                                        .add("specification", material.getSpecification())
-                                        .add("category", BAR_CODE_PREFIX.valueOf(material.getRawTypeCode()).description())
-                                    .build();
+                        TemplateWares wares = findWaresById().get(WaresType.M).apply(ass.getRawMaterId());
+                        return Objects.isNull(wares) ? null : wares.getTemplate(ass.getId());
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
@@ -565,18 +543,8 @@ public class PurchaseOrderService implements StockIn4Holder,
             return mouldSupplierRepository.findBySupplierId(supplierId)
                     .stream()
                     .map(ass -> {
-                        ErpBaseModelTool mould = mouldRepository.findById(ass.getModelId()).orElse(null);
-
-                        return Objects.isNull(mould) ? null :
-                                JsonWrapper.builder()
-                                        .add("code", ass.getId())
-                                        .add("name", mould.getDescription())
-                                        .add("waresId", mould.getId())
-                                        .add("unit", mould.getUnit())
-                                        .add("simpleName", mould.getModelToolName())
-                                        .add("specification", mould.getSpecification())
-                                        .add("category", BAR_CODE_PREFIX.valueOf(mould.getModelToolTypeCode()).description())
-                                    .build();
+                        TemplateWares wares = findWaresById().get(WaresType.D).apply(ass.getModelId());
+                        return Objects.isNull(wares) ? null : wares.getTemplate(ass.getId());
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
@@ -646,5 +614,17 @@ public class PurchaseOrderService implements StockIn4Holder,
                 return names;
             }
         };
+    }
+
+    /**
+     * 根据货物id查找模版货物
+     * @return
+     */
+    public Map<WaresType, Function<Long, TemplateWares>> findWaresById(){
+        return new HashMap<WaresType, Function<Long, TemplateWares>>(){{
+            put(WaresType.P, id -> productRepository.findById(id).orElse(null));
+            put(WaresType.M, id -> materialRepository.findById(id).orElse(null));
+            put(WaresType.D, id -> mouldRepository.findById(id).orElse(null));
+        }};
     }
 }

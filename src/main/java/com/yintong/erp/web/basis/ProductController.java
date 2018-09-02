@@ -7,6 +7,7 @@ import com.yintong.erp.domain.basis.associator.ErpBaseProductBom;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.associator.ProductBomService;
+import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.service.stock.StockOptService;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.excel.ExcelUtil;
@@ -37,6 +38,8 @@ public class ProductController {
     @Autowired ProductService productService;
 
     @Autowired SupplierService supplierService;
+
+    @Autowired SupplierProductService supplierProductService;
 
     @Autowired ProductBomService bomService;
 
@@ -136,6 +139,27 @@ public class ProductController {
     public BaseResult delete(@PathVariable Long productId){
         productService.delete(productId);
         return new BaseResult().setErrmsg("删除成功");
+    }
+
+
+    /**
+     * 根据成品找已关联供应商
+     * @param productId
+     * @return
+     */
+    @GetMapping("{productId}/supplier")
+    public BaseResult findSuppliersByMaterialId(@PathVariable Long productId){
+        return new BaseResult().addList(supplierProductService.findSuppliersAss(productId));
+    }
+
+    /**
+     * 根据成品找未关联供应商
+     * @param productId
+     * @return
+     */
+    @GetMapping("{productId}/supplier/unassociated")
+    public BaseResult findUnassociatedSuppliers(@PathVariable Long productId){
+        return new BaseResult().addList(supplierProductService.findUnassociatedSuppliers(productId));
     }
 
     /**

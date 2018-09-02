@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseModelTool>{
+public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseModelTool>, TemplateWares{
     @Id
     @GeneratedValue
     private Long id;
@@ -70,6 +70,21 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
         }
 
         return description = (_type + this.getModelToolName() + (StringUtils.hasText(specification)? ("-" + specification) : ""));
+    }
+
+    @Override
+    public Long getWaresId() {
+        return id;
+    }
+
+    @Override
+    public String getSimpleName() {
+        return modelToolName;
+    }
+
+    @Override
+    public String getCategoryCode() {
+        return modelToolTypeCode;
     }
 
     public double getTotalNum(){
