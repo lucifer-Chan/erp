@@ -8,8 +8,10 @@ import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
+import com.yintong.erp.validator.OnDeleteProductValidator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * 销售计划单服务
  **/
 @Service
-public class SalePlanService {
+public class SalePlanService implements OnDeleteProductValidator{
 
     @Autowired ErpSalePlanOptLogRepository salePlanOptLogRepository;
 
@@ -131,6 +133,15 @@ public class SalePlanService {
      */
     public List<ErpSalePlanOptLog> findPlanOptHistory(Long planId){
         return salePlanOptLogRepository.findByPlanIdOrderByCreatedAtDesc(planId);
+    }
+
+    @Override
+    public void onDeleteProduct(Long productId) {
+        String codes = salePlanRepository.findByProductId(productId)
+                .stream().map(ErpSalePlan::getBarCode).collect(Collectors.joining(","));
+        if(StringUtils.hasText(codes)){
+            throw new IllegalArgumentException("请先删除采购计划单[" + codes + "]");
+        }
     }
 
     /**

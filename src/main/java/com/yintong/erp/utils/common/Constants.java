@@ -86,6 +86,23 @@ public interface Constants {
     }
 
     /**
+     * 制令单状态
+     */
+    enum ProdOrderStatus {
+        S_001("新建"),
+        S_002("生产中"),//打印了出库单-全部入库
+        S_003("已完成");//全部入库
+
+        ProdOrderStatus(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
+
+    /**
      * 仓位类型
      */
     enum StockPlaceType {
@@ -134,6 +151,20 @@ public interface Constants {
         INIT("初始化");//入库
 
         StockHolder(String description){
+            this.description = description;
+        }
+        private String description;
+        public String description() {
+            return description;
+        }
+    }
+
+    /**
+     * 生产环节，物料清单的宿主
+     */
+    enum ProdBomHolder {
+        PLAN("生产计划单"), ORDER("生产制令单");
+        ProdBomHolder(String description){
             this.description = description;
         }
         private String description;

@@ -207,7 +207,7 @@
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control" name="unitSilverLoss" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                                     </div>
-                                    <label class="col-sm-2 control-label">单粒银铜(g)</label>
+                                    <label class="col-sm-2 control-label">单粒耗铜(g)</label>
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control" name="unitSilverCopper" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                                     </div>
@@ -501,7 +501,7 @@
                                         <div class="col-xs-8 txt pd0" data-name="unitSilverLoss"></div>
                                     </div>
                                     <div class="col-xs-6">
-                                        <label class="col-xs-4 pd0">单粒银铜(g)</label>
+                                        <label class="col-xs-4 pd0">单粒耗铜(g)</label>
                                         <div class="col-xs-8 txt pd0" data-name="unitSilverCopper"></div>
                                     </div>
                                 </div>
@@ -717,10 +717,6 @@
                                     <label class="col-xs-3 pd0">切丝长度</label>
                                     <div class="col-xs-9 txt pd0" data-name="materialNum"></div>
                                 </div>
-                                <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">单位</label>
-                                    <div class="col-xs-9 txt pd0" data-name="unit"></div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -879,8 +875,8 @@
                         body.attr('data-value', (item.id + 'Info'));
                         $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
                         $(body).find('div[data-name="specification"]').html(material.specification || unset);
-                        $(body).find('div[data-name="materialNum"]').html(item.materialNum || unset);
-                        $(body).find('div[data-name="unit"]').html('mm');
+                        var _materialNum = !!item.materialNum ? item.materialNum + '(mm)' : unset;
+                        $(body).find('div[data-name="materialNum"]').html(_materialNum);
                         $bomContent.append($(clone).show());
                     });
                     utils.initRightAngleEvent();
@@ -1073,11 +1069,15 @@
             }
 
             function convertWarning(array) {
+                // if(!array.length === 3 || array[0] === '' || array[1] === ''){
+                //     return '<span class="label label-warning">未设置</span>';
+                // }
+                // var unit = array[2] || '';
+                // return '[' + array[0] + unit + ',' + array[1] + unit + ']';
                 if(!array.length === 3 || array[0] === '' || array[1] === ''){
                     return '<span class="label label-warning">未设置</span>';
                 }
-                var unit = array[2] || '';
-                return '[' + array[0] + unit + ',' + array[1] + unit + ']';
+                return '[' + array[0] + ',' + array[1] + ']';
             }
 
             function convertTotalNum(array) {

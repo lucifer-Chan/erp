@@ -10,8 +10,12 @@ import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 
 import com.yintong.erp.utils.query.QueryParameterBuilder;
+import com.yintong.erp.validator.OnDeleteRawMaterialValidator;
+import com.yintong.erp.validator.OnDeleteProductValidator;
+import com.yintong.erp.validator.OnDeleteMouldValidator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +37,8 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * 采购计划单服务
  **/
 @Service
-public class PurchasePlanService {
+public class PurchasePlanService implements OnDeleteProductValidator
+        , OnDeleteRawMaterialValidator, OnDeleteMouldValidator {
 
     @Autowired ErpPurchasePlanRepository planRepository;
 
@@ -44,6 +49,7 @@ public class PurchasePlanService {
      * @param plan
      * @return
      */
+    @Transactional
     public ErpPurchasePlan create(ErpPurchasePlan plan){
         validatePlan(plan);
         ErpPurchasePlan ret = planRepository.save(plan);
@@ -60,6 +66,7 @@ public class PurchasePlanService {
      * @param plan
      * @return
      */
+    @Transactional
     public ErpPurchasePlan update(ErpPurchasePlan plan) {
         validatePlan(plan);
         ErpPurchasePlan old = planRepository.findById(plan.getId()).orElse(null);
@@ -125,14 +132,14 @@ public class PurchasePlanService {
         return plan;
     }
 
-        /**
-         * 组合查询
-         * @param parameters
-         * @return
-         */
-        public Page<ErpPurchasePlan> query(PlanParameterDto parameters){
-            return planRepository.findAll(parameters.specification(), parameters.pageable());
-        }
+    /**
+     * 组合查询
+     * @param parameters
+     * @return
+     */
+    public Page<ErpPurchasePlan> query(PlanParameterDto parameters){
+        return planRepository.findAll(parameters.specification(), parameters.pageable());
+    }
 
     /**
      * 获取一个销售计划单的历史修改记录
@@ -154,6 +161,36 @@ public class PurchasePlanService {
         @ParameterItem(mappingTo = "waresType", compare = equal)
         String type;
     }
+
+    @Override
+    public void onDeleteMould(Long mouldId) {
+        onDeleteWares(mouldId, Constants.WaresType.D);
+    }
+
+    @Override
+    public void onDeleteProduct(Long productId) {
+        onDeleteWares(productId, Constants.WaresType.P);
+    }
+
+    @Override
+    public void onDeleteMaterial(Long materialId) {
+        onDeleteWares(materialId, Constants.WaresType.M);
+    }
+
+
+    /**
+     * 删除货物时的校验
+     * @param waresId
+     * @param type
+     */
+    private void onDeleteWares(Long waresId, Constants.WaresType type){
+        String codes = planRepository.findByWaresIdAndWaresType(waresId, type.name())
+                .stream().map(ErpPurchasePlan::getBarCode).collect(Collectors.joining(","));
+        if(StringUtils.hasText(codes)){
+            throw new IllegalArgumentException("请先删除采购计划单[" + codes + "]");
+        }
+    }
+
 
     /**
      * 新增或更新时验证计划单有效性

@@ -15,4 +15,6 @@ public interface ErpBaseProductBomRepository extends JpaRepository<ErpBaseProduc
 
 
     List<ErpBaseProductBom> findByProductIdOrderByCreatedAtDesc(Long productId);
+
+    List<ErpBaseProductBom> findByProductIdAndMaterialId(Long productId, Long materialId);
 }

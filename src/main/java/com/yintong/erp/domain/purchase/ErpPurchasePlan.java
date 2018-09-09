@@ -70,7 +70,6 @@ public class ErpPurchasePlan extends BaseEntityWithBarCode {
     @Transient
     private Double currentMoney;
 
-
     //达成记录
     @Transient
     private List<ErpPurchaseOrderItem> finishHistory;

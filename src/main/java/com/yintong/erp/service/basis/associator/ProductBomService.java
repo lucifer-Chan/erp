@@ -105,6 +105,18 @@ public class ProductBomService implements OnDeleteProductValidator, OnDeleteRawM
     }
 
     /**
+     * 根据成品和原材料id查找
+     * @param productId
+     * @param materialId
+     * @return
+     */
+    public ErpBaseProductBom findBom(Long productId, Long materialId){
+        ErpBaseProductBom bom = CommonUtil.single(productBomRepository.findByProductIdAndMaterialId(productId, materialId));
+        Assert.notNull(bom, "未找到成品[" + productId + "],原材料[" + materialId + "]的物料清单");
+        return bom;
+    }
+
+    /**
      * 下拉列表
      * @param productId
      * @return

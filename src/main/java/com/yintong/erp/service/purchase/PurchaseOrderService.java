@@ -557,7 +557,7 @@ public class PurchaseOrderService implements StockIn4Holder,
      * @param assId
      * @param type
      */
-    private void onDeleteAss(Long assId, WaresType type){
+    private void onDeleteAss(Long assId, WaresType type) {
         String codes =  orderItemRepository.findByWaresAssIdAndWaresType(assId, type.name())
                 .stream().map(ErpPurchaseOrderItem::getOrderCode).collect(Collectors.joining(","));
         if(StringUtils.hasText(codes)){

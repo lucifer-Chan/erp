@@ -1,10 +1,12 @@
 package com.yintong.erp.web.basis;
 
 import com.yintong.erp.domain.basis.security.ErpEmployee;
+import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
 import com.yintong.erp.service.basis.EmployeeService;
 import com.yintong.erp.service.basis.EmployeeService.EmployeeParameterBuilder;
 import com.yintong.erp.service.basis.MenuService;
 import com.yintong.erp.utils.base.BaseResult;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
@@ -22,6 +24,8 @@ import static com.yintong.erp.utils.query.PageWrapper.page2BaseResult;
 @RestController
 @RequestMapping("basis/employee")
 public class EmployeeController {
+
+    @Autowired ErpEmployeeRepository employeeRepository;
 
     @Autowired EmployeeService employeeService;
 
@@ -111,5 +115,15 @@ public class EmployeeController {
     public BaseResult query(EmployeeParameterBuilder parameter){
         Page<ErpEmployee> page = employeeService.query(parameter);
         return page2BaseResult(page, (employee)->!menuService.isAdmin(employee.getId()));
+    }
+
+    @GetMapping("all")
+    public BaseResult all(){
+        return new BaseResult().addList(
+                employeeRepository.findAll()
+                        .stream()
+                        .filter(employee -> !menuService.isAdmin(employee.getId()))
+                        .collect(Collectors.toList())
+        );
     }
 }

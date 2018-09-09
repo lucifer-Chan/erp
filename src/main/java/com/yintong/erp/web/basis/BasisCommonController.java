@@ -1,6 +1,5 @@
 package com.yintong.erp.web.basis;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.yintong.erp.domain.basis.ErpBaseCategory;
 import com.yintong.erp.domain.basis.ErpBaseLookupRepository;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
@@ -12,7 +11,9 @@ import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.bar.BarCodeUtil;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.common.Constants;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -24,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import sun.misc.BASE64Encoder;
-
 /**
  * @author lucifer.chan
  * @create 2018-05-14 上午12:22
@@ -100,9 +99,10 @@ public class BasisCommonController {
      */
     @GetMapping("barcode/{code}")
     public BaseResult barCode(@PathVariable String code) {
-        ByteOutputStream out = new ByteOutputStream();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         BarCodeUtil.generate(code, out);
-        String base64 = "data:image/png;base64," + new BASE64Encoder().encode(out.getBytes());
+        String base64 = "data:image/png;base64," + new Base64().encodeToString(out.toByteArray());
         return new BaseResult().put("base64", base64);
     }
 //    @GetMapping("barcode/{code}")
@@ -130,7 +130,6 @@ public class BasisCommonController {
         }
         throw new IllegalArgumentException("货物类型不合法");
     }
-
 
     /**
      * 获取所有供应商和成品的关联

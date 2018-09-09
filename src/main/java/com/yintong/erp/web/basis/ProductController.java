@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,6 +85,18 @@ public class ProductController {
     public BaseResult findAll(){
         return new BaseResult().addList(productRepository.findAll());
     }
+
+    @GetMapping("allWithBom")
+    public BaseResult findAllWithBom(){
+
+        List<ErpBaseEndProduct> list = productRepository.findAll()
+                .stream()
+                .filter(product -> !CollectionUtils.isEmpty(bomService.findBomList(product.getId())))
+                .collect(Collectors.toList());
+
+        return new BaseResult().addList(list);
+    }
+
 
     /**
      * 更新成品
@@ -215,7 +228,7 @@ public class ProductController {
     }
 
     /**
-     * 获取物料清单
+     * 获取成品的物料清单
      * @param productId
      * @return
      */

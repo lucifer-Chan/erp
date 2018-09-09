@@ -19,6 +19,9 @@ public interface ErpPurchasePlanRepository extends JpaRepository<ErpPurchasePlan
      */
     List<ErpPurchasePlan> findByWaresIdAndWaresTypeAndCreatedAtIsBetween(Long waresId, String waresType, Date start, Date end);
 
+
+    List<ErpPurchasePlan> findByWaresIdAndWaresType(Long waresId, String waresType);
+
     /**
      * 模糊查询
      * @param specification

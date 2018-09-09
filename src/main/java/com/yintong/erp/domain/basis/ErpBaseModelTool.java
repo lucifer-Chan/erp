@@ -59,6 +59,13 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     @Transient
     private String description;
 
+    @Transient
+    private String mouldTypeName;
+
+    public String getMouldTypeName(){
+        return BarCodeConstants.BAR_CODE_PREFIX.valueOf(modelToolTypeCode).description();
+    }
+
     public String getDescription(){
         if(StringUtils.hasText(description)) return description;
         String _type;

@@ -131,6 +131,7 @@ public class StockOptService {
             //e - 原材料
             materialSupplierRepository.save(((ErpRawMaterialSupplier) entity).stockIn(num));
         }
+        stockOptLogRepository.save(optLog);
 
         //3- 对应的单据
         final Long _holderId = holderId;
@@ -203,6 +204,8 @@ public class StockOptService {
             //e - 原材料
             materialSupplierRepository.save(((ErpRawMaterialSupplier) entity).stockOut(num));
         }
+        stockOptLogRepository.save(optLog);
+
         //3- 对应的单据
         if(!CollectionUtils.isEmpty(stockOut4Holders)){
             stockOut4Holders.forEach(service-> service.handleOut(holder, holderId, stockEntity, num));

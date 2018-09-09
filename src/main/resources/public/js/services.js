@@ -124,6 +124,10 @@ define('services',['utils'],function (utils) {
                 url : 'basis/employee',
                 data : $.extend({cause : '', departmentId: ''}, data)
             });
+        },
+
+        all : function () {
+            return $.http.get('basis/employee/all');
         }
     };
 
@@ -419,6 +423,11 @@ define('services',['utils'],function (utils) {
                     return ret;
                 });
         },
+        //所有成品 - 有bom关联的
+        allWithBom : function () {
+            return $.http.get('basis/product/allWithBom');
+        },
+
         //保存上下限 {supplierId}/product/{productId}
         saveWarning : function(id, alertLower, alertUpper){
             var $this = this;
@@ -968,7 +977,79 @@ define('services',['utils'],function (utils) {
         optHistory : function (planId) {
             return $.http.get('purchase/plan/' + planId + '/history/opt');
         }
-    }
+    };
+
+    /**
+     * 生产计划
+     * @type {{}}
+     */
+    var prodPlan = {
+        //新增
+        create : function (data) {
+            return $.http.post({
+                url : 'prod/plan',
+                data : data,
+                contentType : $.contentType.json
+            })
+        },
+        //更新
+        update : function (data) {
+            var plan = {};
+            return $.http.put({
+                url : 'prod/plan',
+                data : data,
+                contentType : $.contentType.json
+            }).then(function (ret) {
+                plan = ret;
+                return $.http.get('prod/plan/' + ret.id + '/history/opt');
+            }).then(function (opts) {
+                //操作记录
+                plan.opts = opts.list;
+                return plan;
+            });
+        },
+        //删除
+        delete : function (planId) {
+            return $.http.delete('prod/plan/' + planId);
+        },
+        //查询
+        query : function (params) {
+            return $.http.get({
+                url : 'prod/plan',
+                data : params
+            });
+        },
+        //单个获取
+        one : function (planId) {
+            return $.http.get('prod/plan/' + planId);
+        },
+        //计划单的操作记录
+        optHistory : function (planId) {
+            return $.http.get('prod/plan/' + planId + '/history/opt');
+        },
+        //获取物料清单
+        boms : function (planId, productId) {
+            return $.http.get('prod/plan/' + planId + '/' + productId +'/boms')
+        },
+
+        /**
+         * 保存模具[新增|更新]
+         * @param planId
+         * @param data {id, mouldId, supplierId[可选], realityMouldNum}
+         * @returns {*}
+         */
+        saveMould : function (planId, data) {
+            return $.http.post({
+                url : 'prod/plan/' + planId + '/mould',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+
+        deleteMould : function (id) {
+            return $.http.delete('prod/plan/mould/' + id);
+        }
+    };
 
     /**
      * 销售订单
@@ -1140,6 +1221,37 @@ define('services',['utils'],function (utils) {
     };
 
     /**
+     * 生产制令单
+     * @type {{}}
+     */
+    var prodOrder = {
+        //新增
+        create : function (data) {
+            return $.http.post({
+                url : 'prod/order',
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+        //修改
+        update : function (data) {
+            return $.http.put({
+                url : 'prod/order',
+                data : data,
+                contentType : $.contentType.json
+            })
+        },
+        //删除
+        delete : function (orderId) {
+            return $.http.delete('prod/order/' + orderId);
+        },
+        //find one
+        one : function (orderId) {
+            return $.http.get('prod/order/' + orderId);
+        }
+    };
+
+    /**
      * 仓库管理
      * @type {{place: {}}}
      */
@@ -1231,6 +1343,8 @@ define('services',['utils'],function (utils) {
         , saleOrder : saleOrder
         , purchasePlan : purchasePlan
         , purchaseOrder : purchaseOrder
+        , prodPlan : prodPlan
+        , prodOrder : prodOrder
         , stock : stock
         , common : common
     }

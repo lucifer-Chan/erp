@@ -1,10 +1,1348 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="erp_content animated fadeInRight full_height"  id="prod_plan_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、计划内容、成品名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+        </div>
+        <div class="sidebar-operations">
+            <button type="button" class="btn btn-default btn-ms operation" id="editProdPlanBt" data-toggle="modal" data-target="#_editProdPlan">新增生产计划</button>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:50px" erp-data="{barCode}">计划单编号<span id="allCount"></span></th>
+                                <th style="width:70px" erp-data="{description}" >计划内容</th>
+                                <th style="width:70px" erp-data="{productName}">生产成品</th>
+                                <th style="width:30px" erp-data="{startDate}" erp-convert="convertDate">计划开始日期</th>
+                                <th style="width:30px" erp-data="{endDate}" erp-convert="convertDate">计划达成日期</th>
+                                <th style="width:30px" erp-data="{planNum}" erp-convert="convertNum">生产数量</th>
+                                <th style="width:30px" erp-data="{distributedNum}" erp-convert="convertNum">分配数量</th>
+                                <th style="width:30px" erp-data="{finishNum}" erp-convert="convertNum">达成数量</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 编辑基本信息 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editProdPlan">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑计划单信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd28">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">计划日期</label>
+                        <div class="col-sm-9 projectPlanDate">
+                            <div class="input-daterange input-group col-sm-9">
+                                <input type="text" class="input-sm form-control" name="startDate" id="_editStartDate" value="">
+                                <span class="input-group-addon">到</span>
+                                <input type="text" class="input-sm form-control" name="endDate" id="_editEndDate" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">计划内容</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                        </div>
+                    </div>
+                    <div class="form-group _productId">
+                        <label class="col-sm-3 control-label">生产成品</label>
+                        <div class="col-sm-9">
+                            <div class="customDropkick" style="width: 100%;" id="_productId"></div>
+                            <div><label id="__productId" class="pt7"></label></div>
+                            <span id="selectProductTip" class="text-info"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">生产数量</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="0.01" class="form-control" name="planNum" placeholder="输入数字">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">备注</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="remark">
+                        </div>
+                    </div>
+                    <div class="form-group _bomsHolder">
+                        <label class="col-sm-3 control-label">物料清单</label>
+                        <div class="col-sm-9 _bomsContent">
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- 编辑模具 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="editMould">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑模具</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd28">
+                    <div class="form-group _mould">
+                        <label class="col-sm-3 control-label">模具</label>
+                        <div class="col-sm-9">
+                            <div class="customDropkick" style="width: 100%;" id="_mould"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">供应商</label>
+                        <div class="col-sm-9">
+                            <div class="customDropkick" style="width: 100%;" id="_supplier"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">数量</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="1" class="form-control" name="realityMouldNum" placeholder="输入数字">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑制令单 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="editOrder">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑制令单</h4>
+            </div>
+            <div class="modal-body">
+                <ul id='orderTab' class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><a href="#_editOrderInfo" role="tab" data-toggle="tab"><span>基本信息</span></a></li>
+                    <li role="presentation"><a href="#_editMouldInfo" role="tab" data-toggle="tab"><span>模具信息</span></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="_editOrderInfo">
+                        <div class="row">
+                            <div class="form-horizontal pd28 pd12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">开始时间</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="input-sm form-control" name="startDate" id="_startDate" placeholder="点击选择日期">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">订单描述</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">分配数量</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" step="0.01" class="form-control" data-name="prodNum" placeholder="输入数字">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">工人</label>
+                                    <div class="col-sm-9">
+                                        <div class="customDropkick" style="width: 100%;" id="_employeeId"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">生产成品</label>
+                                    <div class="col-sm-9">
+                                        <div><label id="_orderProductDescription" class="pt7"></label></div>
+                                        <span id="selectOrderProductTip" class="text-info"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group _orderBomsHolder">
+                                    <label class="col-sm-3 control-label">物料清单</label>
+                                    <div class="col-sm-9 _orderBomsContent">
+                                    </div>
+                                </div>
+                                <div class="modal-footer noborder">
+                                    <button class="btn btn-info noborder" name="next">下一步</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="_editMouldInfo">
+                        <div class="row">
+                            <div class="form-horizontal pd28 pd12">
+                                <div class="form-group _mouldsHolder">
+                                    <div class="col-sm-12 _mouldsContent pd48">
+                                    </div>
+                                </div>
+                                <div class="modal-footer noborder">
+                                    <button class="btn btn-info noborder" name="save">保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOM编辑模版-->
+<div class="row pd31 bomTemplate" id="bomTemplate" style="display: none;">
+    <div class="col-sm-12" style="margin-bottom:-20px">
+        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 13px"></h3>
+            </div>
+            <div class="panel-body">
+                <input type="hidden" data-name="bom_id">
+                <input type="hidden" data-name="material_id">
+                <div class="form-group md31">
+                    <label class="col-sm-4">原材料名称</label>
+                    <div class="col-sm-8 pd40">
+                        <div data-name="rawName"></div>
+                    </div>
+                </div>
+                <div class="form-group md31">
+                    <label class="col-sm-4">规格描述</label>
+                    <div class="col-sm-8 pd40">
+                        <div data-name="specification"></div>
+                    </div>
+                </div>
+                <div class="form-group md31">
+                    <label class="col-sm-4 pt7">切丝长度(mm)</label>
+                    <div class="col-sm-8 pd40">
+                        <input type="number" step="0.01" class="form-control" data-name="materialNum" placeholder="输入数字">
+                    </div>
+                </div>
+                <div class="form-group md31">
+                    <label class="col-sm-4 pt7">供应商</label>
+                    <div class="col-sm-8 pd40">
+                        <div class="customDropkick _supplier" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="form-group md31">
+                    <label class="col-sm-4 pt7">总量</label>
+                    <div class="col-sm-8 pd40">
+                        <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOM展现模版 -->
+<div class="row" id="bomDisplayTemplate" style="display: none">
+    <div class="col-sm-12" style="margin-bottom:-20px">
+        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 13px"></h3>
+            </div>
+            <div class="panel-body" data-value="">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">供应商</label>
+                                    <div class="col-xs-9 txt pd0" data-name="supplierName"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">数量</label>
+                                    <div class="col-xs-9 txt pd0" data-name="num"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">原材料名称</label>
+                                    <div class="col-xs-9 txt pd0" data-name="rawName"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">规格</label>
+                                    <div class="col-xs-9 txt pd0" data-name="specification"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">切丝长度</label>
+                                    <div class="col-xs-9 txt pd0" data-name="materialNum"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模具展现模版 -->
+<div class="row" id="mouldDisplayTemplate" style="display: none">
+    <div class="col-sm-12" style="margin-bottom:-20px">
+        <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 13px"></h3>
+                <div class="tools">
+                    <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value=""></i></span>
+                    <button type="button" class="btn btn-info btn-xs _mouldUpdate" data-toggle="modal" data-target="#editMould">修改</button>
+                    <button type="button" class="btn btn-danger btn-xs _mouldDelete">删除</button>
+                </div>
+            </div>
+            <div class="panel-body" data-value="">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div>
+                            <div class="row">
+                                <input type="hidden" data-name="supplierId">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">供应商</label>
+                                    <div class="col-xs-9 txt pd0" data-name="supplierName"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">数量</label>
+                                    <div class="col-xs-9 txt pd0" data-name="realityMouldNum"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label class="col-xs-3 pd0">模具描述</label>
+                                    <div class="col-xs-9 txt pd0" data-name="description"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 右侧 -->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_editProdPlan">修改计划单</button>
+            <button class="btn btn-primary" data-name="delete">删除</button>
+        </span>
+    </div>
+    <div class="bugInfoContent initPlanDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">生产计划单信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">计划单编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">创建时间</label>
+                                <div class="col-xs-8 txt pd0" data-name="createdAt"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">生产成品</label>
+                                <div class="col-xs-8 txt pd0" data-name="productName"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">生产数量</label>
+                                <div class="col-xs-8 txt pd0" data-name="planNum"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">已分配数量</label>
+                                <div class="col-xs-8 txt pd0" data-convert="distributedNum"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">已达成数量</label>
+                                <div class="col-xs-8 txt pd0" data-convert="finishNum"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">备注</label>
+                                <div class="col-xs-10 txt pd0" data-name="remark" data-convert="false"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#orderList" aria-controls="orderList" role="tab" data-toggle="tab">制令单列表</span></li>
+                    <li role="presentation"><span href="#finishHistory" aria-controls="finishHistory" role="tab" data-toggle="tab">达成记录</span></li>
+                    <li role="presentation"><span href="#optHistory" aria-controls="optHistory" role="tab" data-toggle="tab">修改记录</span></li>
+                    <li role="presentation"><span href="#bomList" aria-controls="bomList" role="tab" data-toggle="tab">物料清单</span></li>
+                    <li role="presentation"><span href="#mouldList" aria-controls="mouldList" role="tab" data-toggle="tab">模具清单</span></li>
+
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="orderList">
+                        <button type="button" class="btn btn-success btn-xs md11 _createOrderBt">新增制令单</button>
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="finishHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="optHistory">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="bomList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="mouldList">
+                        <button type="button" class="btn btn-success btn-xs md11 _createMouldBt" data-toggle="modal" data-target="#editMould">新增模具</button>
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 制令单展现 -->
+<script id="template-order" type="text/template">
+    {{each prodOrders as o}}
+    <div class="row pd31">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">{{o.barCode}}</h3>
+                    <div class="tools">
+                        <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="{{o.id}}"></i></span>
+                        <button type="button" class="btn btn-info btn-xs _orderUpdate" data-value="{{o.id}}">修改</button>
+                        <button type="button" class="btn btn-danger btn-xs _orderDelete" data-value="{{o.id}}">删除</button>
+                    </div>
+                </div>
+                <div class="panel-body" data-value="{{o.id}}Info">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">订单描述</label>
+                                        <div class="col-xs-9 txt pd0">{{o.description}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">订单状态</label>
+                                        <div class="col-xs-9 txt pd0">{{o.statusName}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">开始时间</label>
+                                        <div class="col-xs-9 txt pd0">{{o.startDate}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">完成时间</label>
+                                        <div class="col-xs-9 txt pd0">
+                                            {{if o.finishDate}} {{o.finishDate}}
+                                            {{else}}
+                                            <span class="label label-danger">尚未完成</span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">工人</label>
+                                        <div class="col-xs-9 txt pd0">{{o.employeeName}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">分配数量</label>
+                                        <div class="col-xs-9 txt pd0">{{o.prodNum}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">挑拣数量</label>
+                                        <div class="col-xs-9 txt pd0">{{o.pickNum}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">完成数量</label>
+                                        <div class="col-xs-9 txt pd0">{{o.finishNum}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<!-- 制令单BOM编辑 -->
+<script id="template-bom" type="text/template">
+    {{each boms as b}}
+    <div class="row pd31 _template-bom" data-id="{{b.id}}">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">物料清单-{{b.material.rawTypeName}}</h3>
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" data-name="bom_id">
+                    <div class="form-group md31">
+                        <label class="col-sm-4">原材料名称</label>
+                        <div class="col-sm-8 pd40">
+                            <div>{{b.material.rawName}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group md31">
+                        <label class="col-sm-4">规格描述</label>
+                        <div class="col-sm-8 pd40">
+                            <div>{{b.material.specification}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group md31">
+                        <label class="col-sm-4 pt7">切丝长度(mm)</label>
+                        <div class="col-sm-8 pd40">
+                            <div>{{b.materialNum}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group md31">
+                        <label class="col-sm-4 pt7">供应商</label>
+                        <div>{{b.supplierName}}</div>
+                    </div>
+                    <div class="form-group md31">
+                        <label class="col-sm-4 pt7">总量</label>
+                        <div class="col-sm-8 pd40">
+                            {{if numBe0}}
+                                <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字" value="0">
+                            {{else}}
+                                <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字" value="{{b.realityMaterialNum}}">
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<!-- 制令单编辑模具 -->
+<script id="template-mould" type="text/template">
+    {{each moulds as m}}
+    <div class="row pd31 _template-mould" data-id="{{m.id}}">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">{{m.mould.mouldTypeName}}</h3>
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" data-name="mould_id">
+                    <div class="form-group md31">
+                        <label class="col-sm-4">模具名称</label>
+                        <div class="col-sm-8 pd40">
+                            <div>{{m.mould.modelToolName}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group md31">
+                        <label class="col-sm-4">规格描述</label>
+                        <div class="col-sm-8 pd40">
+                            <div>{{m.mould.specification}}</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group md31">
+                        <label class="col-sm-4 pt7">供应商</label>
+                        {{if m.realityMould.supplierName}}
+                            <div>{{m.realityMould.supplierName}}</div>
+                        {{else}}
+                            <div><span class="label label-danger">未指定</span></div>
+                        {{/if}}
+                    </div>
+                    <div class="form-group md31">
+                        <label class="col-sm-4 pt7">数量</label>
+                        <div class="col-sm-8 pd40">
+                            {{if numBe0}}
+                            <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字" value="0">
+                            {{else}}
+                            <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字" value="{{m.realityMouldNum}}">
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        console.log('hello prodPlan');
+        var consts = {
+            oQueryParam : {}//查询参数
+            , currentPlan : {}//当前计划
+            , currentOrder : {}//当前选中的制令单
+            , model : ''//update|create
+            , moulds : [] //所有模具
+            , currentProdMould : {}//当前选中的计划单中的模具
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $editOrderModal : $('#editOrder')//编辑制令单modal
+            , $editInfoModal : $('#_editProdPlan')//编辑计划单modal
+            , $editMouldModal : $('#editMould')//编辑模具modal
+            , $startDate : $('#_editStartDate')
+            , $endDate : $('#_editEndDate')
+            , products : []//所有成品
+            , employees : []//所有员工
+            , productCache : {}//成品缓存
+            , mouldCache : {} //模具缓存
+            , logTemplate : '<p>' +
+                '<span class="name"><b>{name}</b></span>' +
+                '<span class="content"> {content}</span>  ' +
+                '<span class="right">{time}</span>' +
+                '</p>'
+            , $bomTemplate : $('#bomTemplate')//bom template
+            , $bomDisplayTemplate : $('#bomDisplayTemplate')
+            , $mouldDisplayTemplate : $('#mouldDisplayTemplate')
+        };
+
+
+        //预置数据
+        function prepareData() {
+            return $.Promise.all([
+                services.mould.all(), services.product.allWithBom(), services.account.all()
+            ]).then(function (array) {
+                consts.moulds.push({code : -1, name : '【请选择模具】'});
+                consts.products.push({code : -1, name : '【请选择成品】'});
+                consts.employees.push({code : -1, name : '【请选择工人】'})
+
+                array[0].list.forEach(function (value) {
+                    consts.moulds.push({code : value.id, name : value.description});
+                    consts.mouldCache[value.id] = value;
+                });
+                array[1].list.forEach(function (value) {
+                    consts.products.push({code : value.id, name : value.description});
+                    consts.productCache[value.id] = value;
+                });
+                array[2].list.forEach(function (value) {
+                    consts.employees.push({code : value.id, name : value.name});
+                });
+            }).catch(function (reason) {
+                console.log('reason', reason);
+            });
+        }
+
+        /**
+         * 加载计划单列表
+         */
+        function loadDataTable(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.prodPlan.query(params);
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.prodPlan.one(id).then(function (tr) {
+                    console.log('点击tr', tr);
+                    $('#_productId').hide();
+                    $('#__productId').show();
+                    initTrDetail(tr);
+                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                    $rightPage.find('.fa-angle-double-down').click();
+
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            }
+
+            function convertNum(array){
+                return !!array[0] ? array[0] : 0;
+            }
+
+            function convertDate(array) {
+                return (array.length ? array[0] : '').substr(0,10);
+
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : [convertNum, convertDate]
+            });
+        }
+
+        /**
+         * 初始化右侧
+         */
+        function initTrDetail(tr) {
+            consts.currentPlan = tr;
+            var unset = '<span class="label label-danger">未设置</span>';
+            var $detail = $('.initPlanDetail');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                var def = $(this).attr('data-convert') === 'false' ? '无' : unset;
+                $(this).html(tr[$(this).attr('data-name')] || def);
+            });
+            //data-convert="planDate"
+            $baseInfo.find('div[data-convert="planDate"]').html(tr.startDate.substr(0,10) + ' 至 ' + tr.endDate.substr(0,10));
+            $baseInfo.find('div[data-convert="distributedNum"]').html(tr.distributedNum || 0);
+            $baseInfo.find('div[data-convert="finishNum"]').html(tr.finishNum || 0);
+
+            //达成记录
+            var html = '';
+            var finishHistory = tr.finishHistory || [];
+            if(finishHistory.length){
+                finishHistory.forEach(function (log) {
+                    html += consts.logTemplate.replace('{name}', log.createdName)
+                        .replace('{content}', '订单编号:' + log.orderCode + ',单价:' + log.unitPrice + ', 总额:' + log.money)
+                        .replace('{time}', log.orderOptDate);
+                })
+            } else {
+                html = '<p>暂无</p>';
+            }
+            $('#finishHistory').find('.bugInfoHistories').html(html);
+
+            //操作记录
+            services.prodPlan.optHistory(tr.id)
+                .then(function (ret) {
+                    var html = '';
+                    var opts = ret.list||[];
+                    if(opts.length){
+                        opts.forEach(function (log) {
+                            html += consts.logTemplate.replace('{name}', log.createdName)
+                                .replace('{content}', log.content)
+                                .replace('{time}', log.createdAt);
+                        });
+                    } else {
+                        html = '<p>暂无</p>';
+                    }
+                    $('#optHistory').find('.bugInfoHistories').html(html);
+                });
+
+            //物料清单
+            var $bomsHolder = $('#bomList').find('.bugInfoHistories').empty();
+            var boms = tr.boms || [];
+            if(boms.length){
+                $.each(boms, function (i, item) {
+                    var material = item.material || {};
+                    var realityMaterial = item.realityMaterial || {};
+                    var clone = consts.$bomDisplayTemplate.clone();
+                    $(clone).find('.panel-title').text('物料清单-' + (i+1));
+                    var body = $(clone).find('.panel-body');
+                    $(body).find('div[data-name="supplierName"]').html(realityMaterial.supplierName || unset);
+                    $(body).find('div[data-name="num"]').html(item.realityMaterialNum || 0);
+                    $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
+                    $(body).find('div[data-name="specification"]').html(material.specification || unset);
+                    var _materialNum = !!item.materialNum ? item.materialNum + '(mm)' : unset;
+                    $(body).find('div[data-name="materialNum"]').html(_materialNum).val(item.materialNum || '');
+                    $bomsHolder.append($(clone).show());
+                });
+            } else {
+                $bomsHolder.html('<p>暂无</p>');
+            }
+            //模具清单
+            var $mouldsHolder = $('#mouldList').find('.bugInfoHistories').empty();
+            var moulds = tr.moulds || [];
+            if(moulds.length){
+                $.each(moulds, function (i, item) {
+                    var mould = item.mould || {};
+                    var realityMould = item.realityMould || {};
+                    var clone = consts.$mouldDisplayTemplate.clone();
+                    $(clone).find('.panel-title').text('模具清单-' + (i+1));
+                    $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._mouldUpdate, ._mouldDelete')
+                        .attr('data-value', item.id)
+                        .attr('data-supplierId', realityMould.supplierId)
+                        .attr('data-mouldId', mould.id)
+                        .attr('data-num', item.realityMouldNum || 0);
+                    var body = $(clone).find('.panel-body');
+                    body.attr('data-value', (item.id + 'Info'));
+                    $(body).find('input[data-name="supplierId"]').val(realityMould.supplierId);
+                    $(body).find('div[data-name="supplierName"]').html(realityMould.supplierName || '<span class="label label-danger">未指定</span>');
+                    $(body).find('div[data-name="realityMouldNum"]').html(item.realityMouldNum || 0);
+                    $(body).find('div[data-name="description"]').html(mould.description || unset);
+                    $mouldsHolder.append($(clone).show());
+                });
+            }
+
+            //制令单清单
+            var ordersHtml = template('template-order', {
+               prodOrders : tr.prodOrders || []
+               //  prodOrders : [{barCode : 'ssss', description : 'fuck', id : '999', finishDate : '2018-09-09'}]
+            });
+            $('#orderList').find('.bugInfoHistories').empty().html(ordersHtml);
+
+            utils.initRightAngleEvent();
+            initBtEvent();
+        }
+
+        //按钮事件
+        function initBtEvent() {
+            //修改、删除模具
+            consts.$rightPage.find('._mouldUpdate, ._mouldDelete').click(function () {
+                var $bt = $(this);
+                consts.currentProdMould = {
+                    id : $bt.attr('data-value'),
+                    supplierId : $bt.attr('data-supplierId'),
+                    mouldId : $bt.attr('data-mouldId'),
+                    num : $bt.attr('data-num')
+                };
+
+                if ($bt.hasClass('_mouldDelete')){
+                    layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                        services.prodPlan.deleteMould(consts.currentProdMould.id)
+                            .then(function (plan) {
+                                layer.msg("删除成功");
+                                initTrDetail(plan);
+                            })
+                            .catch(function (reason) {
+                                layer.msg(reason.caught ? reason.message : '请求失败！');
+                            });
+                    });
+                }
+            });
+
+            consts.$rightPage.find('._orderUpdate, ._orderDelete').click(function () {
+                var $bt = $(this);
+                var orderId = $bt.attr('data-value');
+                if ($bt.hasClass('_orderUpdate')){
+                    services.prodOrder.one(orderId).then(function (order) {
+                        consts.currentOrder = order;
+                        consts.$editOrderModal.modal('show');
+                    })
+
+                }else if ($bt.hasClass('_orderDelete')){
+                    layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                        services.prodOrder.delete(orderId)
+                            .then(function () {
+                                layer.msg("删除成功");
+                                return services.prodPlan.one(consts.currentPlan.id);
+                            })
+                            .then(function (plan) {
+                                initTrDetail(plan);
+                                loadDataTable(true);
+                            })
+                            .catch(function (reason) {
+                                layer.msg(reason.caught ? reason.message : '请求失败！');
+                            });
+                    });
+                }
+
+            });
+
+
+            //编辑制令单的"下一页"按钮
+            consts.$editOrderModal.find('button[name="next"]').unbind('click').click(function () {
+                var data = buildOrderData1();
+                if (data){
+                    $('#orderTab').find('li:eq(1) a').tab('show');
+                }
+            });
+
+            //编辑制令单的保存按钮
+            consts.$editOrderModal.find('button[name="save"]').unbind('click').click(function () {
+                var data = buildOrderData1();
+                if (!data) {
+                    return;
+                }
+                var $tab2 = $('#_editMouldInfo');
+                var $moulds = $tab2.find('._template-mould');
+                var moulds = [], mouldsFlag = true;
+                $.each($moulds, function (i, item) {
+                    var num = $(item).find('input[data-name="num"]').val();
+                    if (!num || parseFloat(num) <= 0){
+                        layer.msg('模具数量需大于0');
+                        return mouldsFlag = false;
+                    }
+                    moulds.push({
+                        id : $(item).attr('data-id'),
+                        num : num
+                    });
+                });
+
+                if (!moulds.length || !mouldsFlag) return null;
+
+                data.moulds = moulds;
+
+                console.log('save prodOrder data', data);
+
+                var _function = !!consts.currentOrder.id ? services.prodOrder.update : services.prodOrder.create;
+
+                _function(data).then(function (order) {
+                    loadDataTable(true);
+                    layer.msg('保存制令单成功');
+                    consts.$editOrderModal.modal('hide');
+                    return services.prodPlan.one(consts.currentPlan.id);
+                }).then(function (plan) {
+                    initTrDetail(plan)
+                }).catch(function (reason) {
+                    console.log('保存制令单失败', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+
+            //点击新增制令单
+            $('._createOrderBt').unbind('click').click(function () {
+                if (!consts.currentPlan.moulds.length){
+                    layer.confirm('请先维护模具',{title:'提示',move:false},function(){
+                        layer.closeAll();
+                        $('#rightInfoPage').find('span[aria-controls="mouldList"]').tab('show');
+                    });
+                } else {
+                    consts.$editOrderModal.modal('show');
+                }
+            })
+
+
+        }
+        //验证制令单第一tab的数据（基础数据+bom）
+        function buildOrderData1(){
+            var $tab1 = $('#_editOrderInfo');
+            var $boms = $tab1.find('._template-bom');
+            //1-base data : {employeeId prodNum ,planId, startDate, description}
+            var orderData = {
+                id : consts.currentOrder.id,
+                employeeId : $('#_employeeId').attr('data-value'),
+                prodNum : $tab1.find('input[data-name="prodNum"]').val(),
+                planId : consts.currentPlan.id,
+                startDate :  $('#_startDate').val(),
+                description : $tab1.find('input[name="description"]').val()
+            };
+            if (!orderData.startDate || isNaN(Date.parse(orderData.startDate))){
+                layer.msg('请选择正确的日期');
+                return null;
+            }
+            if (!orderData.description){
+                layer.msg('订单描述不能为空');
+                return null;
+            }
+            if (!orderData.prodNum || parseFloat(orderData.prodNum) <= 0){
+                layer.msg('分配数量需大于0');
+                return null;
+            }
+            if (!orderData.employeeId || orderData.employeeId === '-1'){
+                layer.msg('请选择工人');
+                return null;
+            }
+
+            var boms = [], bomsFlag = true;
+            $.each($boms, function (i, item) {
+                var num = $(item).find('input[data-name="num"]').val();
+                if (!num || parseFloat(num) <= 0){
+                    layer.msg('原材料数量需大于0');
+                    return bomsFlag = false;
+                }
+                boms.push({
+                    id : $(item).attr('data-id'),
+                    num : num
+                });
+            });
+
+            if (!boms.length || !bomsFlag) return null;
+
+            return { order : orderData, boms : boms };
+        }
+
+        /**
+         * 初始化BOM
+         */
+        function initBoms(productId) {
+            var $bomHolder = $('._bomsHolder');
+            var $bomContent = $bomHolder.find('._bomsContent');
+            var unset = '<span class="label label-danger">未设置</span>';
+            $bomContent.empty();
+            if(productId == '-1') {
+                $bomHolder.hide();
+                return;
+            }
+            $bomHolder.show();
+            services.prodPlan.boms(consts.currentPlan.id || -1, productId)
+                .then(function (ret) {
+                    console.log('物料清单', ret.list);
+
+                    $.each(ret.list, function (i, item) {
+                        var material = item.material || {};
+                        var clone = consts.$bomTemplate.clone();
+                        $(clone).find('.panel-title').text('物料清单-' + (i+1));
+                        $(clone).attr('id', 'bomTemplate_' + (i+1));
+                        var body = $(clone).find('.panel-body');
+                        $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
+                        $(body).find('div[data-name="specification"]').html(material.specification || unset);
+                        $(body).find('input[data-name="materialNum"]').val(item.materialNum);
+                        $(body).find('input[data-name="bom_id"]').val(item.id);
+                        $(body).find('input[data-name="material_id"]').val(item.materialId);
+                        $(body).find('input[data-name="num"]').val(item.num),
+                            $bomContent.append($(clone).show());
+                        var $supplierHolder = $(clone).find('._supplier').attr('id', 'supplierHolder_' + item.materialId);
+
+                        init_material_suppliers($supplierHolder, item.supplierId, item.materialId);
+                    });
+                });
+        }
+        
+        /**
+         * 初始化模具的供应商
+         */ 
+        function init_mould_suppliers(mouldId) {
+            services.association.mouldSupplier(mouldId)
+                .then(function (ret) {
+                    var suppliers =  [{code : -1, name : '【请选择供应商】'}];
+                    $.each(ret.list, function (i, item) {
+                        suppliers.push({
+                            code : item.supplierId,
+                            name : item.supplierName
+                        });
+                    });
+                    utils.dropkick({
+                        $holder :$('#_supplier')
+                        , data : suppliers
+                        , current : consts.currentProdMould.supplierId
+                        , callback : function (supplierId) {
+                            console.log('供应商id：', supplierId);
+                        }
+                    });
+
+                })
+        }
+
+        /**
+         * 初始化原材料供应商列表
+         * @param idHolder - 供应商
+         * @param defaultId - 默认供应商
+         * @param materialId
+         */
+        function init_material_suppliers(idHolder, defaultId, materialId){
+            //供选原材料的供应商
+            services.association.materialSupplier(materialId)
+                .then(function (ret) {
+                    var suppliers =  [{code : -1, name : '【请选择供应商】'}];
+                    $.each(ret.list, function (i, item) {
+                        suppliers.push({
+                            code : item.supplierId,
+                            name : item.supplierName
+                        });
+                    });
+                    utils.dropkick({
+                        $holder :idHolder
+                        , data : suppliers
+                        , current : defaultId
+                        , callback : function (supplierId) {
+                            console.log('原材料供应商id：', supplierId);
+                        }
+                    });
+                });
+        }
+
+        /**
+         * 初始化事件
+         */
+        function initEvent() {
+            //搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                consts.oQueryParam.cause = $('#fastKeyword').val();
+                loadDataTable(true);
+            });
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13){
+                    consts.oQueryParam.cause = $('#fastKeyword').val();
+                    loadDataTable(true);
+                }
+            });
+
+            //编辑计划单模态框
+            consts.$editInfoModal.on('show.bs.modal', function () {
+                var $this = $(this);
+                //初始数据
+                $.each(consts.currentPlan, function (name, value) {
+                    if (name === 'startDate' || name === 'endDate'){
+                        value = (value ||'').substr(0,10);
+                    }
+                    $this.find('form [name="'+ name +'"]').val(value);
+                });
+                // 时间控件
+                utils.datepicker({
+                    begin : consts.$startDate,
+                    end : consts.$endDate
+                });
+                //供选成品
+                utils.dropkick({
+                    $holder : $('#_productId')
+                    , data : consts.products
+                    , current : consts.currentPlan.productId
+                    , callback : function (productId) {
+                        console.log('产品模版id：', productId);
+                        var $tip = $('#selectProductTip');
+                        if(!$tip || !$tip.length) return;
+                        if(!productId || productId === '-1'){
+                            $tip.html('').hide();
+                        } else {
+                            var product = consts.productCache[productId] || {};
+                            $('#__productId').html(product.description);
+                            $tip.html('单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
+                        }
+
+                        initBoms(productId);
+                    }
+                });
+            }).on('hidden.bs.modal', function () {
+                //清理数据
+                $(this).find('input, textarea').val('');
+            });
+
+            //编辑模具模态框
+            consts.$editMouldModal.on('shown.bs.modal', function () {
+                //初始数据
+                utils.dropkick({
+                    $holder : $('#_mould')
+                    , data : consts.moulds
+                    , current : consts.currentProdMould.mouldId
+                    , callback : function (mouldId) {
+                        init_mould_suppliers(mouldId);
+                    }
+                });
+
+                consts.$editMouldModal.find('input[name="realityMouldNum"]').val(consts.currentProdMould.num || '');
+            }).on('hidden.bs.modal', function () {
+                $(this).find('input').val('');
+                consts.currentProdMould = {};
+            });
+
+            //编辑制令单modal
+            consts.$editOrderModal.on('shown.bs.modal', function () {
+                console.log('当前计划单', consts.currentPlan);
+                console.log('当前制令单', consts.currentOrder);
+                $('#orderTab').find('li:eq(0) a').tab('show');
+
+                //初始化值
+                $('#_startDate').val(!!consts.currentOrder.startDate ? consts.currentOrder.startDate.substring(0,10) : '');
+                $(this).find('input[name="description"]').val(consts.currentOrder.description || '');
+                var product = consts.productCache[consts.currentPlan.productId]||{};
+                $(this).find('#_orderProductDescription').html(product.description || '');
+                $('#selectOrderProductTip').html('单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
+                $(this).find('input[data-name="prodNum"]').val(consts.currentOrder.prodNum || 0);
+                utils.dropkick({
+                    $holder : $('#_employeeId'),
+                    data : consts.employees,
+                    current : consts.currentOrder.employeeId
+                });
+                // 时间控件
+                $('#_startDate').datepicker(utils.datepickerConfig);
+                // 物料清单 - 如果有制令单即更新，采用制令单|如果无制令单即新建，采用计划单
+                var boms = consts.currentOrder.boms || consts.currentPlan.boms;
+                var numBe0 = !consts.currentOrder.boms;//数量默认是否为0
+                var bomsHtml = template('template-bom', {boms : boms, numBe0 : numBe0});
+                $(this).find('._orderBomsContent').empty().html(bomsHtml);
+
+                //模具 - 如果有制令单即更新，采用制令单|如果无制令单即新建，采用计划单
+                var moulds = consts.currentOrder.moulds || consts.currentPlan.moulds;
+                var mouldsHtml = template('template-mould', {moulds : moulds, numBe0 : numBe0});
+                $(this).find('._mouldsContent').empty().html(mouldsHtml);
+
+
+            }).on('hidden.bs.modal', function () {
+                consts.currentOrder = {}
+            });
+
+
+            
+            //save prodPlan
+            consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var plan = consts.$editInfoModal.find('form').serializeObject();
+                plan.productId = $('#_productId').attr('data-value');
+                if(plan.productId === '-1'){
+                    layer.msg('请选择成品！');
+                    return;
+                }
+
+                if(!plan.startDate || !plan.endDate){
+                    layer.msg('请选择时间范围！');
+                    return;
+                }
+                plan.productName = $('#_productId').find('.dk_label').html();
+                plan.id = consts.currentPlan.id || '';
+                plan.planNum = parseFloat(plan.planNum||0.00).toFixed(2);
+                //Bom 列表
+                var boms = [];
+                $.each($('._bomsContent').find('.bomTemplate'), function (i, bom) {
+                    var $supplier = $(bom).find('._supplier');
+                    boms.push({
+                        id : $(bom).find('input[data-name="bom_id"]').val(),
+                        materialId : $(bom).find('input[data-name="material_id"]').val(),
+                        num : $(bom).find('input[data-name="num"]').val(),
+                        materialNum : $(bom).find('input[data-name="materialNum"]').val(),
+                        supplierId : $supplier.attr('data-value'),
+                        supplierName : $supplier.find('.dk_label').html()
+                    });
+                });
+
+                if(!boms.length){
+                    layer.msg('物料清单不能为空！');
+                    return;
+                }
+
+                for(var i = 0; i < boms.length; i ++){
+                    if (!boms[i].num || parseFloat(boms[i].num) <= 0){
+                        layer.msg('物料清单-' + (i+1) +'的总数需大于0！');
+                        return;
+                    }
+                    if (!boms[i].supplierId || parseInt(boms[i].supplierId) === -1){
+                        layer.msg('请选择物料清单-' + (i+1) +'的供应商！');
+                        return;
+                    }
+                }
+                var data = {plan : plan, boms : boms};
+
+                console.log('save plan data', data);
+
+                var _function = !!consts.currentPlan.id ? services.prodPlan.update : services.prodPlan.create;
+
+                _function(data).then(function (plan) {
+                    loadDataTable(true);
+                    if (consts.currentPlan.id){
+                        initTrDetail(plan)
+                    }
+                    consts.$editInfoModal.modal('hide');
+                    layer.msg('保存生产计划单成功');
+                }).catch(function (reason) {
+                    console.log('生产计划单', reason);
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+
+            //新增按钮绑定事件
+            $('#editProdPlanBt').bind('click', function(){
+                consts.currentPlan = {};
+                consts.model = 'create';//新增模式
+                $('#_productId').show();
+                $('#__productId').hide();
+            });
+
+            //新增模具按钮绑定事件
+            $('#_createMouldBt').bind('click', function () {
+                consts.currentProdMould = {};
+            });
+
+            //save mould
+            consts.$editMouldModal.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var data = {
+                    id : consts.currentProdMould.id || '',
+                    supplierId : $('#_supplier').attr('data-value'),
+                    mouldId : $('#_mould').attr('data-value'),
+                    realityMouldNum : consts.$editMouldModal.find('input[name="realityMouldNum"]').val()
+                };
+
+                console.log('save mould data', data);
+
+                if (!data.mouldId || data.mouldId == '-1'){
+                    layer.msg('请选择供模具');
+                    return;
+                }
+
+                if (!data.realityMouldNum || parseInt(data.realityMouldNum) <= 0){
+                    layer.msg('请输入模具数量');
+                    return;
+                }
+
+                services.prodPlan.saveMould(consts.currentPlan.id, data)
+                    .then(function (plan) {
+                        loadDataTable(true);
+                        initTrDetail(plan);
+                        consts.$editMouldModal.modal('hide');
+                        layer.msg('保存模具成功');
+                    })
+                    .catch(function (reason) {
+                        console.log('保存模具异常', reason);
+                        layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+
+            });
+
+            //删除计划单操作
+            consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
+                layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
+                    services.prodPlan.delete(consts.currentPlan.id)
+                        .then(function (ret) {
+                            layer.msg(ret._message);
+                            loadDataTable(true);
+                            consts.currentPlan = {};
+                            consts.$rightPage.hide();
+                        })
+                        .catch(function (reason) {
+                            layer.msg(reason.caught ? reason.message : '请求失败！');
+                        });
+                });
+            });
+        }
+
+        function init() {
+            prepareData().then(function () {
+                initEvent();
+                loadDataTable();
+            });
+        }
+
+        init();
+
+    });
+</script>

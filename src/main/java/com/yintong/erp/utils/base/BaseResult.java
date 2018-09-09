@@ -183,6 +183,7 @@ public class BaseResult{
         return JSONObject.fromObject(ret);
     }
 
+    @SuppressWarnings("unchecked")
     public BaseResult setRet(JSONObject ret){
         this.ret = ret;
         return this;

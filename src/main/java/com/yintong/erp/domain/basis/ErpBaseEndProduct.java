@@ -117,7 +117,7 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String spFCstrength;
     @Column(columnDefinition = "varchar(20) comment '单粒银耗(g)'")
     private String unitSilverLoss;
-    @Column(columnDefinition = "varchar(20) comment '单粒银铜(g)'")
+    @Column(columnDefinition = "varchar(20) comment '单粒耗铜(g)'")
     private String unitSilverCopper;
     @Column(columnDefinition = "varchar(64) comment '技术要求'")
     private String technicalRequirements;
