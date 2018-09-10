@@ -1250,6 +1250,13 @@ ul.bugPlanNum li .PlanNumClass em {
     width: 30%;
     padding: 0px 5px;
 }
+
+.col-xs-9 p{
+    padding: 0 0 0 0 !important;
+    margin-top: -5px;
+    margin-left: -10px;
+}
+
 .bugInfoHistories p,
 .bugTestTaskHistory p,
 .bugTestInfoComments p {

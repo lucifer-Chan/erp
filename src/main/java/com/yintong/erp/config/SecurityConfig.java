@@ -28,6 +28,26 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements Constants.Roles{
+
+    private final AccessDeniedHandler accessDeniedHandler;
+
+    private final AuthenticationSuccessHandler successHandler;
+
+    private final AuthenticationFailureHandler failureHandler;
+
+    private final LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    public SecurityConfig(AccessDeniedHandler accessDeniedHandler
+            , AuthenticationSuccessHandler successHandler
+            , AuthenticationFailureHandler failureHandler
+            , LogoutSuccessHandler logoutSuccessHandler) {
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
+    }
+
     @Override
     @Order(Ordered.HIGHEST_PRECEDENCE)
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
@@ -91,14 +111,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Cons
     EmployeeDetailService employeeDetailService(){
         return new EmployeeDetailService();
     }
-
-    @Autowired AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired AuthenticationSuccessHandler successHandler;
-
-    @Autowired AuthenticationFailureHandler failureHandler;
-
-    @Autowired LogoutSuccessHandler logoutSuccessHandler;
 }
 
 
