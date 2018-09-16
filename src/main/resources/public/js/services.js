@@ -1248,6 +1248,33 @@ define('services',['utils'],function (utils) {
         //find one
         one : function (orderId) {
             return $.http.get('prod/order/' + orderId);
+        },
+        //操作记录
+        opt : function (orderId) {
+            return $.http.get('prod/order/' + orderId + '/history/opt');
+        },
+        //打印出库单之后
+        afterPrintOut : function (orderId) {
+            return $.http.patch('prod/order/' + orderId + '/preOut');
+        },
+        //打印入库单之后
+        afterPrintIn : function (orderId) {
+            return $.http.patch('prod/order/' + orderId + '/preIn');
+        },
+        //挑拣-新增|修改
+        pick : function (record) {
+            return $.http.post({
+                url : 'prod/order/pick',
+                data : record,
+                contentType : $.contentType.json
+            })
+        },
+        //组合查询
+        query : function (params) {
+            return $.http.get({
+                url : 'prod/order',
+                data : params
+            });
         }
     };
 

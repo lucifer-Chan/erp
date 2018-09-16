@@ -450,7 +450,7 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         Assert.isTrue( 1 == order.getPreStockOut(), "尚未打印出库单");
 
         List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdAndProductId(saleOrderId, stockEntity.templateId());
-        ErpSaleOrderItem item = CommonUtil.single(items, "销售订单[" + saleOrderId + "存在脏数据");
+        ErpSaleOrderItem item = CommonUtil.single(items, "销售订单[" + order.getBarCode() + "存在脏数据");
         if(Objects.isNull(item)) return;
 
         Assert.isTrue(!STATUS_005.name().equals(item.getStatusCode()), item.getProductName() + "已完成出库");
@@ -523,16 +523,16 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         Assert.isTrue(STATUS_006.name().equals(order.getStatusCode())
                 , "状态为" + STATUS_006.description() + "的销售订单方可入库");
         List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdAndProductId(saleOrderId, stockEntity.templateId());
-        ErpSaleOrderItem item = CommonUtil.single(items, "销售订单[" + saleOrderId + "存在脏数据");
+        ErpSaleOrderItem item = CommonUtil.single(items, "销售订单[" + order.getBarCode() + "存在脏数据");
         if(Objects.isNull(item)) return;
 
         Assert.isTrue(!STATUS_061.name().equals(item.getStatusCode()), item.getProductName() + "已完成退货");
         SaleOrderStatus status = STATUS_006;//客户退货
         double currentInNum = inNum + item.getInNum();
-        String content = item.getProductName() + " 完成入库,入库数量【" + currentInNum + "/" + item.getNum() + "】";
+        String content = item.getProductName() + " 完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
         if(currentInNum >= item.getNum()){
             status = STATUS_061;
-            content = item.getProductName() + " 全部完成入库,入库数量【" + currentInNum + "/" + item.getNum() + "】";
+            content = item.getProductName() + " 全部完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
         }
         //2-保存订单明细
         item.setStatusCode(status.name());

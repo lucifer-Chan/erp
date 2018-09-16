@@ -90,7 +90,7 @@ public interface Constants {
      */
     enum ProdOrderStatus {
         S_001("新建"),
-        S_002("生产中"),//打印了出库单-全部入库
+        S_002("生产中"),//打印了出库单全部入库
         S_003("已完成");//全部入库
 
         ProdOrderStatus(String description){

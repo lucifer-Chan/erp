@@ -1,16 +1,19 @@
 package com.yintong.erp.domain.prod;
 
-import com.yintong.erp.utils.base.BaseEntity;
+import com.yintong.erp.utils.bar.BarCode;
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.Assert;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.KREC;
 
 
 /**
@@ -19,21 +22,28 @@ import lombok.Setter;
  * 制令单挑拣记录
  **/
 @Entity
+@BarCode(prefix = KREC)
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class ErpProdOrderPickRecord extends BaseEntity {
+public class ErpProdOrderPickRecord extends BaseEntityWithBarCode {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(columnDefinition = "bigint(20) comment '制令单id'")
-    private Long prodId;
+    private Long orderId;
 
     @Column(columnDefinition = "double(16,9) comment '成品总数'")
-    private Double productTotalNum;
+    private Double totalNum;
 
     @Column(columnDefinition = "double(16,9) comment '挑拣的质量合格的成品数'")
-    private Double productValidNum;
+    private Double validNum;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;
+
+    public void requiredValidate(){
+        Assert.notNull(orderId, "制令单不能为空");
+        Assert.notNull(totalNum, "成品总数不能为空");
+        Assert.notNull(validNum, "质量合格的成品数不能为空");
+    }
 }

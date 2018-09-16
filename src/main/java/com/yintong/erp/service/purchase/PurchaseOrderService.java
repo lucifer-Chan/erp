@@ -447,16 +447,16 @@ public class PurchaseOrderService implements StockIn4Holder,
 
         List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdAndWaresAssIdAndWaresType(purchaseOrderId, stockEntity.realityId(), stockEntity.waresType().name());
 
-        ErpPurchaseOrderItem item = CommonUtil.single(items, "采购订单[" + purchaseOrderId + "存在脏数据");
+        ErpPurchaseOrderItem item = CommonUtil.single(items, "采购订单[" + order.getBarCode() + "存在脏数据");
         if(Objects.isNull(item)) return;
 
         Assert.isTrue(!STATUS_005.name().equals(item.getStatusCode()), item.getWaresName() + "已完成入库");
         PurchaseOrderStatus status = STATUS_049;//入库中
         double currentInNum = inNum + item.getInNum();
-        String content = item.getWaresName() + " 完成入库,入库数量【" + currentInNum + "/" + item.getNum() + "】";
+        String content = item.getWaresName() + " 完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
         if(currentInNum >= item.getNum()){
             status = STATUS_005;
-            content = item.getWaresName() + " 全部完成入库,入库数量【" + currentInNum + "/" + item.getNum() + "】";
+            content = item.getWaresName() + " 全部完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
         }
         //2-保存订单明细
         item.setStatusCode(status.name());

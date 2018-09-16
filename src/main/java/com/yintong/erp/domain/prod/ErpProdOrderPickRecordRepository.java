@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ErpProdOrderPickRecordRepository extends JpaRepository<ErpProdOrderPickRecord, Long> {
 
-    List<ErpProdOrderPickRecord> findByProdId(Long id);
+    List<ErpProdOrderPickRecord> findByOrderIdOrderByCreatedAtDesc(Long id);
 }

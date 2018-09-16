@@ -1,6 +1,5 @@
 package com.yintong.erp.service.stock;
 
-import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
 import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;

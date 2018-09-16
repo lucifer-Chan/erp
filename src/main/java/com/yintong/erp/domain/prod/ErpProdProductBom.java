@@ -63,6 +63,12 @@ public class ErpProdProductBom extends BaseEntity {
     @Column(columnDefinition = "double(16,9) comment '原材料数量-耗银|耗铜，总数'")
     private Double realityMaterialNum;
 
+    @Column(columnDefinition = "double(16,9) comment '原材料数量-出库-针对制令单'")
+    private Double numOut;
+
+    @Column(columnDefinition = "double(16,9) comment '原材料数量-入库-针对制令单[用完回收]'")
+    private Double numIn;
+
     @Column(columnDefinition = "double(16,9) comment '切丝长度'")
     private Double materialNum;
 
@@ -78,6 +84,17 @@ public class ErpProdProductBom extends BaseEntity {
     @Transient
     private ErpRawMaterialSupplier realityMaterial;
 
+    public double getNumIn(){
+        return Objects.isNull(numIn) ? 0d : numIn;
+    }
+
+    public double getNumOut(){
+        return Objects.isNull(numOut) ? 0d : numOut;
+    }
+
+    public double getRealityMaterialNum(){
+        return Objects.isNull(realityMaterialNum) ? 0d : realityMaterialNum;
+    }
 
     /**
      * 获取原材料模版
@@ -107,6 +124,8 @@ public class ErpProdProductBom extends BaseEntity {
 
     protected void prePersist(){
         onPreCommit();
+        numOut = 0D;
+        numIn = 0D;
     }
 
     protected void preUpdate(){
@@ -182,11 +201,11 @@ public class ErpProdProductBom extends BaseEntity {
         if(!this.getSupplierId().equals(source.getSupplierId())){
             modified = true;
         }
-        if(!this.getRealityMaterialNum().equals(source.getNum())){
+        if(!ObjectUtils.equals(getRealityMaterialNum(), source.getNum())){
             modified = true;
         }
 
-        if(!ObjectUtils.equals(materialNum, source.getMaterialNum())){
+        if(!ObjectUtils.equals(getMaterialNum(), source.getMaterialNum())){
             modified = true;
         }
 

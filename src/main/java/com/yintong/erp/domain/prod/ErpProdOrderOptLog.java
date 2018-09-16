@@ -29,4 +29,22 @@ public class ErpProdOrderOptLog extends BaseEntity{
 
     @Column(columnDefinition = "varchar(100) comment '操作内容：修改aaa->bbb'")
     private String content;
+
+    @Column(columnDefinition = "bigint(20) comment '货物id-模版'")
+    private Long waresId;
+
+    @Column(columnDefinition = "bigint(20) comment '货物id-关联id'")
+    private Long waresAssId;
+
+    @Column(columnDefinition = "varchar(20) DEFAULT '' comment '货物类型-原材料|成品|模具->M|P|D'")
+    private String waresType;
+
+    @Column(columnDefinition = "varchar(200) DEFAULT '' comment '货物名称'")
+    private String waresName;
+
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物条形码-可为空'")
+    private String waresBarcode;
+
+    @Column(columnDefinition = "varchar(20) DEFAULT 'order' comment '类型：order-订单操作，pick-挑拣，stock-出入库'")
+    private String optType;
 }

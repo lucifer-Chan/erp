@@ -117,7 +117,8 @@ public interface BarCodeConstants {
         D500("模具-钨钢刀片"),
         D600("模具-剪切座"),
         D700("模具-偏心管"),
-        D800("模具-头冲");
+        D800("模具-头冲"),
+        KREC("挑拣记录");
 
         BAR_CODE_PREFIX(String description) {
             this.description = description;

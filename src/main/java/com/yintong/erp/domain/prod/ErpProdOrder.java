@@ -1,5 +1,7 @@
 package com.yintong.erp.domain.prod;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.service.basis.EmployeeService;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
@@ -94,6 +96,9 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
     @Transient
     private List<ErpProdOrderPickRecord> pickRecords;
 
+    @Transient
+    private ErpBaseEndProduct product;
+
     /**
      * 获取挑拣记录
      * @return
@@ -102,7 +107,7 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
         if(!CollectionUtils.isEmpty(pickRecords)){
             return pickRecords;
         }
-        return pickRecords = SpringUtil.getBean(ErpProdOrderPickRecordRepository.class).findByProdId(id);
+        return pickRecords = SpringUtil.getBean(ErpProdOrderPickRecordRepository.class).findByOrderIdOrderByCreatedAtDesc(id);
     }
 
     public List<ErpProdProductBom> getBoms(){
@@ -126,6 +131,14 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
         }
 
         return employeeName;
+    }
+
+    public ErpBaseEndProduct getProduct(){
+        if(Objects.nonNull(product)) return product;
+        if(Objects.nonNull(productId)){
+            product = SpringUtil.getBean(ErpBaseEndProductRepository.class).findById(productId).orElse(null);
+        }
+        return product;
     }
 
     protected void prePersist(){

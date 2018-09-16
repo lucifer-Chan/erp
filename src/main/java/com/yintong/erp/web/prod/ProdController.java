@@ -1,6 +1,8 @@
 package com.yintong.erp.web.prod;
 
 import com.yintong.erp.domain.prod.ErpProdMould;
+import com.yintong.erp.domain.prod.ErpProdOrder;
+import com.yintong.erp.domain.prod.ErpProdOrderPickRecord;
 import com.yintong.erp.domain.prod.ErpProdPlan;
 import com.yintong.erp.dto.ProdOrderDto;
 import com.yintong.erp.dto.ProdPlanDto;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -133,6 +136,8 @@ public class ProdController {
         return new BaseResult().addList(planService.findBomList(planId, productId));
     }
 
+    //========================== 以下为制令单内容 ==========================//
+
     /**
      * 新增制令单
      * @param orderDto - order : employeeId prodNum ,planId, startDate, description 其余数据从计划单里拿
@@ -158,6 +163,17 @@ public class ProdController {
     }
 
     /**
+     * 组合查询
+     * @param parameters
+     * @return
+     */
+    @GetMapping("order")
+    public BaseResult findOrders(ProdOrderService.OrderParameterDto parameters) {
+        Page<ErpProdOrder> page = orderService.query(parameters);
+        return page2BaseResult(page);
+    }
+
+    /**
      * 删除制令单
      * @param orderId
      * @return
@@ -178,4 +194,43 @@ public class ProdController {
         return new BaseResult().addPojo(orderService.findOneOrder(orderId));
     }
 
+    /**
+     * 制令单的操作记录
+     * @param orderId
+     * @return
+     */
+    @GetMapping("order/{orderId}/history/opt")
+    public BaseResult findOrderOptHistory(@PathVariable Long orderId) {
+        return new BaseResult().addList(orderService.findOrderOptHistory(orderId));
+    }
+
+    /**
+     * 准备出库-打印出库单[原材料|模具]之后调用
+     * @param orderId
+     * @return
+     */
+    @PatchMapping("order/{orderId}/preOut")
+    public BaseResult preStockOut(@PathVariable Long orderId){
+        return new BaseResult().addPojo(orderService.preStockOut(orderId));
+    }
+
+    /**
+     * 准备入库-打印入库之后调用
+     * @param orderId
+     * @return
+     */
+    @PatchMapping("order/{orderId}/preIn")
+    public BaseResult preStockIn(@PathVariable Long orderId){
+        return new BaseResult().addPojo(orderService.preStockIn(orderId));
+    }
+
+    /**
+     * 保存挑拣记录 - 新增|修改
+     * @param record
+     * @return
+     */
+    @PostMapping("order/pick")
+    public BaseResult saveRecord(@RequestBody ErpProdOrderPickRecord record){
+        return new BaseResult().addPojo(orderService.saveRecord(record));
+    }
 }

@@ -2,6 +2,8 @@ package com.yintong.erp.domain.basis.associator;
 
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
+import com.yintong.erp.domain.stock.ErpStockPlace;
+import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
@@ -63,6 +65,9 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode implements Sto
     @Transient
     private String supplierName;
 
+    @Transient
+    private String placeNames;//仓位名称
+
     @Override
     protected void prePersist(){
         validate();
@@ -108,6 +113,16 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode implements Sto
 
     public double getTotalNum(){
         return Objects.isNull(totalNum) ? 0d :totalNum;
+    }
+
+    public String getPlaceNames(){
+        if(StringUtils.hasText(placeNames)) return placeNames;
+        if(Objects.isNull(id)) return "";
+        return placeNames = SpringUtil.getBean(ErpStockPlaceRepository.class)
+                .findByMaterialSupplierAssId(id)
+                .stream()
+                .map(ErpStockPlace::getName)
+                .collect(Collectors.joining(","));
     }
 
 

@@ -107,7 +107,7 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         String content = "更新";
         List<String> contents = new ArrayList<>();
         if(!oldPlan.getPlanNum().equals(plan.getPlanNum())){
-            contents.add("数量：¥" + plan.getPlanNum());
+            contents.add("数量：" + plan.getPlanNum());
             oldPlan.setPlanNum(plan.getPlanNum());
         }
 
@@ -207,7 +207,7 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
                 contents.add(oldMouldName + "->" + mouldName);
             }
 
-            if(!old.getRealityMouldNum().equals(mould.getRealityMouldNum())){
+            if(!ObjectUtils.equals(old.getRealityMouldNum(), mould.getRealityMouldNum())){
                 contents.add(mouldName + "数量：" + old.getRealityMouldNum() + "->" + mould.getRealityMouldNum());
             }
 

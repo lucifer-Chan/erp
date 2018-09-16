@@ -1,10 +1,873 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="erp_content animated fadeInRight full_height"  id="sale_plan_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、内容、成品名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:50px" erp-data="{barCode}">制令单编号<span id="allCount"></span></th>
+                                <th style="width:70px" erp-data="{description}" >订单描述</th>
+                                <th style="width:70px" erp-data="{statusName}">订单状态</th>
+                                <th style="width:70px" erp-data="{productName}">生产成品</th>
+                                <th style="width:30px" erp-data="{employeeName}">工人</th>
+                                <th style="width:30px" erp-data="{prodNum}">分配数量</th>
+                                <th style="width:30px" erp-data="{pickNum}">挑拣数量</th>
+                                <th style="width:30px" erp-data="{finishNum}">入库数量</th>
+                                <th style="width:70px" erp-data="{startDate}" erp-convert="_convertDate">生产开始日期</th>
+                                <th style="width:70px" erp-data="{finishDate}" erp-convert="_convertDate">完成时间</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- 右侧 -->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" id="toPrintOrderBt">打印物料出库单</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_addPickRecord">挑拣</button>
+            <button class="btn btn-primary" id="toPrintInBt">打印入库单</button>
+        </span>
+    </div>
+    <div class="bugInfoContent initOrderDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">销售制令单信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">制令单编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">订单状态</label>
+                                <div class="col-xs-8 txt pd0" data-name="statusName"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">生产成品</label>
+                                <div class="col-xs-10 txt pd0" data-name="productName" style="margin-left: -10px;"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">开始时间</label>
+                                <div class="col-xs-8 txt pd0" data-convert="startDate"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">完成时间</label>
+                                <div class="col-xs-8 txt pd0" data-convert="finishDate"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">工人</label>
+                                <div class="col-xs-8 txt pd0" data-name="employeeName"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">分配数量</label>
+                                <div class="col-xs-8 txt pd0" data-name="prodNum"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">挑拣数量</label>
+                                <div class="col-xs-8 txt pd0" data-name="pickNum"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">入库数量</label>
+                                <div class="col-xs-8 txt pd0" data-name="finishNum"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#bomList" aria-controls="bomList" role="tab" data-toggle="tab">物料清单</span></li>
+                    <li role="presentation"><span href="#mouldList" aria-controls="mouldList" role="tab" data-toggle="tab">模具清单</span></li>
+                    <li role="presentation"><span href="#recordList" aria-controls="recordList" role="tab" data-toggle="tab">挑拣记录</span></li>
+                    <li role="presentation"><span href="#stockList" aria-controls="stockList" role="tab" data-toggle="tab">库存记录</span></li>
+                    <li role="presentation"><span href="#optList" aria-controls="optList" role="tab" data-toggle="tab">操作记录</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="bomList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="mouldList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="recordList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="stockList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="optList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 挑拣modal -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_addPickRecord">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 编辑挑拣信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal pd28">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">成品数量</label>
+                        <div class="col-sm-4">
+                            <input type="number" step="1" class="form-control" name="totalNum" placeholder="请输入数字">
+                        </div>
+                        <label class="col-sm-2 control-label">合格数</label>
+                        <div class="col-sm-4">
+                            <input type="text" step="1" class="form-control" name="validNum" placeholder="请输入数字">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="remark" placeholder="最多输入30个字符" autofocus="" onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="printHolder" hidden></div>
+
+<!-- 物料清单模版 -->
+<script id="template-bom" type="text/template">
+    {{if boms.length}}
+    {{each boms as b i}}
+    <div class="row">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">物料清单-{{i + 1}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">原材料名称</label>
+                                        <div class="col-xs-9 txt pd0">{{b.material.rawName}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">规格描述</label>
+                                        <div class="col-xs-9 txt pd0">{{b.material.specification}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">供应商</label>
+                                        <div class="col-xs-9 txt pd0">{{b.supplierName}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">切丝长度</label>
+                                        {{if b.material.materialNum}}
+                                        <div class="col-xs-9 txt pd0">{{b.material.materialNum}}</div>
+                                        {{else}}
+                                        <div class="col-xs-9 txt pd0"><span class="label label-warning">未设置</span></div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">需求数量</label>
+                                        <div class="col-xs-9 txt pd0">{{b.realityMaterialNum}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">出库总数</label>
+                                        {{if b.numOut}}
+                                            <div class="col-xs-9 txt pd0">{{b.numOut}}</div>
+                                        {{else}}
+                                            <div class="col-xs-9 txt pd0"><span class="label label-warning">未出库</span></div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label class="col-xs-2 pd0">回收总数</label>
+                                        <div class="col-xs-10 txt pd0"style="margin-left: -25px;">{{if b.numIn}} {{b.numIn}} {{else}} <span class="label label-warning">未回收</span> {{/if}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!-- 模具清单 -->
+<script id="template-mould" type="text/template">
+    {{if moulds.length}}
+    {{each moulds as d i}}
+    <div class="row">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">模具清单-{{i + 1}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">模具名称</label>
+                                        <div class="col-xs-9 txt pd0">{{d.mould.modelToolName}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">规格描述</label>
+                                        <div class="col-xs-9 txt pd0">{{d.mould.specification}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">供应商</label>
+                                        <div class="col-xs-9 txt pd0">
+                                            {{if d.realityMould.supplierName}} {{d.realityMould.supplierName}} {{else}} <span class="label label-warning">未指定</span>{{/if}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">需求数量</label>
+                                        <div class="col-xs-9 txt pd0">{{d.realityMouldNum}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">出库总数</label>
+                                        <div class="col-xs-9 txt pd0">
+                                            {{if d.numOut}} {{d.numOut}} {{else}} <span class="label label-warning">未出库</span> {{/if}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">回收总数</label>
+                                        <div class="col-xs-9 txt pd0">
+                                            {{if d.numIn}} {{d.numIn}} {{else}} <span class="label label-warning">未回收</span> {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!-- 挑拣记录 -->
+<script id="template-record" type="text/template">
+    {{if records.length}}
+    {{each records as r}}
+    <div class="row" data-id="{{r.id}}">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">挑拣编号-{{r.barCode}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">挑拣数</label>
+                                        <div class="col-xs-9 txt pd0">{{r.validNum}}/{{r.totalNum}}</div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-3 pd0">挑拣时间</label>
+                                        <div class="col-xs-9 txt pd0">{{r.createdAt}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label class="col-xs-2 pd0">备注</label>
+                                        <div class="col-xs-10 txt pd0"style="margin-left: -25px;">{{if r.remark}} {{r.remark}} {{else}} 无 {{/if}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!-- 日志模版 -->
+<script id="template-log" type="text/template">
+    {{if logs.length}}
+        {{each logs as log}}
+        <p>
+            <span class="name"><b>{{log.createdName}}</b></span>
+            <span class="content"> {{log.content}}</span>
+            <span class="right">{{log.createdAt}}</span>
+        </p>
+        {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!-- 物料出库打印 -->
+<script id="template-print_prod_order_out" type="text/template">
+    <div class="panel-default bugInfo">
+        <div class="row">
+        <span class="print-header">
+            <h3>瑞安市银通电器有限公司-物料出库单</h3>
+        </span>
+        </div>
+        <div class="row pd22">
+            <div class="col-xs-12 print-right">
+                <img src="{{o.barcode}}" class="print-barcode">
+            </div>
+        </div>
+        <div class="pd13"></div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>打印时间:</label>
+                    <div class="pd42">{{o.currentTime}}</div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>生产成品:</label>
+                    <div class="pd42">{{o.product.productName}}</div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>规格描述:</label>
+                    <div class="pd42">{{o.product.specification}}</div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;">
+            <table class="table table-print">
+                <thead>
+                <tr>
+                    <th>物料类型</th>
+                    <th>物料名称</th>
+                    <th>规格型号</th>
+                    <th>供应商</th>
+                    <th>参考仓位</th>
+                    <th>单位</th>
+                    <th>数量</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each o.wares as w}}
+                <tr>
+                    <td>{{w.type}}</td>
+                    <td>{{w.name}}</td>
+                    <td>{{w.specification}}</td>
+                    <td>{{w.supplierName}}</td>
+                    <td>{{w.placeNames}}</td>
+                    <td>{{w.unit}}</td>
+                    <td></td>
+                </tr>
+                {{/each}}
+                {{each o.empty}}
+                <tr style="height: 37px">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="print-line" >
+                    <label>创建人:</label>
+                    <div>{{o.createdName}}</div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>生产日期:</label>
+                    <div class="pd42">{{o.startDate}}</div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>生产工人:</label>
+                    <div class="pd42">{{o.employeeName}}</div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>仓管员:</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- 成品入库打印 -->
+<script id="template-print_prod_order_in" type="text/template">
+    <div class="panel-default bugInfo">
+        <div class="row">
+        <span class="print-header">
+            <h3>瑞安市银通电器有限公司-成品入库单</h3>
+        </span>
+        </div>
+        <div class="row pd22">
+            <div class="col-xs-12 print-right">
+                <img src="{{o.barcode}}" class="print-barcode">
+            </div>
+        </div>
+        <div class="pd13"></div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>打印时间:</label>
+                    <div class="pd42">{{o.currentTime}}</div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>最近挑拣时间:</label>
+                    <div class="pd42">{{o.lastPickDate}}</div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>最近挑拣人:</label>
+                    <div class="pd42">{{o.lastPickUser}}</div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;">
+            <table class="table table-print">
+                <thead>
+                <tr>
+                    <th width="18%">成品类型</th>
+                    <th width="18%">成品名称</th>
+                    <th width="17%">规格型号</th>
+                    <th width="7%">单位</th>
+                    <th width="10%">数量</th>
+                    <th width="30%">备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{o.product.typeName}}</td>
+                    <td>{{o.product.productName}}</td>
+                    <td>{{o.product.specification}}</td>
+                    <td>{{o.product.unit}}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="print-line" >
+                    <label>创建人:</label>
+                    <div>{{o.createdName}}</div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>生产日期:</label>
+                    <div class="pd42">{{o.startDate}}</div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="print-line" >
+                    <label>生产工人:</label>
+                    <div class="pd42">{{o.employeeName}}</div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="print-line" >
+                    <label>仓管员:</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        console.log('hello prodOrder');
+        var consts = {
+            oQueryParam : {}//查询参数
+            , currentRecord : {}//当前挑拣记录
+            , currentOrder : {}//当前制令单
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , $addPickRecord : $('#_addPickRecord')//挑拣
+        };
+
+        /**
+         * 加载制令单列表
+         */
+        function loadDataTable(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.prodOrder.query(params);
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.prodOrder.one(id).then(function (tr) {
+                    console.log('点击tr', tr);
+                    initTrDetail(tr);
+                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                    $rightPage.find('.fa-angle-double-down').click();
+
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            }
+
+            function _convertDate(array) {
+                return convertDate(array[0]);
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : [_convertDate]
+            });
+        }
+
+        function convertDate(date) {
+            return !!date ? date.substr(0,10) : '<span class="label label-warning">尚未完成</span>';
+        }
+
+        /**
+         * 初始化右侧
+         */
+        function initTrDetail(tr) {
+            consts.currentOrder = tr;
+            var unSetting = '<span class="label label-warning">无</span>';
+            var $detail = $('.initOrderDetail');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                var def = $(this).attr('data-convert') === 'false' ? '无' : unSetting;
+                $(this).html(tr[$(this).attr('data-name')] || def);
+            });
+            //data-convert="startDate finishDate"
+            $baseInfo.find('div[data-convert="startDate"]').html(tr.startDate.substr(0,10));
+            $baseInfo.find('div[data-convert="finishDate"]').html(convertDate(tr.finishDate));
+            //物料清单
+            var bomsHtml = template('template-bom', { boms : tr.boms});
+            $('#bomList').find('.bugInfoHistories').html(bomsHtml);
+            //模具清单
+            var mouldHtml = template('template-mould', {moulds : tr.moulds});
+            $('#mouldList').find('.bugInfoHistories').html(mouldHtml);
+            //挑拣记录
+            var pickHtml = template('template-record', {records : tr.pickRecords});
+            $('#recordList').find('.bugInfoHistories').html(pickHtml);
+            //操作记录|库存记录
+            services.prodOrder.opt(tr.id).then(function (ret) {
+                var orderLogs = [], stockLogs = [], pickLogs = [];
+                ret.list.forEach(function (opt) {
+                    if(opt.optType === 'order'){
+                        orderLogs.push(opt);
+                    } else if(opt.optType === 'stock'){
+                        stockLogs.push(opt);
+                    } else if(opt.optType === 'pick'){
+                        pickLogs.push(opt);
+                    }
+                });
+                //操作记录
+                var optHtml = template('template-log', {logs : orderLogs});
+                $('#optList').find('.bugInfoHistories').html(optHtml);
+                //库存记录
+                var stockHtml = template('template-log', {logs : stockLogs});
+                $('#stockList').find('.bugInfoHistories').html(stockHtml);
+            });
+            //隐藏操作按钮
+            if(tr.pickRecords.length){
+                $('#toPrintInBt').show();
+            } else {
+                $('#toPrintInBt').hide();
+            }
+        }
+
+        /**
+         * 初始化事件
+         */
+        function initEvent() {
+            //搜索图标
+            $('#searchIcon').unbind('click').click(function(){
+                consts.oQueryParam.cause = $('#fastKeyword').val();
+                loadDataTable(true);
+            });
+            $("#fastKeyword").keydown(function(e){
+                if(e.keyCode === 13){
+                    consts.oQueryParam.cause = $('#fastKeyword').val();
+                    loadDataTable(true);
+                }
+            });
+            //制令单打印
+            init_print_order();
+            //挑拣
+            init_pick_modal();
+            //成品入库单打印
+            init_print_product_in();
+        }
+
+        //成品入库打印
+        function init_print_product_in(){
+            $('#toPrintInBt').unbind('click').click(function () {
+                var order = consts.currentOrder;
+                var $printHolder = $('#printHolder').clone();
+                var data = {
+                    barcode : '',
+                    currentTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+                    createdName : order.createdName,
+                    employeeName : order.employeeName,
+                    startDate : order.startDate.substr(0, 10),
+                    product : {
+                        typeName : order.product.typeName,
+                        productName : order.product.endProductName,
+                        specification : order.product.specification,
+                        unit : order.product.unit ||''
+                    }
+                };
+
+                var lastPick = order.pickRecords.length ? order.pickRecords[0] : {};
+                data.lastPickDate = lastPick.createdAt || '';
+                data.lastPickUser = lastPick.createdName || '';
+
+                //条形码
+                services.common.barcode(order.barCode)
+                    .then(function (ret) {
+                        data.barcode = ret.base64;
+                        console.log('打印数据', data);
+                    })
+                    .then(function () {
+                        var html = template("template-print_prod_order_in", {o : data});
+                        $printHolder.html(html).show().print({
+                            deferred: $.Deferred().done(function() {
+                                services.prodOrder.afterPrintIn(order.id);
+                            })
+                        });
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+
+
+            })
+        }
+
+        //制令单打印-原材料|模具出库
+        function init_print_order() {
+            $('#toPrintOrderBt').unbind('click').click(function () {
+                var order = consts.currentOrder;
+                var $printHolder = $('#printHolder').clone();
+                var data = {
+                    barcode : '',
+                    currentTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+                    createdName : order.createdName,
+                    employeeName : order.employeeName,
+                    startDate : order.startDate.substr(0, 10),
+                    product : {
+                        productName : order.product.endProductName,
+                        specification : order.product.specification
+                    },
+
+                    wares : [],
+                    empty : []
+                };
+
+                order.boms.forEach(function (bom) {
+                    data.wares.push({
+                        type : bom.material.rawTypeName,
+                        name : bom.material.rawName,
+                        specification : bom.material.specification,
+                        supplierName : bom.realityMaterial.supplierName,
+                        placeNames : bom.realityMaterial.placeNames || '',
+                        unit : bom.material.unit ||''
+                    })
+                });
+
+                order.moulds.forEach(function (mould) {
+                    data.wares.push({
+                        type : mould.mould.mouldTypeName,
+                        name : mould.mould.modelToolName,
+                        specification : mould.mould.specification,
+                        supplierName : !!mould.realityMould ? mould.realityMould.supplierName : '',
+                        unit : mould.mould.unit ||''
+                    })
+                });
+
+                if (data.wares.length < 5){
+                    for(var i = 0; i < (5-data.wares.length); i++){
+                        data.empty.push(i);
+                    }
+                }
+                //条形码
+                services.common.barcode(order.barCode)
+                    .then(function (ret) {
+                        data.barcode = ret.base64;
+                        console.log('打印数据', data);
+                    })
+                    .then(function () {
+                        var html = template("template-print_prod_order_out", {o : data});
+                        $printHolder.html(html).show().print({
+                            deferred: $.Deferred().done(function() {
+                                services.prodOrder.afterPrintOut(order.id);
+                            })
+                        });
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            });
+        }
+
+        //挑拣
+        function init_pick_modal() {
+            var $holder = consts.$addPickRecord;
+            $holder.on('show.bs.modal', function () {
+                $holder.find('input[name="totalNum"]').val(consts.currentRecord.totalNum || '');
+                $holder.find('input[name="validNum"]').val(consts.currentRecord.validNum || '');
+                $holder.find('input[name="remark"]').val(consts.currentRecord.remark || '');
+            }).on('hidden.bs.modal', function () {
+                consts.currentRecord = {};
+            });
+
+            $holder.find('button[name="save"]').unbind('click').click(function (e) {
+                e.preventDefault();
+                var total = $holder.find('input[name="totalNum"]').val();
+                var valid = $holder.find('input[name="validNum"]').val();
+                if(!total || !valid){
+                    layer.msg('总数或合格数不能为空');
+                    return false;
+                }
+                if(parseFloat(total) <= 0 || parseFloat(valid) <= 0){
+                    layer.msg('总数或合格数不能为空');
+                    return false;
+                }
+                if(parseFloat(total) < parseFloat(valid)){
+                    layer.msg('总数不能小于合格数');
+                    return false;
+                }
+
+                services.prodOrder.pick({
+                    id : consts.currentRecord.id || '',
+                    orderId : consts.currentOrder.id || '',
+                    remark : $holder.find('input[name="remark"]').val() || '',
+                    totalNum : total,
+                    validNum : valid
+                }).then(function (record) {
+                    layer.msg('保存挑拣记录成功');
+                    $holder.modal('hide');
+                    return services.prodOrder.one(consts.currentOrder.id);
+                }).then(function (order) {
+                    initTrDetail(order);
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            });
+
+        }
+
+        function init() {
+            initEvent();
+            loadDataTable();
+        }
+
+        init();
+
+    });
+</script>

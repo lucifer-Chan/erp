@@ -50,8 +50,14 @@ public class ErpProdMould extends BaseEntity {
     @Column(columnDefinition = "bigint(20) comment '模具id-关联供应商'")
     private Long realityMouldId;
 
-    @Column(columnDefinition = "double(16,9) comment '模具数量'")
+    @Column(columnDefinition = "double(16,9) comment '模具数量-需求'")
     private Double realityMouldNum;
+
+    @Column(columnDefinition = "double(16,9) comment '模具数量-出库-针对制令单'")
+    private Double numOut;
+
+    @Column(columnDefinition = "double(16,9) comment '模具数量-入库-针对制令单[用完回收]'")
+    private Double numIn;
 
     /**
      * 模具模版
@@ -65,6 +71,17 @@ public class ErpProdMould extends BaseEntity {
     @Transient
     private ErpModelSupplier realityMould;
 
+    public double getNumIn(){
+        return Objects.isNull(numIn) ? 0d : numIn;
+    }
+
+    public double getNumOut(){
+        return Objects.isNull(numOut) ? 0d : numOut;
+    }
+
+    public double getRealityMouldNum(){
+        return Objects.isNull(realityMouldNum) ? 0d : realityMouldNum;
+    }
 
     /**
      * 获取模具模版
@@ -100,6 +117,8 @@ public class ErpProdMould extends BaseEntity {
 
     protected void prePersist(){
         validate();
+        numOut = 0D;
+        numIn = 0D;
     }
 
     protected void preUpdate(){

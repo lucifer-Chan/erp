@@ -148,10 +148,17 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String endProductTypeName;
 
     @Transient
+    private String typeName;
+
+    @Transient
     private String description;
 
     @Transient
     private String supplierTypeCode;
+
+    public String getTypeName(){
+        return StringUtils.hasText(endProductTypeCode) ? BarCodeConstants.BAR_CODE_PREFIX.valueOf(endProductTypeCode).description() : "";
+    }
 
     public String getDescription(){
         if(StringUtils.hasText(description)) return description;

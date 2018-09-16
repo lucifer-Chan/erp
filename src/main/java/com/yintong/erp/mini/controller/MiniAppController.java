@@ -10,6 +10,7 @@ import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
 import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
+import com.yintong.erp.service.prod.ProdOrderService;
 import com.yintong.erp.service.purchase.PurchaseOrderService;
 import com.yintong.erp.service.sale.SaleOrderService;
 import com.yintong.erp.service.stock.StockOptService;
@@ -65,6 +66,8 @@ public class MiniAppController {
     @Autowired SaleOrderService saleOrderService;
 
     @Autowired PurchaseOrderService purchaseOrderService;
+
+    @Autowired ProdOrderService prodOrderService;
 
     @Autowired ProductService productService;
     
@@ -159,7 +162,7 @@ public class MiniAppController {
      * @return 仓位
      */
     @PostMapping("scan/{stockOpt}/{stockHolder}/item")
-    public BaseResult scan2StockIn(@PathVariable String stockOpt, @PathVariable String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
+    public BaseResult scan2Stock(@PathVariable String stockOpt, @PathVariable String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
         Assert.isTrue(IN.name().equals(stockOpt) || OUT.name().equals(stockOpt), "操作类型参数不正确");
         Assert.hasText(stockHolder, "订单类型不能为空");
         Assert.notNull(placeId, "仓位信息不能为空");
@@ -211,8 +214,8 @@ public class MiniAppController {
                     put(IN.name() + "_" + BUY.name(), purchaseOrderService::findOrder4In);//采购单（销售） - 具体的入库信息
                     put(IN.name() + "_" + REFUNDS.name(), saleOrderService::findOrder4In);//销售单（退货） - 具体的入库信息
                     put(OUT.name() + "_" + SALE.name(), saleOrderService::findOrder4Out);//销售单（销售） - 具体的出库信息
-//                    put(OUT.name() + "_" + PROD.name(), /*TODO*/);//制令单（生产） - 具体的出库信息
-//                    put(IN.name() + "_" + PROD.name(), /*TODO*/);//制令单（生产） - 具体的入库信息
+                    put(IN.name() + "_" + PROD.name(), prodOrderService::findOrder4In);//制令单（生产） - 具体的入库信息
+                    put(OUT.name() + "_" + PROD.name(), prodOrderService::findOrder4Out);//制令单（生产） - 具体的出库信息
         }});
     }
 

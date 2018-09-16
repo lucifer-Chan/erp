@@ -407,9 +407,9 @@
                 <ul class="nav nav-tabs noborder" role="tablist">
                     <li role="presentation" class="active"><span href="#orderList" aria-controls="orderList" role="tab" data-toggle="tab">制令单列表</span></li>
                     <li role="presentation"><span href="#finishHistory" aria-controls="finishHistory" role="tab" data-toggle="tab">达成记录</span></li>
-                    <li role="presentation"><span href="#optHistory" aria-controls="optHistory" role="tab" data-toggle="tab">修改记录</span></li>
                     <li role="presentation"><span href="#bomList" aria-controls="bomList" role="tab" data-toggle="tab">物料清单</span></li>
                     <li role="presentation"><span href="#mouldList" aria-controls="mouldList" role="tab" data-toggle="tab">模具清单</span></li>
+                    <li role="presentation"><span href="#optHistory" aria-controls="optHistory" role="tab" data-toggle="tab">操作记录</span></li>
 
                 </ul>
                 <!-- Tab panes -->
@@ -423,16 +423,16 @@
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="optHistory">
-                        <div class="col-sm-12 bugInfoHistories">
-                        </div>
-                    </div>
                     <div role="tabpanel" class="tab-pane" id="bomList">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="mouldList">
                         <button type="button" class="btn btn-success btn-xs md11 _createMouldBt" data-toggle="modal" data-target="#editMould">新增模具</button>
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="optHistory">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
@@ -481,7 +481,7 @@
                                         <div class="col-xs-9 txt pd0">
                                             {{if o.finishDate}} {{o.finishDate}}
                                             {{else}}
-                                            <span class="label label-danger">尚未完成</span>
+                                            <span class="label label-warning">尚未完成</span>
                                             {{/if}}
                                         </div>
                                     </div>
