@@ -153,7 +153,7 @@ public class MiniAppController {
     /**
      * 3-具体货物出入库(扫码货物|原材料仓位)
      * @param stockOpt - 枚举：IN|OUT -> 出库|入库
-     * @param stockHolder  - 枚举： 订单类型 -> REFUNDS("退货单")|PROD("制令单")|BUY("采购单")|INIT("初始化")
+     * @param stockHolder  - 枚举： 订单类型 -> REFUNDS("退货单")|PROD("制令单")|BUY("采购单")|INIT("初始化")|SALE("销售")
      * @param placeId - 仓位id
      * @param orderId - 订单id
      * @param orderBarcode - 订单条形码 [INIT时为null]
