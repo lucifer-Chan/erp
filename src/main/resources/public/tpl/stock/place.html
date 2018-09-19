@@ -219,7 +219,7 @@
             types : [{
                 code : 'M', name : '原材料仓位', icon : 'fa-circle-o-notch'
             },{
-                code : 'P', name : '废品仓位', icon : 'fa-barcode'
+                code : 'P', name : '成品仓位', icon : 'fa-barcode'
             },{
                 code : 'D', name : '模具仓位', icon : 'fa-wrench'
             },{
@@ -348,7 +348,7 @@
                         var source = consts.source[info.holder] || '';
                         var operation = info.operation === 'IN' ? '入库' : '出库';
                         var name = '【' + operation + '-' + source + '】';
-                        var content = (info.productName || info.mouldName || info.rubbishName || tr.materialName) + '['+ info.num + ']';//
+                        var content = (info.productName || info.mouldName || info.rubbishName || tr.materialName) + ' | 数量： '+ info.num;//
                         if('INIT' !== info.holder){
                             content += ',对应单号：' + info.holderBarCode;
                         }

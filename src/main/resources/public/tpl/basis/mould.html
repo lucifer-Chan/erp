@@ -114,6 +114,7 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editMould">修改模具信息</button>
+            <button class="btn btn-primary" id="printBt">打印条形码</button>
              <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
@@ -507,6 +508,29 @@
                     .catch(function (reason) {
                         console.log(reason);
                         layer.msg(reason.caught ? reason.message : '请求失败！');
+                    });
+            });
+
+            //打印成品条形码
+            $('#printBt').unbind('click').click(function () {
+                var $clone = $('#print_to_wares').clone();
+                $clone.find('label[data-name="label_1"]').html('类别：');
+                $clone.find('span[data-name="content_1"]').html(consts.selectedMould.mouldTypeName);
+                $clone.find('label[data-name="label_2"]').html('名称：');
+                $clone.find('span[data-name="content_2"]').html(consts.selectedMould.modelToolName);
+                $clone.find('label[data-name="label_3"]').html('规格：');
+                $clone.find('span[data-name="content_3"]').html(consts.selectedMould.specification);
+
+                //打印数据构建 - 条形码
+                services.common.barcode(consts.selectedMould.barCode)
+                    .then(function (ret) {
+                        $clone.find('.print-barcode').attr('src', ret.base64);
+                    })
+                    .then(function () {
+                        $clone.show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
                     });
             });
         }

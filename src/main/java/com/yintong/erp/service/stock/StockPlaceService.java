@@ -171,6 +171,53 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
     }
 
     /**
+     * 根据模具barcode查找有库存的仓位
+     * @param mouldBarCode
+     * @return
+     */
+    public List<ErpStockPlace> findPlacesByMouldCode(String mouldBarCode){
+        List<Long> placeIds = filterPlaceIdsOfLogs(stockOptLogRepository.findByMouldCode(mouldBarCode));
+        return CollectionUtils.isEmpty(placeIds) ? new ArrayList<>() : stockPlaceRepository.findByIdIn(placeIds);
+    }
+
+    /**
+     * 根据成品barcode查找有库存的仓位
+     * @param productBarCode
+     * @return
+     */
+    public List<ErpStockPlace> findPlacesByProductCode(String productBarCode){
+        List<Long> placeIds = filterPlaceIdsOfLogs(stockOptLogRepository.findByProductCode(productBarCode));
+        return CollectionUtils.isEmpty(placeIds) ? new ArrayList<>() : stockPlaceRepository.findByIdIn(placeIds);
+    }
+
+
+    /**
+     * 从出入库日志中过滤出有库存的placeId
+     * @param logs 通过barcode查询后同一类型的logs
+     * @return
+     */
+    private List<Long> filterPlaceIdsOfLogs(List<ErpStockOptLog> logs){
+        //根据placeId分组
+        Map<Long, List<ErpStockOptLog>> longListMap = logs.stream().collect(Collectors.groupingBy(ErpStockOptLog::getStockPlaceId));
+
+        List<Long> placeIds = longListMap.entrySet().stream()
+                .filter(entity -> {
+                    Double sum = entity.getValue().stream().mapToDouble(log-> StockOpt.IN.name().equals(log.getOperation()) ? log.getNum() : -1 * log.getNum()).sum();
+                    return sum > 0;
+                })
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        return placeIds;
+    }
+
+
+
+
+
+
+
+
+    /**
      * 仓位查询入参dto
      */
     @Getter@Setter

@@ -385,6 +385,7 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editProduct">修改基本信息</button>
+            <button class="btn btn-primary" id="printBt">打印条形码</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#__editWarning">修改预警阀值</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#editBom" id="toAddBom">新增物料清单</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
@@ -1495,6 +1496,28 @@
                     });
             });
 
+            //打印成品条形码
+            $('#printBt').unbind('click').click(function () {
+                var $clone = $('#print_to_wares').clone();
+                $clone.find('label[data-name="label_1"]').html('类别：');
+                $clone.find('span[data-name="content_1"]').html(consts.product.typeName);
+                $clone.find('label[data-name="label_2"]').html('名称：');
+                $clone.find('span[data-name="content_2"]').html(consts.product.endProductName);
+                $clone.find('label[data-name="label_3"]').html('规格：');
+                $clone.find('span[data-name="content_3"]').html(consts.product.specification);
+
+                //打印数据构建 - 条形码
+                services.common.barcode(consts.product.barCode)
+                    .then(function (ret) {
+                        $clone.find('.print-barcode').attr('src', ret.base64);
+                    })
+                    .then(function () {
+                        $clone.show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            });
 
             //编辑bom
             init_edit_bom_modal();

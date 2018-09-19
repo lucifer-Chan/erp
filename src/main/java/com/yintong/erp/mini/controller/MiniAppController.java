@@ -17,6 +17,7 @@ import com.yintong.erp.service.stock.StockOptService;
 import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.base.BaseResult;
 
+import com.yintong.erp.utils.base.JsonWrapper;
 import com.yintong.erp.utils.common.SimpleCache;
 import com.yintong.erp.utils.common.SimpleRemote;
 import com.yintong.erp.web.stock.StockController;
@@ -82,6 +83,8 @@ public class MiniAppController {
     @Autowired StockOptService stockOptService;
 
     @Autowired SimpleRemote simpleRemote;
+
+    @Autowired SimpleCache<StockEntity> simpleCache;
 
     /**
      * 生成token
@@ -161,18 +164,15 @@ public class MiniAppController {
      * @param num - 数量
      * @return 仓位
      */
-    @PostMapping("scan/{stockOpt}/{stockHolder}/item")
-    public BaseResult scan2Stock(@PathVariable String stockOpt, @PathVariable String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
+    @PostMapping("stock")
+    public BaseResult scan2Stock(String stockOpt, String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
         Assert.isTrue(IN.name().equals(stockOpt) || OUT.name().equals(stockOpt), "操作类型参数不正确");
         Assert.hasText(stockHolder, "订单类型不能为空");
         Assert.notNull(placeId, "仓位信息不能为空");
         Assert.isTrue(Objects.nonNull(num) && num > 0, "数量必须大于0");
         Assert.isTrue(Stream.of(StockHolder.values()).map(StockHolder::name).collect(Collectors.toList()).contains(stockHolder), "订单类型不正确");
-        Assert.isTrue(StringUtils.hasText(barcode) && (barcode.length() == WARES_BAR_CODE_TPL_LENGTH || barcode.length() == WARES_BAR_CODE_ASS_LENGTH) , "条形码有误");
-        String firstChartOfBarcode = barcode.substring(0, 1);
-        Assert.isTrue(Stream.of(WaresType.values()).map(WaresType::name).collect(Collectors.toList()).contains(firstChartOfBarcode), "条形码不匹配");
+
         StockHolder holder = StockHolder.valueOf(stockHolder);
-        WaresType type = WaresType.valueOf(firstChartOfBarcode);
         StockOpt opt = StockOpt.valueOf(stockOpt);
         if(opt == StockOpt.IN && INIT != holder){
             //1- stockHolder不为INIT的时候需要orderId
@@ -180,17 +180,50 @@ public class MiniAppController {
         } else if (opt == StockOpt.OUT){
             Assert.isTrue(Objects.nonNull(orderId) && StringUtils.hasText(orderBarcode), "订单不能为空");
         }
+        //2-查找货物
+        StockEntity stockEntity = findWaresByBarcode(barcode);
 
-        //2- 通过barcode判断具体货物类型 截取barcode长度，找到货物模版id
-        String functionKey = type.name() + barcode.length();
-        Function<String, StockEntity> function = waresFunctionMap().get(functionKey);
-        Assert.notNull(function, "未找到匹配的根据条形码查找" + type.description() + "的方法");
-        StockEntity stockEntity = function.apply(barcode);
         //3- 调用StockOptService的出入库方法
         ErpStockPlace place = (opt == StockOpt.IN) ?
                 stockOptService.stockIn(placeId, stockEntity, holder, orderId, orderBarcode, num) :
                 stockOptService.stockOut(placeId, stockEntity, holder, orderId, orderBarcode, num);
+        //4- 清理缓存中的stockEntity
+        simpleCache.clearCache("MINI_" + barcode);
         return new BaseResult().addPojo(place);
+    }
+
+    /**
+     * 根据条码找货物
+     * @param barcode
+     * @return
+     */
+    @GetMapping("scan/wares")
+    public BaseResult findWares(String barcode){
+        StockEntity entity = findWaresByBarcode(barcode);
+        JSONObject ret = JsonWrapper.builder()
+                .add("template", entity.template().getTemplate())
+                .add("type", entity.waresType().description())
+                .add("entity", entity.toJSONObject())
+            .build();
+        return new BaseResult().add(ret);
+    }
+
+    private StockEntity findWaresByBarcode(String barcode){
+        Assert.isTrue(StringUtils.hasText(barcode) && (barcode.length() == WARES_BAR_CODE_TPL_LENGTH || barcode.length() == WARES_BAR_CODE_ASS_LENGTH) , "条形码有误");
+        String firstCharOfBarcode = barcode.substring(0, 1);
+        //原材料的情况
+        if("S".equals(firstCharOfBarcode)){
+            firstCharOfBarcode = "M";
+        }
+        Assert.isTrue(Stream.of(WaresType.values()).map(WaresType::name).collect(Collectors.toList()).contains(firstCharOfBarcode), "条形码不匹配");
+        WaresType type = WaresType.valueOf(firstCharOfBarcode);
+        //通过barcode判断具体货物类型 截取barcode长度，找到货物模版id
+        String functionKey = type.name() + barcode.length();
+        Function<String, StockEntity> function = waresFunctionMap().get(functionKey);
+        Assert.notNull(function, "未找到匹配的根据条形码查找" + type.description() + "的方法");
+
+        return simpleCache.getDataFromCache("MINI_" + barcode, value -> function.apply(barcode));
+
     }
 
     /**

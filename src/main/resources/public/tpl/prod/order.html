@@ -37,6 +37,7 @@
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
+            <button class="btn btn-primary" id="toProductPrintBt">打印成品条形码</button>
             <button class="btn btn-primary" id="toPrintOrderBt">打印物料出库单</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_addPickRecord">挑拣</button>
             <button class="btn btn-primary" id="toPrintInBt">打印入库单</button>
@@ -698,6 +699,8 @@
             });
             //制令单打印
             init_print_order();
+            //成品打印
+            init_print_product();
             //挑拣
             init_pick_modal();
             //成品入库单打印
@@ -781,11 +784,13 @@
                 });
 
                 order.moulds.forEach(function (mould) {
+                    var realityMould = mould.realityMould || {};
                     data.wares.push({
                         type : mould.mould.mouldTypeName,
                         name : mould.mould.modelToolName,
                         specification : mould.mould.specification,
-                        supplierName : !!mould.realityMould ? mould.realityMould.supplierName : '',
+                        supplierName : realityMould.supplierName || '',
+                        placeNames : realityMould.placeNames || mould.mould.placeNames || '',
                         unit : mould.mould.unit ||''
                     })
                 });
@@ -813,6 +818,35 @@
                         layer.msg('生成条形码失败！');
                     });
             });
+        }
+
+        //成品打印
+        function init_print_product() {
+            //toProductPrintBt
+            $('#toProductPrintBt').unbind('click').click(function () {
+                var product = consts.currentOrder.product;
+
+                var $clone = $('#print_to_wares').clone();
+                $clone.find('label[data-name="label_1"]').html('类别：');
+                $clone.find('span[data-name="content_1"]').html(product.typeName);
+                $clone.find('label[data-name="label_2"]').html('名称：');
+                $clone.find('span[data-name="content_2"]').html(product.endProductName);
+                $clone.find('label[data-name="label_3"]').html('规格：');
+                $clone.find('span[data-name="content_3"]').html(product.specification);
+
+                //打印数据构建 - 条形码
+                services.common.barcode(product.barCode)
+                    .then(function (ret) {
+                        $clone.find('.print-barcode').attr('src', ret.base64);
+                    })
+                    .then(function () {
+                        $clone.show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            });
+
         }
 
         //挑拣

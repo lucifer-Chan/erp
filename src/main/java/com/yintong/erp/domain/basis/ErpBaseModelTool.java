@@ -1,12 +1,15 @@
 package com.yintong.erp.domain.basis;
 
+import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
+import java.util.stream.Collectors;
 import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.Assert;
@@ -61,6 +64,21 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
 
     @Transient
     private String mouldTypeName;
+
+    @Transient
+    private String placeNames;
+
+    /**
+     * 有库存的仓位名称
+     * @return
+     */
+    public String getPlaceNames(){
+        if(StringUtils.hasText(placeNames)) return placeNames;
+        if(!StringUtils.hasText(getBarCode())) return placeNames = "";
+        List<ErpStockPlace> places = SpringUtil.getBean(StockPlaceService.class).findPlacesByMouldCode(getBarCode());
+
+        return placeNames = places.stream().map(ErpStockPlace::getName).collect(Collectors.joining(","));
+    }
 
     public String getMouldTypeName(){
         return BarCodeConstants.BAR_CODE_PREFIX.valueOf(modelToolTypeCode).description();

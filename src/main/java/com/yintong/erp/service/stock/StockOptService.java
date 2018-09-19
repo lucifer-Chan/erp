@@ -94,7 +94,7 @@ public class StockOptService {
 
         //1.1 计算仓位空闲
         double remain = place.getUpperLimit() - place.getCurrentStorageNum();
-        Assert.isTrue((remain - num) > 0, place.getName() + "剩余空间为" + remain + ",无法入库数量为" + num + "的" + waresType.description());
+        Assert.isTrue((remain - num) >= 0, place.getName() + "剩余空间为" + remain + ",无法入库数量为" + num + "的" + waresType.description());
         place.setCurrentStorageNum(place.getCurrentStorageNum() + num);
         stockPlaceRepository.save(place);
 

@@ -19,7 +19,7 @@ public interface JSONable {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
 
             private String process(Object date){
-                return Objects.isNull(date) ? null : simpleDateFormat.format(date);
+                return Objects.isNull(date) ? "" : simpleDateFormat.format(date);
             }
 
             @Override

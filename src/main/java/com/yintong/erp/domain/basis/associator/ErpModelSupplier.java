@@ -5,13 +5,16 @@ import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.domain.basis.ErpBaseSupplier;
 import com.yintong.erp.domain.basis.ErpBaseSupplierRepository;
 import com.yintong.erp.domain.basis.TemplateWares;
+import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Transient;
 import lombok.*;
@@ -69,6 +72,21 @@ public class ErpModelSupplier extends BaseEntityWithBarCode  implements StockEnt
 
     @Transient
     private String supplierName;
+
+    @Transient
+    private String placeNames;
+
+    /**
+     * 有库存的仓位名称
+     * @return
+     */
+    public String getPlaceNames(){
+        if(StringUtils.hasText(placeNames)) return placeNames;
+        if(!StringUtils.hasText(getBarCode())) return placeNames = "";
+        List<ErpStockPlace> places = SpringUtil.getBean(StockPlaceService.class).findPlacesByMouldCode(getBarCode());
+
+        return placeNames = places.stream().map(ErpStockPlace::getName).collect(Collectors.joining(","));
+    }
 
     //供应商名称
     public String getSupplierName(){

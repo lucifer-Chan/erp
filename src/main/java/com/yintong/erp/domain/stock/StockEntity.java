@@ -3,6 +3,7 @@ package com.yintong.erp.domain.stock;
 import com.yintong.erp.domain.basis.TemplateWares;
 import com.yintong.erp.service.purchase.PurchaseOrderService;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.base.JSONable;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import static com.yintong.erp.utils.common.Constants.*;
  * @create 2018-08-28 下午10:28
  * 可出入库的实体
  **/
-public interface StockEntity<T extends BaseEntityWithBarCode> {
+public interface StockEntity<T extends BaseEntityWithBarCode> extends JSONable{
     /**
      * 入库
      * @param num
