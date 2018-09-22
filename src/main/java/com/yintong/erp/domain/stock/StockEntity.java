@@ -1,10 +1,9 @@
 package com.yintong.erp.domain.stock;
 
 import com.yintong.erp.domain.basis.TemplateWares;
-import com.yintong.erp.service.purchase.PurchaseOrderService;
+import com.yintong.erp.service.basis.CommonService;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.JSONable;
-import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.Objects;
 import java.util.function.Function;
@@ -69,7 +68,7 @@ public interface StockEntity<T extends BaseEntityWithBarCode> extends JSONable{
      * @return
      */
     default TemplateWares template(){
-        Function<Long, TemplateWares> function = SpringUtil.getBean(PurchaseOrderService.class).findWaresById().get(waresType());
+        Function<Long, TemplateWares> function = SpringUtil.getBean(CommonService.class).findWaresById().get(waresType());
         return function.apply(templateId());
     }
 

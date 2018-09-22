@@ -16,6 +16,7 @@ import com.yintong.erp.domain.purchase.ErpPurchaseOrderRepository;
 import com.yintong.erp.domain.stock.ErpStockInOrder;
 import com.yintong.erp.domain.stock.ErpStockInOrderRepository;
 import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.service.basis.CommonService;
 import com.yintong.erp.service.stock.StockIn4Holder;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants.PurchaseOrderStatus;
@@ -29,11 +30,9 @@ import com.yintong.erp.validator.OnDeleteSupplierRawMaterialValidator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
@@ -85,6 +84,8 @@ public class PurchaseOrderService implements StockIn4Holder,
 
     @Autowired ErpBaseModelToolRepository mouldRepository;
 
+    @Autowired CommonService commonService;
+
     /**
      * 组合查询
      * @param parameters
@@ -119,10 +120,12 @@ public class PurchaseOrderService implements StockIn4Holder,
         Assert.notNull(order, "未找到采购订单[" + barcode + "]");
         Assert.isTrue(1 == order.getPreStockIn(), "该采购订单尚未打印入库单");
         //添加明细
-        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
-                .stream().filter(item -> item.getInNum() < item.getNum())
-                .collect(Collectors.toList());
+        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId());
+//        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+//                .stream().filter(item -> item.getInNum() < item.getNum())
+//                .collect(Collectors.toList());
         Assert.notEmpty(items, "无可入库的明细");
+        order.setItems(items);
         return order;
     }
 
@@ -521,7 +524,7 @@ public class PurchaseOrderService implements StockIn4Holder,
             return productSupplierRepository.findBySupplierId(supplierId)
                     .stream()
                     .map(ass -> {
-                        TemplateWares wares = findWaresById().get(WaresType.P).apply(ass.getEndProductId());
+                        TemplateWares wares = commonService.findWaresById().get(WaresType.P).apply(ass.getEndProductId());
                         return Objects.isNull(wares) ? null : wares.getTemplate(ass.getId());
                     })
                     .filter(Objects::nonNull)
@@ -532,7 +535,7 @@ public class PurchaseOrderService implements StockIn4Holder,
             return materialSupplierRepository.findBySupplierId(supplierId)
                     .stream()
                     .map(ass -> {
-                        TemplateWares wares = findWaresById().get(WaresType.M).apply(ass.getRawMaterId());
+                        TemplateWares wares = commonService.findWaresById().get(WaresType.M).apply(ass.getRawMaterId());
                         return Objects.isNull(wares) ? null : wares.getTemplate(ass.getId());
                     })
                     .filter(Objects::nonNull)
@@ -543,7 +546,7 @@ public class PurchaseOrderService implements StockIn4Holder,
             return mouldSupplierRepository.findBySupplierId(supplierId)
                     .stream()
                     .map(ass -> {
-                        TemplateWares wares = findWaresById().get(WaresType.D).apply(ass.getModelId());
+                        TemplateWares wares = commonService.findWaresById().get(WaresType.D).apply(ass.getModelId());
                         return Objects.isNull(wares) ? null : wares.getTemplate(ass.getId());
                     })
                     .filter(Objects::nonNull)
@@ -616,15 +619,4 @@ public class PurchaseOrderService implements StockIn4Holder,
         };
     }
 
-    /**
-     * 根据货物id查找模版货物
-     * @return
-     */
-    public Map<WaresType, Function<Long, TemplateWares>> findWaresById(){
-        return new HashMap<WaresType, Function<Long, TemplateWares>>(){{
-            put(WaresType.P, id -> productRepository.findById(id).orElse(null));
-            put(WaresType.M, id -> materialRepository.findById(id).orElse(null));
-            put(WaresType.D, id -> mouldRepository.findById(id).orElse(null));
-        }};
-    }
 }

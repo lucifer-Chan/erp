@@ -1,10 +1,13 @@
 package com.yintong.erp.mini.controller;
 
+import com.yintong.erp.domain.stock.ErpStockOptLog;
+import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.mini.domain.WxMiniUser;
 import com.yintong.erp.mini.service.MiniAppService;
 
+import com.yintong.erp.mini.service.MiniDtoWrapper;
 import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
@@ -14,7 +17,8 @@ import com.yintong.erp.service.prod.ProdOrderService;
 import com.yintong.erp.service.purchase.PurchaseOrderService;
 import com.yintong.erp.service.sale.SaleOrderService;
 import com.yintong.erp.service.stock.StockOptService;
-import com.yintong.erp.utils.base.BaseEntity;
+import com.yintong.erp.service.stock.StockPlaceService;
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.BaseResult;
 
 import com.yintong.erp.utils.base.JsonWrapper;
@@ -23,7 +27,9 @@ import com.yintong.erp.utils.common.SimpleRemote;
 import com.yintong.erp.web.stock.StockController;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -33,6 +39,7 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.yintong.erp.mini.service.MiniAppService.UNBIND_OPENID_PREFIX;
+import static com.yintong.erp.mini.service.MiniDtoWrapper.*;
 import static com.yintong.erp.utils.bar.BarCodeConstants.*;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
 import static com.yintong.erp.utils.common.Constants.*;
@@ -61,6 +69,8 @@ public class MiniAppController {
     private String openIdUrl;
 
     @Autowired StockController stockController;
+
+    @Autowired StockPlaceService stockPlaceService;
 
     @Autowired MiniAppService miniAppService;
 
@@ -85,6 +95,8 @@ public class MiniAppController {
     @Autowired SimpleRemote simpleRemote;
 
     @Autowired SimpleCache<StockEntity> simpleCache;
+
+    @Autowired ErpStockOptLogRepository stockOptLogRepository;
 
     /**
      * 生成token
@@ -128,8 +140,8 @@ public class MiniAppController {
      * @param barcode 订单的条形码
      * @return
      */
-    @GetMapping("scan/{stockOpt}/{stockHolder}/order")
-    public BaseResult scanOrder(@PathVariable String stockOpt, @PathVariable String stockHolder, String barcode){
+    @GetMapping("scan/order")
+    public BaseResult scanOrder(String stockOpt, String stockHolder, String barcode){
         Assert.isTrue(IN.name().equals(stockOpt) || OUT.name().equals(stockOpt), "操作类型参数不正确");
         Assert.isTrue(StringUtils.hasText(barcode), "请先扫描条形码");
         Assert.isTrue(HOLDER_AND_PREFIX_MAP.keySet().contains(stockHolder), "条形码不合法！");
@@ -137,9 +149,15 @@ public class MiniAppController {
         Assert.isTrue(barcode.startsWith(prefix), "扫描错误，请扫描" + BAR_CODE_PREFIX.valueOf(prefix).description() + "的条形码");
         //根据操作类型和订单类型返回相应的订单／明细
         String functionKey = stockOpt + "_" + stockHolder;
-        Function<String, BaseEntity> function = holderFunctionMap().get(functionKey);
+        Function<String, BaseEntityWithBarCode> function = holderFunctionMap().get(functionKey);
         Assert.notNull(function, "未找到" + StockOpt.valueOf(stockOpt) + StockHolder.valueOf(stockHolder) + "的方法");
-        return new BaseResult().addPojo(function.apply(barcode));
+
+        BaseEntityWithBarCode order = function.apply(barcode);
+        //noinspection unchecked
+        return new BaseResult().add(buildOrder(order));
+
+        //buildOrder
+//        return new BaseResult().addPojo(function.apply(barcode));
     }
 
     /**
@@ -151,6 +169,43 @@ public class MiniAppController {
     public BaseResult scanPlace(String barcode){
         Assert.isTrue(StringUtils.hasText(barcode) && barcode.startsWith(S000.name()), "请扫描仓位条形码！");
         return stockController.one(barcode);
+    }
+
+    /**
+     * 获取仓库的现有库存
+     * @param placeId - 仓位id
+     * @param waresCode - 货物条码
+     * @param waresId - 货物模版id
+     * @param strict - 是否严格（关联供应商|随意）
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @GetMapping("place/remain")
+    public BaseResult placeRemain(Long placeId, String waresCode, Long waresId, boolean strict){
+        String firstChar = waresCode.substring(0,1);
+
+        JSONObject empty = JsonWrapper.builder().add("total", -1).build();
+        if(WaresType.D.name().equals(firstChar)) {
+            List<ErpStockOptLog> optHistory = strict ?
+                    stockOptLogRepository.findByStockPlaceIdAndMouldCode(placeId, waresCode) :
+                    stockOptLogRepository.findByStockPlaceIdAndMouldId(placeId, waresId);
+            JSONObject ret =
+                    stockPlaceService.collect(optHistory, (log)->true, ErpStockOptLog::getMouldCode, "mouldId", "mouldCode")
+                        .stream().findAny().orElse(empty);
+            return new BaseResult().add(ret);
+        }
+
+        if(WaresType.P.name().equals(firstChar)) {
+            List<ErpStockOptLog> optHistory = strict ?
+                    stockOptLogRepository.findByStockPlaceIdAndProductCode(placeId, waresCode) :
+                    stockOptLogRepository.findByStockPlaceIdAndProductId(placeId, waresId);
+            JSONObject ret =
+                    stockPlaceService.collect(optHistory, (log)->true, ErpStockOptLog::getProductCode, "productId", "productCode")
+                            .stream().findAny().orElse(empty);
+            return new BaseResult().add(ret);
+        }
+
+        return new BaseResult();
     }
 
     /**
@@ -166,6 +221,7 @@ public class MiniAppController {
      */
     @PostMapping("stock")
     public BaseResult scan2Stock(String stockOpt, String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
+        orderId = -999 == orderId ? null : orderId;
         Assert.isTrue(IN.name().equals(stockOpt) || OUT.name().equals(stockOpt), "操作类型参数不正确");
         Assert.hasText(stockHolder, "订单类型不能为空");
         Assert.notNull(placeId, "仓位信息不能为空");
@@ -200,12 +256,8 @@ public class MiniAppController {
     @GetMapping("scan/wares")
     public BaseResult findWares(String barcode){
         StockEntity entity = findWaresByBarcode(barcode);
-        JSONObject ret = JsonWrapper.builder()
-                .add("template", entity.template().getTemplate())
-                .add("type", entity.waresType().description())
-                .add("entity", entity.toJSONObject())
-            .build();
-        return new BaseResult().add(ret);
+        //noinspection unchecked
+        return new BaseResult().add(buildWares(entity));
     }
 
     private StockEntity findWaresByBarcode(String barcode){
@@ -241,32 +293,29 @@ public class MiniAppController {
      * 操作+订单类型 和 执行方法（获取订单实例）的映射
      * @return apply -> 订单实例
      */
-    private Map<String, Function<String, BaseEntity>> holderFunctionMap(){
-        return new SimpleCache<Map<String, Function<String, BaseEntity>>>().getDataFromCache(this.getClass().getName() + "_holderFunctionMap",
-                (value) -> new HashMap<String, Function<String, BaseEntity>>(){{
-                    put(IN.name() + "_" + BUY.name(), purchaseOrderService::findOrder4In);//采购单（销售） - 具体的入库信息
-                    put(IN.name() + "_" + REFUNDS.name(), saleOrderService::findOrder4In);//销售单（退货） - 具体的入库信息
-                    put(OUT.name() + "_" + SALE.name(), saleOrderService::findOrder4Out);//销售单（销售） - 具体的出库信息
-                    put(IN.name() + "_" + PROD.name(), prodOrderService::findOrder4In);//制令单（生产） - 具体的入库信息
-                    put(OUT.name() + "_" + PROD.name(), prodOrderService::findOrder4Out);//制令单（生产） - 具体的出库信息
-        }});
+    private Map<String, Function<String, BaseEntityWithBarCode>> holderFunctionMap() {
+        return new HashMap<String, Function<String, BaseEntityWithBarCode>>() {{
+            put(IN.name() + "_" + BUY.name(), purchaseOrderService::findOrder4In);//采购单（销售） - 具体的入库信息
+            put(IN.name() + "_" + REFUNDS.name(), saleOrderService::findOrder4In);//销售单（退货） - 具体的入库信息
+            put(OUT.name() + "_" + SALE.name(), saleOrderService::findOrder4Out);//销售单（销售） - 具体的出库信息
+            put(IN.name() + "_" + PROD.name(), prodOrderService::findOrder4In);//制令单（生产） - 具体的入库信息
+            put(OUT.name() + "_" + PROD.name(), prodOrderService::findOrder4Out);//制令单（生产） - 具体的出库信息
+        }};
     }
 
     /**
      * 货物类型+条码长度 和执行方法（获取货物模版实例）的映射
      * @return apply -> 货物模版实例 (不考虑废品)
      */
-    private Map<String, Function<String, StockEntity>> waresFunctionMap(){
-        return new SimpleCache<Map<String, Function<String, StockEntity>>>().getDataFromCache(this.getClass().getName() + "_holderFunctionMap",
-                (value) -> new HashMap<String, Function<String, StockEntity>>(){{
-                    put(WaresType.P.name() + WARES_BAR_CODE_TPL_LENGTH, productService::findByBarcode);//成品-模版条码
-                    put(WaresType.P.name() + WARES_BAR_CODE_ASS_LENGTH, supplierProductService::findByBarcode);//成品-关联条码
-                    //put(WaresType.M.name() + WARES_BAR_CODE_TPL_LENGTH, materialService::one);//原材料-模版条码
-                    put(WaresType.M.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMaterialService::findByPlaceBarcode);//原材料-关联条码
-                    put(WaresType.D.name() + WARES_BAR_CODE_TPL_LENGTH, mouldService::findByBarcode);//模具-模版条码
-                    put(WaresType.D.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMouldService::findByBarcode);//模具-关联条码
-
-        }});
+    private Map<String, Function<String, StockEntity>> waresFunctionMap() {
+        return new HashMap<String, Function<String, StockEntity>>() {{
+            put(WaresType.P.name() + WARES_BAR_CODE_TPL_LENGTH, productService::findByBarcode);//成品-模版条码
+            put(WaresType.P.name() + WARES_BAR_CODE_ASS_LENGTH, supplierProductService::findByBarcode);//成品-关联条码
+            //put(WaresType.M.name() + WARES_BAR_CODE_TPL_LENGTH, materialService::one);//原材料-模版条码
+            put(WaresType.M.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMaterialService::findByPlaceBarcode);//原材料-关联条码
+            put(WaresType.D.name() + WARES_BAR_CODE_TPL_LENGTH, mouldService::findByBarcode);//模具-模版条码
+            put(WaresType.D.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMouldService::findByBarcode);//模具-关联条码
+        }};
     }
 
 }

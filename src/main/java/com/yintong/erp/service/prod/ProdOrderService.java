@@ -488,7 +488,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
     public void stockOut(StockHolder holder, Long orderId, StockEntity stockEntity, double outNum) {
         //1.1 检查订单
         ErpProdOrder order = findOneOrder(orderId);
-        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
+        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印制令单");
         //操作日志 - 暂无content
         ErpProdOrderOptLog prodOrderOptLog = ErpProdOrderOptLog.builder()
                 .optType("stock")
@@ -533,10 +533,10 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         //1.1 检查订单
         ErpProdOrder order = orderRepository.findByBarCode(barcode).orElse(null);
         Assert.notNull(order, "未找到制令单[" + barcode + "]");
-        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
-        long bomCount = order.getBoms().stream().filter(bom -> bom.getNumOut() < bom.getNumIn()).count();
-        long mouldCount = order.getMoulds().stream().filter(mould -> mould.getNumOut() < mould.getNumIn()).count();
-        Assert.isTrue(bomCount + mouldCount > 0, "无可出库的模具或原材料");
+        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印制令单");
+//        long bomCount = order.getBoms().stream().filter(bom -> bom.getNumOut() < bom.getNumIn()).count();
+//        long mouldCount = order.getMoulds().stream().filter(mould -> mould.getNumOut() < mould.getNumIn()).count();
+//        Assert.isTrue(bomCount + mouldCount > 0, "无可出库的模具或原材料");
         Assert.isTrue(!S_003.name().equals(order.getStatusCode()), "该制令单已完成生产，不能再出库模具或原材料");
         return order;
     }
@@ -548,7 +548,6 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
      */
     public ErpProdOrder findOrder4In(String barcode){
         ErpProdOrder order = orderRepository.findByBarCode(barcode).orElse(null);
-        Assert.notNull(order, "未找到销售订单[" + barcode + "]");
         Assert.notNull(order, "未找到制令单[" + barcode + "]");
         Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
         return order;

@@ -36,6 +36,8 @@ import org.springframework.stereotype.Service;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
+
+import static com.yintong.erp.utils.common.Constants.StockHolder.REFUNDS;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.in;
@@ -98,9 +100,10 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         Assert.notNull(order, "未找到销售订单[" + barcode + "]");
         Assert.isTrue(1 == order.getPreStockOut(), "该销售订单尚不可出库");
         //添加明细
-        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
-                .stream().filter(item -> item.getOutedNum() < item.getNum())
-                .collect(Collectors.toList());
+        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId());
+//        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+//                .stream().filter(item -> item.getOutedNum() < item.getNum())
+//                .collect(Collectors.toList());
         Assert.notEmpty(items, "无可出库的明细");
         order.setItems(items);
         return order;
@@ -118,9 +121,10 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         SaleOrderStatus currentStatus = SaleOrderStatus.valueOf(order.getStatusCode());
         Assert.isTrue(STATUS_006 == currentStatus, "当前订单状态为" + currentStatus.description() + "，不可入库");
         //添加明细
-        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
-                .stream().filter(item -> item.getInNum() < item.getNum())
-                .collect(Collectors.toList());
+        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId());
+//        List<ErpSaleOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+//                .stream().filter(item -> item.getInNum() < item.getNum())
+//                .collect(Collectors.toList());
         Assert.notEmpty(items, "无可入库的明细");
         order.setItems(orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId()));
         return order;
@@ -504,7 +508,7 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
      */
     @Override
     public boolean matchesIn(StockHolder holder, StockEntity stockEntity) {
-        return  SALE == holder && WaresType.P == stockEntity.waresType();
+        return  REFUNDS == holder && WaresType.P == stockEntity.waresType();
     }
 
     /**
@@ -536,7 +540,7 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         }
         //2-保存订单明细
         item.setStatusCode(status.name());
-        item.setOutedNum(currentInNum);
+        item.setInNum(currentInNum);
         orderItemRepository.save(item);
         //3-明细日志
         orderOptLogRepository.save(

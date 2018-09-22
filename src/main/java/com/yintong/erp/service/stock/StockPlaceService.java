@@ -1,5 +1,6 @@
 package com.yintong.erp.service.stock;
 
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
 import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
@@ -47,6 +48,8 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
 
     @Autowired ErpStockOptLogRepository stockOptLogRepository;
 
+    @Autowired ErpRawMaterialSupplierRepository materialSupplierRepository;
+
     /**
      * 查找是否有原材料对应的供应商
      * @param id
@@ -67,6 +70,10 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
     public ErpStockPlace create(ErpStockPlace place){
         place.setId(null);
         place.setStatusCode(ON.name());
+        Long assId = place.getMaterialSupplierAssId();
+        if(Objects.nonNull(assId)){
+            materialSupplierRepository.findById(assId).ifPresent(associator -> place.setMaterialSupplierBarCode(associator.getBarCode()));
+        }
         return stockPlaceRepository.save(place);
     }
 
@@ -200,21 +207,14 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
         //根据placeId分组
         Map<Long, List<ErpStockOptLog>> longListMap = logs.stream().collect(Collectors.groupingBy(ErpStockOptLog::getStockPlaceId));
 
-        List<Long> placeIds = longListMap.entrySet().stream()
+        return longListMap.entrySet().stream()
                 .filter(entity -> {
                     Double sum = entity.getValue().stream().mapToDouble(log-> StockOpt.IN.name().equals(log.getOperation()) ? log.getNum() : -1 * log.getNum()).sum();
                     return sum > 0;
                 })
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-        return placeIds;
     }
-
-
-
-
-
-
 
 
     /**
@@ -251,10 +251,14 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
      * @param <K>
      * @return
      */
-    private <K> List<JSONObject> collect(List<ErpStockOptLog> optHistory,
+    public <K> List<JSONObject> collect(List<ErpStockOptLog> optHistory,
                                          Predicate<? super ErpStockOptLog> filter,
                                          Function<? super ErpStockOptLog, ? extends K> groupingBy,
                                          String ... attrs){
+        if(CollectionUtils.isEmpty(optHistory)) {
+            return new ArrayList<>();
+        }
+
         Map<K, List<ErpStockOptLog>> infoMap =
                 optHistory.stream().filter(filter).collect(Collectors.groupingBy(groupingBy));
         List<JSONObject> infoList = new ArrayList<>();
@@ -275,6 +279,7 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
         });
         return infoList;
     }
+
 
     ///**
     //     * 仓位信息

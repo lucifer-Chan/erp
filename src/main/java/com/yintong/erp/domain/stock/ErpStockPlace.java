@@ -47,6 +47,9 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "bigint(20) comment '关联供应商之后的原材料id，当stock_place_type为M时有效'")
     private Long materialSupplierAssId;
 
+    @Column(columnDefinition = "varchar(40) comment '关联供应商之后的原材料条码，当stock_place_type为M时有效'")
+    private String materialSupplierBarCode;
+
     @Column(columnDefinition = "varchar(40) comment '可存物料名称，当stock_place_type为M时为原材料明细，否则为:成品|模具|废品'")
     private String materialName;
 

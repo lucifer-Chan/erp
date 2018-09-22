@@ -67,6 +67,101 @@
 </script>
 -->
 
+<!--
+<div style="width: 70%">
+    <div id="print_prod_order_template">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <span class="print-header">
+                    <h3>瑞安市银通电器有限公司-制令单</h3>
+                </span>
+            </div>
+            <div class="row pd22">
+                <div class="col-xs-12 print-right">
+                    <img src="/PTD0000000096.png" class="print-barcode">
+                </div>
+            </div>
+            <div class="pd13"></div>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="print-line" >
+                        <label>打印时间:</label>
+                        <div class="pd42">2018-07-27 16:15:25</div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="print-line" >
+                        <label>生产成品:</label>
+                        <div class="pd42">8TD.550.475</div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="print-line" >
+                        <label>规格描述:</label>
+                        <div class="pd42" data-name="createdName">9.5*1.6+4*4F(整体)</div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-print">
+                    <thead>
+                    <tr>
+                        <th>物料类型</th>
+                        <th>物料名称</th>
+                        <th>规格型号</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>原材料-铜丝-紫铜丝</td>
+                        <td>AgSnO₂(9)</td>
+                        <td>3.15</td>
+                        <td>kg</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>模具-银刀</td>
+                        <td>一把银刀</td>
+                        <td>1*2*3*4</td>
+                        <td>个</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="print-line" >
+                        <label>会计:</label>
+                        <div class="pd42"></div>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="print-line" >
+                        <label>创建人:</label>
+                        <div>管理员</div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="print-line" >
+                        <label>创建日期:</label>
+                        <div class="pd42">2018-08-20</div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="print-line" >
+                        <label>生产工人:</label>
+                        <div class="pd42">测试人员</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
 <div id="print_to_product_xxxx">
     <div class="panel-default bugInfo">
         <div class="row">
@@ -177,3 +272,141 @@
         </div>
     </div>
 </div>
+
+
+
+
+<div id="prod_order_holder"></div>
+<script id="template-print_prod_order" type="text/template">
+    <div style="width: 70%">
+        <div class="panel-default bugInfo">
+            <div class="row">
+            <span class="print-header">
+                <h3>瑞安市银通电器有限公司-制令单</h3>
+            </span>
+            </div>
+            <div class="row pd22">
+                <div class="col-xs-12 print-right">
+                    <img src="{{o.product.barcode}}" class="print-barcode">
+                </div>
+            </div>
+            <div class="pd13"></div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="print-line" >
+                        <label>打印时间:</label>
+                        <div class="pd42">{{o.currentTime}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="print-line" >
+                        <label>生产成品:</label>
+                        <div class="pd42">{{o.product.productName}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="print-line" >
+                        <label>规格描述:</label>
+                        <div class="pd42">{{o.product.specification}}</div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-print">
+                    <thead>
+                    <tr>
+                        <th>物料类型</th>
+                        <th>物料名称</th>
+                        <th>规格型号</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{each o.wares as w}}
+                    <tr>
+                        <td>{{w.type}}</td>
+                        <td>{{w.name}}</td>
+                        <td>{{w.specification}}</td>
+                        <td>{{w.unit}}</td>
+                        <td></td>
+                    </tr>
+                    {{/each}}
+                    {{each o.empty}}
+                    <tr style="height: 37px">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="print-line" >
+                        <label>会计:</label>
+                        <div class="pd42"></div>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="print-line" >
+                        <label>创建人:</label>
+                        <div>{{o.createdName}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="print-line" >
+                        <label>创建日期:</label>
+                        <div class="pd42">{{o.createdAt}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="print-line" >
+                        <label>生产工人:</label>
+                        <div class="pd42">{{o.employeeName}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="print-line" >
+                        <label>仓管员:</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    var data = {
+        currentTime: '2018-09-14 16:15:25',
+        createdName : '管理员',
+        employeeName : '测试人员',
+        createdAt : '2018-08-20',
+        product : {
+            barcode : '/PTD0000000096.png',
+            productName : '8TD.550.475',
+            specification : '9.5*1.6+4*4F(整体)',
+        },
+
+        wares : [{
+            type : '原材料-铜丝-紫铜丝',
+            name : 'AgSnO₂(9)',
+            specification :'3.15',
+            unit : 'kg'
+        },{
+            type : '模具-银刀',
+            name : '一把银刀',
+            specification :'1*2*3*4',
+            unit : '个'
+        }],
+        empty : [0,1,2]
+    };
+    var html = template("template-print_prod_order", {o : data});
+    $('#prod_order_holder').html(html);
+
+
+</script>
+

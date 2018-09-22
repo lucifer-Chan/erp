@@ -1,7 +1,7 @@
 package com.yintong.erp.domain.purchase;
 
 import com.yintong.erp.domain.basis.TemplateWares;
-import com.yintong.erp.service.purchase.PurchaseOrderService;
+import com.yintong.erp.service.basis.CommonService;
 import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
@@ -74,6 +74,10 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Transient
     private JSONObject wares;
 
+    public Double getInNum(){
+        return Objects.isNull(inNum) ? 0D : inNum;
+
+    }
 //    @Column(columnDefinition = "varchar(64) comment '单位'")
 //    private String unit;
 //
@@ -105,7 +109,7 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     public JSONObject getWares(){
         if(Objects.nonNull(wares)) return wares;
         if(null == waresType) return wares = null;
-        Function<Long, TemplateWares> function = SpringUtil.getBean(PurchaseOrderService.class).findWaresById().get(Constants.WaresType.valueOf(waresType));
+        Function<Long, TemplateWares> function = SpringUtil.getBean(CommonService.class).findWaresById().get(Constants.WaresType.valueOf(waresType));
         TemplateWares templateWares = function.apply(waresId);
         return wares = (Objects.isNull(templateWares) ? null : templateWares.getTemplate());
     }

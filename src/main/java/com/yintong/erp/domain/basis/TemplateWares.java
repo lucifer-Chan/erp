@@ -12,6 +12,8 @@ import net.sf.json.JSONObject;
 public interface TemplateWares {
     
     String getDescription();
+
+    String getBarCode();
     
     Long getWaresId();
     
@@ -25,8 +27,9 @@ public interface TemplateWares {
     
     default JSONObject getTemplate(){
         return JsonWrapper.builder()
-                .add("name",getDescription())
+                .add("name", getDescription())
                 .add("waresId", getWaresId())
+                .add("barCode", getBarCode())
                 .add("unit", getUnit())
                 .add("simpleName", getSimpleName())
                 .add("specification", getSpecification())

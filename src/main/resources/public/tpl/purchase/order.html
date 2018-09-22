@@ -145,7 +145,6 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editPurchaseOrderItem" id="_addPurchaseOrderItemBt">新增订单明细</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toSubmitOrderBt">提交审核</button>
             <button class="btn btn-primary" id="_printToInBt">打印入库单</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toRefundsOrderBt">供应商退货</button>
             <button class="btn btn-primary" data-name="delete" id="_deletePurchaseOrderBt">删除</button>
         </span>
     </div>
@@ -322,7 +321,7 @@
                 //列表相关
                 dataTable : {
                     id : 'dataTables'//列表id
-                    , codes : ['STATUS_001','STATUS_002','STATUS_003','STATUS_004','STATUS_049','STATUS_005','STATUS_006','STATUS_007', 'STATUS_008'] //搜索供选的状态
+                    , codes : ['STATUS_001','STATUS_002','STATUS_003','STATUS_004','STATUS_049','STATUS_005','STATUS_007', 'STATUS_008'] //搜索供选的状态
                 }
                 , oQueryParam : {}//查询参数
                 , initSuppliers : true//是否初始化供应商列表
@@ -337,10 +336,10 @@
                 'STATUS_004' : '审核退回',
                 'STATUS_049' : '入库中',
                 'STATUS_005' : '已入库',
-                'STATUS_006' : '供应商退货',
                 'STATUS_007' : '已完成',
                 'STATUS_008' : '作废'
             }
+
             /******************** start buttons**************************/
             , $addPurchaseOrderBt : $('#addPurchaseOrderBt')//新增采购订单按钮
             , $saveOrderBt : $('#_saveOrderBt')//保存采购订单按钮
