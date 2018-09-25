@@ -444,4 +444,30 @@
             return $;
         });
     }
+
+    /**
+     * ajax请求 遮罩
+     */
+    (function(){
+        var ajaxbg = $("#loading_background,#loading_progressBar");
+        if (ajaxbg.length < 1) return;
+        ajaxbg.hide();
+        var timeCount ,time = 0;
+        $(document).ajaxStart(function() {
+            $('#loading_background').height(window.innerHeight);
+            timeCount = setInterval(function(){
+                time ++;
+                if(time >=2){
+                    ajaxbg.show();
+                    // clearInterval(timeCount);
+                }
+            }, 200);
+        }).ajaxStop(function() {
+            clearInterval(timeCount);
+            console.log('time cost', time);
+            time = 0;
+            ajaxbg.hide();
+        });
+    })();
+
 })(jQuery, window, document);
