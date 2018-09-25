@@ -311,6 +311,10 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
         var aTr = [];
         //每行tr，用来存id
         var oTr = null;
+
+        var unSorting = options.unSorting || []; //不参与排序的index eg:4,5,6
+
+        var sorting = [0, 'desc'];
         $.each($(ths), function(idx,th){
             //原内容
             var text = $(th).attr('erp-data') || '';
@@ -346,9 +350,24 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
             "bInfo": false,
             "bStateSave": false,
             "iDisplayLength": 15,//当前每页显示多少
-            "ordering": false, // 禁止排序
+            "order": [sorting],
+            "aoColumnDefs":[
+                { "bSortable": false,"aTargets": unSorting }
+            ],
+            // "ordering": !sorting.length, // 禁止排序
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 var params = $.extend({},oParams, {pageNum : aoData.start / aoData.length + 1, perPageNum : aoData.length});
+
+                if (!!aoData.order && !$.isEmptyObject(aoData) && ths.length >= aoData.order[0].column){
+                    var attrs = $(ths[aoData.order[0].column]).attr('erp-data');///\{(.+?)\}/.exec($(ths[aoData.order[0].column]))[1];
+                    var attr = (attrs.match(/\{(.+?)\}/g) || [''])[0];
+                    var sortAttr = (/\{(.+?)\}/.exec(attr) || ['', ''])[1];
+                    var sortBy = !!sortAttr ? sortAttr + '@' + aoData.order[0].dir : false;
+                    if (sortBy !== false){
+                        params.sortBy = sortBy;
+                    }
+                    console.log('列表排序：', sortBy);
+                }
                 $dataProvider(params)
                     .then(function (ret) {
                         $('#allCount').text('共'+ret.totalElements+'条记录');

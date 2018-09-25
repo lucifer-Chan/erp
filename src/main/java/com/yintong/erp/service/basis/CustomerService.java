@@ -164,7 +164,7 @@ public class CustomerService {
 
     @Getter
     @Setter
-    @OrderBy(fieldName = "id")
+    @OrderBy(fieldName = "barCode")
     public static class CustomerParameterBuilder extends QueryParameterBuilder {
         @ParameterItem(mappingTo = {"barCode", "customerName", "contactName", "contactMobile", "contactPhone"}, compare = like, group = OR)
         String cause;

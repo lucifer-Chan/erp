@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
@@ -35,6 +36,7 @@ import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 public class QueryParameterBuilder {
     protected int pageNum = 1;
     protected int perPageNum = 20;
+    protected String sortBy = "";//attrName@asc || attrName@desc
     protected Map<BooleanOperator, List<Predicate>> predicateMap = new HashMap<>();
 
     public int getPageNum(){
@@ -72,6 +74,7 @@ public class QueryParameterBuilder {
     @Deprecated
     private <T> List<Predicate> buildSingle(Field field, Root<T> root, CriteriaBuilder criteriaBuilder) throws ParseException, IllegalAccessException, NoSuchMethodException {
         ParameterItem parameterItem = field.getAnnotation(ParameterItem.class);
+
         Object value = transValue(field, parameterItem.transformer());
         if(value == null) return null;
         Class clazz = Comparable.class;
@@ -97,6 +100,7 @@ public class QueryParameterBuilder {
      * @return
      */
     public <T> Specification<T> specification(){
+
         OrderBy orderBy = this.getClass().getAnnotation(OrderBy.class);
         return (root, criteriaQuery, criteriaBuilder) -> {
             ReflectUtil.getAllFields(this)
@@ -104,10 +108,19 @@ public class QueryParameterBuilder {
                     .filter(field -> field.isAnnotationPresent(ParameterItem.class))
                     .forEach(Unchecked.consumer(field -> buildSingleField(field, root, criteriaBuilder)));
             //排序
-            if(Objects.nonNull(orderBy)){
+            if(StringUtils.hasText(sortBy)){
+                String attrName = sortBy.split("@")[0];
+                String method = sortBy.split("@")[1];
+                criteriaQuery.orderBy(
+                        OrderBy.METHOD.desc.name().equals(method) ?
+                                criteriaBuilder.desc(root.get(attrName)) :
+                                criteriaBuilder.asc(root.get(attrName))
+                );
+
+            } else if(Objects.nonNull(orderBy)){
                 criteriaQuery.orderBy(
                         OrderBy.METHOD.desc.equals(orderBy.method()) ?
-                            criteriaBuilder.desc(root.get(orderBy.fieldName())) :
+                                criteriaBuilder.desc(root.get(orderBy.fieldName())) :
                                 criteriaBuilder.asc(root.get(orderBy.fieldName()))
                 );
             }
@@ -120,7 +133,7 @@ public class QueryParameterBuilder {
             return criteriaBuilder.and(
                     criteriaBuilder.and(ands.toArray(new Predicate[ands.size()])),
                     criteriaBuilder.or(ors.toArray(new Predicate[ors.size()]))
-                   );
+            );
         };
     }
 
