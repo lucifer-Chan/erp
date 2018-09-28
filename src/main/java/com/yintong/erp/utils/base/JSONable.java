@@ -7,10 +7,32 @@ import net.sf.json.processors.JsonValueProcessor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import org.springframework.util.StringUtils;
 
 public interface JSONable {
     default JSONObject toJSONObject(){
         return JSONObject.fromObject(this, toDateFormat("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    /**
+     *
+     * @param includeEmpty 是否包含空信息
+     * @return
+     */
+    default JSONObject toJSONObject(boolean includeEmpty){
+        JSONObject ret = toJSONObject();
+        if(includeEmpty) return ret;
+
+        JSONObject that = new JSONObject();
+        //noinspection unchecked
+        ret.forEach((k, v) -> {
+            if(null != v && StringUtils.hasText(v.toString())){
+                that.put(k,v);
+            }
+        });
+
+        return that;
+
     }
 
     static JsonConfig toDateFormat(String format) {

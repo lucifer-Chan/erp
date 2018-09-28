@@ -39,7 +39,7 @@ public class MiniDtoWrapper {
         JSONObject ret = JsonWrapper.builder()
                 .add("template", stockEntity.template().getTemplate())
                 .add("type", stockEntity.waresType().description())
-                .add("entity", stockEntity.toJSONObject())
+                .add("entity", stockEntity.toJSONObject(false))
             .build();
         if(Objects.nonNull(stockEntity.realityId())){
             String realityBarCode = SpringUtil.getBean(CommonService.class).findRealityWaresBarCode(stockEntity.waresType().name(), stockEntity.realityId());
