@@ -35,6 +35,9 @@ public class ErpStockOptLog extends BaseEntity{
     @Column(columnDefinition = "bigint(20) comment '仓位id'")
     private Long stockPlaceId;
 
+    @Column(columnDefinition = "bigint(20) comment '仓位id-针对库存调拨'")
+    private Long newPlaceId;
+
     @Column(columnDefinition = "bigint(20) comment '成品id[当仓位为成品仓位时有值]'")
     private Long productId;
 

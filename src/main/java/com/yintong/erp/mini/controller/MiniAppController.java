@@ -3,11 +3,11 @@ package com.yintong.erp.mini.controller;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
 import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
+import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.mini.domain.WxMiniUser;
 import com.yintong.erp.mini.service.MiniAppService;
 
-import com.yintong.erp.mini.service.MiniDtoWrapper;
 import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
@@ -28,21 +28,24 @@ import com.yintong.erp.web.stock.StockController;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,6 +100,8 @@ public class MiniAppController {
     @Autowired SimpleCache<StockEntity> simpleCache;
 
     @Autowired ErpStockOptLogRepository stockOptLogRepository;
+
+    @Autowired ErpStockPlaceRepository stockPlaceRepository;
 
     /**
      * 生成token
@@ -155,9 +160,6 @@ public class MiniAppController {
         BaseEntityWithBarCode order = function.apply(barcode);
         //noinspection unchecked
         return new BaseResult().add(buildOrder(order));
-
-        //buildOrder
-//        return new BaseResult().addPojo(function.apply(barcode));
     }
 
     /**
@@ -172,7 +174,101 @@ public class MiniAppController {
     }
 
     /**
-     * 获取仓库的现有库存
+     * 根据条码找货物
+     * @param barcode
+     * @return
+     */
+    @GetMapping("scan/wares")
+    public BaseResult findWares(String barcode){
+        StockEntity entity = findWaresByBarcode(barcode, true);
+        //noinspection unchecked
+        return new BaseResult().add(buildWares(entity));
+    }
+
+    /**
+     * 获取单个仓位的库存明细
+     * @param barcode - 仓位的条码
+     * @return {
+     *     //place : {type : 'M|P|D|R', barCode, name, current, limit, statusCode, statusName, description}
+     *     place : {}
+     *     contents : {name, barCode, category, specification, total, supplierName}
+     * }
+     */
+    @GetMapping("scan/place/detail")
+    public BaseResult scanPlace4Detail(String barcode){
+        ErpStockPlace stockPlace = stockPlaceService.one(barcode);
+        JSONObject place = new BaseResult().addPojo(stockPlace).getRet();
+        StockPlaceType placeType = StockPlaceType.valueOf(stockPlace.getStockPlaceType());
+
+        if(StockPlaceType.M == placeType){
+            StockEntity material = supplierMaterialService.findByPlaceBarcode(barcode);
+            return new BaseResult().put("place", place).addList("contents", Collections.singletonList(buildWares(material)));
+        }
+
+        List<ErpStockOptLog> optHistory = stockOptLogRepository.findByStockPlaceId(stockPlace.getId());
+        if (StockPlaceType.D == placeType){
+            List<JSONObject> contents = stockPlaceService.collect(optHistory, log -> StringUtils.hasText(log.getMouldCode()), ErpStockOptLog::getMouldCode, "mouldCode")
+                    .stream()
+                    .peek(json -> json.putAll(buildWares(findWaresByBarcode(json.getString("mouldCode"), false))))
+                    .collect(Collectors.toList());
+            return new BaseResult().put("place", place).addList("contents", contents);
+        } else if(StockPlaceType.P == placeType) {
+            List<JSONObject> contents = stockPlaceService.collect(optHistory, log -> StringUtils.hasText(log.getProductCode()), ErpStockOptLog::getProductCode, "productCode")
+                    .stream()
+                    .peek(json -> json.putAll(buildWares(findWaresByBarcode(json.getString("productCode"), false))))
+                    .collect(Collectors.toList());
+            return new BaseResult().put("place", place).addList("contents", contents);
+        } else if(StockPlaceType.R == placeType) {
+            return new BaseResult().put("place", place)
+                    .addList("contents", stockPlaceService.collect(optHistory, log -> StringUtils.hasText(log.getRubbishName()), ErpStockOptLog::getRubbishName, "rubbishName"));
+        }
+
+        throw new IllegalArgumentException("条码类型不正确[" + barcode + "]");
+
+    }
+
+    /**
+     * 获取单个货物的库存明细
+     * @param barcode - 货物的条码，原材料时为仓位
+     * @return
+     */
+    @GetMapping("scan/wares/detail")
+    public BaseResult scanWares4Detail(String barcode){
+        StockEntity stockEntity = findWaresByBarcode(barcode, false);
+        JSONObject wares = buildWares(stockEntity);
+        WaresType waresType = stockEntity.waresType();
+        if(waresType == WaresType.M){
+            List<JSONObject> places = stockPlaceRepository.findByMaterialSupplierBarCode(stockEntity.entity().getBarCode())
+                    .stream()
+                    .sorted(Comparator.comparing(ErpStockPlace::getCurrentStorageNum).reversed())
+                    .map(place -> {
+                        JSONObject json = place.toJSONObject(false);
+                        json.put("total", place.getCurrentStorageNum());
+                        return json;
+                    })
+                    .collect(Collectors.toList());
+            return new BaseResult().put("wares", wares).addList("places", places);
+        }
+
+        List<ErpStockOptLog> optHistory = new ArrayList<>();
+        if(waresType == WaresType.P){
+            optHistory = stockOptLogRepository.findByProductCodeLike(barcode + "%");
+        } else if(waresType == WaresType.D){
+            optHistory = stockOptLogRepository.findByMouldCodeLike(barcode + "%");
+        }
+
+        List<JSONObject> places = stockPlaceService.collect(optHistory, log->true, ErpStockOptLog::getStockPlaceId, "stockPlaceId")
+                .stream()
+                .peek(json -> {
+                    ErpStockPlace stockPlace = stockPlaceService.one(json.getLong("stockPlaceId"));
+                    json.putAll(stockPlace.toJSONObject(false));
+                })
+                .collect(Collectors.toList());
+        return new BaseResult().put("wares", wares).addList("places", places);
+    }
+
+    /**
+     * 获取仓库的某一货物现有库存
      * @param placeId - 仓位id
      * @param waresCode - 货物条码
      * @param waresId - 货物模版id
@@ -237,7 +333,7 @@ public class MiniAppController {
             Assert.isTrue(Objects.nonNull(orderId) && StringUtils.hasText(orderBarcode), "订单不能为空");
         }
         //2-查找货物
-        StockEntity stockEntity = findWaresByBarcode(barcode);
+        StockEntity stockEntity = findWaresByBarcode(barcode, true);
 
         //3- 调用StockOptService的出入库方法
         ErpStockPlace place = (opt == StockOpt.IN) ?
@@ -248,19 +344,7 @@ public class MiniAppController {
         return new BaseResult().addPojo(place);
     }
 
-    /**
-     * 根据条码找货物
-     * @param barcode
-     * @return
-     */
-    @GetMapping("scan/wares")
-    public BaseResult findWares(String barcode){
-        StockEntity entity = findWaresByBarcode(barcode);
-        //noinspection unchecked
-        return new BaseResult().add(buildWares(entity));
-    }
-
-    private StockEntity findWaresByBarcode(String barcode){
+    private StockEntity findWaresByBarcode(String barcode, boolean cacheAble){
         Assert.isTrue(StringUtils.hasText(barcode) && (barcode.length() == WARES_BAR_CODE_TPL_LENGTH || barcode.length() == WARES_BAR_CODE_ASS_LENGTH) , "条形码有误");
         String firstCharOfBarcode = barcode.substring(0, 1);
         //原材料的情况
@@ -274,8 +358,8 @@ public class MiniAppController {
         Function<String, StockEntity> function = waresFunctionMap().get(functionKey);
         Assert.notNull(function, "未找到匹配的根据条形码查找" + type.description() + "的方法");
 
-        return simpleCache.getDataFromCache("MINI_" + barcode, value -> function.apply(barcode));
-
+        return cacheAble ? simpleCache.getDataFromCache("MINI_" + barcode, value -> function.apply(barcode))
+                : function.apply(barcode);
     }
 
     /**
@@ -312,7 +396,7 @@ public class MiniAppController {
             put(WaresType.P.name() + WARES_BAR_CODE_TPL_LENGTH, productService::findByBarcode);//成品-模版条码
             put(WaresType.P.name() + WARES_BAR_CODE_ASS_LENGTH, supplierProductService::findByBarcode);//成品-关联条码
             //put(WaresType.M.name() + WARES_BAR_CODE_TPL_LENGTH, materialService::one);//原材料-模版条码
-            put(WaresType.M.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMaterialService::findByPlaceBarcode);//原材料-关联条码
+            put(WaresType.M.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMaterialService::findByPlaceBarcode);//仓位条码
             put(WaresType.D.name() + WARES_BAR_CODE_TPL_LENGTH, mouldService::findByBarcode);//模具-模版条码
             put(WaresType.D.name() + WARES_BAR_CODE_ASS_LENGTH, supplierMouldService::findByBarcode);//模具-关联条码
         }};

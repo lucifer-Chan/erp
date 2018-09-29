@@ -45,7 +45,7 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
     @Autowired ErpRawMaterialSupplierRepository rawMaterialSupplierRepository;
     @Autowired CategoryService categoryService;
     @Autowired(required = false)
-    List<OnDeleteSupplierRawMaterialValidator> onDeleteSupplierRawMeterials;
+    List<OnDeleteSupplierRawMaterialValidator> onDeleteSupplierRawMaterials;
 
     /**
      * 建立供应商和原材料的关联
@@ -178,8 +178,8 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
     public void delete(Long rawMaterId, Long supplierId){
         ErpRawMaterialSupplier one = rawMaterialSupplierRepository.findByRawMaterIdAndSupplierId(rawMaterId, supplierId).orElse(null);
         Assert.notNull(one, "未找到关联");
-        if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierRawMeterials))
-            onDeleteSupplierRawMeterials
+        if(!org.apache.commons.collections4.CollectionUtils.isEmpty(onDeleteSupplierRawMaterials))
+            onDeleteSupplierRawMaterials
                     .forEach(validator -> validator.onDeleteSupplierRawMaterial(one.getId()));
         rawMaterialSupplierRepository.delete(one);
     }

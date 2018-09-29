@@ -37,7 +37,7 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     private Long id;
 
     @BarCodeIndex(holder = true, value = 1)// 1位
-    @Column(columnDefinition = "varchar(10) comment '仓位类型 [M-原材料|P-成品]'")
+    @Column(columnDefinition = "varchar(10) comment '仓位类型 [M-原材料|P-成品|D-模具|R-废品]'")
     private String stockPlaceType;
 
     @Column(columnDefinition = "varchar(100) comment '仓位名称'")
