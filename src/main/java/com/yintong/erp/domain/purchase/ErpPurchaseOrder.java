@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.V000;
 
@@ -55,6 +56,9 @@ public class ErpPurchaseOrder  extends BaseEntityWithBarCode {
     @Column(columnDefinition = "integer DEFAULT 0 comment '是否可入库[1-可以|0-不可以]'")
     private Integer preStockIn;
 
+    @Transient
+    private String statusName;
+
     /**
      * 订单明细-controller传入
      */
@@ -74,6 +78,12 @@ public class ErpPurchaseOrder  extends BaseEntityWithBarCode {
     public ErpPurchaseOrder setStatusCode(Constants.PurchaseOrderStatus statusCode){
         this.statusCode = statusCode.name();
         return this;
+    }
+
+    public String getStatusName(){
+        if(StringUtils.hasText(statusName)) return statusName;
+        if(StringUtils.isEmpty(statusCode)) return statusName = "";
+        return statusName = Constants.PurchaseOrderStatus.valueOf(statusCode).description();
     }
 
     @Override

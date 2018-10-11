@@ -561,7 +561,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 $(clone).find('.tools').find('.fa-angle-double-up, .fa-angle-double-down, ._print, ._update, ._delete').attr('data-value', item.id);
                 var body = $(clone).find('.panel-body');
                 body.attr('data-value', (item.id + 'Info'));
-                if(item.statusCode !== 'STATUS_049'){
+                if(item.statusCode !== 'STATUS_049' && item.statusCode !== 'STATUS_005'){
                     $(body).find('div[data-name="status"]').parent().hide();
                 }
                 $(body).find('div[data-name="status"]').html(_convertStatus(item.statusCode));

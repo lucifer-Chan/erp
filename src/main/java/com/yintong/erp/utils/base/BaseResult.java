@@ -55,7 +55,7 @@ public class BaseResult{
         return this;
     }
 
-    public BaseResult add(Map<String, Object> map){
+    public BaseResult add(Map<String, ?> map){
         map.forEach(this::put);
         return this;
     }

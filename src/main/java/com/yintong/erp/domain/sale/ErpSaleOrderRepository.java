@@ -13,4 +13,6 @@ public interface ErpSaleOrderRepository extends JpaRepository<ErpSaleOrder, Long
     List<ErpSaleOrder> findByCustomerId(Long customerId);
 
     List<ErpSaleOrder> findByBarCode(String barCode);
+
+    List<ErpSaleOrder> findByCreatedByOrderByCreatedAtDesc(Long createdBy);
 }

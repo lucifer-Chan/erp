@@ -335,13 +335,13 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="pd43 tab-pane active" id="saleLog">
-                        <p>暂无</p>
+                        <div class="col-sm-12 bugInfoHistories"></div>
                     </div>
                     <div role="tabpanel" class="pd43 tab-pane" id="produceLog">
-                        <p>暂无</p>
+                        <div class="col-sm-12 bugInfoHistories"></div>
                     </div>
                     <div role="tabpanel" class="pd43 tab-pane" id="purchaseLog">
-                        <p>暂无</p>
+                        <div class="col-sm-12 bugInfoHistories"></div>
                     </div>
                 </div>
             </div>
@@ -375,6 +375,22 @@
         </div>
     </div>
 </div>
+
+<!-- 员工订单模版 -->
+<script id="template-emp-order" type="text/template">
+    {{if orders.length}}
+    {{each orders as order}}
+    <p>
+        <span class="name"><b>{{order.statusName}}</b></span>
+        <span class="content">【{{order.barCode}}】 {{order.description}}</span>
+        <span class="right">{{order.createdAt}}</span>
+    </p>
+    {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('starting at employee.html');
@@ -500,6 +516,14 @@
                     $menuInfo.append('<span class="md32 border-radius label label-default">' + name + '</span>');
                 })
             }
+            //初始化订单操作
+            services.account.orders(employee.id)
+                .then(function (ret) {
+                    $('#saleLog').find('.bugInfoHistories').html(template('template-emp-order', { orders : ret.sale || []}));
+                    $('#produceLog').find('.bugInfoHistories').html(template('template-emp-order', { orders : ret.prod || []}));
+                    $('#purchaseLog').find('.bugInfoHistories').html(template('template-emp-order', { orders : ret.purchase || []}));
+
+                });
         }
 
         /**

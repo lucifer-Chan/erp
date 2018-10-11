@@ -128,6 +128,15 @@ define('services',['utils'],function (utils) {
 
         all : function () {
             return $.http.get('basis/employee/all');
+        },
+
+        /**
+         * 用户创建的订单
+         * @param employeeId
+         * @returns {*}
+         */
+        orders : function (employeeId) {
+            return $.http.get('basis/employee/' + employeeId +'/orders')
         }
     };
 

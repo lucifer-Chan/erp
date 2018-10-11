@@ -11,4 +11,6 @@ public interface ErpPurchaseOrderRepository extends JpaRepository<ErpPurchaseOrd
     Page<ErpPurchaseOrder> findAll(Specification<ErpPurchaseOrder> specification, Pageable pageable);
 
     List<ErpPurchaseOrder> findByBarCode(String barcode);
+
+    List<ErpPurchaseOrder> findByCreatedByOrderByCreatedAtDesc(Long createdBy);
 }

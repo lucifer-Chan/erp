@@ -6,13 +6,21 @@ import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.domain.basis.security.ErpEmployeeMenu;
 import com.yintong.erp.domain.basis.security.ErpEmployeeMenuRepository;
 import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
+import com.yintong.erp.domain.prod.ErpProdOrderRepository;
+import com.yintong.erp.domain.purchase.ErpPurchaseOrderRepository;
+import com.yintong.erp.domain.sale.ErpSaleOrderRepository;
+import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.SessionUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteEmployeeValidator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 import lombok.Getter;
 import lombok.Setter;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,7 +52,37 @@ public class EmployeeService {
 
     @Autowired ErpEmployeeMenuRepository employeeMenuRepository;
 
+    @Autowired ErpProdOrderRepository prodOrderRepository;
+
+    @Autowired ErpSaleOrderRepository saleOrderRepository;
+
+    @Autowired ErpPurchaseOrderRepository purchaseOrderRepository;
+
     @Autowired(required = false) List<OnDeleteEmployeeValidator> validators;
+
+
+    /**
+     * 查询用户创建的订单
+     * @param employeeId
+     * @return {sale:[{description, barCode, statusName}], purchase : [], prod : []}
+     */
+    public Map<String, List<JSONObject>> findOrders(Long employeeId){
+
+        Function<List<? extends BaseEntityWithBarCode>, List<JSONObject>> function = list -> list.stream().map(order -> order.filter("description", "barCode", "statusName", "createdAt")).collect(toList());
+
+
+        return new HashMap<String, List<JSONObject>>(){
+            {
+                put("sale", function.apply(saleOrderRepository.findByCreatedByOrderByCreatedAtDesc(employeeId)));
+                put("purchase", function.apply(purchaseOrderRepository.findByCreatedByOrderByCreatedAtDesc(employeeId)));
+                put("prod", function.apply(prodOrderRepository.findByCreatedByOrderByCreatedAtDesc(employeeId)));
+
+//                put("sale", saleOrderRepository.findByCreatedByOrderByCreatedAtDesc(employeeId).stream().map(order -> order.filter("description", "barCode", "statusName")).collect(toList()));
+//                put("purchase", purchaseOrderRepository.findByCreatedByOrderByCreatedAtDesc(employeeId).stream().map(order -> order.filter("description", "barCode", "statusName")).collect(toList()));
+//                put("prod", prodOrderRepository.findByCreatedByOrderByCreatedAtDesc(employeeId).stream().map(order -> order.filter("description", "barCode", "statusName")).collect(toList()));
+            }
+        };
+    }
 
     /**
      *
@@ -158,29 +196,6 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-
-    /**
-     * 保存前的验证
-     * @param employee
-     */
-    private void validateEmployee(ErpEmployee employee){
-        String loginName = employee.getLoginName();
-        String mobile = employee.getMobile();
-        if(StringUtils.hasLength(loginName)) {
-            List<ErpEmployee> employees = Objects.isNull(employee.getId()) ?
-                    employeeRepository.findByLoginName(loginName) :
-                    employeeRepository.findByLoginNameAndIdIsNot(loginName, employee.getId());
-            Assert.isTrue(CollectionUtils.isEmpty(employees), "登录名" + loginName + "已被使用");
-        }
-
-        if(StringUtils.hasLength(mobile)){
-            List<ErpEmployee> employees = Objects.isNull(employee.getId()) ?
-                    employeeRepository.findByMobile(mobile) :
-                    employeeRepository.findByMobileAndIdIsNot(mobile, employee.getId());
-            Assert.isTrue(CollectionUtils.isEmpty(employees), "手机号" + mobile + "已被使用");
-        }
-    }
-
     /**
      * 保存用户的部门
      * @param employeeId
@@ -234,5 +249,27 @@ public class EmployeeService {
             return StringUtils.hasLength(departmentId) ? departmentId : "";
         }
 
+    }
+
+    /**
+     * 保存前的验证
+     * @param employee
+     */
+    private void validateEmployee(ErpEmployee employee){
+        String loginName = employee.getLoginName();
+        String mobile = employee.getMobile();
+        if(StringUtils.hasLength(loginName)) {
+            List<ErpEmployee> employees = Objects.isNull(employee.getId()) ?
+                    employeeRepository.findByLoginName(loginName) :
+                    employeeRepository.findByLoginNameAndIdIsNot(loginName, employee.getId());
+            Assert.isTrue(CollectionUtils.isEmpty(employees), "登录名" + loginName + "已被使用");
+        }
+
+        if(StringUtils.hasLength(mobile)){
+            List<ErpEmployee> employees = Objects.isNull(employee.getId()) ?
+                    employeeRepository.findByMobile(mobile) :
+                    employeeRepository.findByMobileAndIdIsNot(mobile, employee.getId());
+            Assert.isTrue(CollectionUtils.isEmpty(employees), "手机号" + mobile + "已被使用");
+        }
     }
 }

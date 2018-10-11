@@ -126,4 +126,14 @@ public class EmployeeController {
                         .collect(Collectors.toList())
         );
     }
+
+    /**
+     * chaxun
+     * @param employeeId
+     * @return
+     */
+    @GetMapping("{employeeId}/orders")
+    public BaseResult orders(@PathVariable Long employeeId){
+        return new BaseResult().add(employeeService.findOrders(employeeId));
+    }
 }

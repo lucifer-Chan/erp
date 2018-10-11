@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 /**
  * @author lucifer.chan
@@ -57,6 +58,8 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "integer DEFAULT 0 comment '是否可入库[1-可以|0-不可以]'")
     private Integer preStockIn;
 
+    @Transient
+    private String statusName;
 
     /**
      * 订单明细-controller传入
@@ -77,6 +80,12 @@ public class ErpSaleOrder extends BaseEntityWithBarCode {
     public ErpSaleOrder setStatusCode(Constants.SaleOrderStatus statusCode){
         this.statusCode = statusCode.name();
         return this;
+    }
+
+    public String getStatusName(){
+        if(StringUtils.hasText(statusName)) return statusName;
+        if(StringUtils.isEmpty(statusCode)) return statusName = "";
+        return statusName = Constants.SaleOrderStatus.valueOf(statusCode).description();
     }
 
     @Override
