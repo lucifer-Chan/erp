@@ -64,7 +64,7 @@ public class MiniAppService {
         Assert.isTrue(new BCryptPasswordEncoder().matches(password, employee.getPassword()), "密码错误");
         String openId = decryptOpenId(encryptedOpenId);
         Assert.notNull(openId, "openId解密失败");
-        Assert.isTrue(!StringUtils.isEmpty(employee.getOpenId()) || openId.equals(employee.getOpenId()), loginName + "已被其他人绑定！");
+        Assert.isTrue(StringUtils.isEmpty(employee.getOpenId()) || openId.equals(employee.getOpenId()), loginName + "已被其他人绑定！");
         employee.setOpenId(openId);
         employeeRepository.save(employee);
         return aesUtil.encrypt(employee.getId().toString());
