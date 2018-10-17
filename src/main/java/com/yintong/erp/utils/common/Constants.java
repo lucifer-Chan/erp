@@ -5,6 +5,12 @@ import org.springframework.util.StringUtils;
 public interface Constants {
 
     interface Roles{
+
+        /**
+         * 库存管理组
+         */
+        String STOCK_ROLE_GROUP = "30";
+
         /**
          * 管理员的权限
          */
