@@ -81,9 +81,20 @@ public class ProductController {
 
     }
 
+//    @GetMapping("all")
+//    public BaseResult findAll(){
+//        return new BaseResult().addList(productRepository.findAll());
+//    }
+
+    /**
+     * 只提供id和描述
+     * @return
+     */
     @GetMapping("all")
     public BaseResult findAll(){
-        return new BaseResult().addList(productRepository.findAll());
+        return new BaseResult().addList(
+                productRepository.findAll().stream().map(product -> product.filter("id", "description")).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("allWithBom")

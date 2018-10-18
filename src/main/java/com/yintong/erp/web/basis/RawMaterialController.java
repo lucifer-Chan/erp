@@ -48,9 +48,20 @@ public class RawMaterialController {
 
     }
 
+//    @GetMapping("all")
+//    public BaseResult findAll(){
+//        return new BaseResult().addList(rawMaterialRepository.findAllByOrderByRawTypeCode());
+//    }
+
+    /**
+     * 只提供id和描述
+     * @return
+     */
     @GetMapping("all")
     public BaseResult findAll(){
-        return new BaseResult().addList(rawMaterialRepository.findAllByOrderByRawTypeCode());
+        return new BaseResult().addList(
+                rawMaterialRepository.findAllByOrderByRawTypeCode().stream().map(product -> product.filter("id", "description")).collect(Collectors.toList())
+        );
     }
 
     @GetMapping

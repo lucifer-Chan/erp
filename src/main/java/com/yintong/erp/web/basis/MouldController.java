@@ -7,6 +7,7 @@ import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
 import com.yintong.erp.utils.base.BaseResult;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +42,20 @@ public class MouldController {
         return new BaseResult().put("total", supplierMouldService.stockRemain(mouldAssId));
     }
 
+//    @GetMapping("all")
+//    public BaseResult findAll(){
+//        return new BaseResult().addList(modelToolRepository.findAllByOrderByModelToolTypeCode());
+//    }
+
+    /**
+     * 只提供id和描述
+     * @return
+     */
     @GetMapping("all")
     public BaseResult findAll(){
-        return new BaseResult().addList(modelToolRepository.findAllByOrderByModelToolTypeCode());
+        return new BaseResult().addList(
+                modelToolRepository.findAllByOrderByModelToolTypeCode().stream().map(product -> product.filter("id", "description")).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("findSupplierAll")
