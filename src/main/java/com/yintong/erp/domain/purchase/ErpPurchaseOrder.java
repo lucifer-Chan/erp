@@ -41,7 +41,7 @@ public class ErpPurchaseOrder  extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(40) comment '供应商名称-冗余数据，方便查询'")
     private String supplierName;
 
-    @Column(columnDefinition = "double(16,9) comment '采购金额-计算值'")
+    @Column(columnDefinition = "double(20,5) comment '采购金额-计算值'")
     private Double money;
 
     @Column(columnDefinition = "varchar(20) comment '状态编码'")

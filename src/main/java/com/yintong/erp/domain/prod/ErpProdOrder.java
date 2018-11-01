@@ -57,13 +57,13 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "bigint(20) comment '员工id'")
     private Long employeeId;
 
-    @Column(columnDefinition = "double(16,9) comment '生产数量,计划单分配过来的数量'")
+    @Column(columnDefinition = "double(20,5) comment '生产数量,计划单分配过来的数量'")
     private Double prodNum;
 
-    @Column(columnDefinition = "double(16,9) comment '已挑拣数量-计算值（挑拣+）'")
+    @Column(columnDefinition = "double(20,5) comment '已挑拣数量-计算值（挑拣+）'")
     private Double pickNum;
 
-    @Column(columnDefinition = "double(16,9) comment '当前达成数量-计算值（入库+）'")
+    @Column(columnDefinition = "double(20,5) comment '当前达成数量-计算值（入库+）'")
     private Double finishNum;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '生产制令单描述'")
@@ -83,6 +83,9 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;
+
+    @Column(columnDefinition = "varchar(5) comment '单位：kg|只'")
+    private String unit;
 
     @Transient
     private String employeeName;
@@ -177,6 +180,7 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
         planId = plan.getId();
         productId = plan.getProductId();
         productName = plan.getProductName();
+        unit = plan.getUnit();
         return this;
 
     }

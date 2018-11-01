@@ -64,7 +64,7 @@ public class ErpModelSupplier extends BaseEntityWithBarCode  implements StockEnt
     @Column(columnDefinition = "datetime comment '关联时间'")
     private Date associateAt;
 
-    @Column(columnDefinition = "double(16,9) comment '库存总量'")
+    @Column(columnDefinition = "double(20,5) comment '库存总量'")
     private Double totalNum;
 
     @Transient

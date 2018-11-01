@@ -32,11 +32,14 @@ public class ErpProdOrderPickRecord extends BaseEntityWithBarCode {
     @Column(columnDefinition = "bigint(20) comment '制令单id'")
     private Long orderId;
 
-    @Column(columnDefinition = "double(16,9) comment '成品总数'")
+    @Column(columnDefinition = "double(20,5) comment '供调减的成品重量kg'")
     private Double totalNum;
 
-    @Column(columnDefinition = "double(16,9) comment '挑拣的质量合格的成品数'")
+    @Column(columnDefinition = "double(20,5) comment '挑拣的质量合格的成品重量kg'")
     private Double validNum;
+
+    @Column(columnDefinition = "int(20) comment '挑拣的质量合格的成品个数'")
+    private Integer validOne;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;

@@ -23,6 +23,11 @@ public class JsonWrapper {
         return this;
     }
 
+    public JsonWrapper add(JSONObject json){
+        this.ret.putAll(json);
+        return this;
+    }
+
     public JSONObject build(){
         return this.ret;
     }

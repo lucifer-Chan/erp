@@ -4,12 +4,15 @@ import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.SpringUtil;
+import java.text.DecimalFormat;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,16 +62,22 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "integer DEFAULT 0 comment '库存上限'")
     private Integer upperLimit;
 
-    @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '当前存量'")
+    @Column(columnDefinition = "double(20,5) DEFAULT 0 comment '当前存量'")
     private Double currentStorageNum;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '仓位描述'")
     private String description;
 
+    @Transient
+    private double remain;
+
     public Double getCurrentStorageNum(){
-        return Objects.isNull(currentStorageNum) ? 0d : currentStorageNum;
+        return CommonUtil.toFixed2(currentStorageNum);
     }
 
+    public double getRemain(){
+        return CommonUtil.toFixed2(upperLimit - currentStorageNum);
+    }
 
     protected void prePersist(){
         onPreCommit();

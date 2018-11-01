@@ -36,7 +36,7 @@ public abstract class BaseEntity implements Filterable {
     @JsonIgnore
     private Integer isDel;//1-逻辑删除;
 
-    @JsonIgnore
+//    @JsonIgnore
     private Date lastUpdatedAt;
 
     @JsonIgnore

@@ -44,10 +44,10 @@ public class ErpPurchasePlan extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(200) DEFAULT '' comment '货物名称'")
     private String waresName;
 
-    @Column(columnDefinition = "double(16,9) comment '计划花费金额'")
+    @Column(columnDefinition = "double(20,5) comment '计划花费金额'")
     private Double planMoney;
 
-    @Column(columnDefinition = "double(16,9) comment '计划采购数量'")
+    @Column(columnDefinition = "double(20,5) comment '计划采购数量'")
     private Double planNum;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '采购计划单描述'")
@@ -58,6 +58,9 @@ public class ErpPurchasePlan extends BaseEntityWithBarCode {
 
     @Column(columnDefinition = "date comment '计划结束年月日'")
     private Date endDate;
+
+    @Column(columnDefinition = "varchar(5) comment '单位：kg|只'")
+    private String unit;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;

@@ -166,4 +166,14 @@ public class ErpBaseRawMaterial extends BaseEntityWithBarCode implements Importa
                 : repository.findByRawNameAndSpecificationAndRawTypeCodeAndIdNot(rawName, specification, rawTypeCode, id);
         Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-类别-规格重复");
     }
+
+    @Override
+    protected void prePersist(){
+        this.unit = "kg";
+    }
+
+    @Override
+    protected void preUpdate(){
+        this.unit = "kg";
+    }
 }

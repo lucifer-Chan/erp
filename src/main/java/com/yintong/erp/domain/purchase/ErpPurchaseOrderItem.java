@@ -52,21 +52,24 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Column(columnDefinition = "varchar(200) DEFAULT '' comment '货物名称'")
     private String waresName;
 
-    @Column(columnDefinition = "double(16,9) comment '总额'")
+    @Column(columnDefinition = "double(20,5) comment '总额'")
     private Double money;
 
-    @Column(columnDefinition = "double(16,9) comment '数量'")
+    @Column(columnDefinition = "double(20,5) comment '数量'")
     private Double num;
 
 
-    @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已入库数量'")
+    @Column(columnDefinition = "double(20,5) DEFAULT 0 comment '已入库数量'")
     private Double inNum;
 
-    @Column(columnDefinition = "double(16,9) comment '单价'")
+    @Column(columnDefinition = "double(20,5) comment '单价'")
     private Double unitPrice;
 
     @Column(columnDefinition = "varchar(20) comment '状态编码'")
     private String statusCode;
+
+    @Column(columnDefinition = "varchar(5) comment '单位：kg|只'")
+    private String unit;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '描述'")
     private String remark;
@@ -78,8 +81,7 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
         return Objects.isNull(inNum) ? 0D : inNum;
 
     }
-//    @Column(columnDefinition = "varchar(64) comment '单位'")
-//    private String unit;
+
 //
 //    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '货物名称-实际名称-冗余数据-打印用'")
 //    private String simpleName;
@@ -97,6 +99,7 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
         Assert.notNull(waresAssId, "货物名称不能为空");
         Assert.hasText(waresName, "货物名称不能为空");
         Assert.hasText(waresType, "货物类型不能为空");
+        Assert.hasText(unit, "单位不能为空");
         Assert.notNull(getStatusCode(), "状态码不能为空");
         Assert.notNull(getMoney(), "总额不能为空");
         Assert.notNull(getNum(), "数量不能为空");
@@ -114,6 +117,10 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
         return wares = (Objects.isNull(templateWares) ? null : templateWares.getTemplate());
     }
 
+    public TemplateWares templateWares(){
+        Function<Long, TemplateWares> function = SpringUtil.getBean(CommonService.class).findWaresById().get(Constants.WaresType.valueOf(waresType));
+        return function.apply(waresId);
+    }
 
     /**
      * 从采购订单里复制信息

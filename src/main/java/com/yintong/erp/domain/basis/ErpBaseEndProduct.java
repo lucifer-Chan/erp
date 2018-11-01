@@ -4,12 +4,14 @@ import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
+import com.yintong.erp.utils.base.JsonWrapper;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.*;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.Assert;
 
@@ -47,7 +49,7 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private Integer alertUpper;
     @Column(columnDefinition = "int(20) comment '预警下限'")
     private Integer alertLower;
-    @Column(columnDefinition = "double(16,9) comment '库存总量'")
+    @Column(columnDefinition = "double(20,5) comment '库存总量'")
     private Double totalNum;
 
 
@@ -59,7 +61,7 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String custCodeNew;
     @Column(columnDefinition = "varchar(64) comment '客户名称'")
     private String custName;
-    @Column(columnDefinition = "varchar(10) comment '只/KG'")
+    @Column(columnDefinition = "varchar(10) comment '只/kg'")
     private String onlyOrKg;
     @Column(columnDefinition = "varchar(10) comment '难度系数'")
     private String courseRating;
@@ -173,6 +175,11 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     }
 
     @Override
+    public JSONObject extInfo(){
+        return JsonWrapper.builder().add("onlyOrKg", onlyOrKg).build();
+    }
+
+    @Override
     public Long getWaresId() {
         return id;
     }
@@ -270,6 +277,16 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Override
     public Constants.WaresType waresType() {
         return Constants.WaresType.P;
+    }
+
+    @Override
+    protected void prePersist(){
+        this.unit = "kg";
+    }
+
+    @Override
+    protected void preUpdate(){
+        this.unit = "kg";
     }
 
 }

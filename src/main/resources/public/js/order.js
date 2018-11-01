@@ -9,9 +9,11 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 if(consts.config.initProducts && !consts.products.length){
                     return services.product.all().then(function (ret) {
                         consts.products = [];
+                        consts.productCache = {};
                         consts.products.push({code : -1, name : '【请选择成品】'});
                         ret.list.forEach(function (value) {
                             consts.products.push({code : value.id , name : value.description});
+                            consts.productCache[value.id] = value.onlyOrKg;
                         });
 
                     });
@@ -201,6 +203,12 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 data.orderCode = consts.currentOrder.barCode;
                 data.statusCode = consts.currentOrder.statusCode;
                 data.id = (consts.currentOrderItem || {}).id;
+                data.unit = consts.currentOrderItem.unit;
+                if(!data.unit){
+                    layer.msg('请选择单位！');
+                    return;
+                }
+
                 if(data.productId === '-1'){
                     layer.msg('请选择成品！');
                     return;
@@ -228,7 +236,8 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                         //供选成品
                         utils.dropkick({
                             $holder : $('#_editProductId'),
-                            data : consts.products
+                            data : consts.products,
+                            callback : init_select_product_tip
                         });
                         layer.msg('新增明细成功');
                     }
@@ -262,7 +271,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                             html += '<tr>' +
                                 '<td>'+ (product.endProductName || '') +'</td>' +
                                 '<td>'+ (product.specification || '')  +'</td>' +
-                                '<td style="text-align: center">'+ (product.unit || '') +'</td>' +
+                                '<td style="text-align: center">'+ (item.unit || '') +'</td>' +
                                 '<td style="text-align: right">'+ (item.num || 0)  +'</td>' +
                                 '<td style="text-align: right">'+ (item.unitPrice||0).toFixed(2) +'</td>' +
                                 //'<td>¥'+ calcMoney +'</td>' +
@@ -382,11 +391,33 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             var num = $('#_editItemNum').val() || 0;
             var ret = parseFloat(unitPrice) * parseFloat(num);
             $('#_editItemMoney').val(ret.toFixed(2));
+            calc2Kg();
         }
 
         $('#_editItemNum, #_editItemUnitPrice').bind('input propertychange', function () {
             calc();
         });
+    }
+
+    function calc2Kg(productId) {
+        var unit = consts.currentOrderItem.unit;
+        if (!unit || unit === 'kg') {
+            clearRemark();
+            return;
+        }
+        var _productId = productId || $('#_editProductId').attr('data-value');
+        var onlyOrKg = _productId === '-1' ? 0 : consts.productCache[_productId];
+        var num = $('#_editItemNum').val();
+        if(!!onlyOrKg && !!num){
+            var kg = (num/ onlyOrKg).toFixed(2);
+            $('#_editItemRemark').val('约' + kg + 'kg');
+        } else {
+            clearRemark();
+        }
+
+        function clearRemark() {
+            $('#_editItemRemark').val('');
+        }
     }
 
     //编辑明细modal
@@ -405,6 +436,20 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 current : consts.currentOrderItem.productId,
                 callback : init_select_product_tip
             });
+
+            //初始化总量单位
+            utils.dropdown({
+                $holder : $('#units_li'),
+                data : [{code : 'kg', name : 'kg'}, {code : '只', name : '只'}],
+                unselected : '-选择单位-',
+                current : consts.currentOrderItem || '',
+                callback : function (value) {
+                    console.log("单位切换", value);
+                    consts.currentOrderItem.unit = value;
+                    calc2Kg();
+                }
+            });
+
             consts.$saveOrderItemBt.text(!!consts.currentOrderItem.id ? '保存' : '继续添加');
 
         }).on('hidden.bs.modal', function () {
@@ -567,7 +612,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 $(body).find('div[data-name="status"]').html(_convertStatus(item.statusCode));
                 $(body).find('div[data-name="money"]').text('¥' + (item.money || 0).toFixed(2));
                 $(body).find('div[data-name="unitPrice"]').text('¥' + (item.unitPrice||0).toFixed(2));
-                $(body).find('div[data-name="num"]').text(item.num);
+                $(body).find('div[data-name="num"]').text(item.num + item.unit);
                 $(body).find('div[data-name="remark"]').text(item.remark || '无');
                 $orderItems.append($(clone).show());
             })
@@ -663,9 +708,11 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             return;
         }
 
+        calc2Kg(productId);
+
         services.product.stockRemain(productId)
             .then(function (map) {
-                $tip.html('总库存量：' + map.total + "，安全库存量：" + map.safe).show();
+                $tip.html('总库存量：' + map.total + "(kg)，安全库存量：" + map.safe + '(kg)').show();
             });
     }
 

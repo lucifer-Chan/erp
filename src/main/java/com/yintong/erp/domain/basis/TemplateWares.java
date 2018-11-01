@@ -34,6 +34,7 @@ public interface TemplateWares {
                 .add("simpleName", getSimpleName())
                 .add("specification", getSpecification())
                 .add("category", BarCodeConstants.BAR_CODE_PREFIX.valueOf(getCategoryCode()).description())
+                .add(extInfo())
             .build();
     }
 
@@ -41,5 +42,9 @@ public interface TemplateWares {
         JSONObject ret = getTemplate();
         ret.put("code", code);
         return ret;
+    }
+
+    default JSONObject extInfo(){
+        return new JSONObject();
     }
 }

@@ -93,7 +93,7 @@ public class ProductController {
     @GetMapping("all")
     public BaseResult findAll(){
         return new BaseResult().addList(
-                productRepository.findAll().stream().map(product -> product.filter("id", "description")).collect(Collectors.toList())
+                productRepository.findAll().stream().map(product -> product.filter("id", "description", "onlyOrKg")).collect(Collectors.toList())
         );
     }
 

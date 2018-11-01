@@ -60,16 +60,16 @@ public class ErpProdProductBom extends BaseEntity {
     @Column(columnDefinition = "bigint(20) comment '原材料id-关联供应商'")
     private Long realityMaterialId;
 
-    @Column(columnDefinition = "double(16,9) comment '原材料数量-耗银|耗铜，总数'")
+    @Column(columnDefinition = "double(20,5) comment '原材料数量-耗银|耗铜，总数-单位g'")
     private Double realityMaterialNum;
 
-    @Column(columnDefinition = "double(16,9) comment '原材料数量-出库-针对制令单'")
+    @Column(columnDefinition = "double(20,5) comment '原材料数量-出库-针对制令单'")
     private Double numOut;
 
-    @Column(columnDefinition = "double(16,9) comment '原材料数量-入库-针对制令单[用完回收]'")
+    @Column(columnDefinition = "double(20,5) comment '原材料数量-入库-针对制令单[用完回收]'")
     private Double numIn;
 
-    @Column(columnDefinition = "double(16,9) comment '切丝长度'")
+    @Column(columnDefinition = "double(20,5) comment '切丝长度'")
     private Double materialNum;
 
     /**

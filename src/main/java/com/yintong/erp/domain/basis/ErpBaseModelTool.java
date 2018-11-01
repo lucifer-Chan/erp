@@ -53,7 +53,7 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
 
-    @Column(columnDefinition = "double(16,9) comment '库存总量'")
+    @Column(columnDefinition = "double(20,5) comment '库存总量'")
     private Double totalNum;
 
     @Transient

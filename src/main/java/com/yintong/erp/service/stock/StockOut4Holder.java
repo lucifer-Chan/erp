@@ -23,7 +23,7 @@ public interface StockOut4Holder {
      * @param holder
      * @param holderId
      * @param stockEntity
-     * @param num
+     * @param num -Kg
      */
     void stockOut(StockHolder holder, Long holderId, StockEntity stockEntity, double num);
 
@@ -32,7 +32,7 @@ public interface StockOut4Holder {
      * @param holder
      * @param holderId
      * @param stockEntity
-     * @param num
+     * @param num -Kg
      */
     default void handleOut(StockHolder holder, Long holderId, StockEntity stockEntity, double num){
         if(matchesOut(holder, stockEntity)){

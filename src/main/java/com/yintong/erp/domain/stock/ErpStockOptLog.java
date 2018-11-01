@@ -53,7 +53,7 @@ public class ErpStockOptLog extends BaseEntity{
     @Column(columnDefinition = "varchar(500) comment '废品名称[当仓位为废品仓位时有值]'")
     private String rubbishName;
 
-    @Column(columnDefinition = "double(16,9) comment '出入库数量'")
+    @Column(columnDefinition = "double(20,5) comment '出入库数量'")
     private Double num;
 
     @Column(columnDefinition = "varchar(20) DEFAULT '' comment '出入库[IN|OUT]'")

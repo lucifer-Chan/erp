@@ -461,17 +461,23 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
     /**
      * @param setting -{$holder, -- dom
      *                  data, -- 数据 [{code, name}] or {a:b,c:d,e:f}
+     *                  unselected, -未选择时的展现字
      *                  prefix, -- 前缀
      *                  callback, -- 点击a标签的回调函数，参数为a的data-value
-     *                  init --初始时候调用callback
+     *                  init, --初始时候调用callback
+     *                  current -- 当前值
      *                  }
      */
     function dropdown(setting) {
-        setting = $.extend({$holder : $('<div/>'), data : [], prefix:''}, setting);
+        setting = $.extend({$holder : $('<div/>'), data : [], prefix:'', current : ''}, setting);
         var callback = setting.callback || function (value) {console.log(value)};
-        setting.$holder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'+ setting.prefix +'：全部 <span class="caret"></span></a>');
+        var unselected = setting.unselected || '全部';
+        var prefix = !!setting.prefix ? (setting.prefix + ':') : '';
+
+        setting.$holder.html('<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'+ prefix + unselected +' <span class="caret"></span></a>');
         var ul = $('<ul class="dropdown-menu">');
-        ul.append('<li><a data-value="">全部</a></li>');
+
+        ul.append('<li><a data-value="">'+ unselected +'</a></li>');
         var dataType = $.isArray(setting.data) ? 'array' : $.isObject(setting.data) ? 'object' : undefined;
         if(dataType === 'object'){
             $.each(setting.data, function (code, name) {
@@ -485,10 +491,11 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
         setting.$holder.append(ul);
         ul.find('li>a').click(function () {
             var $this = $(this);
-            $(this).parents('li.dropdown').children().eq(0).html(setting.prefix +'：' +$this.text()+' <span class="caret"></span>');
+            $(this).parents('li.dropdown').children().eq(0).html(prefix + $this.text()+' <span class="caret"></span>');
             callback($(this).attr('data-value'));
         });
         (setting.init === true) && ul.find('li>a').first().click();
+        (setting.current !== '') && ul.find('li>a[data-value="'+  setting.current +'"]').click();
     }
 
     /**

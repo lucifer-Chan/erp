@@ -43,19 +43,19 @@ public class ErpSaleOrderItem extends BaseEntity{
     @Column(columnDefinition = "bigint(20) comment '成品id-模版id|供应商关联的id'")
     private Long productId;
 
-    @Column(columnDefinition = "double(16,9) comment '总额'")
+    @Column(columnDefinition = "double(20,5) comment '总额'")
     private Double money;
 
-    @Column(columnDefinition = "double(16,9) comment '数量'")
+    @Column(columnDefinition = "double(20,5) comment '数量'")
     private Double num;
 
-    @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已出库数量'")
+    @Column(columnDefinition = "double(20,5) DEFAULT 0 comment '已出库数量'")
     private Double outedNum;
 
-    @Column(columnDefinition = "double(16,9) DEFAULT 0 comment '已入库数量-退货'")
+    @Column(columnDefinition = "double(20,5) DEFAULT 0 comment '已入库数量-退货'")
     private Double inNum;
 
-    @Column(columnDefinition = "double(16,9) comment '单价'")
+    @Column(columnDefinition = "double(20,5) comment '单价'")
     private Double unitPrice;
 
     @Column(columnDefinition = "varchar(20) comment '状态编码'")
@@ -63,6 +63,9 @@ public class ErpSaleOrderItem extends BaseEntity{
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '描述'")
     private String remark;
+
+    @Column(columnDefinition = "varchar(5) comment '单位：kg|只'")
+    private String unit;
 
     @Transient
     private ErpBaseEndProduct product;
@@ -126,6 +129,7 @@ public class ErpSaleOrderItem extends BaseEntity{
      * 必填项校验
      */
     public void validateRequired(){
+        Assert.notNull(getUnit(), "单位不能为空");
         Assert.notNull(getProductId(), "成品信息不能为空");
         Assert.notNull(getStatusCode(), "状态码不能为空");
         Assert.notNull(getMoney(), "总额不能为空");

@@ -2,7 +2,7 @@
     <div class="full_height">
         <div id="searchFilter">
             <div class="sidebar-search">
-                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称、图纸编号" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称、图纸编号、规格描述" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="typeP">
@@ -26,14 +26,14 @@
                                 <th style="width:70px" erp-data="{endProductName}" >货物名称(客户)</th>
                                 <th style="width:70px" erp-data="{specification}">规格描述</th>
                                 <th style="width:15px" erp-data="{totalNum}" erp-convert="convertTotalNum">库存</th>
-                                <th style="width:15px" erp-data="{unit}">单位</th>
+                                <!--<th style="width:15px" erp-data="{unit}">单位</th>-->
                                 <th style="width:15px" erp-data="{level}">产品等级</th>
                                 <th style="width:40px" erp-data="{custDrawingNo}">客户图号</th>
                                 <th style="width:40px" erp-data="{drawingNo}">图纸编号</th>
                                 <th style="width:40px" erp-data="{custCodeOld}">客户代码(旧)</th>
-                                <th style="width:40px" erp-data="{onlyOrKg}">只/KG</th>
+                                <th style="width:40px" erp-data="{onlyOrKg}">只/kg</th>
                                 <th style="width:40px" erp-data="{courseRating}">难度系数</th>
-                                <th style="width:40px" erp-data="{alertLower}{alertUpper}{unit}" erp-convert="convertWarning">预警阀值</th>
+                                <!--<th style="width:40px" erp-data="{alertLower}{alertUpper}{unit}" erp-convert="convertWarning">预警阀值</th>-->
                             </tr>
                             </thead>
                         </table>
@@ -163,7 +163,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">单位</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="unit" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                        <label class="pt7">kg</label>
                                     </div>
                                     <label class="col-sm-2 control-label">图纸编号</label>
                                     <div class="col-sm-4">
@@ -187,7 +187,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">只/KG</label>
+                                    <label class="col-sm-2 control-label">只/kg</label>
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control" name="onlyOrKg" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                                     </div>
@@ -414,12 +414,10 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12">
-                                        <label class="col-xs-2 pd0">材料名称</label>
-                                        <div class="col-xs-10 txt pd0" data-name="materialName"></div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">材料名称</label>
+                                        <div class="col-xs-8 txt pd0" data-name="materialName"></div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-xs-6">
                                         <label class="col-xs-4 pd0">库存</label>
                                         <div class="col-xs-8 txt pd0" data-name="totalNum" data-convert="convertTotalNum"></div>
@@ -435,7 +433,16 @@
                                         <div class="col-xs-8 txt pd0" data-convert="convertWarning"></div>
                                     </div>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">创建时间</label>
+                                        <div class="col-xs-8 txt pd0" data-name="createdAt"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">修改时间</label>
+                                        <div class="col-xs-8 txt pd0" data-convert="convertLastUpdatedAt"></div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <label class="col-xs-4 pd0">大类</label>
@@ -478,7 +485,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <label class="col-xs-4 pd0">只/KG</label>
+                                        <label class="col-xs-4 pd0">只/kg</label>
                                         <div class="col-xs-8 txt pd0" data-name="onlyOrKg"></div>
                                     </div>
                                     <div class="col-xs-6">
@@ -1133,8 +1140,13 @@
                 return product.totalNum || 0;
             }
 
+            function convertLastUpdatedAt() {
+                return product.lastUpdatedAt || '<span class="label label-info">无</span>';
+            }
+
             $baseInfo.find('div[data-convert="convertWarning"]').html(warningConvert());
             $baseInfo.find('div[data-convert="convertTotalNum"]').html(convertTotalNum());
+            $baseInfo.find('div[data-convert="convertLastUpdatedAt"]').html(convertLastUpdatedAt());
 
             initBoms();
             initStockHistory();

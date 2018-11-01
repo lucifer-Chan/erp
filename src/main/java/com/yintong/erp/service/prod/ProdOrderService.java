@@ -1,5 +1,6 @@
 package com.yintong.erp.service.prod;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.prod.ErpProdMould;
 import com.yintong.erp.domain.prod.ErpProdMouldRepository;
 import com.yintong.erp.domain.prod.ErpProdOrder;
@@ -49,7 +50,6 @@ import org.springframework.util.StringUtils;
 import static com.yintong.erp.utils.common.Constants.ProdBomHolder.ORDER;
 import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_002;
 import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_003;
-import static com.yintong.erp.utils.common.Constants.ProdOrderStatus;
 import static com.yintong.erp.utils.common.Constants.StockHolder.PROD;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
@@ -137,7 +137,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         plan.setDistributedNum(plan.getDistributedNum() + order.getProdNum());
         planRepository.save(plan);
         //5-操作记录
-        String content = "新建 数量：" + ret.getProdNum() +
+        String content = "新建 数量：" + ret.getProdNum().intValue() + CommonUtil.ifNotPresent(order.getUnit(), "") +
                 ", 开始时间：["  + DateUtil.getDateString(ret.getStartDate()) + "]";
         orderOptLogRepository.save(ErpProdOrderOptLog.builder().orderId(ret.getId()).content(content).optType("order").build());
         planOptLogRepository.save(ErpProdPlanOptLog.builder().planId(order.getPlanId()).content("新增制令单[" + ret.getBarCode() + "]").build());
@@ -165,10 +165,10 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         List<String> contents = new ArrayList<>();
 
         if(!oldOrder.getProdNum().equals(order.getProdNum())){
-            contents.add("数量：" + order.getProdNum());
             //2-计划单的分配数量
             ErpProdPlan plan = planService.findOnePlan(oldOrder.getPlanId());
             plan.setDistributedNum(plan.getDistributedNum() - oldOrder.getProdNum() + order.getProdNum());
+            contents.add("数量：" + order.getProdNum().intValue() + CommonUtil.ifNotPresent(oldOrder.getUnit(), ""));
             planRepository.save(plan);
             oldOrder.setProdNum(order.getProdNum());
         }
@@ -313,16 +313,17 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         record.requiredValidate();
         Long orderId = record.getOrderId();
         ErpProdOrder order = findOneOrder(orderId);
-        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印制令单");
+        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印物料出库单");
         if(Objects.isNull(record.getId())){
             record = pickRecordRepository.save(record);
             orderOptLogRepository.save(ErpProdOrderOptLog.builder()
                     .orderId(orderId)
                     .optType("pick")
-                    .content("新增【"+ record.getBarCode() + "】 总数【" + record.getTotalNum() + "】 合格数【" + record.getValidNum() + "】")
+                    .content("新增【"+ record.getBarCode() + "】 供挑拣重量【" + record.getTotalNum() + "kg】 合格重量【" + record.getValidNum() + "kg】 合格数【" + record.getValidOne() +"只】")
                     .build());
             //修改制令单的挑拣数量
-            order.setPickNum(order.getPickNum() + record.getValidNum());
+            //order.setPickNum(order.getPickNum() + record.getValidNum());
+            order.setPickNum(order.getPickNum() + calc(order, record));
             orderRepository.save(order);
             return record;
         }
@@ -331,13 +332,15 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         List<String> contents = new ArrayList<String>(){{ add("修改【" + old.getBarCode() + "】"); }};
 
         if(!ObjectUtils.equals(record.getTotalNum(), old.getTotalNum())){
-            contents.add("总数【" + old.getTotalNum() + " -> " + record.getTotalNum() + "】");
+            contents.add("供挑拣重量【" + old.getTotalNum() + " -> " + record.getTotalNum() + "】");
         }
 
         if(!ObjectUtils.equals(record.getValidNum(), old.getValidNum())){
-            contents.add("合格数【" + old.getValidNum() + " -> " + record.getValidNum() + "】");
+            contents.add("合格重量【" + old.getValidNum() + "kg -> " + record.getValidNum() + "kg】");
+            contents.add("合格数【" + old.getValidOne() + "只 -> " + record.getValidOne() + "只】");
             //修改制令单的挑拣数量
-            order.setPickNum(order.getPickNum() + record.getValidNum() - old.getValidNum());
+            //order.setPickNum(order.getPickNum() + record.getValidNum() - old.getValidNum());
+            order.setPickNum(order.getPickNum() + calc(order, record) - calc(order, old));
             orderRepository.save(order);
             return record;
 
@@ -414,6 +417,13 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         return PROD == holder && Arrays.asList(WaresType.P, WaresType.M, WaresType.D).contains(stockEntity.waresType());
     }
 
+    /**
+     * 入库
+     * @param holder
+     * @param orderId
+     * @param stockEntity
+     * @param inNum
+     */
     @Override
     public void stockIn(StockHolder holder, Long orderId, StockEntity stockEntity, double inNum) {
         //1.1 检查订单
@@ -434,13 +444,20 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         if(WaresType.P == stockEntity.waresType()){
             //成品入库 - 挑拣后的成品 - 状态管理
 //            Assert.isTrue(!S_003.name().equals(order.getStatusCode()), order.getProductName() + "已全部完成入库");//不做校验，可以超量生产
+            //成品入库 - inNum为kg；根据制令单的单位（kg／只）计算出数量再入库
+            inNum = CommonUtil.calcFromKg(order.getProduct(), order.getUnit(), inNum);
             double currentInNum = inNum + order.getFinishNum();
-            String content = order.getProductName() + " 完成入库,库存数量【" + currentInNum + "/" + order.getProdNum() + "】";
+            String content = order.getProductName() + "入库【" + inNum + order.getUnit() + "】 累计入库 【" + currentInNum + "/" + order.getProdNum() + order.getUnit() + "】";
             if(currentInNum >= order.getProdNum()){
                 order.setStatusCode(S_003.name());
                 order.setFinishDate(new Date());
-                content = order.getProductName() + " 全部完成入库,库存数量【" + currentInNum + "/" + order.getProdNum() + "】";
+                content = order.getProductName() + "入库【" + inNum + order.getUnit() +  "】 全部完成入库 【" + currentInNum + "/" + order.getProdNum() + "】";
             }
+
+            //计划单的达成数量计算
+            planService.addFinish(order.getPlanId(), inNum);
+
+
             prodOrderOptLog.setContent(content);
             //保存订单
             order.setFinishNum(currentInNum);
@@ -453,7 +470,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
             double currentInNum = inNum + bom.getNumIn();
             Assert.isTrue(currentInNum <= bom.getNumOut(), "入库原材料数量不能大于总出库数");
             bom.setNumIn(currentInNum);
-            prodOrderOptLog.setContent(bom.getMaterial().getRawName() + " 完成回收入库，库存数量【" + currentInNum + "】");
+            prodOrderOptLog.setContent(bom.getMaterial().getRawName() + " 完成回收入库 【" + currentInNum + "kg】");
             //保存bom
             prodProductBomRepository.save(bom);
 
@@ -463,9 +480,9 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
             ErpProdMould mould =  CommonUtil.single(mouldList, "制令单[" + order.getBarCode() + "]的模具清单存在脏数据");
             Assert.notNull(mould, "制令单[" + order.getBarCode() + "]的模具清单中未找到" + stockEntity.template().getSimpleName());
             double currentInNum = inNum + mould.getNumIn();
-            Assert.isTrue(currentInNum <= mould.getNumOut(), "入库原材料数量不能大于总出库数");
+            Assert.isTrue(currentInNum <= mould.getNumOut(), "入库原材料量不能大于总出库量");
             mould.setNumIn(currentInNum);
-            prodOrderOptLog.setContent(mould.getMould().getSimpleName() + " 完成回收入库，库存数量【" + currentInNum + "】");
+            prodOrderOptLog.setContent(mould.getMould().getSimpleName() + " 完成回收入库 【" + currentInNum + "件】");
             //保存mould
             prodMouldRepository.save(mould);
         }
@@ -488,7 +505,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
     public void stockOut(StockHolder holder, Long orderId, StockEntity stockEntity, double outNum) {
         //1.1 检查订单
         ErpProdOrder order = findOneOrder(orderId);
-        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印制令单");
+        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先出库原材料");
         //操作日志 - 暂无content
         ErpProdOrderOptLog prodOrderOptLog = ErpProdOrderOptLog.builder()
                 .optType("stock")
@@ -505,7 +522,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
             Assert.notNull(bom, "制令单[" + order.getBarCode() + "]的物料清单中未找到" + stockEntity.template().getSimpleName());
             double currentOutNum = outNum + bom.getNumOut();
             bom.setNumOut(currentOutNum);
-            prodOrderOptLog.setContent(bom.getMaterial().getRawName() + " 完成出库，累计出库数量【" + currentOutNum + "】");
+            prodOrderOptLog.setContent(bom.getMaterial().getRawName() + " 完成出库，累计出库数量【" + currentOutNum + "kg】");
             //保存bom
             prodProductBomRepository.save(bom);
 
@@ -516,7 +533,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
             Assert.notNull(mould, "制令单[" + order.getBarCode() + "]的模具清单中未找到" + stockEntity.template().getSimpleName());
             double currentOutNum = outNum + mould.getNumOut();
             mould.setNumOut(currentOutNum);
-            prodOrderOptLog.setContent(mould.getMould().getSimpleName() + " 完成出库，累计出库数量【" + currentOutNum + "】");
+            prodOrderOptLog.setContent(mould.getMould().getSimpleName() + " 完成出库，累计出库数量【" + currentOutNum + "件】");
             //保存mould
             prodMouldRepository.save(mould);
         }
@@ -562,5 +579,20 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         @ParameterItem(mappingTo = {"barCode", "description", "productName"}, compare = like, group = OR)
         String cause;
     }
+
+    /**
+     * 出入库数量计算 ：根据订单的单位计算-只|Kg
+     * @param order
+     * @param record
+     * @return
+     */
+    private Double calc(ErpProdOrder order, ErpProdOrderPickRecord record){
+        ErpBaseEndProduct product = order.getProduct();
+        if(Objects.isNull(product) || !StringUtils.hasText(product.getOnlyOrKg()) || !StringUtils.hasText(order.getUnit())){
+            return record.getValidNum();
+        }
+        return "kg".equalsIgnoreCase(order.getUnit()) ? record.getValidNum() : record.getValidOne();
+    }
+
 
 }

@@ -43,7 +43,7 @@ public class ErpSalePlan extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '计划单描述'")
     private String description;
 
-    @Column(columnDefinition = "double(16,9) comment '计划销售金额'")
+    @Column(columnDefinition = "double(20,5) comment '计划销售金额'")
     private Double planMoney;
 
     @Column(columnDefinition = "date comment '计划开始年月日'")

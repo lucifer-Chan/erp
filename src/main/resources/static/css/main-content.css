@@ -719,6 +719,11 @@ ul.bugPlanNum li .PlanNumClass em {
     color: #fff;
     cursor: pointer;
 }
+
+.input-group-addon a{
+    color:black !important;
+}
+
 .nav li>p:hover {
     background: #00adef;
 }

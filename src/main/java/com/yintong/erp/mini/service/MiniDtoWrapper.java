@@ -83,6 +83,7 @@ public class MiniDtoWrapper {
                 .stream()
                 .map(item -> {
                     JSONObject json = item.getWares();
+                    json.put("unit", item.getUnit());
                     json.put("type", item.getWaresType());
                     json.put("total", item.getNum());
                     json.put("in", item.getInNum());

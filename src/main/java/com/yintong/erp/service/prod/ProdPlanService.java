@@ -6,7 +6,6 @@ import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
 import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
 import com.yintong.erp.domain.prod.ErpProdMould;
 import com.yintong.erp.domain.prod.ErpProdMouldRepository;
-import com.yintong.erp.domain.prod.ErpProdOrderRepository;
 import com.yintong.erp.domain.prod.ErpProdPlan;
 import com.yintong.erp.domain.prod.ErpProdPlanOptLog;
 import com.yintong.erp.domain.prod.ErpProdPlanOptLogRepository;
@@ -17,6 +16,7 @@ import com.yintong.erp.dto.BomDto;
 import com.yintong.erp.dto.ProdPlanDto;
 import com.yintong.erp.service.basis.associator.ProductBomService;
 import com.yintong.erp.utils.common.Assert;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
@@ -54,8 +54,6 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
 
     @Autowired ErpProdPlanRepository planRepository;
 
-    @Autowired ErpProdOrderRepository orderRepository;
-
     @Autowired ErpProdPlanOptLogRepository planOptLogRepository;
 
     @Autowired ErpRawMaterialSupplierRepository materialSupplierRepository;
@@ -86,7 +84,7 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         Assert.notEmpty(bomList, "物料清单不能为空");
         prodProductBomRepository.saveAll(bomList);
         //操作记录
-        String content = "新建计划单 成品数量：" + ret.getPlanNum() +
+        String content = "新建计划单 成品数量：" + ret.getPlanNum().intValue() + CommonUtil.ifNotPresent(plan.getUnit(), "") +
                 ", 时间：["  + DateUtil.getDateString(plan.getStartDate()) + " 至 " + DateUtil.getDateString(plan.getEndDate()) + "]";
         planOptLogRepository.save(ErpProdPlanOptLog.builder().planId(ret.getId()).content(content).build());
         return ret;
@@ -107,7 +105,7 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         String content = "更新";
         List<String> contents = new ArrayList<>();
         if(!oldPlan.getPlanNum().equals(plan.getPlanNum())){
-            contents.add("数量：" + plan.getPlanNum());
+            contents.add("数量：" + plan.getPlanNum().intValue() + CommonUtil.ifNotPresent(plan.getUnit(), ""));
             oldPlan.setPlanNum(plan.getPlanNum());
         }
 
@@ -129,18 +127,29 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         //计划单
         ErpProdPlan ret = planRepository.save(oldPlan);
 
-        //bom - 制令单存在的情况下不允许修改bom
-        if(CollectionUtils.isEmpty(plan.getProdOrders())) {
-            Map<Long, BomDto> bomDtoMap = planDto.getBoms().stream().collect(Collectors.toMap(BomDto::getId, Function.identity()));
-            List<ErpProdProductBom> bomList = prodProductBomRepository.findByIdIn(bomDtoMap.keySet()).stream()
-                    .map(bom -> bom.copy4UpdatePlan(bomDtoMap.get(bom.getId()), this::findMaterialAssId))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            if(!CollectionUtils.isEmpty(bomList)) {
-                prodProductBomRepository.saveAll(bomList);
-                contents.add("物料清单");
-            }
+        //bom
+        Map<Long, BomDto> bomDtoMap = planDto.getBoms().stream().collect(Collectors.toMap(BomDto::getId, Function.identity()));
+        List<ErpProdProductBom> bomList = prodProductBomRepository.findByIdIn(bomDtoMap.keySet()).stream()
+                .map(bom -> bom.copy4UpdatePlan(bomDtoMap.get(bom.getId()), this::findMaterialAssId))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(bomList)) {
+            prodProductBomRepository.saveAll(bomList);
+            contents.add("物料清单");
         }
+
+        //bom - 制令单存在的情况下不允许修改bom
+//        if(CollectionUtils.isEmpty(plan.getProdOrders())) {
+//            Map<Long, BomDto> bomDtoMap = planDto.getBoms().stream().collect(Collectors.toMap(BomDto::getId, Function.identity()));
+//            List<ErpProdProductBom> bomList = prodProductBomRepository.findByIdIn(bomDtoMap.keySet()).stream()
+//                    .map(bom -> bom.copy4UpdatePlan(bomDtoMap.get(bom.getId()), this::findMaterialAssId))
+//                    .filter(Objects::nonNull)
+//                    .collect(Collectors.toList());
+//            if(!CollectionUtils.isEmpty(bomList)) {
+//                prodProductBomRepository.saveAll(bomList);
+//                contents.add("物料清单");
+//            }
+//        }
         //操作记录
         if(!CollectionUtils.isEmpty(contents)){
             content += StringUtils.collectionToCommaDelimitedString(contents);
@@ -179,7 +188,7 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
     public ErpProdPlan saveMould(Long planId, ErpProdMould mould) {
         ErpProdPlan plan = findOnePlan(planId);
         //1-已有制令单的不允许修改或新增
-        Assert.isEmpty(plan.getProdOrders(), "该计划单已有制令单，不能修改或新增模具");
+//        Assert.isEmpty(plan.getProdOrders(), "该计划单已有制令单，不能修改或新增模具");
 
         mould.setHolder(PLAN.name());
         mould.setHolderId(planId);
@@ -192,7 +201,8 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         //新增
         if(Objects.isNull(mould.getId())){
             Assert.isEmpty(existMoulds, "已存在该模具，请重新选择");
-            planOptLogRepository.save(ErpProdPlanOptLog.builder().planId(planId).content("新增模具：" + mouldName + ",数量：" + mould.getRealityMouldNum()).build());
+            planOptLogRepository.save(ErpProdPlanOptLog.builder().planId(planId).content("新增模具：" + mouldName
+                    + ",数量：" + new Double(mould.getRealityMouldNum()).intValue() + "件").build());
 
         } else {
             //更新
@@ -208,7 +218,10 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
             }
 
             if(!ObjectUtils.equals(old.getRealityMouldNum(), mould.getRealityMouldNum())){
-                contents.add(mouldName + "数量：" + old.getRealityMouldNum() + "->" + mould.getRealityMouldNum());
+                contents.add(mouldName + "数量："
+                        + new Double(old.getRealityMouldNum()).intValue()
+                        + "件 -> "
+                        + new Double(mould.getRealityMouldNum()).intValue()  + "件");
             }
 
             if(!CollectionUtils.isEmpty(contents)){
@@ -230,7 +243,7 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         Assert.notNull(mould, "未找到计划单模具[" + id + "]");
         ErpProdPlan plan = findOnePlan(mould.getHolderId());
         //1-已有制令单的不允许修改或新增
-        Assert.isEmpty(plan.getProdOrders(), "该计划单已有制令单，不能删除模具");
+//        Assert.isEmpty(plan.getProdOrders(), "该计划单已有制令单，不能删除模具");
         String mouldName = mouldRepository.findById(mould.getMouldId()).orElse(new ErpBaseModelTool()).getSimpleName();
         planOptLogRepository.save(ErpProdPlanOptLog.builder().planId(mould.getHolderId()).content("删除模具：" + mouldName).build());
         prodMouldRepository.deleteById(id);
@@ -272,6 +285,19 @@ public class ProdPlanService implements OnDeleteSupplierRawMaterialValidator, On
         ErpProdPlan plan = planRepository.findById(planId).orElse(null);
         Assert.notNull(plan, "未找到生产计划单[" + planId + "]");
         return plan;
+    }
+
+    /**
+     * 添加达成数量
+     * @param planId
+     * @param num
+     */
+    public ErpProdPlan addFinish(Long planId, double num){
+        ErpProdPlan plan = findOnePlan(planId);
+        double finishNum = CommonUtil.ifNotPresent(plan.getFinishNum(), 0d);
+        plan.setFinishNum(finishNum + num);
+        return planRepository.save(plan);
+
     }
 
     /**

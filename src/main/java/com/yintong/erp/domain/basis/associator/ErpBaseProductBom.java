@@ -36,7 +36,7 @@ public class ErpBaseProductBom extends BaseEntity {
     @Column(columnDefinition = "bigint(20) comment '原材料id-未关联供应商'")
     private Long materialId;
 
-    @Column(columnDefinition = "double(16,9) comment '切丝长度'")
+    @Column(columnDefinition = "double(20,5) comment '切丝长度'")
     private Double materialNum;
 
     @Transient

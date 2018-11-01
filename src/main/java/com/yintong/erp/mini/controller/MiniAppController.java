@@ -379,7 +379,7 @@ public class MiniAppController {
      */
     private Map<String, Function<String, BaseEntityWithBarCode>> holderFunctionMap() {
         return new HashMap<String, Function<String, BaseEntityWithBarCode>>() {{
-            put(IN.name() + "_" + BUY.name(), purchaseOrderService::findOrder4In);//采购单（销售） - 具体的入库信息
+            put(IN.name() + "_" + BUY.name(), purchaseOrderService::findOrder4In);//采购单（采购） - 具体的入库信息
             put(IN.name() + "_" + REFUNDS.name(), saleOrderService::findOrder4In);//销售单（退货） - 具体的入库信息
             put(OUT.name() + "_" + SALE.name(), saleOrderService::findOrder4Out);//销售单（销售） - 具体的出库信息
             put(IN.name() + "_" + PROD.name(), prodOrderService::findOrder4In);//制令单（生产） - 具体的入库信息

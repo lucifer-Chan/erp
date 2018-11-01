@@ -1,5 +1,6 @@
 package com.yintong.erp.service.purchase;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.domain.basis.ErpBaseRawMaterialRepository;
@@ -455,11 +456,20 @@ public class PurchaseOrderService implements StockIn4Holder,
 
         Assert.isTrue(!STATUS_005.name().equals(item.getStatusCode()), item.getWaresName() + "已完成入库");
         PurchaseOrderStatus status = STATUS_049;//入库中
+
+        TemplateWares templateWares = item.templateWares();
+        if(Objects.nonNull(templateWares) && (templateWares instanceof ErpBaseEndProduct)){
+            ErpBaseEndProduct product = (ErpBaseEndProduct)templateWares;
+            inNum = CommonUtil.calcFromKg(product, item.getUnit(), inNum);
+        }
+
         double currentInNum = inNum + item.getInNum();
-        String content = item.getWaresName() + " 完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
+
+        String content = item.getWaresName() + "入库【" + inNum + item.getUnit() + "】 累计入库 【" + currentInNum + "/" + item.getNum() + item.getUnit() + "】";
+
         if(currentInNum >= item.getNum()){
             status = STATUS_005;
-            content = item.getWaresName() + " 全部完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
+            content = item.getWaresName() + "入库【" + inNum + item.getUnit() +  "】 全部完成入库 【" + currentInNum + "/" + item.getNum() + "】";
         }
         //2-保存订单明细
         item.setStatusCode(status.name());

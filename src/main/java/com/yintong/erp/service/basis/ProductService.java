@@ -2,9 +2,9 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
-import com.yintong.erp.domain.sale.ErpSaleOrderItem;
 import com.yintong.erp.domain.sale.ErpSaleOrderItemRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
@@ -31,7 +31,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PAF0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PAT0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PNF0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PNM0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PNR0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PNX0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PNY0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PTD0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PTT0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PTU0;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.PTW0;
 import static com.yintong.erp.utils.common.Constants.SaleOrderStatus.STATUS_003;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
@@ -126,6 +136,7 @@ public class ProductService {
         product.setBarCode(inDb.getBarCode());
         product.setAlertLower(inDb.getAlertLower());
         product.setAlertUpper(inDb.getAlertUpper());
+        product.setCreatedAt(inDb.getCreatedAt());
         return productRepository.save(product);
     }
     /**
@@ -168,12 +179,12 @@ public class ProductService {
         double approval = orderItemRepository.findByProductIdAndStatusCode(productId, STATUS_003.name())
                 .stream()
                 .filter(Objects::nonNull)
-                .mapToDouble(ErpSaleOrderItem::getNum)
+                .mapToDouble(orderItem -> CommonUtil.calc2Kg(product, orderItem.getUnit(), orderItem.getNum()))
                 .sum();
-        double total = product.getTotalNum();
+        double total = product.getTotalNum();//kg
         return new HashMap<String, Object>(){{
             put("total", total);
-            put("safe", (total - approval));
+            put("safe", Math.max(total - approval, 0));
         }};
     }
 
@@ -182,7 +193,7 @@ public class ProductService {
      */
     @Getter @Setter @OrderBy(fieldName = "id")
     public static class ProductParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo"}, compare = like, group = OR)
+        @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo", "specification"}, compare = like, group = OR)
         String cause;
         @ParameterItem(mappingTo = "endProductTypeCode", compare = like)
         String typeC;

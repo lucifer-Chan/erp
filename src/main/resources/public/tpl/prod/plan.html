@@ -20,9 +20,10 @@
                                 <th style="width:70px" erp-data="{productName}">生产成品</th>
                                 <th style="width:30px" erp-data="{startDate}" erp-convert="convertDate">计划开始日期</th>
                                 <th style="width:30px" erp-data="{endDate}" erp-convert="convertDate">计划达成日期</th>
-                                <th style="width:30px" erp-data="{planNum}" erp-convert="convertNum">生产数量</th>
-                                <th style="width:30px" erp-data="{distributedNum}" erp-convert="convertNum">分配数量</th>
-                                <th style="width:30px" erp-data="{finishNum}" erp-convert="convertNum">达成数量</th>
+                                <th style="width:30px" erp-data="{planNum}" erp-convert="convertNum">生产量</th>
+                                <th style="width:30px" erp-data="{unit}">单位</th>
+                                <th style="width:30px" erp-data="{distributedNum}" erp-convert="convertNum">已分配量</th>
+                                <th style="width:30px" erp-data="{finishNum}" erp-convert="convertNum">达成量</th>
                             </tr>
                             </thead>
                         </table>
@@ -46,16 +47,10 @@
                         <label class="col-sm-3 control-label">计划日期</label>
                         <div class="col-sm-9 projectPlanDate">
                             <div class="input-daterange input-group col-sm-9">
-                                <input type="text" class="input-sm form-control" name="startDate" id="_editStartDate" value="">
+                                <input type="text" class="input-sm form-control" name="startDate" id="_editStartDate" value="" readonly>
                                 <span class="input-group-addon">到</span>
-                                <input type="text" class="input-sm form-control" name="endDate" id="_editEndDate" value="">
+                                <input type="text" class="input-sm form-control" name="endDate" id="_editEndDate" value="" readonly>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">计划内容</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
                         </div>
                     </div>
                     <div class="form-group _productId">
@@ -67,9 +62,21 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">生产数量</label>
+                        <label class="col-sm-3 control-label">计划内容</label>
                         <div class="col-sm-9">
-                            <input type="number" step="0.01" class="form-control" name="planNum" placeholder="输入数字">
+                            <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" id="_planDescription"
+                                   onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">生产量</label>
+                        <div class="col-sm-9" style="display: table;">
+                            <input type="number" step="0.01" class="form-control" name="planNum" placeholder="输入数字" id="_planNum">
+                            <ul class="input-group-addon" id="units_ul">
+                                <li role="presentation" class="dropdown" id="units_li">
+                                </li>
+                            </ul>
+                            <label id="unit_label" class="input-group-addon" name="unit"></label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -150,7 +157,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">开始时间</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="input-sm form-control" name="startDate" id="_startDate" placeholder="点击选择日期">
+                                        <input type="text" class="input-sm form-control" name="startDate" id="_startDate" placeholder="点击选择日期" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -161,9 +168,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">分配数量</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" step="0.01" class="form-control" data-name="prodNum" placeholder="输入数字">
+                                    <div class="col-sm-9" style="display: table;">
+                                        <input type="number" step="0.01" class="form-control" data-name="prodNum" placeholder="输入数字" id="_distributedNum">
+                                        <label id="distributedNum_label" class="input-group-addon"></label>
                                     </div>
+                                    <!--
+                                    <div class="col-sm-9">
+                                        <input type="number" step="0.01" class="form-control" data-name="prodNum" placeholder="输入数字" id="_distributedNum">
+                                    </div>
+                                    -->
                                 </div>
 
                                 <div class="form-group">
@@ -210,7 +223,7 @@
 </div>
 
 <!-- BOM编辑模版-->
-<div class="row pd31 bomTemplate" id="bomTemplate" style="display: none;">
+<div class="row pd31 planBomEditTemplate" id="planBomEditTemplate" style="display: none;" data-material_type="">
     <div class="col-sm-12" style="margin-bottom:-20px">
         <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
             <div class="panel-heading">
@@ -244,7 +257,7 @@
                     </div>
                 </div>
                 <div class="form-group md31">
-                    <label class="col-sm-4 pt7">总量</label>
+                    <label class="col-sm-4 pt7">总量(kg)</label>
                     <div class="col-sm-8 pd40">
                         <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字">
                     </div>
@@ -267,18 +280,18 @@
                         <div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">供应商</label>
-                                    <div class="col-xs-9 txt pd0" data-name="supplierName"></div>
+                                    <label class="col-xs-4 pd0">供应商</label>
+                                    <div class="col-xs-8 txt pd0" data-name="supplierName"></div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">数量</label>
+                                    <label class="col-xs-3 pd0">数量(kg)</label>
                                     <div class="col-xs-9 txt pd0" data-name="num"></div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">原材料名称</label>
-                                    <div class="col-xs-9 txt pd0" data-name="rawName"></div>
+                                    <label class="col-xs-4 pd0">原材料名称</label>
+                                    <div class="col-xs-8 txt pd0" data-name="rawName"></div>
                                 </div>
                                 <div class="col-xs-6">
                                     <label class="col-xs-3 pd0">规格</label>
@@ -287,8 +300,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">切丝长度</label>
-                                    <div class="col-xs-9 txt pd0" data-name="materialNum"></div>
+                                    <label class="col-xs-4 pd0">切丝长度</label>
+                                    <div class="col-xs-8 txt pd0" data-name="materialNum"></div>
                                 </div>
                             </div>
                         </div>
@@ -322,7 +335,7 @@
                                     <div class="col-xs-9 txt pd0" data-name="supplierName"></div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <label class="col-xs-3 pd0">数量</label>
+                                    <label class="col-xs-3 pd0">数量(件)</label>
                                     <div class="col-xs-9 txt pd0" data-name="realityMouldNum"></div>
                                 </div>
                             </div>
@@ -378,18 +391,18 @@
                                 <div class="col-xs-8 txt pd0" data-name="productName"></div>
                             </div>
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">生产数量</label>
-                                <div class="col-xs-8 txt pd0" data-name="planNum"></div>
+                                <label class="col-xs-4 pd0">生产量</label>
+                                <div class="col-xs-8 txt pd0" data-convert="planNum"></div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">已分配数量</label>
+                                <label class="col-xs-4 pd0">已分配量</label>
                                 <div class="col-xs-8 txt pd0" data-convert="distributedNum"></div>
                             </div>
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">已达成数量</label>
+                                <label class="col-xs-4 pd0">已达成量</label>
                                 <div class="col-xs-8 txt pd0" data-convert="finishNum"></div>
                             </div>
                         </div>
@@ -492,18 +505,18 @@
                                         <div class="col-xs-9 txt pd0">{{o.employeeName}}</div>
                                     </div>
                                     <div class="col-xs-6">
-                                        <label class="col-xs-3 pd0">分配数量</label>
-                                        <div class="col-xs-9 txt pd0">{{o.prodNum}}</div>
+                                        <label class="col-xs-3 pd0">分配量</label>
+                                        <div class="col-xs-9 txt pd0">{{o.prodNum}}{{unit}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <label class="col-xs-3 pd0">挑拣数量</label>
-                                        <div class="col-xs-9 txt pd0">{{o.pickNum}}</div>
+                                        <label class="col-xs-3 pd0">挑拣量</label>
+                                        <div class="col-xs-9 txt pd0">{{o.pickNum}}{{unit}}</div>
                                     </div>
                                     <div class="col-xs-6">
-                                        <label class="col-xs-3 pd0">完成数量</label>
-                                        <div class="col-xs-9 txt pd0">{{o.finishNum}}</div>
+                                        <label class="col-xs-3 pd0">完成量</label>
+                                        <div class="col-xs-9 txt pd0">{{o.finishNum}}{{unit}}</div>
                                     </div>
                                 </div>
                                 <hr>
@@ -512,7 +525,7 @@
                                         <label class="col-xs-3 pd0" style="width: 12.5%">物料清单</label>
                                         <div class="col-xs-9 txt pd0" style="width: 87.5%">
                                             {{each o.boms as b}}
-                                            <p><span class="content">【物料描述】{{b.material.description}} 【数量】{{b.realityMaterialNum}}</span></p>
+                                            <p><span class="content">【物料描述】{{b.material.description}} 【总量】{{b.realityMaterialNum}}kg</span></p>
                                             {{/each}}
 
                                         </div>
@@ -524,7 +537,7 @@
                                         <label class="col-xs-3 pd0" style="width: 12.5%">模具清单</label>
                                         <div class="col-xs-9 txt pd0" style="width: 87.5%">
                                             {{each o.moulds as d}}
-                                            <p><span class="content">【模具描述】{{d.mould.description}} 【数量】{{d.realityMouldNum}}</span></p>
+                                            <p><span class="content">【模具描述】{{d.mould.description}} 【总量】{{d.realityMouldNum}}件</span></p>
                                             {{/each}}
                                         </div>
                                     </div>
@@ -540,9 +553,9 @@
 </script>
 
 <!-- 制令单BOM编辑 -->
-<script id="template-bom" type="text/template">
+<script id="template-order-bom" type="text/template">
     {{each boms as b}}
-    <div class="row pd31 _template-bom" data-id="{{b.id}}">
+    <div class="row pd31 _template-order-bom" data-id="{{b.id}}">
         <div class="col-sm-12" style="margin-bottom:-20px">
             <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
                 <div class="panel-heading">
@@ -550,6 +563,7 @@
                 </div>
                 <div class="panel-body">
                     <input type="hidden" data-name="bom_id">
+                    <input type="hidden" data-name="total_num" data-total="{{b.realityMaterialNum}}">
                     <div class="form-group md31">
                         <label class="col-sm-4">原材料名称</label>
                         <div class="col-sm-8 pd40">
@@ -565,16 +579,16 @@
                     <div class="form-group md31">
                         <label class="col-sm-4 pt7">切丝长度(mm)</label>
                         <div class="col-sm-8 pd40">
-                            <div>{{b.materialNum}}</div>
+                            <div class="pt7">{{b.materialNum}}</div>
                         </div>
                     </div>
                     <div class="form-group md31">
                         <label class="col-sm-4 pt7">供应商</label>
-                        <div>{{b.supplierName}}</div>
+                        <div class="pt7">{{b.supplierName}}</div>
                     </div>
                     <div class="form-group md31">
-                        <label class="col-sm-4 pt7">总量</label>
-                        <div class="col-sm-8 pd40">
+                        <label class="col-sm-4 pt7">总量(kg)</label>
+                        <div class="col-sm-8 pd40 _suggest">
                             {{if numBe0}}
                                 <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字" value="0">
                             {{else}}
@@ -590,9 +604,9 @@
 </script>
 
 <!-- 制令单编辑模具 -->
-<script id="template-mould" type="text/template">
+<script id="template-order-mould" type="text/template">
     {{each moulds as m}}
-    <div class="row pd31 _template-mould" data-id="{{m.id}}">
+    <div class="row pd31 _template-order-mould" data-id="{{m.id}}">
         <div class="col-sm-12" style="margin-bottom:-20px">
             <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
                 <div class="panel-heading">
@@ -600,30 +614,33 @@
                 </div>
                 <div class="panel-body">
                     <input type="hidden" data-name="mould_id">
+                    <input type="hidden" data-name="total_num" data-total="{{m.realityMouldNum}}">
                     <div class="form-group md31">
-                        <label class="col-sm-4">模具名称</label>
-                        <div class="col-sm-8 pd40">
+                        <label class="col-sm-3">模具名称</label>
+                        <div class="col-sm-9 pd40">
                             <div>{{m.mould.modelToolName}}</div>
                         </div>
                     </div>
                     <div class="form-group md31">
-                        <label class="col-sm-4">规格描述</label>
-                        <div class="col-sm-8 pd40">
+                        <label class="col-sm-3">规格描述</label>
+                        <div class="col-sm-9 pd40">
                             <div>{{m.mould.specification}}</div>
                         </div>
                     </div>
 
                     <div class="form-group md31">
-                        <label class="col-sm-4 pt7">供应商</label>
+                        <label class="col-sm-3 pt7">供应商</label>
+                        <div class="col-sm-9 pd40">
                         {{if m.realityMould.supplierName}}
                             <div>{{m.realityMould.supplierName}}</div>
                         {{else}}
                             <div><span class="label label-danger">未指定</span></div>
                         {{/if}}
+                        </div>
                     </div>
                     <div class="form-group md31">
-                        <label class="col-sm-4 pt7">数量</label>
-                        <div class="col-sm-8 pd40">
+                        <label class="col-sm-3 pt7">数量(件)</label>
+                        <div class="col-sm-9 pd40 _suggest">
                             {{if numBe0}}
                             <input type="number" step="0.01" class="form-control" data-name="num" placeholder="输入数字" value="0">
                             {{else}}
@@ -663,11 +680,83 @@
                 '<span class="content"> {content}</span>  ' +
                 '<span class="right">{time}</span>' +
                 '</p>'
-            , $bomTemplate : $('#bomTemplate')//bom template
+            , $planBomEditTemplate : $('#planBomEditTemplate')//bom template
             , $bomDisplayTemplate : $('#bomDisplayTemplate')
             , $mouldDisplayTemplate : $('#mouldDisplayTemplate')
         };
 
+        /**
+         * 计算原材料数量
+         * @param unit 成品单位-个|kg
+         * @param perCost 单粒成品银耗（铜）g
+         * @param num 生产成品数量
+         * @param numOneKg 只/kg
+         *
+         */
+        function calcMaterialNum(unit, perCost, num, numOneKg) {
+            if(!unit || !perCost || !num || !numOneKg) return 0;
+            //1-生产数（只）
+            var total = unit === 'kg' ? num * numOneKg : num;
+            //2-耗材（kg）
+            return total * perCost / 1000;
+        }
+
+        /**
+         * 自动计算耗银和耗铜
+         * @param product 成品所有信息
+         * @param $bomHolder 物料清单
+         */
+        function auto_calc(product, $bomHolder){
+            //单粒耗银
+            var silver = product.unitSilverLoss || 0;
+            //单粒耗铜
+            var copper = product.unitSilverCopper || 0;
+
+            //银原材料BOMS
+            var $silvers = $bomHolder.find('div[data-material_type="MA"]');
+            //铜原材料BOMS
+            var $coppers = $bomHolder.find('div[data-material_type="MZ"]');
+            //成品单位
+            var unit = consts.currentPlan.unit;
+            //生产数量
+            var num = $('#_planNum').val();
+            
+            var silverNum = calcMaterialNum(unit, silver, num, product.onlyOrKg);
+            var copperNum = calcMaterialNum(unit, copper, num, product.onlyOrKg);
+            $silvers.find('input[data-name="num"]').val(silverNum);
+            $coppers.find('input[data-name="num"]').val(copperNum);
+        }
+
+        /**
+         * 计算建议原材料、模具数量
+         * @param $bomsContent 原材料列表div
+         * @param $mouldsContent 模具列表div
+         * @param isNew 是否新建制令单
+         */
+        function calc4Suggest($bomsContent, $mouldsContent, isNew){
+            //if(!isNew) return;
+            var planNum = consts.currentPlan.planNum || 0;
+            if(!planNum) return;
+
+            var $editDistributedNum = $('#_distributedNum');
+            $editDistributedNum.bind('input propertychange', function () {
+
+                var distributedNum = $editDistributedNum.val() || 0;
+                $bomsContent.find('._template-order-bom').each(function () {
+                    var $div = $(this);
+                    var totalNum = $div.find('input[data-name="total_num"]').attr('data-total');
+                    var calcNum = (totalNum * distributedNum / planNum).toFixed(4);
+                    $div.find('._suggest').find('input').val(calcNum);
+                });
+
+                $mouldsContent.find('._template-order-mould').each(function () {
+                    var $div = $(this);
+                    var totalNum = $div.find('input[data-name="total_num"]').attr('data-total');
+                    var calcNum = (totalNum * distributedNum / planNum).toFixed(0);
+                    $div.find('._suggest').find('input').val(calcNum);
+                });
+            });
+        }
 
         //预置数据
         function prepareData() {
@@ -768,8 +857,9 @@
             });
             //data-convert="planDate"
             $baseInfo.find('div[data-convert="planDate"]').html(tr.startDate.substr(0,10) + ' 至 ' + tr.endDate.substr(0,10));
-            $baseInfo.find('div[data-convert="distributedNum"]').html(tr.distributedNum || 0);
-            $baseInfo.find('div[data-convert="finishNum"]').html(tr.finishNum || 0);
+            $baseInfo.find('div[data-convert="distributedNum"]').html((tr.distributedNum || 0) + (tr.unit||''));
+            $baseInfo.find('div[data-convert="finishNum"]').html((tr.finishNum || 0) + (tr.unit||''));
+            $baseInfo.find('div[data-convert="planNum"]').html((tr.planNum || 0) + (tr.unit||''));
 
             //达成记录
             var html = '';
@@ -849,7 +939,8 @@
 
             //制令单清单
             var ordersHtml = template('template-order', {
-               prodOrders : tr.prodOrders || []
+                prodOrders : tr.prodOrders || [],
+                unit : consts.currentPlan.unit
                //  prodOrders : [{barCode : 'ssss', description : 'fuck', id : '999', finishDate : '2018-09-09'}]
             });
             $('#orderList').find('.bugInfoHistories').empty().html(ordersHtml);
@@ -912,7 +1003,6 @@
 
             });
 
-
             //编辑制令单的"下一页"按钮
             consts.$editOrderModal.find('button[name="next"]').unbind('click').click(function () {
                 var data = buildOrderData1();
@@ -928,7 +1018,7 @@
                     return;
                 }
                 var $tab2 = $('#_editMouldInfo');
-                var $moulds = $tab2.find('._template-mould');
+                var $moulds = $tab2.find('._template-order-mould');
                 var moulds = [], mouldsFlag = true;
                 $.each($moulds, function (i, item) {
                     var num = $(item).find('input[data-name="num"]').val();
@@ -980,7 +1070,7 @@
         //验证制令单第一tab的数据（基础数据+bom）
         function buildOrderData1(){
             var $tab1 = $('#_editOrderInfo');
-            var $boms = $tab1.find('._template-bom');
+            var $boms = $tab1.find('._template-order-bom');
             //1-base data : {employeeId prodNum ,planId, startDate, description}
             var orderData = {
                 id : consts.currentOrder.id,
@@ -1028,7 +1118,8 @@
         /**
          * 初始化BOM
          */
-        function initBoms(productId) {
+        function initBoms(product) {
+            var productId = product.id;
             var $bomHolder = $('._bomsHolder');
             var $bomContent = $bomHolder.find('._bomsContent');
             var unset = '<span class="label label-danger">未设置</span>';
@@ -1044,9 +1135,10 @@
 
                     $.each(ret.list, function (i, item) {
                         var material = item.material || {};
-                        var clone = consts.$bomTemplate.clone();
+                        var clone = consts.$planBomEditTemplate.clone();
                         $(clone).find('.panel-title').text('物料清单-' + (i+1));
-                        $(clone).attr('id', 'bomTemplate_' + (i+1));
+                        $(clone).attr('id', 'planBomEditTemplate_' + (i+1));
+                        $(clone).attr('data-material_type', material.rawTypeCode.substr(0,2))
                         var body = $(clone).find('.panel-body');
                         $(body).find('div[data-name="rawName"]').html(material.rawName || unset);
                         $(body).find('div[data-name="specification"]').html(material.specification || unset);
@@ -1054,11 +1146,15 @@
                         $(body).find('input[data-name="bom_id"]').val(item.id);
                         $(body).find('input[data-name="material_id"]').val(item.materialId);
                         $(body).find('input[data-name="num"]').val(item.num),
-                            $bomContent.append($(clone).show());
+                        $bomContent.append($(clone).show());
                         var $supplierHolder = $(clone).find('._supplier').attr('id', 'supplierHolder_' + item.materialId);
 
                         init_material_suppliers($supplierHolder, item.supplierId, item.materialId);
                     });
+                    // 自动计算耗银和耗铜
+                    if(!consts.currentPlan.id || consts.currentPlan.id == '-1'){
+                        auto_calc(product, $bomHolder);
+                    }
                 });
         }
         
@@ -1131,6 +1227,12 @@
                 }
             });
 
+            //编辑成品数量
+            $('#_planNum').bind('input propertychange', function () {
+                var productId = $('#_productId').attr('data-value') || -1;
+                auto_calc(consts.productCache[productId] || {}, $('._bomsHolder'));
+            });
+
             //编辑计划单模态框
             consts.$editInfoModal.on('show.bs.modal', function () {
                 var $this = $(this);
@@ -1157,15 +1259,38 @@
                         if(!$tip || !$tip.length) return;
                         if(!productId || productId === '-1'){
                             $tip.html('').hide();
+                            initBoms({id : -1});
                         } else {
                             var product = consts.productCache[productId] || {};
                             $('#__productId').html(product.description);
+                            $('#_planDescription').val(product.description);
                             $tip.html('单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
+                            initBoms(product);
                         }
-
-                        initBoms(productId);
                     }
                 });
+                //更新
+                if(consts.currentPlan.id){
+                    $('#units_ul').hide();
+                    $('#unit_label').html(consts.currentPlan.unit).show();
+                } else {
+                    //新增
+                    //初始化总量单位
+                    utils.dropdown({
+                        $holder : $('#units_li'),
+                        data : [{code : 'kg', name : 'kg'}, {code : '只', name : '只'}],
+                        unselected : '-选择单位-',
+                        callback : function (value) {
+                            console.log("单位切换", value);
+                            consts.currentPlan.unit = value;
+                            var productId = $('#_productId').attr('data-value') || -1;
+                            auto_calc(consts.productCache[productId] || {}, $('._bomsHolder'));
+                        }
+                    });
+                    $('#units_ul').show();
+                    $('#unit_label').hide();
+                }
+
             }).on('hidden.bs.modal', function () {
                 //清理数据
                 $(this).find('input, textarea').val('');
@@ -1202,6 +1327,7 @@
                 $(this).find('#_orderProductDescription').html(product.description || '');
                 $('#selectOrderProductTip').html('单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
                 $(this).find('input[data-name="prodNum"]').val(consts.currentOrder.prodNum || 0);
+                $('#distributedNum_label').html(consts.currentPlan.unit || '');
                 utils.dropkick({
                     $holder : $('#_employeeId'),
                     data : consts.employees,
@@ -1211,21 +1337,22 @@
                 $('#_startDate').datepicker(utils.datepickerConfig);
                 // 物料清单 - 如果有制令单即更新，采用制令单|如果无制令单即新建，采用计划单
                 var boms = consts.currentOrder.boms || consts.currentPlan.boms;
-                var numBe0 = !consts.currentOrder.boms;//数量默认是否为0
-                var bomsHtml = template('template-bom', {boms : boms, numBe0 : numBe0});
-                $(this).find('._orderBomsContent').empty().html(bomsHtml);
-
                 //模具 - 如果有制令单即更新，采用制令单|如果无制令单即新建，采用计划单
                 var moulds = consts.currentOrder.moulds || consts.currentPlan.moulds;
-                var mouldsHtml = template('template-mould', {moulds : moulds, numBe0 : numBe0});
-                $(this).find('._mouldsContent').empty().html(mouldsHtml);
 
+                var isNew = !consts.currentOrder.boms;//数量默认是否为0
+                var bomsHtml = template('template-order-bom', {boms : boms, numBe0 : isNew});
+                var mouldsHtml = template('template-order-mould', {moulds : moulds, numBe0 : isNew});
+                var $bomsContent = $(this).find('._orderBomsContent');
+                var $mouldsContent = $(this).find('._mouldsContent');
 
+                $bomsContent.empty().html(bomsHtml);
+                $mouldsContent.empty().html(mouldsHtml);
+                //计算建议原材料、模具数量
+                calc4Suggest($bomsContent, $mouldsContent, isNew);
             }).on('hidden.bs.modal', function () {
                 consts.currentOrder = {}
             });
-
-
             
             //save prodPlan
             consts.$editInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
@@ -1244,9 +1371,15 @@
                 plan.productName = $('#_productId').find('.dk_label').html();
                 plan.id = consts.currentPlan.id || '';
                 plan.planNum = parseFloat(plan.planNum||0.00).toFixed(2);
+                plan.unit = consts.currentPlan.unit || '';
+                if(!plan.unit){
+                    layer.msg('请选择单位！');
+                    return;
+                }
+
                 //Bom 列表
                 var boms = [];
-                $.each($('._bomsContent').find('.bomTemplate'), function (i, bom) {
+                $.each($('._bomsContent').find('.planBomEditTemplate'), function (i, bom) {
                     var $supplier = $(bom).find('._supplier');
                     boms.push({
                         id : $(bom).find('input[data-name="bom_id"]').val(),

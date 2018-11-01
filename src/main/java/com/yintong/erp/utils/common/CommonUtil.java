@@ -1,6 +1,9 @@
 package com.yintong.erp.utils.common;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +23,8 @@ import org.springframework.util.StringUtils;
 public class CommonUtil {
 
     private static final Charset charset = Charset.forName("UTF-8");
+
+    private static final DecimalFormat DECIMAL_FORMAT_DOUBLE = new DecimalFormat("#.00");
 
     /**
      * 不存在时返回默认
@@ -137,6 +142,15 @@ public class CommonUtil {
         return dst;
     }
 
+    /**
+     * 保留两位
+     * @param d
+     * @return
+     */
+    public static Double toFixed2(Double d){
+        return Double.valueOf(DECIMAL_FORMAT_DOUBLE.format(Objects.isNull(d) ? 0d : d));
+    }
+
 
     public static Double parseDouble(String s){
         try {
@@ -158,5 +172,52 @@ public class CommonUtil {
         JSONObject ret = new JSONObject();
         Stream.of(jsons).forEach(ret::putAll);
         return ret;
+    }
+
+    /**
+     * num为kg；根据订单单位（kg／只）计算出数量
+     * @param product
+     * @param unit
+     * @param num kg
+     * @return
+     */
+    public static Double calcFromKg(ErpBaseEndProduct product, String unit, double num){
+        if(Objects.isNull(product)
+                || !StringUtils.hasText(product.getOnlyOrKg())
+                || !StringUtils.hasText(unit)
+                || !Arrays.asList("kg","只").contains(unit.toLowerCase())){
+            return num;
+        }
+
+        if("kg".equalsIgnoreCase(unit)) return num;
+
+        //计算个数
+        //每kg生产的个数
+        Double numOneKg = parseDouble(product.getOnlyOrKg());
+        Assert.notNull(numOneKg, "请维护 ".concat(product.getDescription()).concat(" 的'只/kg'属性"));
+        return (double) new Double(num * numOneKg).intValue();
+    }
+
+    /**
+     *
+     * @param product
+     * @param unit
+     * @param num kg or 只
+     * @return kg
+     */
+    public static Double calc2Kg(ErpBaseEndProduct product, String unit, double num){
+        if(Objects.isNull(product)
+                || !StringUtils.hasText(product.getOnlyOrKg())
+                || !StringUtils.hasText(unit)
+                || !Arrays.asList("kg","只").contains(unit.toLowerCase())){
+            return num;
+        }
+
+        if("kg".equalsIgnoreCase(unit)) return num;
+        //计算kg
+        //每kg生产的个数
+        Double numOneKg = parseDouble(product.getOnlyOrKg());
+        Assert.notNull(numOneKg, "请维护 ".concat(product.getDescription()).concat(" 的'只/kg'属性"));
+        return toFixed2(num / numOneKg);
     }
 }

@@ -40,10 +40,10 @@ public class ErpProdPlan extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '生产成品-冗余数据'")
     private String productName;
 
-    @Column(columnDefinition = "double(16,9) comment '计划生产数量'")
+    @Column(columnDefinition = "double(20,5) comment '计划生产数量'")
     private Double planNum;
 
-    @Column(columnDefinition = "double(16,9) comment '已分配的数量-分配给制令单'")
+    @Column(columnDefinition = "double(20,5) comment '已分配的数量-分配给制令单'")
     private Double distributedNum;
 
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '生产计划单描述'")
@@ -58,8 +58,11 @@ public class ErpProdPlan extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) DEFAULT '' comment '备注'")
     private String remark;
 
-    @Column(columnDefinition = "double(16,9) comment '当前达成数量'")
+    @Column(columnDefinition = "double(20,5) comment '当前达成数量'")
     private Double finishNum;
+
+    @Column(columnDefinition = "varchar(5) comment '单位：kg|只'")
+    private String unit;
 
     @Transient
     private List<ErpProdOrder> prodOrders;
@@ -108,6 +111,7 @@ public class ErpProdPlan extends BaseEntityWithBarCode {
         Assert.notNull(planNum , "数量不能为空");
         Assert.notNull(startDate , "计划开始时间不能为空");
         Assert.hasText(description , "计划单描述不能为空");
+        Assert.hasText(unit, "单位不能为空");
         if(null == distributedNum) distributedNum = 0D;
     }
 }

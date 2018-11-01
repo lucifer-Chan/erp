@@ -213,6 +213,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 data.orderCode = consts.currentOrder.barCode;
                 data.statusCode = consts.currentOrder.statusCode;
                 data.id = (consts.currentOrderItem || {}).id;
+                data.unit = (consts.currentOrderItem || {}).unit;
 
 
                 if(data.waresType === '-1'){
@@ -233,6 +234,10 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 }
                 if(!data.unitPrice ){
                     layer.msg('请输入单价');
+                    return;
+                }
+                if(!data.unit ){
+                    layer.msg('请输入单位');
                     return;
                 }
                 var wares = waresData[data.waresType  + data.waresAssId] || {};
@@ -287,7 +292,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                             '<td>'+ (w.category || '') +'</td>' +
                             '<td>'+ (w.simpleName || '') +'</td>' +
                             '<td>'+ (w.specification || '')  +'</td>' +
-                            '<td style="text-align: center">'+ (w.unit || '') +'</td>' +
+                            '<td style="text-align: center">'+ (item.unit || '') +'</td>' +
                             '<td style="text-align: right">'+ (item.num || 0)  +'</td>' +
                             '<td style="text-align: right">'+ (item.unitPrice||0).toFixed(2) +'</td>' +
                             '<td style="text-align: right">'+ (item.money || 0).toFixed(2)  +'</td>' +
@@ -400,6 +405,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
             var num = $('#_editItemNum').val() || 0;
             var ret = parseFloat(unitPrice) * parseFloat(num);
             $('#_editItemMoney').val(ret.toFixed(2));
+            calc2Kg();
         }
 
         $('#_editItemNum, #_editItemUnitPrice').bind('input propertychange', function () {
@@ -424,6 +430,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 current : consts.currentOrderItem.waresType,
                 callback : init_wares
             });
+
             consts.$saveOrderItemBt.text(!!consts.currentOrderItem.id ? '保存' : '继续添加');
 
         }).on('hidden.bs.modal', function () {
@@ -581,7 +588,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 var body = $(clone).find('.panel-body');
                 var tools =  $(clone).find('.tools');
                 body.attr('data-value', (item.id + 'Info'));
-                if(item.statusCode !== 'STATUS_049'){
+                if(item.statusCode !== 'STATUS_049' && item.statusCode !== 'STATUS_005'){
                     $(body).find('div[data-name="status"]').parent().hide();
                 }
                 if(item.waresType === 'M' || item.waresType === 'R'){
@@ -591,7 +598,8 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 $(body).find('div[data-name="status"]').html(_convertStatus(item.statusCode));
                 $(body).find('div[data-name="money"]').text('¥' + (item.money || 0).toFixed(2));
                 $(body).find('div[data-name="unitPrice"]').text('¥' + (item.unitPrice||0).toFixed(2));
-                $(body).find('div[data-name="num"]').text(item.num);
+                $(body).find('div[data-name="num"]').text(item.num + item.unit);
+                $(body).find('div[data-name="inNum"]').text(item.inNum + item.unit);
                 $(body).find('div[data-name="remark"]').text(item.remark || '无');
                 $orderItems.append($(clone).show());
             })
@@ -610,7 +618,7 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
             $('#rightInfoPage').find('#_toApprovalPassBt, #_toApprovalRefuseBt').hide();
         }
         //审核通过 可操作：打印入库单、作废
-        if(tr.statusCode === 'STATUS_003'){
+        if(tr.statusCode === 'STATUS_003' || tr.statusCode === 'STATUS_049'){
             $('#rightInfoPage').find('#_printToInBt, #_toInvalidOrderBt').show();
         } else {
             $('#rightInfoPage').find('#_printToInBt, #_toInvalidOrderBt').hide();
@@ -702,6 +710,65 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
         return name;
     }
 
+    //成品- 只->kg
+    function calc2Kg() {
+        function clearRemark() {
+            var remark = $('#_editItemRemark').val() || '';
+            if (remark.indexOf('约') === 0){
+                $('#_editItemRemark').val('');
+            }
+        }
+        var unit = consts.currentOrderItem.unit;
+        var onlyOrKg = consts.currentOrderItem.onlyOrKg;
+        var num = $('#_editItemNum').val() || 0;
+        var $remark = $('#_editItemRemark');
+        if (!!onlyOrKg && !!num && unit === '只'){
+            var kg = (num/ onlyOrKg).toFixed(2);
+            $remark.val('约' + kg + 'kg');
+        } else {
+            clearRemark();
+        }
+    }
+
+    //切换单位
+    function onChangeUnit(type) {
+        if ('M' === type){
+            $('#units_ul').hide();
+            consts.currentOrderItem.unit = 'kg';
+            $('#unit_label').html('kg').show();
+            return;
+        } else if('D' === type){
+            $('#units_ul').hide();
+            consts.currentOrderItem.unit = '件';
+            $('#unit_label').html('件').show();
+            return;
+        } else if('P' === type){
+            if(consts.currentOrderItem.id){
+                $('#units_ul').hide();
+                $('#unit_label').html(consts.currentOrderItem.unit).show();
+            } else {
+                if (consts.currentOrderItem.unit === '件'){
+                    consts.currentOrderItem.unit = 'kg'
+                }
+                //初始化总量单位
+                utils.dropdown({
+                    $holder : $('#units_li'),
+                    data : [{code : 'kg', name : 'kg'}, {code : '只', name : '只'}],
+                    current : consts.currentOrderItem.unit,
+                    unselected : '-选择单位-',
+                    callback : function (unit) {
+                        console.log("单位切换", unit);
+                        consts.currentOrderItem.unit = unit;
+                        //计算只->kg
+                        calc2Kg();
+                    }
+                });
+                $('#units_ul').show();
+                $('#unit_label').hide();
+            }
+        }
+    }
+
     //根据货物类型初始化货物列表
     function init_wares(waresType) {
         var label = consts.waresTypes.find(function (type) {
@@ -716,6 +783,9 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     data.push(item);
                     waresData[waresType + item.code] = item;
                 });
+                //单位
+                onChangeUnit(waresType);
+                calc2Kg();
                 //供选货物类型
                 utils.dropkick({
                     $holder : $('#_editWaresAssId'),
@@ -730,6 +800,8 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                         }
                         //如果是成品，查找成品模版库存，否则查找当前供应商的货物库存
                         var _id = 'P' === waresType ? waresData[waresType + id].waresId : id;
+                        consts.currentOrderItem.onlyOrKg = waresData[waresType + id].onlyOrKg;
+                        calc2Kg();
 
                         waresService[waresType].stockRemain(_id)
                             .then(function (map) {
@@ -754,8 +826,6 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
         init_edit_item_modal();
         init_change_status_modal();
         init_input_event();
-
-        
     }
 
     function init(options) {

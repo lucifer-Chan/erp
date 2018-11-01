@@ -369,6 +369,11 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         if(!item.getProductId().equals(oldItem.getProductId())){
             content += ", 成品调整为：" + item.getProductName();
         }
+
+        if(!item.getUnit().equals(oldItem.getUnit())){
+            content += ", 单位调整为：" + item.getUnit();
+        }
+
         orderOptLogRepository.save(ErpSaleOrderOptLog.builder().statusCode(item.getStatusCode()).content(content).optType("item").orderId(item.getOrderId()).build());
         item.copyBase(oldItem);
         return orderItemRepository.save(item);
@@ -459,11 +464,12 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
 
         Assert.isTrue(!STATUS_005.name().equals(item.getStatusCode()), item.getProductName() + "已完成出库");
         SaleOrderStatus status = STATUS_049;//出库中
+        outNum = CommonUtil.calcFromKg(item.getProduct(), item.getUnit(), outNum);
         double currentOutedNum = outNum + item.getOutedNum();
-        String content = item.getProductName() + " 完成出库,出库数量【" + currentOutedNum + "/" + item.getNum() + "】";
+        String content = item.getProductName() + "出库【" + outNum + item.getUnit() + "】 累计出库 【" + currentOutedNum + "/" + item.getNum() + item.getUnit() + "】";
         if(currentOutedNum >= item.getNum()){
             status = STATUS_005;
-            content = item.getProductName() + " 全部完成出库,出库数量【" + currentOutedNum + "/" + item.getNum() + "】";
+            content = item.getProductName() + "出库【" + outNum + item.getUnit() +  "】 全部完成出库 【" + currentOutedNum + "/" + item.getNum() + "】";
         }
         //2-保存订单明细
         item.setStatusCode(status.name());
@@ -532,11 +538,12 @@ public class SaleOrderService implements StockOut4Holder, StockIn4Holder, OnDele
 
         Assert.isTrue(!STATUS_061.name().equals(item.getStatusCode()), item.getProductName() + "已完成退货");
         SaleOrderStatus status = STATUS_006;//客户退货
+        inNum = CommonUtil.calcFromKg(item.getProduct(), item.getUnit(), inNum);
         double currentInNum = inNum + item.getInNum();
-        String content = item.getProductName() + " 完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
+        String content = item.getProductName() + "入库【" + inNum + item.getUnit() + "】 累计入库 【" + currentInNum + "/" + item.getNum() + item.getUnit() + "】";
         if(currentInNum >= item.getNum()){
             status = STATUS_061;
-            content = item.getProductName() + " 全部完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
+            content = item.getProductName() + "入库【" + inNum + item.getUnit() +  "】 全部完成入库 【" + currentInNum + "/" + item.getNum() + "】";
         }
         //2-保存订单明细
         item.setStatusCode(status.name());

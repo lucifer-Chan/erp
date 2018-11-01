@@ -50,13 +50,13 @@ public class ErpProdMould extends BaseEntity {
     @Column(columnDefinition = "bigint(20) comment '模具id-关联供应商'")
     private Long realityMouldId;
 
-    @Column(columnDefinition = "double(16,9) comment '模具数量-需求'")
+    @Column(columnDefinition = "double(20,5) comment '模具数量-需求'")
     private Double realityMouldNum;
 
-    @Column(columnDefinition = "double(16,9) comment '模具数量-出库-针对制令单'")
+    @Column(columnDefinition = "double(20,5) comment '模具数量-出库-针对制令单'")
     private Double numOut;
 
-    @Column(columnDefinition = "double(16,9) comment '模具数量-入库-针对制令单[用完回收]'")
+    @Column(columnDefinition = "double(20,5) comment '模具数量-入库-针对制令单[用完回收]'")
     private Double numIn;
 
     /**
