@@ -698,7 +698,7 @@
             //1-生产数（只）
             var total = unit === 'kg' ? num * numOneKg : num;
             //2-耗材（kg）
-            return total * perCost / 1000;
+            return (total * perCost / 1000).toFixed(2);
         }
 
         /**
