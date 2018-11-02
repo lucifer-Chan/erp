@@ -831,13 +831,10 @@
                     });
                 }
             });
-            //搜索图标
-            $('#searchIcon').unbind('click').click(function(){
-                loadDataTable({ cause : $('#fastKeyword').val() });
-            });
-            $("#fastKeyword").keydown(function(e){
-                if(e.keyCode === 13)
-                    loadDataTable({ cause : $('#fastKeyword').val() });
+
+            //搜索
+            utils.bindQuery(function (value) {
+                loadDataTable({cause : value});
             });
         }
 

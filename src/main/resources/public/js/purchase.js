@@ -121,17 +121,12 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
             }
         });
 
-        //2- 搜索图标
-        $('#searchIcon').unbind('click').click(function(){
-            consts.oQueryParam.cause = $('#fastKeyword').val();
+        //2- 搜索
+        utils.bindQuery(function (value) {
+            consts.oQueryParam.cause = value;
             loadDataTable(true);
         });
-        $("#fastKeyword").keydown(function(e){
-            if(e.keyCode === 13){
-                consts.oQueryParam.cause = $('#fastKeyword').val();
-                loadDataTable(true);
-            }
-        });
+
     }
 
     //按钮事件

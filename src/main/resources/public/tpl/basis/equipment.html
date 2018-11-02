@@ -273,18 +273,10 @@
              }
              });*/
 
-
-
-            //搜索图标
-            $('#searchIcon').unbind('click').click(function(){
-                consts.oQueryParam.cause = $('#fastKeyword').val();
+            //搜索
+            utils.bindQuery(function (value) {
+                consts.oQueryParam.cause = value;
                 loadEquipmentData(true);
-            });
-            $("#fastKeyword").keydown(function(e){
-                if(e.keyCode === 13){
-                    consts.oQueryParam.cause = $('#fastKeyword').val();
-                    loadEquipmentData(true);
-                }
             });
 
             //模态框初始化-编辑模具信息

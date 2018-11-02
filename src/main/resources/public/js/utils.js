@@ -753,6 +753,25 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
         return chineseStr;
     }
 
+    function bindQuery(callback) {
+        callback = callback || function (val) {
+            console.log('当前输入:' + val);
+        }
+        //搜索图标
+        $('#searchIcon').unbind('click').click(function(){
+            callback($('#fastKeyword').val());
+        });
+        //回车搜索
+        $("#fastKeyword").keydown(function(e){
+            if(e.keyCode === 13){
+                callback($('#fastKeyword').val());
+            }
+        });
+        //输入完成搜索
+        $("#fastKeyword").bind('input propertychange', function () {
+            callback($('#fastKeyword').val());
+        });
+    }
 
     return {
         loadPage: loadPage
@@ -773,5 +792,6 @@ define('utils',['timeObjectUtil'],function(timeObjectUtil){
         , datepicker : datepicker
         , initRightAngleEvent : initRightAngleEvent
         , convertCurrency : convertCurrency
+        , bindQuery : bindQuery
     }
 });
