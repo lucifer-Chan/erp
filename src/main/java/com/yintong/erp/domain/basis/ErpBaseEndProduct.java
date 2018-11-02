@@ -209,6 +209,15 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
         }
     }
 
+    public String getEndProductTypeName(){
+        try{
+            String fullName = BarCodeConstants.BAR_CODE_PREFIX.valueOf(this.getEndProductTypeCode()).description();
+            return fullName.substring("成品-".length());
+        } catch (Exception e){
+            return "";
+        }
+    }
+
     @Override
     public void requiredValidate(){
         Assert.hasLength(endProductTypeCode, "未找到类别");

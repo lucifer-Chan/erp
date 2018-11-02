@@ -14,6 +14,7 @@
         <div class="sidebar-operations">
             <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editProduct">新增成品</button>
             <button type="button" class="btn btn-default btn-ms operation" id="batchOperationBt" data-toggle="modal" data-target="#_batchOperation">批量操作</button>
+            <button type="button" class="btn btn-default" id="exportBt">Excel导出</button>
         </div>
         <div class="pd23 pd43">
             <div class="row">
@@ -1269,6 +1270,11 @@
                     layer.msg('导入'+ fileName + '失败！失败原因：' + (ret.message||ret.errmsg ||'请求失败'));
                 }
             });
+            //全表导出
+            $('#exportBt').click(function () {
+                window.open(GLOBALS.ctxPath +'export/product');
+            });
+
             //初始化删除列表
             function initBatchDeleteTable() {
                 services.product.imported().then(function (ret) {

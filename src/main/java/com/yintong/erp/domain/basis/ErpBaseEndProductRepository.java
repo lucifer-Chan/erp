@@ -27,4 +27,6 @@ public interface ErpBaseEndProductRepository extends JpaRepository<ErpBaseEndPro
     List<ErpBaseEndProduct> findByEndProductNameAndSpecificationAndIdNot(String endProductName, String specification, Long id);
 
     Optional<ErpBaseEndProduct> findByBarCode(String barcode);
+
+    List<ErpBaseEndProduct> findAllByOrderById();
 }

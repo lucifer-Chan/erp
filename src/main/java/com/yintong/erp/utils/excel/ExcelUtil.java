@@ -85,20 +85,20 @@ public class ExcelUtil {
         int cellStartAt = fieldRow.getFirstCellNum();
         int cellEndAt = fieldRow.getLastCellNum();
         for (int i = cellStartAt; i < cellEndAt; i ++){
-            fieldNames.add(getCellValue(fieldRow.getCell(i)));
+            fieldNames.add(getCellValue(evaluator, fieldRow.getCell(i)));
         }
 
         for (int rowNum = firstDataRowAt; rowNum <= sheet.getLastRowNum(); rowNum++) {
             XSSFRow row = sheet.getRow(rowNum);
             List<String> rowData = new ArrayList<>();
             for (int i = cellStartAt; i < cellEndAt; i ++){
-                rowData.add(getCellValue(row.getCell(i)));
+                rowData.add(getCellValue(evaluator, row.getCell(i)));
             }
             data.add(rowData);
         }
     }
 
-    private String getCellValue(XSSFCell cell) {
+    static String getCellValue(FormulaEvaluator evaluator, XSSFCell cell) {
         if (null == cell)
             return null;
         String ret;

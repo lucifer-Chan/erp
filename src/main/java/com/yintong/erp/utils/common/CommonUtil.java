@@ -1,6 +1,9 @@
 package com.yintong.erp.utils.common;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -219,5 +222,25 @@ public class CommonUtil {
         Double numOneKg = parseDouble(product.getOnlyOrKg());
         Assert.notNull(numOneKg, "请维护 ".concat(product.getDescription()).concat(" 的'只/kg'属性"));
         return toFixed2(num / numOneKg);
+    }
+
+    public static String toString(Object object){
+        return Objects.isNull(object) ? "" : object.toString();
+    }
+
+    /**
+     * inputStream -> byte[]
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static byte[] input2Byte(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        byte[] buff = new byte[100];
+        int rc = 0;
+        while ((rc = inputStream.read(buff, 0, 100)) > 0) {
+            swapStream.write(buff, 0, rc);
+        }
+        return swapStream.toByteArray();
     }
 }
