@@ -29,4 +29,6 @@ public interface ErpBaseEndProductRepository extends JpaRepository<ErpBaseEndPro
     Optional<ErpBaseEndProduct> findByBarCode(String barcode);
 
     List<ErpBaseEndProduct> findAllByOrderById();
+
+    List<ErpBaseEndProduct> findByCustCodeOld(String custCodeOld);
 }

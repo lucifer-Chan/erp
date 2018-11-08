@@ -1032,7 +1032,10 @@
                     });
                 });
 
-                if (!moulds.length || !mouldsFlag) return null;
+                // if (!moulds.length || !mouldsFlag) return null;
+
+                //20181108 制订生产单，移除模具限制
+                if (!mouldsFlag) return null;
 
                 data.moulds = moulds;
 
@@ -1055,14 +1058,16 @@
 
             //点击新增制令单
             $('._createOrderBt').unbind('click').click(function () {
-                if (!consts.currentPlan.moulds.length){
-                    layer.confirm('请先维护模具',{title:'提示',move:false},function(){
-                        layer.closeAll();
-                        $('#rightInfoPage').find('span[aria-controls="mouldList"]').tab('show');
-                    });
-                } else {
-                    consts.$editOrderModal.modal('show');
-                }
+                // if (!consts.currentPlan.moulds.length){
+                //     layer.confirm('请先维护模具',{title:'提示',move:false},function(){
+                //         layer.closeAll();
+                //         $('#rightInfoPage').find('span[aria-controls="mouldList"]').tab('show');
+                //     });
+                // } else {
+                //     consts.$editOrderModal.modal('show');
+                // }
+                //20181108 制订生产单，移除模具限制
+                consts.$editOrderModal.modal('show');
             })
 
 

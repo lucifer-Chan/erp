@@ -174,7 +174,9 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">客户代码(旧)</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="custCodeOld" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                        <input type="text" class="form-control"
+                                               name="custCodeOld"
+                                               placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                                     </div>
                                     <label class="col-sm-2 control-label">客户代码(新)</label>
                                     <div class="col-sm-4">
@@ -1251,10 +1253,37 @@
             return true;
         }
 
+        //id="_editProduct">custCodeOld custName custCodeNew
+        function autoCust() {
+            var $oldCodeInput = consts.$editInfoModal.find('input[name="custCodeOld"]');
+            var $newCodeInput = consts.$editInfoModal.find('input[name="custCodeNew"]');
+            var $custName = consts.$editInfoModal.find('input[name="custName"]');
+
+            $oldCodeInput.bind('input propertychange', function(){
+                var value = $oldCodeInput.val();
+                if(!!value){
+                    services.product.cust(value)
+                        .then(function (json) {
+                            console.log("带回来的数据", json);
+                            if(json.custCodeNew){
+                                $newCodeInput.val(json.custCodeNew);
+                            }
+                            if(json.custName){
+                                $custName.val(json.custName);
+                            }
+                        })
+                }
+            });
+        }
+
         /**
          * 初始事件
          */
         function initEvent(){
+
+            //根据旧客户代码查找产品，并填充新客户代码和客户名称
+            autoCust();
+
             // {$input, uploadUrl, type, $modal}
             //导入Excel
             utils.uploadFile({

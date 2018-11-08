@@ -330,6 +330,12 @@ define('services',['utils'],function (utils) {
 
     var product = {
         sessionKey : '_services_product_all_',
+
+        //找到成品里之前有过的数据，然后把客户代码（新）以及客户名称自动填充上
+        cust : function (oldCode) {
+            return $.http.get('basis/product/cust?oldCode=' + oldCode);
+        },
+
         //分类
         getTypeAll : function () {
             return $.http.get('basis/common/categories/tree?code=P');

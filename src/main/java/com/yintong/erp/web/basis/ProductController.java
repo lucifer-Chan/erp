@@ -11,6 +11,7 @@ import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.service.stock.StockOptService;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.excel.ExcelUtil;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -108,6 +109,19 @@ public class ProductController {
         return new BaseResult().addList(list);
     }
 
+    /**
+     * 根据客户图号找随便找一个 20181108
+     * 需求：找到成品里之前有过的数据，然后把客户代码（新）以及客户名称自动填充上
+     * @param oldCode
+     * @return
+     */
+    @GetMapping("cust")
+    public BaseResult findOneByCustCodeOld(String oldCode){
+        ErpBaseEndProduct product = productRepository.findByCustCodeOld(oldCode).stream().findAny().orElse(null);
+        if(Objects.isNull(product)) return new BaseResult();
+        //noinspection unchecked
+        return new BaseResult().add(product.filter("custCodeNew", "custName"));
+    }
 
     /**
      * 更新成品
@@ -294,6 +308,5 @@ public class ProductController {
         bomService.delete(bomId);
         return new BaseResult().setErrmsg("删除成功");
     }
-
 
 }
