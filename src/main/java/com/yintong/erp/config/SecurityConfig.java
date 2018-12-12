@@ -2,7 +2,6 @@ package com.yintong.erp.config;
 
 import com.yintong.erp.security.EmployeeDetailService;
 import com.yintong.erp.utils.common.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Cons
 
     private final LogoutSuccessHandler logoutSuccessHandler;
 
-    @Autowired
     public SecurityConfig(AccessDeniedHandler accessDeniedHandler
             , AuthenticationSuccessHandler successHandler
             , AuthenticationFailureHandler failureHandler
