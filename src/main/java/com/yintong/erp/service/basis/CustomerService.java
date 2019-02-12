@@ -7,7 +7,6 @@ import com.yintong.erp.domain.sale.ErpSaleOrderItemRepository;
 import com.yintong.erp.domain.sale.ErpSaleOrderRepository;
 import com.yintong.erp.dto.TreeNode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
-import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
