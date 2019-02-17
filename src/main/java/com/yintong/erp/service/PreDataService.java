@@ -23,7 +23,7 @@ import java.util.List;
  * 预置数据服务
  **/
 
-@Component
+//@Component
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;

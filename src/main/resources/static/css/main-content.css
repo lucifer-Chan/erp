@@ -158,6 +158,14 @@ body.fluid-sidebar .main-content {
     padding-left: 10px;
 }
 
+.print-label {
+    text-align: right;
+}
+
+.print-text {
+    border-bottom: 1px solid black;
+}
+
 img.print-barcode{
     width:300px;
     height:80px;
@@ -177,12 +185,24 @@ div.table-print-holder {
     background: #dcdcdc!important;
 }
 
-.table-print>thead>tr>th{
-    text-align: center;
+.table-print>thead>tr>th, .table>tbody>tr>th{
+    text-align: center!important;
 }
 
 .table-print>tbody>tr>td, .table-print>tbody>tr>th, .table-print>tfoot>tr>td, .table-print>tfoot>tr>th, .table-print>thead>tr>td, .table-print>thead>tr>th{
     border: 1px solid #030303;
+}
+
+.table-print-small>tbody>tr{
+    height: 20px;
+}
+
+.table-print-small>tbody>tr>td, .table-print-small>tbody>tr>th{
+    height: 20px!important;
+}
+
+.table-print-small>tbody>tr>td, .table-print-small>tbody>tr>th, .table-print-small>tfoot>tr>td, .table-print-small>tfoot>tr>th, .table-print-small>thead>tr>td, .table-print-small>thead>tr>th {
+    padding: 2px!important;
 }
 
 .table-print-right {

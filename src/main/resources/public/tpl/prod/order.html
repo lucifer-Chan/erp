@@ -38,6 +38,7 @@
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
+            <button class="btn btn-primary" id="toPrintProdOrderBt">打印制令单</button>
             <button class="btn btn-primary" id="toProductPrintBt">打印成品条形码</button>
             <button class="btn btn-primary" id="toPrintOrderBt">打印物料出库单</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_addPickRecord">挑拣</button>
@@ -566,6 +567,207 @@
     </div>
 </script>
 
+<!-- 制令单打印-->
+<script id="template-print_prod_order" type="text/template">
+    <div style="font-size: 8px;">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <div class="col-xs-9">
+                    <span class="print-header">
+                        <h3>瑞安市银通电器有限公司</h3>
+                        <h4>生产制令单</h4>
+                    </span>
+                </div>
+                <div class="col-xs-3" style="text-align:right;">
+                    <img src="{{o.barcode}}" class="print-barcode">
+                </div>
+            </div>
+            <div class="row pd22">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label class="col-xs-5 print-label">单据日期</label>
+                            <div class="col-xs-7 print-text">{{now}}</div>
+                        </div>
+                        <div class="col-xs-6">
+                            <label class="col-xs-5 print-label">销售订单号</label>
+                            <div class="col-xs-7 print-text" style="top:20px"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label class="col-xs-5 print-label">计划完工日期</label>
+                            <div class="col-xs-7 print-text">{{o.plan.endDate}}</div>
+                        </div>
+                        <div class="col-xs-6">
+                            <label class="col-xs-5 print-label">生产计划单号</label>
+                            <div class="col-xs-7 print-text">{{o.plan.barCode}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-print table-print-small">
+                    <tr>
+                        <th>货物名称</th><td colspan="3">{{o.product.endProductName}}</td>
+                        <th>规格描述</th><td colspan="3">{{o.product.specification}}</td>
+                        <th>备注</th><td></td>
+                    </tr>
+                    <tr>
+                        <th>客户图号</th><td colspan="3">{{o.product.custDrawingNo}}</td>
+                        <th>图纸编号</th><td colspan="3">{{o.product.drawingNo}}</td>
+                        <th>操作工</th><td>{{o.employeeName}}</td>
+                    </tr>
+                    <tr>
+                        <th>材料名称</th><td colspan="3">{{o.product.materialName}}</td>
+                        <th>产品等级</th><td>{{o.product.level}}</td>
+                        <th>客户编码</th><td>{{o.product.custCodeOld}}</td>
+                        <th>机号</th><td></td>
+                    </tr>
+                    <tr>
+                        <th>生产数量</th><td colspan="2">{{o.plan.num}}</td>
+                        <th>生产重量</th><td colspan="2">{{o.plan.kg}}</td>
+                        <th>单位银耗<br>(克/粒)</th><td>{{o.product.unitSilver}}</td>
+                        <th>单粒耗铜<br>(克/粒)</th><td>{{o.product.unitCopper}}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">制打控制</th>
+                        <th>头径<br>D(mm)</th>
+                        <th>头厚<br>T(mm)</th>
+                        <th>脚径<br>d(mm)</th>
+                        <th>脚长<br>L(mm)</th>
+                        <th>头径银层<br>S1(mm)</th>
+                        <th>脱模角度<br>θ(° )</th>
+                        <th>球半径<br>SR(mm)</th>
+                        <th>同心度</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">制打公差</th>
+                        <th>上限</th>
+                        <td>{{o.product.spHdmmUpper}}</td>
+                        <td>{{o.product.spHtmmUpper}}</td>
+                        <td>{{o.product.spFtmmUpper}}</td>
+                        <td>{{o.product.spFlmmUpper}}</td>
+                        <td>{{o.product.spHdsmmUpper}}</td>
+                        <td>{{o.product.spTmammUpper}}</td>
+                        <td>{{o.product.spSrammUpper}}</td>
+                        <td rowspan="2">{{o.product.concentricity}}</td>
+                    </tr>
+                    <tr>
+                        <th>下限</th>
+                        <td>{{o.product.spHdmmLower}}</td>
+                        <td>{{o.product.spHtmmLower}}</td>
+                        <td>{{o.product.spFtmmLower}}</td>
+                        <td>{{o.product.spFlmmLower}}</td>
+                        <td>{{o.product.spHdsmmLower}}</td>
+                        <td>{{o.product.spTmammLower}}</td>
+                        <td>{{o.product.spSrammLower}}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">制打控制</th>
+                        <th>同轴度<br>◎(mm)</th>
+                        <th>边缘<br>S1(mm)</th>
+                        <th>钉脚<br>S2(mm)</th>
+                        <th>脚边缘<br>S2(mm)</th>
+                        <th>头部<br>复合强度</th>
+                        <th>脚部<br>复合强度</th>
+                        <th colspan="2">模具位</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">制打公差</th>
+                        <th>上限</th>
+                        <td>{{o.product.spAxlemmUpper}}</td>
+                        <td>{{o.product.spEdgemmUpper}}</td>
+                        <td>{{o.product.spFdsmmUpper}}</td>
+                        <td>{{o.product.spFaxlemmUpper}}</td>
+                        <td rowspan="2">{{o.product.spHCstrength}}</td>
+                        <td rowspan="2">{{o.product.spFCstrength}}</td>
+                        <td rowspan="2" colspan="2">{{o.product.modelLocation}}</td>
+                    </tr>
+                    <tr>
+                        <th>下限</th>
+                        <td>{{o.product.spAxlemmLower}}</td>
+                        <td>{{o.product.speEdgeemmLower}}</td>
+                        <td>{{o.product.speFdsmmLower}}</td>
+                        <td>{{o.product.speFaxlemmLower}}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">特殊要求</th>
+                        <td colspan="8"></td>
+                    </tr>
+                    <tr>
+                        <th rowspan="4">物料清单</th>
+                        <th>材料种类</th>
+                        <th>材料名称</th>
+                        <th>规格</th>
+                        <th>切丝长度</th>
+                        <th>实际重量</th>
+                        <th rowspan="4">编制人</th>
+                        <td rowspan="4"></td>
+                        <th rowspan="4">审核人</th>
+                        <th rowspan="5"></th>
+                    </tr>
+                    {{each o.boms as b}}
+                    <tr>
+                        <td>{{b.material.rawTypeName}}</td>
+                        <td>{{b.material.rawName}}</td>
+                        <td>{{b.material.specification}}</td>
+                        <td>{{b.materialNum}}</td>
+                        <td>{{b.realityMaterialNum}}</td>
+                    </tr>
+                    {{/each}}
+                    {{each o.empty}}
+                    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+                    {{/each}}
+                    <tr>
+                        <th colspan="10" style="font-size: 20px">制打产品自检记录表</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">测量数据\参数</th>
+                        <th>头径D(mm)</th>
+                        <th>头厚T(mm)</th>
+                        <th>脚径d(mm)</th>
+                        <th>脚长L(mm)</th>
+                        <th>头径银层S1(mm)</th>
+                        <th>钉脚S2(mm)</th>
+                        <th>同轴度◎(mm)</th>
+                        <th>经手人</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="10">测<br>量<br>日<br>期</th>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/javascript">
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
         console.log('hello prodOrder');
@@ -706,8 +908,9 @@
                 consts.oQueryParam.cause = value;
                 loadDataTable(true);
             });
-
-            //制令单打印
+            //打印制令单
+            init_print_prod_order();
+            //制令单打印-原材料|模具出库
             init_print_order();
             //成品打印
             init_print_product();
@@ -760,6 +963,47 @@
 
 
             })
+        }
+        //打印制令单
+        function init_print_prod_order() {
+            $('#toPrintProdOrderBt').unbind('click').click(function () {
+                var order = consts.currentOrder;
+                var $printHolder = $('#printHolder').clone();
+                var data = $.extend({empty : [], }, order);
+                if (data.boms.length < 3){
+                    for(var i = 0; i < (3-data.boms.length); i++){
+                        data.empty.push(i);
+                    }
+                }
+
+                services.prodPlan.one(order.planId)
+                    .then(function (plan) {
+                        data.plan = {};
+                        data.plan.endDate = plan.endDate.substr(0,10);
+                        data.plan.barCode = plan.barCode;
+
+                        //endDate : '2020年9月29日',
+                        // barCode : 'R000000001495',
+                        //     num : '1000(只)',
+                        //     kg : '20(kg)'
+                        return services.common.barcode(order.barCode);
+                    })
+                    .then(function (ret) {
+                        data.barcode = ret.base64;
+                        console.log('打印制令单', data);
+                    })
+                    .then(function () {
+                        var html = template("template-print_prod_order", {o : data, now : new Date().format("yyyy-MM-dd")});
+                        $printHolder.html(html).show().print({
+                            deferred: $.Deferred().done(function() {
+                                services.prodOrder.afterPrintOut(order.id);
+                            })
+                        });
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            });
         }
 
         //制令单打印-原材料|模具出库

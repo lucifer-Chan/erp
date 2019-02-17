@@ -193,7 +193,7 @@ public class ProductService {
      */
     @Getter @Setter @OrderBy(fieldName = "id")
     public static class ProductParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo", "specification"}, compare = like, group = OR)
+        @ParameterItem(mappingTo = {"barCode", "endProductName","drawingNo", "specification", "custCodeOld", "custCodeNew"}, compare = like, group = OR)
         String cause;
         @ParameterItem(mappingTo = "endProductTypeCode", compare = like)
         String typeC;

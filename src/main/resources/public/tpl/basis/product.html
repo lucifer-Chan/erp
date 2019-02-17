@@ -2,7 +2,16 @@
     <div class="full_height">
         <div id="searchFilter">
             <div class="sidebar-search">
-                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称、图纸编号、规格描述" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称、图纸编号、规格描述、客户代码" autocomplete="off">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" id="searchIcon">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
             </div>
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="typeP">
@@ -205,12 +214,24 @@
                                         <input type="text" class="form-control" name="technicalRequirements" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">单粒银耗(g)</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="unitSilverLoss" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                        <input type="text" class="form-control" name="unitSilver" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                                     </div>
                                     <label class="col-sm-2 control-label">单粒耗铜(g)</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="unitCopper" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">内控单粒银耗(g)</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" name="unitSilverLoss" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                    </div>
+                                    <label class="col-sm-2 control-label">内控单粒耗铜(g)</label>
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control" name="unitSilverCopper" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
                                     </div>
@@ -509,10 +530,20 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <label class="col-xs-4 pd0">单粒银耗(g)</label>
-                                        <div class="col-xs-8 txt pd0" data-name="unitSilverLoss"></div>
+                                        <div class="col-xs-8 txt pd0" data-name="unitSilver"></div>
                                     </div>
                                     <div class="col-xs-6">
                                         <label class="col-xs-4 pd0">单粒耗铜(g)</label>
+                                        <div class="col-xs-8 txt pd0" data-name="unitCopper"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">内控单粒银耗(g)</label>
+                                        <div class="col-xs-8 txt pd0" data-name="unitSilverLoss"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label class="col-xs-4 pd0">内控单粒耗铜(g)</label>
                                         <div class="col-xs-8 txt pd0" data-name="unitSilverCopper"></div>
                                     </div>
                                 </div>
@@ -1247,7 +1278,7 @@
                 return false;
             }
             if (data.unitSilverCopper === ""){
-                layer.msg("单粒银耗不能为空");
+                layer.msg("内控单粒银耗不能为空");
                 return false;
             }
             return true;

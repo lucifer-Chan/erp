@@ -52,7 +52,6 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Column(columnDefinition = "double(20,5) comment '库存总量'")
     private Double totalNum;
 
-
     @Column(columnDefinition = "varchar(64) comment '客户图号'")
     private String custDrawingNo;
     @Column(columnDefinition = "varchar(64) comment '客户代码(旧)'")
@@ -117,9 +116,9 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     private String spHCstrength;
     @Column(columnDefinition = "varchar(10) comment '脚部复合强度'")
     private String spFCstrength;
-    @Column(columnDefinition = "varchar(20) comment '单粒银耗(g)'")
+    @Column(columnDefinition = "varchar(20) comment '内控单粒银耗(g)'")
     private String unitSilverLoss;
-    @Column(columnDefinition = "varchar(20) comment '单粒耗铜(g)'")
+    @Column(columnDefinition = "varchar(20) comment '内控单粒耗铜(g)'")
     private String unitSilverCopper;
     @Column(columnDefinition = "varchar(64) comment '技术要求'")
     private String technicalRequirements;
@@ -145,6 +144,11 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Column(columnDefinition = "varchar(20) comment '同心度'")
     private String concentricity;
 
+    //20190216新增
+    @Column(columnDefinition = "varchar(20) comment '单粒银耗(g)-展示用，不加入计算'")
+    private String unitSilver;
+    @Column(columnDefinition = "varchar(20) comment '单粒耗铜(g)，不加入计算'")
+    private String unitCopper;
 
     @Transient
     private String endProductTypeName;

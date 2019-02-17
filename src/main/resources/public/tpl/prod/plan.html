@@ -71,12 +71,15 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">生产量</label>
                         <div class="col-sm-9" style="display: table;">
-                            <input type="number" step="0.01" class="form-control" name="planNum" placeholder="输入数字" id="_planNum">
-                            <ul class="input-group-addon" id="units_ul">
-                                <li role="presentation" class="dropdown" id="units_li">
-                                </li>
-                            </ul>
-                            <label id="unit_label" class="input-group-addon" name="unit"></label>
+                            <div style="display: table;">
+                                <input type="number" step="0.01" class="form-control" name="planNum" placeholder="输入数字" id="_planNum">
+                                <ul class="input-group-addon" id="units_ul">
+                                    <li role="presentation" class="dropdown" id="units_li">
+                                    </li>
+                                </ul>
+                                <label id="unit_label" class="input-group-addon" name="unit"></label>
+                            </div>
+                            <span id="inputPlanNumTip" class="text-info"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -707,9 +710,9 @@
          * @param $bomHolder 物料清单
          */
         function auto_calc(product, $bomHolder){
-            //单粒耗银
+            //内控单粒耗银
             var silver = product.unitSilverLoss || 0;
-            //单粒耗铜
+            //内控单粒耗铜
             var copper = product.unitSilverCopper || 0;
 
             //银原材料BOMS
@@ -725,6 +728,33 @@
             var copperNum = calcMaterialNum(unit, copper, num, product.onlyOrKg);
             $silvers.find('input[data-name="num"]').val(silverNum);
             $coppers.find('input[data-name="num"]').val(copperNum);
+            //计算预估的数量或重量
+            calcPlanNumTip(product);
+        }
+
+        /**
+         * 生产计划单-无论是输入“重量”还是“数量”数据时，都能对应显示对应的“数量”或（重量）
+         */
+        function calcPlanNumTip(product) {
+            var $tip = $('#inputPlanNumTip');
+            //生产数量
+            var num = $('#_planNum').val();
+            //成品单位
+            var unit = consts.currentPlan.unit;
+            //每kg多少只
+            var numOneKg = product.onlyOrKg || 0;
+
+            if(!num || !unit || !product.id || !numOneKg){
+                $tip.html('');
+                return;
+            }
+
+            //计算出个数
+            if('kg' === unit){
+                $tip.html('预计需要生产[' + (num * numOneKg) + ']只');
+            } else {
+                $tip.html('预计需要生产' + (num / numOneKg).toFixed(0) + 'kg');
+            }
         }
 
         /**
@@ -1259,12 +1289,14 @@
                         if(!productId || productId === '-1'){
                             $tip.html('').hide();
                             initBoms({id : -1});
+                            calcPlanNumTip({id : -1});
                         } else {
                             var product = consts.productCache[productId] || {};
                             $('#__productId').html(product.description);
                             $('#_planDescription').val(product.description);
-                            $tip.html('单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
+                            $tip.html('内控单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，内控单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
                             initBoms(product);
+                            calcPlanNumTip(product);
                         }
                     }
                 });
@@ -1324,7 +1356,7 @@
                 $(this).find('input[name="description"]').val(consts.currentOrder.description || '');
                 var product = consts.productCache[consts.currentPlan.productId]||{};
                 $(this).find('#_orderProductDescription').html(product.description || '');
-                $('#selectOrderProductTip').html('单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
+                $('#selectOrderProductTip').html('内控单粒银耗(g):' + (product.unitSilverLoss||'未设置') + "，内控单粒耗铜(g):" + (product.unitSilverCopper || '未设置')).show();
                 $(this).find('input[data-name="prodNum"]').val(consts.currentOrder.prodNum || 0);
                 $('#distributedNum_label').html(consts.currentPlan.unit || '');
                 utils.dropkick({
