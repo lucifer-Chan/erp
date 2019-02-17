@@ -751,9 +751,9 @@
 
             //计算出个数
             if('kg' === unit){
-                $tip.html('预计需要生产[' + (num * numOneKg) + ']只');
+                $tip.html('预计需要生产[' + (num * numOneKg).toFixed(0) + ']只');
             } else {
-                $tip.html('预计需要生产' + (num / numOneKg).toFixed(0) + 'kg');
+                $tip.html('预计需要生产' + (num / numOneKg).toFixed(2) + 'kg');
             }
         }
 

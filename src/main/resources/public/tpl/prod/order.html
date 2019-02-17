@@ -625,8 +625,8 @@
                         <th>机号</th><td></td>
                     </tr>
                     <tr>
-                        <th>生产数量</th><td colspan="2">{{o.plan.num}}</td>
-                        <th>生产重量</th><td colspan="2">{{o.plan.kg}}</td>
+                        <th>生产数量</th><td colspan="2">{{o.num}}只</td>
+                        <th>生产重量</th><td colspan="2">{{o.kg}}kg</td>
                         <th>单位银耗<br>(克/粒)</th><td>{{o.product.unitSilver}}</td>
                         <th>单粒耗铜<br>(克/粒)</th><td>{{o.product.unitCopper}}</td>
                     </tr>
@@ -975,17 +975,21 @@
                         data.empty.push(i);
                     }
                 }
+                var numOneKg = order.product.onlyOrKg;
+
+                if(numOneKg && order.unit === 'kg'){
+                    data.num = ((order.prodNum || 0) * numOneKg).toFixed(0);
+                    data.kg = order.prodNum || 0;
+                } else if(numOneKg){
+                    data.num = (order.prodNum || 0).toFixed(0);
+                    data.kg = ((order.prodNum || 0)/numOneKg).toFixed(2);
+                }
 
                 services.prodPlan.one(order.planId)
                     .then(function (plan) {
                         data.plan = {};
                         data.plan.endDate = plan.endDate.substr(0,10);
                         data.plan.barCode = plan.barCode;
-
-                        //endDate : '2020年9月29日',
-                        // barCode : 'R000000001495',
-                        //     num : '1000(只)',
-                        //     kg : '20(kg)'
                         return services.common.barcode(order.barCode);
                     })
                     .then(function (ret) {
