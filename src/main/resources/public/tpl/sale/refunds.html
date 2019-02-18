@@ -266,47 +266,41 @@
 </div>
 
 -->
+<button class="btn btn-primary" id="toPrintProdOrderBt">打印制令单</button>
 
 
 <div id="prod_order_holder"></div>
+<!-- 制令单打印-->
 <script id="template-print_prod_order" type="text/template">
-    <div style="font-size: 8px;">
+    <div style="font-size: 14px;" class="table-print-a4">
         <div class="panel-default bugInfo">
-            <div class="row">
-            <span class="print-header">
-                <h3>瑞安市银通电器有限公司</h3>
-                <h4>生产制令单</h4>
-            </span>
-            </div>
-            <div class="row pd22">
-                <div class="col-xs-8">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <label class="col-xs-5 print-label">单据日期</label>
-                            <div class="col-xs-7 print-text">{{now}}</div>
-                        </div>
-                        <div class="col-xs-6">
-                            <label class="col-xs-5 print-label">销售订单号</label>
-                            <div class="col-xs-7 print-text" style="top:20px"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <label class="col-xs-5 print-label">计划完工日期</label>
-                            <div class="col-xs-7 print-text">{{o.plan.endDate}}</div>
-                        </div>
-                        <div class="col-xs-6">
-                            <label class="col-xs-5 print-label">生产计划单号</label>
-                            <div class="col-xs-7 print-text">{{o.plan.barCode}}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-4" style="text-align:right;">
-                    <img src="{{o.plan.barcode}}" class="print-barcode">
-                </div>
-            </div>
             <div style="display: flex;">
-                <table class="table table-print table-print-small">
+                <table class="table table-print table-print-a4">
+                    <tr style="height: 70px" class="print-header">
+                        <td colspan="10" class="nbb"><h2 style="font-weight: 900;">瑞安市银通电器有限公司</h2></td>
+                    </tr>
+                    <tr style="height: 40px" class="print-header">
+                        <td colspan="10" class="nbb"><h3 style="font-weight: 900;">生产制令单</h3></td>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbb">单据日期</th>
+                        <td style="vertical-align: bottom;text-align: center;" class="nbt nbr nbl" colspan="2">{{now}}</td>
+                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbb">销售订单号</th>
+                        <td style="vertical-align: bottom;text-align: center;" class="nbt nbr nbl" colspan="2"></td>
+                        <td colspan="4" rowspan="2" class="nbb" style="text-align: right;">
+                            <img src="{{o.barcode}}" class="print-barcode">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbb">计划完工日期</th>
+                        <td style="padding: 0;vertical-align: bottom;text-align: center;" class="nbt nbr nbl" colspan="2">{{o.plan.endDate}}</td>
+                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbl nbb">生产计划单号</th>
+                        <td style="vertical-align: bottom;text-align: center;" class="nbt nbr nbl " colspan="2">{{o.plan.barCode}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"></td>
+                    </tr>
                     <tr>
                         <th>货物名称</th><td colspan="3">{{o.product.endProductName}}</td>
                         <th>规格描述</th><td colspan="3">{{o.product.specification}}</td>
@@ -324,8 +318,8 @@
                         <th>机号</th><td></td>
                     </tr>
                     <tr>
-                        <th>生产数量</th><td colspan="2">{{o.plan.num}}</td>
-                        <th>生产重量</th><td colspan="2">{{o.plan.kg}}</td>
+                        <th>生产数量</th><td colspan="2">{{o.num}}只</td>
+                        <th>生产重量</th><td colspan="2">{{o.kg}}kg</td>
                         <th>单位银耗<br>(克/粒)</th><td>{{o.product.unitSilver}}</td>
                         <th>单粒耗铜<br>(克/粒)</th><td>{{o.product.unitCopper}}</td>
                     </tr>
@@ -395,16 +389,16 @@
                         <td colspan="8"></td>
                     </tr>
                     <tr>
-                        <th rowspan="4">物料清单</th>
+                        <th rowspan="3">物料清单</th>
                         <th>材料种类</th>
                         <th>材料名称</th>
                         <th>规格</th>
                         <th>切丝长度</th>
                         <th>实际重量</th>
-                        <th rowspan="4">编制人</th>
-                        <td rowspan="4"></td>
-                        <th rowspan="4">审核人</th>
-                        <th rowspan="5"></th>
+                        <th rowspan="3">编制人</th>
+                        <td rowspan="3"></td>
+                        <th rowspan="3">审核人</th>
+                        <th rowspan="3"></th>
                     </tr>
                     {{each o.boms as b}}
                     <tr>
@@ -423,44 +417,46 @@
                     </tr>
                     <tr>
                         <th colspan="2">测量数据\参数</th>
-                        <th>头径D(mm)</th>
-                        <th>头厚T(mm)</th>
-                        <th>脚径d(mm)</th>
-                        <th>脚长L(mm)</th>
-                        <th>头径银层S1(mm)</th>
-                        <th>钉脚S2(mm)</th>
-                        <th>同轴度◎(mm)</th>
+                        <th>头径<br>D(mm)</th>
+                        <th>头厚<br>T(mm)</th>
+                        <th>脚径<br>d(mm)</th>
+                        <th>脚长<br>L(mm)</th>
+                        <th>头径银层<br>S1(mm)</th>
+                        <th>钉脚S2<br>(mm)</th>
+                        <th>同轴度<br>◎(mm)</th>
                         <th>经手人</th>
                     </tr>
-                    <tr>
-                        <th rowspan="10">测<br>量<br>日<br>期</th>
+                    <tr style="height: 49px">
+                        <th rowspan="11">测<br>量<br>日<br>期</th>
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-                    <tr>
+                    <tr style="height: 49px">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
-
+                    <tr style="height: 49px">
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -468,195 +464,229 @@
 </script>
 
 <script>
-    var data = {
-        currentTime: '2018-09-14 16:15:25',
-        createdName : '管理员',
-        employeeName : '测试人员',
-        createdAt : '2018-08-20',
-        product : {
-            "custCodeNew":"G093",
-            "spFlmmUpper":"4.6",
-            "custCodeOld":"8-7-1",
-            "spFCstrength":"",
-            "lastUpdatedAt":"",
-            "spAxlemmLower":"",
-            "spHdsmmUpper":"0.3",
-            "technicalRequirements":"",
-            "userDefinedOne":"",
-            "speEdgeemmLower":"",
-            "endProductName":"YB819D-2.9",
-            "createdAt":"2018-08-23 16:58:23",
-            "unitSilverCopper":"0.240000",
-            "spHdmmLower":"4.45",
-            "lastUpdatedName":"",
-            "id":2255,
-            "spSrammUpper":"",
-            "unitSilverLoss":"0.041000",
-            "endProductTypeName":"触点-二复合银点",
-            "spTmammLower":"20",
-            "spFlmmLower":"4.45",
-            "level":"B级",
-            "barCode":"PTD0000002255",
-            "materialName":"AgNi(15)/Cu",
-            "unit":"kg",
-            "drawingNo":"",
-            "spFdsmmUpper":"",
-            "concentricity":"",
-            "spSrammLower":"",
-            "onlyOrKg":"3666",
-            "alertUpper":"",
-            "spTmammUpper":"20",
-            "speFdsmmLower":"",
-            "courseRating":"",
-            "spHtmmLower":"0.78",
-            "typeName":"成品-触点-二复合银点",
-            "description":"触点-二复合银点-YB819D-2.9-5*0.8(0.3)+2.5*4.5F半空心",
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        var data = {
+            "lastUpdatedAt":"2019-02-16 16:28:29",
+            "description":"1.85",
             "remark":"",
-            "spFtmmLower":"2.4",
-            "modelLocation":"",
-            "spEdgemmUpper":"",
+            "finishNum":0,
+            "productName":"触点-二复合银点-CT002-4*1(0.5)+2*1.85R倒角",
+            "createdAt":"2019-02-16 15:48:53",
+            "lastUpdatedName":"管理员",
+            "statusName":"生产中",
+            "planId":2637,
             "createdName":"管理员",
-            "userDefinedThree":"",
-            "alertLower":"",
-            "speFaxlemmLower":"",
-            "importedAt":"2018-08-23 16:57:37",
-            "spAxlemmUpper":"",
-            "spHCstrength":"",
-            "specification":"5*0.8(0.3)+2.5*4.5F半空心",
-            "custName":"浙江亚伯兰电器有限公司",
-            "userDefinedTwo":"",
-            "supplierTypeCode":"",
-            "spFtmmUpper":"2.47",
-            "unitCopper":"0.240000",
-            "spFaxlemmUpper":"",
-            "unitSilver":"0.041000",
-            "totalNum":0,
-            "spHdmmUpper":"5.07",
-            "spHtmmUpper":"0.83",
-            "custDrawingNo":"",
-            "spHdsmmLower":"0.3",
-            "endProductTypeCode":"PTD0"
-        },
+            "id":2638,
+            "moulds":[
 
-        plan : {
-            endDate : '2020年9月29日',
-            barCode : 'R000000001495',
-            num : '1000(只)',
-            kg : '20(kg)'
-        },
-
-        "boms":[
-            {
-                "supplierName":"2号供应商",
-                "supplierId":785,
-                "productId":821,
-                "lastUpdatedAt":"",
-                "realityMaterialId":2636,
-                "holder":"ORDER",
-                "materialId":1329,
-                "holderId":2652,
-                "numIn":0,
-                "numOut":0,
-                "realityMaterial":{
-                    "alertLower":100,
-                    "supplierName":"2号供应商",
-                    "alertUpper":200,
-                    "supplierId":785,
-                    "lastUpdatedAt":"2018-10-30 15:14:22",
-                    "rawMaterId":1329,
-                    "placeNames":"2号供应商【银丝-AgSnO₂(12)-2.37】",
-                    "barCode":"MA00000001329S000000785",
-                    "createdAt":"2018-10-30 10:11:30",
-                    "totalNum":990,
-                    "lastUpdatedName":"管理员",
-                    "rawMaterType":"MA00",
-                    "associateAt":"2018-10-30 10:11:30",
-                    "createdName":"管理员",
-                    "id":2636,
-                    "supplierType":"S"
-                },
-                "createdAt":"2018-11-08 16:01:15",
-                "material":{
-                    "importedAt":"2018-08-17 14:42:52",
+            ],
+            "boms":[
+                {
+                    "supplierName":"温州泰达合金有限公司",
+                    "supplierId":756,
+                    "productId":2033,
                     "lastUpdatedAt":"",
-                    "specification":"2.37",
-                    "description":"银丝-AgSnO₂(12)-2.37",
-                    "remark":"",
-                    "rawName":"AgSnO₂(12)",
-                    "supplierTypeCode":"",
-                    "rawTypeName":"银丝",
-                    "barCode":"MA00000001329",
-                    "createdAt":"2018-08-17 14:42:54",
-                    "unit":"kg",
-                    "rawTypeCode":"MA00",
+                    "realityMaterialId":893,
+                    "holder":"ORDER",
+                    "materialId":683,
+                    "holderId":2638,
+                    "numIn":0,
+                    "numOut":0,
+                    "realityMaterial":{
+                        "alertLower":"",
+                        "supplierName":"温州泰达合金有限公司",
+                        "alertUpper":"",
+                        "supplierId":756,
+                        "lastUpdatedAt":"",
+                        "rawMaterId":683,
+                        "placeNames":"",
+                        "barCode":"MA00000000683C000000756",
+                        "createdAt":"2018-08-20 16:00:13",
+                        "totalNum":0,
+                        "lastUpdatedName":"",
+                        "rawMaterType":"MA00",
+                        "associateAt":"2018-08-20 16:00:12",
+                        "createdName":"戴仲",
+                        "id":893,
+                        "supplierType":"C"
+                    },
+                    "createdAt":"2019-02-16 15:48:53",
+                    "material":{
+                        "importedAt":"2018-08-17 15:24:31",
+                        "lastUpdatedAt":"",
+                        "specification":"1.37(硬)",
+                        "description":"银丝-AgNi(10)-1.37(硬)",
+                        "remark":"桂林",
+                        "rawName":"AgNi(10)",
+                        "supplierTypeCode":"",
+                        "rawTypeName":"银丝",
+                        "barCode":"MA00000000683",
+                        "createdAt":"2018-08-17 15:24:37",
+                        "unit":"kg",
+                        "rawTypeCode":"MA00",
+                        "lastUpdatedName":"",
+                        "createdName":"管理员",
+                        "id":683
+                    },
                     "lastUpdatedName":"",
+                    "materialNum":1.4,
                     "createdName":"管理员",
-                    "id":1329
+                    "id":9,
+                    "realityMaterialNum":1.49
                 },
+                {
+                    "supplierName":"宁波市海曙兴茂铜材有限公司",
+                    "supplierId":760,
+                    "productId":2033,
+                    "lastUpdatedAt":"",
+                    "realityMaterialId":1006,
+                    "holder":"ORDER",
+                    "materialId":539,
+                    "holderId":2638,
+                    "numIn":0,
+                    "numOut":0,
+                    "realityMaterial":{
+                        "alertLower":"",
+                        "supplierName":"宁波市海曙兴茂铜材有限公司",
+                        "alertUpper":"",
+                        "supplierId":760,
+                        "lastUpdatedAt":"",
+                        "rawMaterId":539,
+                        "placeNames":"",
+                        "barCode":"MZR0000000539C000000760",
+                        "createdAt":"2018-08-20 16:15:04",
+                        "totalNum":0,
+                        "lastUpdatedName":"",
+                        "rawMaterType":"MZR0",
+                        "associateAt":"2018-08-20 16:15:03",
+                        "createdName":"戴仲",
+                        "id":1006,
+                        "supplierType":"C"
+                    },
+                    "createdAt":"2019-02-16 15:48:53",
+                    "material":{
+                        "importedAt":"2018-08-17 15:24:31",
+                        "lastUpdatedAt":"",
+                        "specification":"1.9",
+                        "description":"铜丝-紫铜丝-Cu(半硬)-1.9",
+                        "remark":"宁波",
+                        "rawName":"Cu(半硬)",
+                        "supplierTypeCode":"",
+                        "rawTypeName":"铜丝-紫铜丝",
+                        "barCode":"MZR0000000539",
+                        "createdAt":"2018-08-17 15:24:33",
+                        "unit":"kg",
+                        "rawTypeCode":"MZR0",
+                        "lastUpdatedName":"",
+                        "createdName":"管理员",
+                        "id":539
+                    },
+                    "lastUpdatedName":"",
+                    "materialNum":"",
+                    "createdName":"管理员",
+                    "id":10,
+                    "realityMaterialNum":8.35
+                }
+            ],
+            "pickRecords":[
+
+            ],
+            "employeeName":"郑海华",
+            "prodNum":10,
+            "product":{
+                "custCodeNew":"G051",
+                "spFlmmUpper":"1.89",
+                "custCodeOld":"8-51",
+                "spFCstrength":"",
+                "lastUpdatedAt":"",
+                "spAxlemmLower":"",
+                "spHdsmmUpper":"1/2≥0.52",
+                "technicalRequirements":"注意-1/2(0.5)1/4(0.4)边(0.15)含量18.5%",
+                "userDefinedOne":"",
+                "speEdgeemmLower":"0.05",
+                "endProductName":"CT002",
+                "createdAt":"2018-08-23 16:58:14",
+                "unitSilverCopper":"0.116000",
+                "spHdmmLower":"3.96",
                 "lastUpdatedName":"",
-                "materialNum":10,
+                "id":2033,
+                "spSrammUpper":"7.5",
+                "unitSilverLoss":"0.020700",
+                "endProductTypeName":"触点-二复合银点",
+                "spTmammLower":"25",
+                "spFlmmLower":"1.85",
+                "level":"A级",
+                "barCode":"PTD0000002033",
+                "materialName":"AgNi(10)/Cu",
+                "unit":"kg",
+                "drawingNo":"",
+                "spFdsmmUpper":"",
+                "concentricity":"",
+                "spSrammLower":"6.5",
+                "onlyOrKg":"7200",
+                "alertUpper":"",
+                "spTmammUpper":"27",
+                "speFdsmmLower":"",
+                "courseRating":"",
+                "spHtmmLower":"1",
+                "typeName":"成品-触点-二复合银点",
+                "description":"触点-二复合银点-CT002-4*1(0.5)+2*1.85R倒角",
+                "remark":"",
+                "spFtmmLower":"1.94",
+                "modelLocation":"",
+                "spEdgemmUpper":"0.1",
                 "createdName":"管理员",
-                "id":32,
-                "realityMaterialNum":110
+                "userDefinedThree":"",
+                "alertLower":"",
+                "speFaxlemmLower":"",
+                "importedAt":"2018-08-23 16:57:37",
+                "spAxlemmUpper":"0.08",
+                "spHCstrength":"1/5",
+                "specification":"4*1(0.5)+2*1.85R倒角",
+                "custName":"常州西玛特电器有限公司",
+                "userDefinedTwo":"",
+                "supplierTypeCode":"",
+                "spFtmmUpper":"1.99",
+                "unitCopper":"0.116000",
+                "spFaxlemmUpper":"",
+                "unitSilver":"0.020700",
+                "totalNum":0,
+                "spHdmmUpper":"4.08",
+                "spHtmmUpper":"1.05",
+                "custDrawingNo":"",
+                "spHdsmmLower":"1/2≥0.5",
+                "endProductTypeCode":"PTD0"
             },
-            {
-                "supplierName":"一个供应商",
-                "supplierId":108,
-                "productId":821,
-                "lastUpdatedAt":"",
-                "realityMaterialId":2627,
-                "holder":"ORDER",
-                "materialId":1383,
-                "holderId":2652,
-                "numIn":0,
-                "numOut":0,
-                "realityMaterial":{
-                    "alertLower":100,
-                    "supplierName":"一个供应商",
-                    "alertUpper":10000,
-                    "supplierId":108,
-                    "lastUpdatedAt":"2018-10-31 14:03:49",
-                    "rawMaterId":1383,
-                    "placeNames":"Cu(半硬)仓位",
-                    "barCode":"MZR0000001383C000000108",
-                    "createdAt":"2018-10-29 08:23:59",
-                    "totalNum":965.009,
-                    "lastUpdatedName":"管理员",
-                    "rawMaterType":"MZR0",
-                    "associateAt":"2018-10-29 08:23:59",
-                    "createdName":"管理员",
-                    "id":2627,
-                    "supplierType":"C"
-                },
-                "createdAt":"2018-11-08 16:01:15",
-                "material":{
-                    "importedAt":"2018-08-17 14:42:52",
-                    "lastUpdatedAt":"",
-                    "specification":"2.95",
-                    "description":"铜丝-紫铜丝-Cu(半硬)-2.95",
-                    "remark":"宁波",
-                    "rawName":"Cu(半硬)",
-                    "supplierTypeCode":"",
-                    "rawTypeName":"铜丝-紫铜丝",
-                    "barCode":"MZR0000001383",
-                    "createdAt":"2018-08-17 14:42:54",
-                    "unit":"kg",
-                    "rawTypeCode":"MZR0",
-                    "lastUpdatedName":"",
-                    "createdName":"管理员",
-                    "id":1383
-                },
-                "lastUpdatedName":"",
-                "materialNum":56,
-                "createdName":"管理员",
-                "id":33,
-                "realityMaterialNum":120
-            }
-        ],
-        empty : [0]
-    };
-    var html = template("template-print_prod_order", {o : data, now : '2019年9月9日'});
-    $('#prod_order_holder').html(html);
+            "productId":2033,
+            "employeeId":66,
+            "preStockIn":0,
+            "pickNum":0,
+            "barCode":"Q000000002638",
+            "unit":"kg",
+            "finishDate":"",
+            "startDate":"2019-02-16 00:00:00",
+            "preStockOut":1,
+            "statusCode":"S_002",
+
+            plan : {
+                endDate : '2020年9月29日',
+                barCode : 'R000000001495'
+            },
+            num : '1000(只)',
+            kg : '20(kg)',
+            empty : []
+        };
+
+        var html = template("template-print_prod_order", {o : data, now : new Date().format("yyyy-MM-dd")});
+
+        $('#prod_order_holder').html(html);
+
+        $('#toPrintProdOrderBt').unbind('click').click(function () {
+            $('#prod_order_holder').print();
+        });
+
+    });
+
 
 
 </script>

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
+import org.krysalis.barcode4j.HumanReadablePlacement;
 import org.krysalis.barcode4j.impl.AbstractBarcodeBean;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.impl.code39.Code39Bean;
@@ -66,6 +67,7 @@ public class BarCodeUtil {
         } else {
             bean = code128Bean();
         }
+        bean.setMsgPosition(HumanReadablePlacement.HRP_NONE);
 
         // 精细度
         final int dpi = 500;

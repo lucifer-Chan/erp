@@ -175,6 +175,22 @@ div.table-print-holder {
     display: flex;
 }
 
+.nbt{
+    border-top-color: #fff!important;
+}
+
+.nbb{
+    border-bottom-color: #fff!important;
+}
+
+.nbl{
+    border-left-color: #fff!important;
+}
+
+.nbr{
+    border-right-color: #fff!important;
+}
+
 .table-print {
     border: 1px solid #030303;
     margin-bottom: 0px;
@@ -193,16 +209,29 @@ div.table-print-holder {
     border: 1px solid #030303;
 }
 
-.table-print-small>tbody>tr{
-    height: 20px;
+.table-print-a4>tbody>tr{
+    height: 30px;
 }
 
-.table-print-small>tbody>tr>td, .table-print-small>tbody>tr>th{
+.table-print-a4>tbody>tr>td{
     height: 20px!important;
+    font-weight: normal;
 }
 
-.table-print-small>tbody>tr>td, .table-print-small>tbody>tr>th, .table-print-small>tfoot>tr>td, .table-print-small>tfoot>tr>th, .table-print-small>thead>tr>td, .table-print-small>thead>tr>th {
-    padding: 2px!important;
+.table-print-a4>tbody>tr>th{
+    height: 20px!important;
+    font-weight:bold;
+}
+
+.table-print-a4{
+    width:930px!important;
+}
+
+.table-print-a4>tbody>tr>th, .table-print-a4>tfoot>tr>th, .table-print-a4>thead>tr>th,.table-print-a4>tbody>tr>td, .table-print-a4>tfoot>tr>td, .table-print-a4>thead>tr>td {
+    padding-left: 10px!important;
+    padding-top:1px;
+    padding-bottom:1px;
+    width:93px;
 }
 
 .table-print-right {
