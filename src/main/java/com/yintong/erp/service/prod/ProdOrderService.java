@@ -384,7 +384,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
      */
     public ErpProdOrder preStockIn(Long orderId) {
         ErpProdOrder order = findOneOrder(orderId);
-        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印制令单");
+//        Assert.isTrue(1 == order.getPreStockOut(), "尚未生产，请先打印制令单");
         order.setPreStockIn(1);
         return orderRepository.save(order);
     }
@@ -428,7 +428,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
     public void stockIn(StockHolder holder, Long orderId, StockEntity stockEntity, double inNum) {
         //1.1 检查订单
         ErpProdOrder order = findOneOrder(orderId);
-        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
+//        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
 //        String content = item.getWaresName() + " 完成入库,库存数量【" + currentInNum + "/" + item.getNum() + "】";
         //操作日志 - 暂无content
         ErpProdOrderOptLog prodOrderOptLog = ErpProdOrderOptLog.builder()
@@ -566,7 +566,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
     public ErpProdOrder findOrder4In(String barcode){
         ErpProdOrder order = orderRepository.findByBarCode(barcode).orElse(null);
         Assert.notNull(order, "未找到制令单[" + barcode + "]");
-        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
+//        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
         return order;
     }
 

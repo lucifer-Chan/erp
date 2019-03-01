@@ -197,3 +197,20 @@
         </div>
     </div>
 </div>
+
+<!-- 打印工牌 -->
+<script id="employee_print_tpl" type="text/template">
+    <div style="font-size: 14px;">
+        <table class="table table-print table-print-mini nb" style="text-align: center">
+            <tr style="height: 20px">
+                <th style="padding: 0">{{barCode}}</th>
+            </tr>
+            <tr>
+                <td style="padding: 0"><img src="{{base64}}" class="print-barcode"></td>
+            </tr>
+            <tr style="height: 20px">
+                <th style="padding: 0">{{name}}</th>
+            </tr>
+        </table>
+    </div>
+</script>

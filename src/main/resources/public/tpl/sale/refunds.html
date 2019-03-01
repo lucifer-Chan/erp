@@ -267,7 +267,25 @@
 
 -->
 <button class="btn btn-primary" id="toPrintProdOrderBt">打印制令单</button>
+<button class="btn btn-primary" id="toPrintEmployee">打印人员</button>
 
+<script id="employee_print_tpl" type="text/template">
+    <div style="font-size: 14px;">
+        <table class="table table-print table-print-mini nb" style="text-align: center">
+            <tr style="height: 20px">
+                <th style="padding: 0">{{barCode}}</th>
+            </tr>
+            <tr>
+                <td style="padding: 0"><img src="{{base64}}" class="print-barcode"></td>
+            </tr>
+            <tr style="height: 20px">
+                <th style="padding: 0">{{name}}</th>
+            </tr>
+        </table>
+    </div>
+</script>
+
+<div id="print_holder" style="width: 350px"></div>
 
 <div id="prod_order_holder"></div>
 <!-- 制令单打印-->
@@ -462,6 +480,8 @@
         </div>
     </div>
 </script>
+
+
 
 <script>
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
@@ -684,6 +704,34 @@
         $('#toPrintProdOrderBt').unbind('click').click(function () {
             $('#prod_order_holder').print();
         });
+
+        //2 - 人员
+        //打印数据构建 - 条形码
+        var employee = {
+            barCode: "UE00000000003",
+            name : '戴涵'
+        };
+
+
+
+
+        $('#toPrintEmployee').unbind('click').click(function () {
+            var data = $.extend({}, employee);
+            services.common.barcode(data.barCode)
+                .then(function (ret) {
+                    data.base64 = ret.base64;
+                })
+                .then(function () {
+                    var html = template("employee_print_tpl", data);
+                    // $('#print_holder').html(html);
+                    $('#print_holder').html(html).print();
+
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                });
+        });
+
 
     });
 

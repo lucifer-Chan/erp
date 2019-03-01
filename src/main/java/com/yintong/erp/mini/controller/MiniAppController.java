@@ -1,13 +1,19 @@
 package com.yintong.erp.mini.controller;
 
+import com.yintong.erp.domain.basis.security.ErpEmployee;
+import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
+import com.yintong.erp.domain.prod.ErpProdOrder;
+import com.yintong.erp.domain.prod.ErpProdOrderRepository;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
 import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
 import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.dto.ProdOrderDto;
 import com.yintong.erp.mini.domain.WxMiniUser;
 import com.yintong.erp.mini.service.MiniAppService;
 
+import com.yintong.erp.mini.service.MiniDtoWrapper;
 import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
@@ -103,6 +109,10 @@ public class MiniAppController {
 
     @Autowired ErpStockPlaceRepository stockPlaceRepository;
 
+    @Autowired ErpEmployeeRepository employeeRepository;
+
+    @Autowired ErpProdOrderRepository prodOrderRepository;
+
     /**
      * 生成token
      * @param params 除了openId
@@ -161,6 +171,22 @@ public class MiniAppController {
         //noinspection unchecked
         return new BaseResult().add(buildOrder(order));
     }
+
+    /**
+     * 扫描员工二维码，获取制令单供出库
+     * @param barcode
+     * @return
+     */
+    @GetMapping("scan/employee")
+    public BaseResult scanEmployee(String barcode){
+        Assert.hasText(barcode, "请先扫描条形码");
+        ErpEmployee employee = employeeRepository.findByBarCode(barcode).orElseThrow(() -> new IllegalArgumentException("未找到编号为[".concat(barcode).concat("的员工")));
+        List<ErpProdOrder> orders = prodOrderRepository.findByEmployeeIdAndFinishDateIsNotNull(employee.getId());
+        Assert.notEmpty(orders, "未找到员工".concat(employee.getName()).concat("未完成的制令单"));
+        List<JSONObject> list = orders.stream().map(MiniDtoWrapper::buildOrder).collect(Collectors.toList());
+        return new BaseResult().addList(list);
+    }
+
 
     /**
      * 2-扫码查找单个仓位

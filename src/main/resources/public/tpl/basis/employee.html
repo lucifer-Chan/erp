@@ -248,6 +248,7 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateMenuModal">修改权限</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#resetUserPasswordModal">重置密码</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
+            <button class="btn btn-primary" data-name="printEmployeeInfo">打印工牌</button>
         </span>
     </div>
     <div class="bugInfoContent employeeDetail">
@@ -375,6 +376,8 @@
         </div>
     </div>
 </div>
+
+<div id="employee_print_holder" style="width: 400px" hidden></div>
 
 <!-- 员工订单模版 -->
 <script id="template-emp-order" type="text/template">
@@ -704,6 +707,27 @@
                         });
                 });
             });
+
+            //打印工牌
+            consts.$rightPage.find('._operations').find('button[data-name="printEmployeeInfo"]').unbind('click').click(function () {
+                var employee = consts.selectedEmployee;
+                console.log('当前员工', employee);
+
+                var data = $.extend({}, employee);
+                services.common.barcode(data.barCode)
+                    .then(function (ret) {
+                        data.base64 = ret.base64;
+                    })
+                    .then(function () {
+                        var html = template("employee_print_tpl", data);
+                        var $clone = $('#employee_print_holder').clone();
+                        $clone.html(html).show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            });
+
 
             //编辑用户
             consts.$editEmployeeModal.find('div[role="tab"]').unbind('click').click(function (e) {

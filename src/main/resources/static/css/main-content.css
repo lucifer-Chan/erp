@@ -239,6 +239,14 @@ div.table-print-holder {
     padding-top: 10px;
 }
 
+.table-print-mini{
+    width:350px!important;
+}
+
+table.nb,table.nb>tbody>tr,table.nb>tbody>tr>th,table.nb>tbody>tr>td{
+    border: none;
+}
+
 /** end 打印 **/
 
 /* table */

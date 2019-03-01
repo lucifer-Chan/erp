@@ -1,5 +1,6 @@
 package com.yintong.erp.domain.basis.security;
 
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,4 +28,6 @@ public interface ErpEmployeeRepository extends JpaRepository<ErpEmployee, Long> 
 
 
     List<ErpEmployee> findByOpenId(String openId);
+
+    Optional<ErpEmployee> findByBarCode(String barcode);
 }

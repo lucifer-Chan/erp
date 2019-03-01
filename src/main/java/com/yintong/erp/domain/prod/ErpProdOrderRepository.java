@@ -18,4 +18,6 @@ public interface ErpProdOrderRepository extends JpaRepository<ErpProdOrder, Long
     Page<ErpProdOrder> findAll(Specification<ErpProdOrder> specification, Pageable pageable);
 
     List<ErpProdOrder> findByCreatedByOrderByCreatedAtDesc(Long createdBy);
+
+    List<ErpProdOrder> findByEmployeeIdAndFinishDateIsNotNull(Long employeeId);
 }
