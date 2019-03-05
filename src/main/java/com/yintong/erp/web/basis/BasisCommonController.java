@@ -6,6 +6,7 @@ import com.yintong.erp.domain.basis.associator.ErpEndProductSupplier;
 import com.yintong.erp.domain.basis.associator.ErpEndProductSupplierRepository;
 import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
 import com.yintong.erp.domain.basis.associator.ErpModelSupplierRepository;
+import com.yintong.erp.domain.basis.security.ErpMiniRoleRepository;
 import com.yintong.erp.service.basis.CategoryService;
 import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
 import com.yintong.erp.utils.bar.BarCodeUtil;
@@ -13,6 +14,9 @@ import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.common.Constants;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -21,10 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 /**
  * @author lucifer.chan
  * @create 2018-05-14 上午12:22
@@ -43,6 +43,8 @@ public class BasisCommonController {
     @Autowired ErpEndProductSupplierRepository productSupplierRepository;
 
     @Autowired ErpModelSupplierRepository mouldSupplierRepository;
+
+    @Autowired ErpMiniRoleRepository miniRoleRepository;
 
     /**
      * 类别树
@@ -138,5 +140,10 @@ public class BasisCommonController {
     @GetMapping("ass/supplier/material")
     public BaseResult supplierMaterials(){
         return new BaseResult().addList(supplierRawMaterialService.descriptions());
+    }
+
+    @GetMapping("mini/roles")
+    public BaseResult miniRoles(){
+        return new BaseResult().addList(miniRoleRepository.findAll());
     }
 }

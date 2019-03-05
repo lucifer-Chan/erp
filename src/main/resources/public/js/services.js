@@ -101,6 +101,20 @@ define('services',['utils'],function (utils) {
         },
 
         /**
+         * 保存用户-小程序权限
+         * @param id
+         * @param list
+         * @returns {*}
+         */
+        saveMiniRoles : function (id, list) {
+            return $.http.post({
+                url : 'basis/employee/' + id + '/miniRoles',
+                data : list,
+                contentType : $.contentType.json
+            })
+        },
+
+        /**
          * 更新用户的密码
          * @param id
          * @param password
@@ -1366,6 +1380,14 @@ define('services',['utils'],function (utils) {
          */
         barcode : function (barcode) {
             return $.http.get('basis/common/barcode/'+ barcode);
+        },
+
+        /**
+         * 小程序的权限列表
+         * @returns {*}
+         */
+        miniRoles : function () {
+            return $.http.get('basis/common/mini/roles');
         }
     };
 

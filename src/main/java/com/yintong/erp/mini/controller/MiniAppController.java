@@ -9,10 +9,8 @@ import com.yintong.erp.domain.stock.ErpStockOptLogRepository;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.ErpStockPlaceRepository;
 import com.yintong.erp.domain.stock.StockEntity;
-import com.yintong.erp.dto.ProdOrderDto;
 import com.yintong.erp.mini.domain.WxMiniUser;
 import com.yintong.erp.mini.service.MiniAppService;
-
 import com.yintong.erp.mini.service.MiniDtoWrapper;
 import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.ProductService;
@@ -26,24 +24,21 @@ import com.yintong.erp.service.stock.StockOptService;
 import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.BaseResult;
-
 import com.yintong.erp.utils.base.JsonWrapper;
+import com.yintong.erp.utils.common.SessionUtil;
 import com.yintong.erp.utils.common.SimpleCache;
 import com.yintong.erp.utils.common.SimpleRemote;
 import com.yintong.erp.web.stock.StockController;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.sf.json.JSONObject;
@@ -58,12 +53,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.yintong.erp.mini.service.MiniAppService.UNBIND_OPENID_PREFIX;
-import static com.yintong.erp.mini.service.MiniDtoWrapper.*;
-import static com.yintong.erp.utils.bar.BarCodeConstants.*;
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
-import static com.yintong.erp.utils.common.Constants.*;
-import static com.yintong.erp.utils.common.Constants.StockOpt.*;
-import static com.yintong.erp.utils.common.Constants.StockHolder.*;
+import static com.yintong.erp.mini.service.MiniDtoWrapper.buildOrder;
+import static com.yintong.erp.mini.service.MiniDtoWrapper.buildWares;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.Q000;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.V000;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.X000;
+import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_ASS_LENGTH;
+import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_TPL_LENGTH;
+import static com.yintong.erp.utils.common.Constants.StockHolder;
+import static com.yintong.erp.utils.common.Constants.StockHolder.BUY;
+import static com.yintong.erp.utils.common.Constants.StockHolder.INIT;
+import static com.yintong.erp.utils.common.Constants.StockHolder.PROD;
+import static com.yintong.erp.utils.common.Constants.StockHolder.REFUNDS;
+import static com.yintong.erp.utils.common.Constants.StockHolder.SALE;
+import static com.yintong.erp.utils.common.Constants.StockOpt;
+import static com.yintong.erp.utils.common.Constants.StockOpt.IN;
+import static com.yintong.erp.utils.common.Constants.StockOpt.OUT;
+import static com.yintong.erp.utils.common.Constants.StockPlaceType;
+import static com.yintong.erp.utils.common.Constants.WaresType;
 
 /**
  * @author lucifer.chan
@@ -146,6 +155,16 @@ public class MiniAppController {
         Assert.isTrue(openId.startsWith(UNBIND_OPENID_PREFIX), "openId格式错误");
         String token = miniAppService.login(openId, loginName, password);
         return new BaseResult().put("token", token);
+    }
+
+    /**
+     * 获取小程序权限
+     * @return
+     */
+    @GetMapping("roles")
+    public BaseResult roles(){
+        Map<String, String> roles = miniAppService.miniRoles(SessionUtil.getCurrentUserId());
+        return new BaseResult().add(roles);
     }
 
     /**

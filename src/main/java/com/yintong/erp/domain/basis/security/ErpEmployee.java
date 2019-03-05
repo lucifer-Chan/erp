@@ -4,6 +4,8 @@ import com.yintong.erp.domain.basis.ErpBaseDepartment;
 import com.yintong.erp.domain.basis.ErpBaseDepartmentRepository;
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartment;
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartmentRepository;
+import com.yintong.erp.domain.basis.associator.ErpEmployeeMiniRole;
+import com.yintong.erp.domain.basis.associator.ErpEmployeeMiniRoleRepository;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.SpringUtil;
@@ -62,11 +64,17 @@ public class ErpEmployee extends BaseEntityWithBarCode {
     @Transient @IgnoreIfNull
     private List<String> menuCodes;
 
+    @Transient @IgnoreIfNull
+    private List<String> miniRoleCodes;
+
     @Transient
     private String departmentNames;
 
     @Transient
     private String menuNames;
+
+    @Transient
+    private String miniRoleNames;
 
     @Transient
     private String status;//1-有密码；0-无密码
@@ -115,6 +123,19 @@ public class ErpEmployee extends BaseEntityWithBarCode {
         return menuCodes;
     }
 
+    public List<String> getMiniRoleCodes(){
+        if(Objects.isNull(id)) return null;
+        if(!CollectionUtils.isEmpty(miniRoleCodes)) return miniRoleCodes;
+        try {
+            miniRoleCodes = SpringUtil.getBean(ErpEmployeeMiniRoleRepository.class).findByUserId(id).stream()
+                    .map(ErpEmployeeMiniRole::getMiniRoleCode)
+                    .collect(Collectors.toList());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return miniRoleCodes;
+    }
+
     public String getMenuNames(){
         if(Objects.isNull(id)) return "";
         if(StringUtils.hasLength(menuNames)) return menuNames;
@@ -125,5 +146,17 @@ public class ErpEmployee extends BaseEntityWithBarCode {
             e.printStackTrace();
         }
         return menuNames;
+    }
+
+    public String getMiniRoleNames(){
+        if(Objects.isNull(id)) return "";
+        if((StringUtils.hasLength(miniRoleNames))) return miniRoleNames;
+        try {
+            miniRoleNames = SpringUtil.getBean(ErpMiniRoleRepository.class).findByCodeIn(getMiniRoleCodes()).stream()
+                    .map(ErpMiniRole::getName).collect(Collectors.joining(","));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return miniRoleNames;
     }
 }

@@ -3,6 +3,7 @@ package com.yintong.erp.utils.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.utils.common.SessionUtil;
+import javax.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,7 @@ public abstract class BaseEntity implements Filterable {
     private Date createdAt;
 
     @JsonIgnore
+    @Column(updatable = false)
     private Long createdBy;
 
     /**

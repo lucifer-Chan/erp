@@ -65,6 +65,17 @@ public class EmployeeController {
     }
 
     /**
+     * 保存用户小程序权限
+     * @param employeeId
+     * @param miniRoleCodes
+     * @return
+     */
+    @PostMapping("{employeeId}/miniRoles")
+    public BaseResult saveMiniRoles(@PathVariable Long employeeId, @RequestBody List<String> miniRoleCodes){
+        return new BaseResult().addPojo(employeeService.saveMiniRoles(employeeId, miniRoleCodes));
+    }
+
+    /**
      * 更新用户
      * @param employee
      * @return

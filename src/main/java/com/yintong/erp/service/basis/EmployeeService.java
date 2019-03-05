@@ -2,6 +2,8 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartment;
 import com.yintong.erp.domain.basis.associator.ErpEmployeeDepartmentRepository;
+import com.yintong.erp.domain.basis.associator.ErpEmployeeMiniRole;
+import com.yintong.erp.domain.basis.associator.ErpEmployeeMiniRoleRepository;
 import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.domain.basis.security.ErpEmployeeMenu;
 import com.yintong.erp.domain.basis.security.ErpEmployeeMenuRepository;
@@ -57,6 +59,8 @@ public class EmployeeService {
     @Autowired ErpSaleOrderRepository saleOrderRepository;
 
     @Autowired ErpPurchaseOrderRepository purchaseOrderRepository;
+
+    @Autowired ErpEmployeeMiniRoleRepository erpEmployeeMiniRoleRepository;
 
     @Autowired(required = false) List<OnDeleteEmployeeValidator> validators;
 
@@ -232,6 +236,26 @@ public class EmployeeService {
             employeeMenuRepository.saveAll(
                     menuCodes.stream()
                             .map(menuCode-> ErpEmployeeMenu.builder().menuCode(menuCode).employeeId(employeeId).build())
+                            .collect(toList())
+            );
+        }
+        return employee;
+    }
+
+    /**
+     * 保存用户小程序权限
+     * @param employeeId
+     * @param miniRoleCodes
+     * @return
+     */
+    @Transactional
+    public ErpEmployee saveMiniRoles(Long employeeId, List<String> miniRoleCodes) {
+        ErpEmployee employee = employeeRepository.findById(employeeId).orElseThrow(()-> new IllegalArgumentException("未找到id为" + employeeId + "的用户"));
+        erpEmployeeMiniRoleRepository.deleteByUserId(employeeId);
+        if(!CollectionUtils.isEmpty(miniRoleCodes)){
+            erpEmployeeMiniRoleRepository.saveAll(
+                    miniRoleCodes.stream()
+                            .map(roleCode-> ErpEmployeeMiniRole.builder().miniRoleCode(roleCode).userId(employeeId).build())
                             .collect(toList())
             );
         }

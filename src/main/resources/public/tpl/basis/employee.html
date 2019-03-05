@@ -238,6 +238,27 @@
         </div>
     </div>
 </div>
+<!--修改小程序权限-->
+<div class="modal fade myErpModal" role="dialog" id="updateMiniRoleModal">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-unlock-alt defaultColor"></i> 修改权限信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="pd210 pd410 projectSetting">
+                    <div class="_miniRoles"></div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info" name="save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+updateMin
+
 <!-- 右侧-->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
     <div class="bugInfoTop">
@@ -246,6 +267,7 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateUserBaseInfoModal">修改基本信息</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateDepartmentModal">修改所属组织</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateMenuModal">修改权限</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateMiniRoleModal">编辑小程序权限</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#resetUserPasswordModal">重置密码</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
             <button class="btn btn-primary" data-name="printEmployeeInfo">打印工牌</button>
@@ -326,6 +348,19 @@
                     <h5 class="pd43"></h5>
                 </div>
             </div>
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                       <span class="label label-info">小程序权限信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="menu"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="miniRoleInfo">
+                    <h5 class="pd43"></h5>
+                </div>
+            </div>
             <hr>
             <div>
                 <ul class="nav nav-tabs noborder" role="tablist">
@@ -403,6 +438,7 @@
             , treeObj : null//组织树
             , leaves : []//组织树叶子节点
             , menus : []//可操作的菜单-权限
+            , miniRoles : []//所有的小程序权限
             , selectedEmployee : {} //选中的员工
             , oQueryParam : {}//查询参数
 
@@ -414,6 +450,7 @@
             , $resetPasswordModal : $('#resetUserPasswordModal')//重设员工密码
             , $updateDepartmentModal : $('#updateDepartmentModal')//更新员工组织
             , $updateMenuModal : $('#updateMenuModal')//更新员工权限
+            , $updateMiniRoleModal : $('#updateMiniRoleModal')//编辑小程序权限
 
             , $newDnModal : $('#_newDepartment')//新增组织名称的modal
             , $newDnBt : $('#_newDepartmentBt')//新增组织名称的提交按钮
@@ -492,6 +529,7 @@
             var $baseInfo = $detail.find('div[data-value="baseInfo"]');
             var $departmentInfo = $detail.find('div[data-value="departmentInfo"] h5');
             var $menuInfo = $detail.find('div[data-value="menuInfo"] h5');
+            var $miniRoleInfo = $detail.find('div[data-value="miniRoleInfo"] h5')
             //初始化页面数据-基本信息
             $baseInfo.find('div[data-name]').each(function () {
                 $(this).html(employee[$(this).attr('data-name')] || unSetting);
@@ -519,6 +557,17 @@
                     $menuInfo.append('<span class="md32 border-radius label label-default">' + name + '</span>');
                 })
             }
+            //初始化页面数据-小程序权限
+            $miniRoleInfo.html('');
+            var miniRoleNames = employee.miniRoleNames;
+            if(!miniRoleNames.length){
+                $miniRoleInfo.html(unSetting);
+            } else {
+                miniRoleNames.split(',').forEach(function (name) {
+                    $miniRoleInfo.append('<span class="md32 border-radius label label-default">' + name + '</span>');
+                })
+            }
+
             //初始化订单操作
             services.account.orders(employee.id)
                 .then(function (ret) {
@@ -624,6 +673,11 @@
             consts.$updateMenuModal.on('show.bs.modal', function () {
                 $(this).find('._menu').html(drawCircles(consts.menus, consts.selectedEmployee.menuCodes, {idKey : 'code'}));
             });
+            //模态框-更新小程序权限
+            consts.$updateMiniRoleModal.on('show.bs.modal', function () {
+                $(this).find('._miniRoles').html(drawCircles(consts.miniRoles, consts.selectedEmployee.miniRoleCodes, {idKey : 'code'}));
+            });
+
             //更新用户基本信息操作
             consts.$updateBaseInfoModal.find('button[name="save"]').unbind('click').click(function (e) {
                 e.preventDefault();
@@ -692,6 +746,27 @@
                         layer.msg(reason.caught ? reason.message : '保存权限关联失败！');
                     });
             });
+
+
+            //更新用户小程序权限操作
+            consts.$updateMiniRoleModal.find('button[name="save"]').unbind('click').click(function () {
+                var $modal = consts.$updateMiniRoleModal;
+                var miniRoleCodes = [];
+                $modal.find('.fa-dot-circle-o').each(function () {
+                    miniRoleCodes.push($(this).attr('id'));
+                });
+                services.account
+                    .saveMiniRoles(consts.selectedEmployee.id, miniRoleCodes)
+                    .then(function (employee) {
+                        loadDataTable(true);
+                        initEmployeeDetail(employee);
+                        $modal.modal('hide');
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '保存小程序权限关联失败！');
+                    });
+            });
+
             //删除用户操作
             consts.$rightPage.find('._operations ').find('button[data-name="delete"]').unbind('click').click(function () {
                 layer.confirm('删除此组织将会删除他的所有从属组织及人员管理，确定删除吗？',{title:'提示',move:false},function(){
@@ -927,7 +1002,14 @@
                 })
                 .catch(function (reason) {
                     layer.msg(reason.caught ? reason.message : '获取菜单失败！');
-                });
+                })
+                .then(function () {
+                    return services.common.miniRoles();
+                })
+                .then(function (ret) {
+                    consts.miniRoles = ret.list;
+                })
+                ;
         }
 
         /**
