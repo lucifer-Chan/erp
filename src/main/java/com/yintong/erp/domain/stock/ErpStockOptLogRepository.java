@@ -50,6 +50,8 @@ public interface ErpStockOptLogRepository extends JpaRepository<ErpStockOptLog, 
 
     List<ErpStockOptLog> findByProductIdIn(List<Long> productIds);
 
+    List<ErpStockOptLog> findByMouldIdIn(List<Long> mouldIds);
+
     List<ErpStockOptLog> findByProductCodeLike(String productCode);
 
     List<ErpStockOptLog> findByMouldCodeLike(String mouldCode);

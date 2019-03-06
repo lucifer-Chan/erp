@@ -68,12 +68,15 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
      * @return
      */
     public ErpStockPlace create(ErpStockPlace place){
+        Assert.hasText(place.getPlaceCode(), "位置编码不能为空");
         place.setId(null);
         place.setStatusCode(ON.name());
         Long assId = place.getMaterialSupplierAssId();
         if(Objects.nonNull(assId)){
             materialSupplierRepository.findById(assId).ifPresent(associator -> place.setMaterialSupplierBarCode(associator.getBarCode()));
         }
+        ErpStockPlace errorPlace = stockPlaceRepository.findByPlaceCode(place.getPlaceCode());
+        Assert.isNull(errorPlace, "位置编码重复，请重新选择");
         return stockPlaceRepository.save(place);
     }
 
@@ -85,11 +88,17 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
      * @param description
      * @return
      */
-    public ErpStockPlace update(Long placeId, Integer upperLimit, String name, String description){
+    public ErpStockPlace update(Long placeId, Integer lowerLimit, Integer upperLimit
+            , String name, String placeCode, String description){
         ErpStockPlace place = one(placeId);
+        place.setLowerLimit(lowerLimit);
         place.setUpperLimit(upperLimit);
         place.setName(name);
+        place.setPlaceCode(placeCode);
         place.setDescription(description);
+        Assert.hasText(place.getPlaceCode(), "位置编码不能为空");
+        ErpStockPlace errorPlace = stockPlaceRepository.findByPlaceCode(place.getPlaceCode());
+        Assert.isTrue(Objects.isNull(errorPlace) || errorPlace.getId().equals(placeId), "位置编码重复，请重新选择");
         return stockPlaceRepository.save(place);
     }
 
@@ -223,7 +232,7 @@ public class StockPlaceService implements OnDeleteSupplierRawMaterialValidator {
     @Getter@Setter
     @OrderBy(fieldName = "createdAt")
     public static class PlaceParameterDto extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "name", "description", "materialName"}, compare = like, group = OR)
+        @ParameterItem(mappingTo = {"barCode", "name", "description", "materialName", "placeCode"}, compare = like, group = OR)
         String cause;
 
         @ParameterItem( mappingTo = "stockPlaceType", compare = equal, group = AND)

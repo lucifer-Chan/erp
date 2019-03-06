@@ -3,6 +3,7 @@ package com.yintong.erp.domain.stock;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.util.StringUtils;
@@ -20,7 +21,10 @@ public interface StockPlaceFinder {
      * @return
      */
     default List<ErpStockPlace> getPlaces(String productIds, String materialIds){
+        return findPlaces(productIds, materialIds);
+    }
 
+    static List<ErpStockPlace> findPlaces(String productIds, String materialIds){
         List<ErpStockPlace> result = new ArrayList<>();
 
         if(StringUtils.isEmpty(productIds) && StringUtils.isEmpty(materialIds)) return result;
@@ -40,6 +44,20 @@ public interface StockPlaceFinder {
         }
 
         return result;
+    }
 
+    /**
+     * 查找模具的仓位
+     * @param moudlIds
+     * @return
+     */
+    static List<ErpStockPlace> findMouldPlaces(String moudlIds){
+        if(StringUtils.isEmpty(moudlIds)) return Collections.emptyList();
+        List<Long> _moudlIds = Arrays.stream(moudlIds.split(",")).map(Long::parseLong).collect(Collectors.toList());
+        //仓位id列表
+        List<Long> placeIds = SpringUtil.getBean(ErpStockOptLogRepository.class)
+                .findByMouldIdIn(_moudlIds).stream().map(ErpStockOptLog::getStockPlaceId).collect(Collectors.toList());
+
+        return SpringUtil.getBean(ErpStockPlaceRepository.class).findByIdIn(placeIds);
     }
 }

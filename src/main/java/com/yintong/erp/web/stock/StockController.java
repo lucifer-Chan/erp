@@ -49,7 +49,12 @@ public class StockController {
      */
     @PutMapping("place")
     public BaseResult updatePlace(@RequestBody ErpStockPlace place){
-        return new BaseResult().addPojo(placeService.update(place.getId(), place.getUpperLimit(), place.getName(), place.getDescription()));
+        return new BaseResult().addPojo(placeService.update(place.getId()
+                , place.getLowerLimit()
+                , place.getUpperLimit()
+                , place.getName()
+                , place.getPlaceCode()
+                , place.getDescription()));
     }
 
     /**

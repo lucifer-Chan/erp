@@ -1246,6 +1246,14 @@ define('services',['utils'],function (utils) {
         //货物的下拉列表
         lookup : function (supplierId, type) {
             return $.http.get('purchase/order/lookup/'+ supplierId + '/' + type);
+        },
+        //退货
+        refunds : function (order) {
+            return $.http.put({
+                url : 'purchase/order/refunds',
+                data :order,
+                contentType : $.contentType.json
+            });
         }
     };
 

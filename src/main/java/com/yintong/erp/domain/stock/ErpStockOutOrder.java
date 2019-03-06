@@ -52,6 +52,12 @@ public class ErpStockOutOrder extends BaseEntityWithBarCode implements StockPlac
     @Column(columnDefinition = "varchar(1000) comment '出库实际原材料名称列表,英文逗号隔开'")
     private String materialNames;
 
+    @Column(columnDefinition = "varchar(100) comment '入库实际模具id列表,英文逗号隔开'")
+    private String mouldIds;
+
+    @Column(columnDefinition = "varchar(1000) comment '入库实际模具名称列表,英文逗号隔开'")
+    private String mouldNames;
+
     @Column(columnDefinition = "int(20) DEFAULT 0 comment '是否完成-0：未完成，1：完成'")
     private Integer complete;
 
@@ -68,6 +74,6 @@ public class ErpStockOutOrder extends BaseEntityWithBarCode implements StockPlac
 
         List<ErpStockPlace> places = this.getPlaces(productIds, materialIds);
 
-        return this.placeNames = places.isEmpty() ? "" : places.stream().map(ErpStockPlace::getName).collect(Collectors.joining(","));
+        return this.placeNames = places.isEmpty() ? "" : places.stream().map(ErpStockPlace::getPlaceCode).collect(Collectors.joining(","));
     }
 }

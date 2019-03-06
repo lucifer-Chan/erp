@@ -95,10 +95,10 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
 
     function _convertStatus(code) {
         var css = 'label-default';
-        if ('STATUS_002' === code || 'STATUS_049' === code) css = 'label-warning';
+        if ('STATUS_002' === code || 'STATUS_049' === code || 'STATUS_009' === code) css = 'label-warning';
         if ('STATUS_003' === code || 'STATUS_005' === code) css = 'label-success';
         if ('STATUS_004' === code || 'STATUS_006' === code) css = 'label-danger';
-        if ('STATUS_007' === code) css = 'label-primary';
+        if ('STATUS_007' === code || 'STATUS_010' === code) css = 'label-primary';
         return '<span class="label '+ css +'">'+ consts.status[code] +'</span>';
     }
 
@@ -375,7 +375,6 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 bt : '保存'
             };
         });
-
         $('#_toApprovalPassBt').bind('click', function () {
             consts.toNewStatus = {
                 code : 'STATUS_003',
@@ -390,7 +389,66 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 bt : '保存'
             };
         });
+        //完成退货
+        $('#_toRefundsOrderBt').bind('click', function () {
+            consts.toNewStatus = {
+                code : 'STATUS_010',
+                header : '完成退货',
+                bt : '保存'
+            };
+        });
+        //取消退货信息
+        $('#cancelRefundsOrder').unbind('click').click(function (e) {
+            e.preventDefault();
+            consts.$refundsOrderModal.modal('hide');
+        });
+        //保存退货信息
+        $('#saveRefundsOrder').unbind('click').click(function (e) {
+            e.preventDefault();
+            var $items = $('#refundsOrderItems').find('.purchase_items');
+            var items = [];
+            $.each($items, function (i, item) {
+                var id = $(item).attr('data-id');
+                var rtMoney = $(item).find('input[data-name="rtMoney"]').val() || null;
+                var shouldRtNum = $(item).find('input[data-name="shouldRtNum"]').val() || null;
+                if (shouldRtNum){
+                    items.push({id : id
+                        , rtMoney : rtMoney
+                        , shouldRtNum: shouldRtNum
+                        , waresAssId : $(item).attr('data-ware-ass-id') || ''
+                        , waresName : $(item).attr('data-wares-name') || ''
+                        , waresType : $(item).attr('data-wares-type')
+                    });
+                }
+            });
 
+            if (!items.length){
+                layer.msg('请至少填写一项明细的退货数量');
+                return;
+            }
+
+            layer.confirm('退货操作不可恢复，确定退货吗？',{title:'提示',move:false},function(){
+                services.purchaseOrder.refunds({
+                    id : consts.currentOrder.id,
+                    items : items
+                }).then(function () {
+                    layer.msg('操作完成。');
+                    consts.$refundsOrderModal.modal('hide');
+                    loadDataTable(true);
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                }).then(function () {
+                    return services.purchaseOrder.one(consts.currentOrder.id);
+                }).then(function (tr) {
+                    initTrDetail(tr);
+                });
+            });
+        });
+
+
+        $('#_printToOutBt').bind('click', function () {
+            alert('打印退货单（出库）')
+        });
     }
 
     //输入框事件
@@ -505,6 +563,24 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
         });
     }
 
+    //退货明细modal
+    function init_refunds_order_modal() {
+        console.log('退货明细modal初始化');
+        if(!consts.$refundsOrderModal || !consts.$refundsOrderModal.length) return;
+        var $modal = consts.$refundsOrderModal;
+
+        $modal.on('show.bs.modal', function () {
+            //明细
+            var items = consts.currentOrder.items || [];
+            //
+            var html = template("refunds_item_tpl", {items : items});
+            $modal.find('#refundsOrderItems').html(html);
+            $('#prod_order_holder').html(html);
+        }).on('hidden.bs.modal', function () {
+            $modal.find('#refundsOrderItems').html('');
+        });
+    }
+
     /**
      * 初始化右侧
      */
@@ -583,8 +659,10 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 var body = $(clone).find('.panel-body');
                 var tools =  $(clone).find('.tools');
                 body.attr('data-value', (item.id + 'Info'));
-                if(item.statusCode !== 'STATUS_049' && item.statusCode !== 'STATUS_005'){
+                if(item.statusCode !== 'STATUS_049' && item.statusCode !== 'STATUS_005' && item.statusCode !== 'STATUS_009' && item.statusCode !== 'STATUS_010'){
                     $(body).find('div[data-name="status"]').parent().hide();
+                } else {
+                    $(body).find('div[data-name="status"]').parent().show();
                 }
                 if(item.waresType === 'M' || item.waresType === 'R'){
                     $(tools).find('._print').hide();
@@ -596,6 +674,17 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                 $(body).find('div[data-name="num"]').text(item.num + item.unit);
                 $(body).find('div[data-name="inNum"]').text(item.inNum + item.unit);
                 $(body).find('div[data-name="remark"]').text(item.remark || '无');
+
+                if (item.shouldRtNum || item.rtMoney){
+                    $(body).find('div[data-id="rt"]').show();
+                    $(body).find('div[data-name="rtNumLabel"]').html('退货数量(' + item.unit + ')');
+                    $(body).find('div[data-name="rtNum"]').text((item.outNum || 0) + '/' + item.shouldRtNum + item.unit);
+                    $(body).find('div[data-name="rtMoney"]').text('¥' + (item.rtMoney || 0).toFixed(2));
+
+                } else {
+                    $(body).find('div[data-id="rt"]').hide();
+                }
+
                 $orderItems.append($(clone).show());
             })
         }
@@ -618,11 +707,18 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
         } else {
             $('#rightInfoPage').find('#_printToInBt, #_toInvalidOrderBt').hide();
         }
-        //已出库 可操作: 供应商退回、完成
+        //已入库 可操作: 退货、完成
         if(tr.statusCode === 'STATUS_005'){
             $('#rightInfoPage').find('#_toRefundsOrderBt, #_toFinishOrderBt').show();
         } else {
             $('#rightInfoPage').find('#_toRefundsOrderBt, #_toFinishOrderBt').hide();
+        }
+        //正在退货 可操作：打印退货单、完成退货
+        //#_printToOutBt,
+        if(tr.statusCode === 'STATUS_009'){
+            $('#rightInfoPage').find('#_printToOutBt').show();
+        } else {
+            $('#rightInfoPage').find('#_printToOutBt').hide();
         }
 
         //删除判断
@@ -820,11 +916,12 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
         init_add_purchase_modal();
         init_edit_item_modal();
         init_change_status_modal();
+        init_refunds_order_modal();
         init_input_event();
     }
 
     function init(options) {
-        console.log('in purchase/order.js');
+        console.log('in js/purchase.js');
         consts = options;
         prepareData().then(function () {
             initEvent();

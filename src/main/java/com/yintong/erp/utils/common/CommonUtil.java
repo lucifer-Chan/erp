@@ -41,6 +41,16 @@ public class CommonUtil {
     }
 
     /**
+     * 为空时返回默认
+     * @param text
+     * @param defaultText
+     * @return
+     */
+    public static String defaultIfEmpty(String text, String defaultText){
+        return !StringUtils.isEmpty(text) ? text : defaultText;
+    }
+
+    /**
      * collection只能包含0或1个元素，否则抛异常
      * @param collection
      * @param message

@@ -16,10 +16,14 @@ import com.yintong.erp.domain.purchase.ErpPurchaseOrderOptLogRepository;
 import com.yintong.erp.domain.purchase.ErpPurchaseOrderRepository;
 import com.yintong.erp.domain.stock.ErpStockInOrder;
 import com.yintong.erp.domain.stock.ErpStockInOrderRepository;
+import com.yintong.erp.domain.stock.ErpStockOutOrder;
+import com.yintong.erp.domain.stock.ErpStockOutOrderRepository;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.service.basis.CommonService;
 import com.yintong.erp.service.stock.StockIn4Holder;
+import com.yintong.erp.service.stock.StockOut4Holder;
 import com.yintong.erp.utils.common.CommonUtil;
+import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.Constants.PurchaseOrderStatus;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.query.OrderBy;
@@ -34,6 +38,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,7 +67,7 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * 采购订单服务
  **/
 @Service
-public class PurchaseOrderService implements StockIn4Holder,
+public class PurchaseOrderService implements StockIn4Holder, StockOut4Holder,
         OnDeleteSupplierRawMaterialValidator, OnDeleteSupplierMouldValidator, OnDeleteSupplierProductValidator {
 
     @Autowired ErpPurchaseOrderRepository orderRepository;
@@ -72,6 +77,8 @@ public class PurchaseOrderService implements StockIn4Holder,
     @Autowired ErpPurchaseOrderOptLogRepository orderOptLogRepository;
 
     @Autowired ErpStockInOrderRepository stockInOrderRepository;
+
+    @Autowired ErpStockOutOrderRepository stockOutOrderRepository;
 
     @Autowired ErpEndProductSupplierRepository productSupplierRepository;
 
@@ -126,6 +133,25 @@ public class PurchaseOrderService implements StockIn4Holder,
 //                .stream().filter(item -> item.getInNum() < item.getNum())
 //                .collect(Collectors.toList());
         Assert.notEmpty(items, "无可入库的明细");
+        order.setItems(items);
+        return order;
+    }
+
+    /**
+     * 获取当个可出库的采购订单(退货)
+     * @param barcode
+     * @return
+     */
+    public ErpPurchaseOrder findOrder4Out(String barcode){
+        ErpPurchaseOrder order = CommonUtil.single(orderRepository.findByBarCode(barcode));
+        Assert.notNull(order, "未找到采购订单[" + barcode + "]");
+        Assert.isTrue(1 == order.getPreStockOut(), "该采购订单未发起退货请求");
+        //筛选出需要退货量 > 已经退货量的明细
+        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdOrderByMoneyDesc(order.getId())
+                .stream()
+                .filter(item -> CommonUtil.ifNotPresent(item.getShouldRtNum(), 0d) > 0)
+                .collect(Collectors.toList());
+        Assert.notEmpty(items, "无可出库的明细");
         order.setItems(items);
         return order;
     }
@@ -191,6 +217,84 @@ public class PurchaseOrderService implements StockIn4Holder,
         orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(order.getStatusCode()).content(content).optType("order").orderId(order.getId()).build());
         return orderRepository.save(inDb);
     }
+
+    /**
+     * 退货-包含明细
+     * 更新内容：明细的退货金额、shouldRtNum & 订单的状态->STATUS_009("正在退货")
+     * 约束条件：状态为STATUS_005【已入库】
+     * @param order
+     * @return
+     */
+    @Transactional
+    public ErpPurchaseOrder refunds(ErpPurchaseOrder order) {
+        Long orderId = order.getId();
+        List<ErpPurchaseOrderItem> items = order.getItems();
+        ErpPurchaseOrder inDb = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("未找到采购订单[" + orderId + "]"));
+        Assert.isTrue(STATUS_005 == PurchaseOrderStatus.valueOf(inDb.getStatusCode()), "只有状态为".concat(STATUS_005.description()).concat("的采购订单可以退货"));
+        Assert.notEmpty(order.getItems(), "未填写退货明细");
+        PurchaseOrderStatus status = STATUS_009;
+        order.setStatusCode(status);
+        inDb.setStatusCode(status);
+        inDb.setPreStockOut(1);
+
+        for (ErpPurchaseOrderItem dto : items){
+            Double rtMoney = dto.getRtMoney();
+            Double shouldRtNum = dto.getShouldRtNum();
+            ErpPurchaseOrderItem item = orderItemRepository.findById(dto.getId()).orElseThrow(()-> new IllegalArgumentException("未找到采购明细[" + dto.getId() + "]"));
+            item.setRtMoney(rtMoney);
+            item.setShouldRtNum(shouldRtNum);
+            orderItemRepository.save(item);
+            List<String> contents = new ArrayList<>();
+            if(Optional.ofNullable(shouldRtNum).orElse(0d) > 0){
+                item.setStatusCode(status.name());
+                contents.add(" 应退货数量：" + shouldRtNum + item.getUnit());
+            }
+            if(Objects.nonNull(rtMoney)){
+                contents.add(" 应退货金额：¥" + rtMoney);
+            }
+            String content = StringUtils.collectionToCommaDelimitedString(contents);
+            orderOptLogRepository.save(
+                    ErpPurchaseOrderOptLog.builder()
+                            .statusCode(status.name())
+                            .content("退货" + item.getWaresName() + content)
+                            .optType("item")
+                            .orderId(orderId)
+                            .build()
+            );
+        }
+
+        ErpStockOutOrder outOrder = CommonUtil.single(stockOutOrderRepository.findByHolderAndHolderId(BUY.name(), orderId), "采购订单[" + orderId + "]对应的出库单存在脏数据");
+
+        if(Objects.isNull(outOrder)){
+            Map<WaresType, List<ErpPurchaseOrderItem>> orderItemsMap = items.stream()
+                    .filter(it -> Objects.nonNull(it.getShouldRtNum()) && it.getShouldRtNum() > 0)
+                    .collect(Collectors.groupingBy(it -> WaresType.valueOf(it.getWaresType())));
+
+            //成品 id & name
+            KeyValue<String, String> products = collectIdAndName(orderItemsMap.getOrDefault(WaresType.P, new ArrayList<>()));
+            //原材料 id & name
+            KeyValue<String, String> materials = collectIdAndName(orderItemsMap.getOrDefault(WaresType.M, new ArrayList<>()));
+            //模具 id & name
+            KeyValue<String, String> moulds = collectIdAndName(orderItemsMap.getOrDefault(WaresType.D, new ArrayList<>()));
+
+            outOrder = ErpStockOutOrder.builder()
+                    .holder(BUY.name())
+                    .holderId(orderId)
+                    .holderBarCode(order.getBarCode())
+                    .productIds(products.getKey())
+                    .productNames(products.getValue())
+                    .materialIds(materials.getKey())
+                    .materialNames(materials.getValue())
+                    .mouldIds(moulds.getKey())
+                    .mouldNames(moulds.getValue())
+                .build();
+
+            stockOutOrderRepository.save(outOrder);
+        }
+        orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(status.name()).content(status.toLog()).optType("status").orderId(orderId).build());
+        return orderRepository.save(inDb);
+    }
+
 
     /**
      * 删除采购订单-级联删除明细
@@ -434,6 +538,86 @@ public class PurchaseOrderService implements StockIn4Holder,
     }
 
     /**
+     * 采购出库（退货） 成品|原材料|模具
+     * @param holder
+     * @param stockEntity
+     * @return
+     */
+    @Override
+    public boolean matchesOut(StockHolder holder, StockEntity stockEntity) {
+        WaresType waresType = stockEntity.waresType();
+        return BUY == holder && Arrays.asList(WaresType.P, WaresType.M, WaresType.D).contains(waresType);
+    }
+
+    /**
+     *
+     * @param holder
+     * @param purchaseOrderId
+     * @param stockEntity
+     * @param outNum -Kg
+     */
+    @Override
+    public void stockOut(StockHolder holder, Long purchaseOrderId, StockEntity stockEntity, double outNum) {
+        ErpPurchaseOrder order = orderRepository.findById(purchaseOrderId).orElseThrow(()-> new IllegalArgumentException("未找到采购订单[" + purchaseOrderId + "]"));
+        Assert.isTrue( 1 == order.getPreStockOut(), "采购单当前状态不能退货");
+        List<ErpPurchaseOrderItem> items = orderItemRepository.findByOrderIdAndWaresAssIdAndWaresType(purchaseOrderId, stockEntity.realityId(), stockEntity.waresType().name());
+
+        ErpPurchaseOrderItem item = CommonUtil.single(items, "采购订单[" + order.getBarCode() + "存在脏数据");
+        if(Objects.isNull(item)) return;
+        Assert.isTrue(!STATUS_010.name().equals(item.getStatusCode()), item.getWaresName() + "已完成出库");
+
+        PurchaseOrderStatus status = STATUS_009;//正在退货
+        TemplateWares templateWares = item.templateWares();
+        if(Objects.nonNull(templateWares) && (templateWares instanceof ErpBaseEndProduct)){
+            ErpBaseEndProduct product = (ErpBaseEndProduct)templateWares;
+            outNum = CommonUtil.calcFromKg(product, item.getUnit(), outNum);
+        }
+
+        double currentOutNum = outNum + item.getOutNum();
+        String content = item.getWaresName() + "出库【" + outNum + item.getUnit() + "】 累计出库 【" + currentOutNum + "/" + item.getShouldRtNum() + "】";
+        if(currentOutNum >= item.getNum()){
+            status = STATUS_010;
+            content = item.getWaresName() + "出库【" + outNum + item.getUnit() +  "】 全部完成出库 【" + currentOutNum + "/" + item.getShouldRtNum() + "】";
+        }
+        //2-保存订单明细
+        item.setStatusCode(status.name());
+        item.setOutNum(currentOutNum);
+        orderItemRepository.save(item);
+        //3-明细日志
+        orderOptLogRepository.save(
+                ErpPurchaseOrderOptLog.builder()
+                        .statusCode(status.name())
+                        .content(content)
+                        .optType("item")
+                        .orderId(purchaseOrderId)
+                        .waresId(stockEntity.templateId())
+                        .waresAssId(stockEntity.realityId())
+                        .waresType(stockEntity.waresType().name())
+                        .waresBarcode(stockEntity.entity().getBarCode())
+                        .build()
+        );
+
+
+        //4 未完成出库的订单明细
+        List<ErpPurchaseOrderItem> unOutItems = orderItemRepository.findByOrderIdAndStatusCodeNot(purchaseOrderId, STATUS_010.name());
+        if(CollectionUtils.isEmpty(unOutItems)){
+            //全部出库成功->修改订单状态为：完成退货
+            orderRepository.save(order.setStatusCode(STATUS_010));
+            orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(STATUS_010.name()).content(STATUS_010.toLog()).optType("status").orderId(purchaseOrderId).build());
+            //出库单-完成
+            ErpStockOutOrder outOrder = CommonUtil.single(stockOutOrderRepository.findByHolderAndHolderId(BUY.name(), purchaseOrderId));
+            if(Objects.nonNull(outOrder)){
+                outOrder.setComplete(1);
+                stockOutOrderRepository.save(outOrder);
+            }
+        } else if(!STATUS_009.name().equals(order.getStatusCode())){
+            //存在未完成出库的明细，且自身状态不为：出库中
+            orderRepository.save(order.setStatusCode(STATUS_009));
+            orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(STATUS_009.name()).content(STATUS_009.toLog()).optType("status").orderId(purchaseOrderId).build());
+        }
+    }
+
+    /**
      * 对订单明细进行入库：采购入库
      * @param holder
      * @param purchaseOrderId - 采购单id
@@ -465,7 +649,7 @@ public class PurchaseOrderService implements StockIn4Holder,
 
         double currentInNum = inNum + item.getInNum();
 
-        String content = item.getWaresName() + "入库【" + inNum + item.getUnit() + "】 累计入库 【" + currentInNum + "/" + item.getNum() + item.getUnit() + "】";
+        String content = item.getWaresName() + "入库【" + inNum + item.getUnit() + "】 累计入库 【" + currentInNum + "/" + item.getNum() + "】";
 
         if(currentInNum >= item.getNum()){
             status = STATUS_005;
@@ -490,8 +674,8 @@ public class PurchaseOrderService implements StockIn4Holder,
         );
 
         //4 未完成入库的订单明细
-        List<ErpPurchaseOrderItem> unOutItems = orderItemRepository.findByOrderIdAndStatusCodeNot(purchaseOrderId, STATUS_005.name());
-        if(CollectionUtils.isEmpty(unOutItems)){
+        List<ErpPurchaseOrderItem> unInItems = orderItemRepository.findByOrderIdAndStatusCodeNot(purchaseOrderId, STATUS_005.name());
+        if(CollectionUtils.isEmpty(unInItems)){
             //全部入库成功->修改订单状态为：已入库
             orderRepository.save(order.setStatusCode(STATUS_005));
             orderOptLogRepository.save(ErpPurchaseOrderOptLog.builder().statusCode(STATUS_005.name()).content(STATUS_005.toLog()).optType("status").orderId(purchaseOrderId).build());

@@ -1,5 +1,6 @@
 package com.yintong.erp.mini.controller;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
 import com.yintong.erp.domain.prod.ErpProdOrder;
@@ -188,7 +189,7 @@ public class MiniAppController {
 
         BaseEntityWithBarCode order = function.apply(barcode);
         //noinspection unchecked
-        return new BaseResult().add(buildOrder(order));
+        return new BaseResult().add(buildOrder(order, StockOpt.valueOf(stockOpt)));
     }
 
     /**
@@ -202,7 +203,7 @@ public class MiniAppController {
         ErpEmployee employee = employeeRepository.findByBarCode(barcode).orElseThrow(() -> new IllegalArgumentException("未找到编号为[".concat(barcode).concat("的员工")));
         List<ErpProdOrder> orders = prodOrderRepository.findByEmployeeIdAndFinishDateIsNotNull(employee.getId());
         Assert.notEmpty(orders, "未找到员工".concat(employee.getName()).concat("未完成的制令单"));
-        List<JSONObject> list = orders.stream().map(MiniDtoWrapper::buildOrder).collect(Collectors.toList());
+        List<JSONObject> list = orders.stream().map(it -> MiniDtoWrapper.buildOrder(it, null)).collect(Collectors.toList());
         return new BaseResult().addList(list);
     }
 
@@ -425,6 +426,7 @@ public class MiniAppController {
     private Map<String, Function<String, BaseEntityWithBarCode>> holderFunctionMap() {
         return new HashMap<String, Function<String, BaseEntityWithBarCode>>() {{
             put(IN.name() + "_" + BUY.name(), purchaseOrderService::findOrder4In);//采购单（采购） - 具体的入库信息
+            put(OUT.name() + "_" + BUY.name(), purchaseOrderService::findOrder4Out);//采购单（退货） - 具体的出库信息
             put(IN.name() + "_" + REFUNDS.name(), saleOrderService::findOrder4In);//销售单（退货） - 具体的入库信息
             put(OUT.name() + "_" + SALE.name(), saleOrderService::findOrder4Out);//销售单（销售） - 具体的出库信息
             put(IN.name() + "_" + PROD.name(), prodOrderService::findOrder4In);//制令单（生产） - 具体的入库信息

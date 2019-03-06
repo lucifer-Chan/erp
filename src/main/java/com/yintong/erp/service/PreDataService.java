@@ -61,13 +61,16 @@ public class PreDataService {
         List<ErpMiniRole> roles = Arrays.asList(
                 ErpMiniRole.builder().code("IN_INIT").name("初始入库").build()
                 , ErpMiniRole.builder().code("IN_BUY").name("采购入库").build()
+                , ErpMiniRole.builder().code("OUT_BUY").name("采购退货").build()
                 , ErpMiniRole.builder().code("OUT_SALE").name("销售出库").build()
-                , ErpMiniRole.builder().code("IN_REFUNDS").name("退货入库").build()
+                , ErpMiniRole.builder().code("IN_REFUNDS").name("销售退货").build()
                 , ErpMiniRole.builder().code("OUT_PROD").name("生产物料出库").build()
                 , ErpMiniRole.builder().code("IN_PROD_P").name("生产成品入库").build()
                 , ErpMiniRole.builder().code("IN_PROD_W").name("原材料退回").build()
                 , ErpMiniRole.builder().code("inventory").name("仓库盘点").build()
                 , ErpMiniRole.builder().code("employee").name("扫码领料").build()
+                , ErpMiniRole.builder().code("garbage").name("废料入库").build()
+
 
                 , ErpMiniRole.builder().code("PROD_STAGE_1").name("半成品流转").build()
                 , ErpMiniRole.builder().code("PROD_STAGE_2").name("半成品后处理").build()

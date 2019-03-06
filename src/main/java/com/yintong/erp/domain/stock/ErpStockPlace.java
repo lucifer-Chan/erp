@@ -6,7 +6,6 @@ import com.yintong.erp.utils.bar.BarCodeIndex;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.SpringUtil;
-import java.text.DecimalFormat;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,8 +21,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
-import static com.yintong.erp.utils.common.Constants.StockPlaceType;
 import static com.yintong.erp.utils.common.Constants.StockPlaceStatus;
+import static com.yintong.erp.utils.common.Constants.StockPlaceType;
 
 /**
  * @author lucifer.chan
@@ -46,6 +45,9 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(100) comment '仓位名称'")
     private String name;
 
+    @Column(columnDefinition = "varchar(40) DEFAULT '' comment '位置编码'")
+    private String placeCode;
+
     @BarCodeIndex(value = 2, nullable = true)
     @Column(columnDefinition = "bigint(20) comment '关联供应商之后的原材料id，当stock_place_type为M时有效'")
     private Long materialSupplierAssId;
@@ -61,6 +63,9 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
 
     @Column(columnDefinition = "integer DEFAULT 0 comment '库存上限'")
     private Integer upperLimit;
+
+    @Column(columnDefinition = "integer DEFAULT 0 comment '库存下限'")
+    private Integer lowerLimit;
 
     @Column(columnDefinition = "double(20,5) DEFAULT 0 comment '当前存量'")
     private Double currentStorageNum;
@@ -91,7 +96,7 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
      * 存库前的验证
      */
     private void onPreCommit(){
-        Assert.hasText(name, "仓位名称不能为空");
+        Assert.hasText(placeCode, "位置编码不能为空");
         Assert.isTrue(Objects.isNull(upperLimit) || upperLimit > 0 , "库存上限不能小于0");
         Assert.isTrue(Objects.isNull(currentStorageNum) || currentStorageNum > 0, "当前存量不能小于0");
 

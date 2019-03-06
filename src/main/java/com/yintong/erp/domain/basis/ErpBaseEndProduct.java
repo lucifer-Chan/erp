@@ -1,10 +1,13 @@
 package com.yintong.erp.domain.basis;
 
+import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockEntity;
+import com.yintong.erp.domain.stock.StockPlaceFinder;
 import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.JsonWrapper;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
@@ -180,7 +183,11 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
 
     @Override
     public JSONObject extInfo(){
-        return JsonWrapper.builder().add("onlyOrKg", onlyOrKg).build();
+        List<ErpStockPlace> places = StockPlaceFinder.findPlaces(String.valueOf(id), null);
+        return JsonWrapper.builder()
+                .add("onlyOrKg", onlyOrKg)
+                .add("places", CommonUtil.defaultIfEmpty(places.stream().map(ErpStockPlace::getPlaceCode).collect(Collectors.joining(",")), "无"))
+                .build();
     }
 
     @Override

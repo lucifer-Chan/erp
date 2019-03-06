@@ -56,6 +56,9 @@ public class ErpPurchaseOrder  extends BaseEntityWithBarCode {
     @Column(columnDefinition = "integer DEFAULT 0 comment '是否可入库[1-可以|0-不可以]'")
     private Integer preStockIn;
 
+    @Column(columnDefinition = "integer DEFAULT 0 comment '是否可出库[1-可以|0-不可以]-针对退货'")
+    private Integer preStockOut;
+
     @Transient
     private String statusName;
 

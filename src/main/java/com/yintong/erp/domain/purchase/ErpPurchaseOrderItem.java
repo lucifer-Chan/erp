@@ -1,12 +1,18 @@
 package com.yintong.erp.domain.purchase;
 
 import com.yintong.erp.domain.basis.TemplateWares;
+import com.yintong.erp.domain.stock.ErpStockPlace;
+import com.yintong.erp.domain.stock.StockPlaceFinder;
 import com.yintong.erp.service.basis.CommonService;
 import com.yintong.erp.utils.base.BaseEntity;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -62,6 +68,15 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     @Column(columnDefinition = "double(20,5) DEFAULT 0 comment '已入库数量'")
     private Double inNum;
 
+    @Column(columnDefinition = "double(20,5) comment '需要退货的数量'")
+    private Double shouldRtNum;
+
+    @Column(columnDefinition = "double(20,5) comment '退款'")
+    private Double rtMoney;
+
+    @Column(columnDefinition = "double(20,5) comment '已出库的数量（退货）'")
+    private Double outNum;
+
     @Column(columnDefinition = "double(20,5) comment '单价'")
     private Double unitPrice;
 
@@ -80,6 +95,10 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
     public Double getInNum(){
         return Objects.isNull(inNum) ? 0D : inNum;
 
+    }
+
+    public Double getOutNum(){
+        return CommonUtil.ifNotPresent(outNum, 0d);
     }
 
 //
@@ -114,7 +133,15 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
         if(null == waresType) return wares = null;
         Function<Long, TemplateWares> function = SpringUtil.getBean(CommonService.class).findWaresById().get(Constants.WaresType.valueOf(waresType));
         TemplateWares templateWares = function.apply(waresId);
-        return wares = (Objects.isNull(templateWares) ? null : templateWares.getTemplate());
+        wares = (Objects.isNull(templateWares) ? new JSONObject() : templateWares.getTemplate());
+
+        if(Constants.WaresType.M.name().equals(waresType)){
+            wares.put("places", CommonUtil.defaultIfEmpty(StockPlaceFinder.findPlaces(null, String.valueOf(waresAssId)).stream().map(ErpStockPlace::getPlaceCode).collect(Collectors.joining(",")), "无"));
+        }
+        if(Constants.WaresType.D.name().equals(waresType)){
+            wares.put("places", CommonUtil.defaultIfEmpty(StockPlaceFinder.findMouldPlaces(String.valueOf(waresAssId).concat(",").concat(String.valueOf(waresId))).stream().map(ErpStockPlace::getPlaceCode).collect(Collectors.joining(",")), "无"));
+        }
+        return wares;
     }
 
     public TemplateWares templateWares(){

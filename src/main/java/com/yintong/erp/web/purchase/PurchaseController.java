@@ -132,6 +132,20 @@ public class PurchaseController {
     }
 
     /**
+     * 退货-包含明细
+     * 更新内容：明细的退货金额、shouldRtNum & 订单的状态->STATUS_009("正在退货")
+     * 约束条件：状态为STATUS_005【已入库】
+     * @param order
+     * @return
+     */
+    @PutMapping("order/refunds")
+    public BaseResult refunds(@RequestBody ErpPurchaseOrder order){
+        return new BaseResult().addPojo(orderService.refunds(order));
+    }
+
+    //purchase/order/refunds
+
+    /**
      * 删除采购订单-级联删除明细
      * 约束条件：状态为未发布,待审核,审核退回
      * @param orderId

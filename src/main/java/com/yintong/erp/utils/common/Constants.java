@@ -204,7 +204,11 @@ public interface Constants {
         STATUS_049("正在入库", ""),
         STATUS_005("已入库", ""),
         STATUS_007("已完成", ""),
-        STATUS_008("作废", "审核");
+        STATUS_008("作废", "审核"),
+        //小程序录入
+        STATUS_009("正在退货", "退货"),
+        //页面完成
+        STATUS_010("完成退货", "退货");
 
         PurchaseOrderStatus(String description, String operation) {
             this.description = description;

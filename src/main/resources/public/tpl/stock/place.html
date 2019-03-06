@@ -3,7 +3,7 @@
     <div class="full_height">
         <div id="searchFilter">
             <div class="sidebar-search">
-                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、仓位名称、可存物料" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、仓位名称、位置编码、可存物料" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="typeCollection"></li>
@@ -24,7 +24,8 @@
                             <tr erp-id="{id}">
                                 <th style="width:50px" erp-data="{barCode}">仓位编号<span id="allCount"></span></th>
                                 <th style="width:30px" erp-data="{stockPlaceType}" erp-convert="convertType">类型</th>
-                                <th style="width:70px" erp-data="{name}" >名称</th>
+                                <th style="width:70px" erp-data="{placeCode}" >位置编码</th>
+                                <th style="width:70px" erp-data="{name}" >描述</th>
                                 <th style="width:30px" erp-data="{statusCode}" erp-convert="convertStatus">仓位状态</th>
                                 <th style="width:30px" erp-data="{upperLimit}{currentStorageNum}" erp-convert="convertStorage">存储情况</th>
                                 <th style="width:70px" erp-data="{materialName}">可存物料</th>
@@ -49,9 +50,22 @@
                 <form class="form-horizontal pd23">
                     <input type="hidden" name="stockPlaceType">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">仓位名称</label>
+                        <label class="col-sm-3 control-label">位置编码</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="name" placeholder="仓位名称：类似 一号仓位" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                            <input type="text" class="form-control" name="placeCode" placeholder="位置编码" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">仓位描述</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="name" placeholder="仓位描述" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">库存下限</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" step="1" name="lowerLimit" placeholder="请输入正整数" >
+                            <span class="text-info">成品单位：kg; 模具单位：件</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -61,12 +75,14 @@
                             <span class="text-info">成品单位：kg; 模具单位：件</span>
                         </div>
                     </div>
+                    <!--
                     <div class="form-group">
                         <label class="col-sm-3 control-label">备注</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" autofocus onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
                         </div>
                     </div>
+                    -->
                     <div class="modal-footer noborder">
                         <button class="btn btn-info noborder" name="save" id="savePbt">保存</button>
                     </div>
@@ -93,10 +109,22 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">仓位名称</label>
+                        <label class="col-sm-3 control-label">位置编码</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="placeCode" placeholder="位置编码" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">仓位描述</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="name" id="_materialPlaceName"
                                    placeholder="仓位名称：类似 一号仓位" onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">库存下限</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" step="1" name="lowerLimit" placeholder="请输入正整数" >
                         </div>
                     </div>
                     <div class="form-group">
@@ -105,12 +133,14 @@
                             <input type="number" class="form-control" step="1" name="upperLimit" placeholder="请输入正整数" >
                         </div>
                     </div>
+                    <!--
                     <div class="form-group">
                         <label class="col-sm-3 control-label">备注</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="description" placeholder="最多输入50个字符" autofocus onfocus="checkStrNum(this,50)" oninput="checkStrNum(this,50)">
                         </div>
                     </div>
+                    -->
                     <div class="modal-footer noborder">
                         <button class="btn btn-info noborder" name="save" id="saveMbt">保存</button>
                     </div>
@@ -145,12 +175,12 @@
                     <div class="pd43">
                         <div class="row">
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">名称</label>
-                                <div class="col-xs-8 txt pd0" data-name="name"></div>
-                            </div>
-                            <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">编号</label>
                                 <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">位置编码</label>
+                                <div class="col-xs-8 txt pd0" data-name="placeCode"></div>
                             </div>
                         </div>
 
@@ -164,14 +194,25 @@
                                 <div class="col-xs-8 txt pd0" data-name="statusCode" data-convert="convertStatus"></div>
                             </div>
                         </div>
+
                         <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">存储下限</label>
+                                <div class="col-xs-8 txt pd0" data-name="lowerLimit"></div>
+                            </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">存储上限</label>
                                 <div class="col-xs-8 txt pd0" data-name="upperLimit"></div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">当前存量</label>
                                 <div class="col-xs-8 txt pd0" data-name="currentStorageNum"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">仓位描述</label>
+                                <div class="col-xs-8 txt pd0" data-name="name"></div>
                             </div>
                         </div>
 
@@ -181,13 +222,14 @@
                                 <div class="col-xs-10 txt pd0" data-name="materialName"></div>
                             </div>
                         </div>
+                        <!--
                         <div class="row">
                             <div class="col-xs-12">
                                 <label class="col-xs-2 pd0">备注</label>
                                 <div class="col-xs-10 txt pd0" data-name="description"></div>
                             </div>
-
                         </div>
+                        -->
                     </div>
                 </div>
             </div>
