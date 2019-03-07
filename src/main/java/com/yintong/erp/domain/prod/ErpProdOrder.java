@@ -102,6 +102,9 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
     @Transient
     private ErpBaseEndProduct product;
 
+    @Transient
+    private List<ErpProdGarbageHistory> garbages;
+
     /**
      * 获取挑拣记录
      * @return
@@ -111,6 +114,13 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
             return pickRecords;
         }
         return pickRecords = SpringUtil.getBean(ErpProdOrderPickRecordRepository.class).findByOrderIdOrderByCreatedAtDesc(id);
+    }
+
+    public List<ErpProdGarbageHistory> getGarbages(){
+        if(!CollectionUtils.isEmpty(garbages)){
+            return garbages;
+        }
+        return garbages = SpringUtil.getBean(ErpProdGarbageHistoryRepository.class).findByProdOrderIdOrderByCreatedAtDesc(id);
     }
 
     public List<ErpProdProductBom> getBoms(){

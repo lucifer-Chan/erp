@@ -5,6 +5,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.B000;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -89,8 +90,10 @@ public class ErpPurchasePlan extends BaseEntityWithBarCode {
                 && StringUtils.hasText(waresType)){
             finishHistory =
                     SpringUtil.getBean(ErpPurchaseOrderItemRepository.class)
-                            .findByWaresIdAndWaresTypeAndStatusCodeAndCreatedAtIsBetween(
-                                    waresId, waresType, Constants.PurchaseOrderStatus.STATUS_007.name(), startDate, endDate
+                            .findByWaresIdAndWaresTypeAndStatusCodeInAndCreatedAtIsBetween(
+                                    waresId, waresType
+                                    , Arrays.asList(Constants.PurchaseOrderStatus.STATUS_007.name(), Constants.PurchaseOrderStatus.STATUS_010.name())
+                                    , startDate, endDate
                             );
         }
         return finishHistory;
@@ -102,7 +105,9 @@ public class ErpPurchasePlan extends BaseEntityWithBarCode {
      */
     public Double getCurrentNum(){
         if(Objects.nonNull(currentNum)) return currentNum;
-        return currentNum = current(ErpPurchaseOrderItem::getNum);
+        double num = current(ErpPurchaseOrderItem::getNum);
+        double retNum = current(ErpPurchaseOrderItem::getOutNum);
+        return currentNum = num - retNum;
     }
 
     /**
@@ -111,7 +116,9 @@ public class ErpPurchasePlan extends BaseEntityWithBarCode {
      */
     public Double getCurrentMoney(){
         if(Objects.nonNull(currentMoney)) return currentMoney;
-        return currentMoney = current(ErpPurchaseOrderItem::getMoney);
+        double money = current(ErpPurchaseOrderItem::getMoney);
+        double rtMoney = current(ErpPurchaseOrderItem::getRtMoney);
+        return currentMoney = money - rtMoney;
     }
 
     private Double current(ToDoubleFunction<? super ErpPurchaseOrderItem> mapper){

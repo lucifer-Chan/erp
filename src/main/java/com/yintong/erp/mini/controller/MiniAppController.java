@@ -1,8 +1,9 @@
 package com.yintong.erp.mini.controller;
 
-import com.sun.org.apache.regexp.internal.RE;
 import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
+import com.yintong.erp.domain.prod.ErpProdGarbageHistory;
+import com.yintong.erp.domain.prod.ErpProdGarbageHistoryRepository;
 import com.yintong.erp.domain.prod.ErpProdOrder;
 import com.yintong.erp.domain.prod.ErpProdOrderRepository;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
@@ -26,6 +27,7 @@ import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.base.JsonWrapper;
+import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.common.SessionUtil;
 import com.yintong.erp.utils.common.SimpleCache;
 import com.yintong.erp.utils.common.SimpleRemote;
@@ -122,6 +124,8 @@ public class MiniAppController {
     @Autowired ErpEmployeeRepository employeeRepository;
 
     @Autowired ErpProdOrderRepository prodOrderRepository;
+
+    @Autowired ErpProdGarbageHistoryRepository garbageHistoryRepository;
 
     /**
      * 生成token
@@ -270,7 +274,6 @@ public class MiniAppController {
         }
 
         throw new IllegalArgumentException("条码类型不正确[" + barcode + "]");
-
     }
 
     /**
@@ -388,6 +391,67 @@ public class MiniAppController {
         //4- 清理缓存中的stockEntity
         simpleCache.clearCache("MINI_" + barcode);
         return new BaseResult().addPojo(place);
+    }
+
+    /**
+     * 扫描制令单，准备废料入库
+     * @param barcode
+     * @return
+     */
+    @GetMapping("scan/garbage")
+    public BaseResult scan2Garbage(String barcode){
+        ErpProdOrder order = prodOrderService.findOrder4In(barcode);
+        List<ErpProdGarbageHistory> maList = garbageHistoryRepository.findByProdOrderIdAndTypeCode(order.getId(), "MA");
+        List<ErpProdGarbageHistory> mzList = garbageHistoryRepository.findByProdOrderIdAndTypeCode(order.getId(), "MZ");
+        //废银数量
+        double maNum = maList.stream().mapToDouble(ErpProdGarbageHistory::getNum).sum();
+        double mzNum =  mzList.stream().mapToDouble(ErpProdGarbageHistory::getNum).sum();
+        return new BaseResult()
+                .put("maNum", maNum)
+                .put("mzNum", mzNum)
+                .put("barCode", barcode)
+                .put("time", DateUtil.getDateString(order.getCreatedAt()))
+                .put("prodOrderId", order.getId())
+                ;
+    }
+
+    /**
+     * 废料入库
+     * @param prodOrderId
+     * @param maNum
+     * @param mzNum
+     * @return
+     */
+    @PostMapping("recycle/in/garbage")
+    public BaseResult recycleInGarbage(Long prodOrderId, double maNum, double mzNum){
+        prodOrderService.findOneOrder(prodOrderId);
+        Assert.isTrue(maNum >= 0, "废银数量不能小于0");
+        Assert.isTrue(mzNum >= 0, "废铜数量不能小于0");
+        if(maNum == 0 && mzNum == 0){
+            throw new IllegalArgumentException("废银数量和废铜数量不能同时为0");
+        }
+
+        if(maNum > 0){
+            garbageHistoryRepository.save(
+                    ErpProdGarbageHistory.builder()
+                            .typeCode("MA")
+                            .typeName("废银")
+                            .prodOrderId(prodOrderId).num(maNum)
+                            .build()
+            );
+        }
+
+        if(mzNum > 0){
+            garbageHistoryRepository.save(
+                    ErpProdGarbageHistory.builder()
+                            .typeCode("MZ")
+                            .typeName("废铜")
+                            .prodOrderId(prodOrderId).num(mzNum)
+                            .build()
+            );
+        }
+
+        return new BaseResult().setErrmsg("操作成功");
     }
 
     private StockEntity findWaresByBarcode(String barcode, boolean cacheAble){

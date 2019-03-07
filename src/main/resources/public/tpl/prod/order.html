@@ -116,6 +116,7 @@
                     <li role="presentation"><span href="#recordList" aria-controls="recordList" role="tab" data-toggle="tab">挑拣记录</span></li>
                     <li role="presentation"><span href="#stockList" aria-controls="stockList" role="tab" data-toggle="tab">库存记录</span></li>
                     <li role="presentation"><span href="#optList" aria-controls="optList" role="tab" data-toggle="tab">操作记录</span></li>
+                    <li role="presentation"><span href="#garbageList" aria-controls="garbageList" role="tab" data-toggle="tab">废料入库记录</span></li>
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content">
@@ -136,6 +137,10 @@
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="optList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="garbageList">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
@@ -371,6 +376,21 @@
             <span class="right">{{log.createdAt}}</span>
         </p>
         {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!-- 废料入库模版 -->
+<script id="garbage-record" type="text/template">
+    {{if logs.length}}
+    {{each logs as log}}
+    <p>
+        <span class="name"><b>{{log.createdName}}</b></span>
+        <span class="content">入库{{log.typeName}} {{log.num}} kg</span>
+        <span class="right">{{log.createdAt}}</span>
+    </p>
+    {{/each}}
     {{else}}
     <p>暂无</p>
     {{/if}}
@@ -864,6 +884,10 @@
             //挑拣记录
             var pickHtml = template('template-record', {records : tr.pickRecords});
             $('#recordList').find('.bugInfoHistories').html(pickHtml);
+            //废料入库记录
+            var garbageHtml = template('garbage-record', {logs : tr.garbages});
+            $('#garbageList').find('.bugInfoHistories').html(garbageHtml);
+
             //操作记录|库存记录
             services.prodOrder.opt(tr.id).then(function (ret) {
                 var orderLogs = [], stockLogs = [], pickLogs = [];

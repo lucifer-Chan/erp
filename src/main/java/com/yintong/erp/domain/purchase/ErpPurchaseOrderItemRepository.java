@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ErpPurchaseOrderItemRepository extends JpaRepository<ErpPurchaseOrderItem, Long> {
 
-    List<ErpPurchaseOrderItem> findByWaresIdAndWaresTypeAndStatusCodeAndCreatedAtIsBetween(Long waresId, String waresType, String statusCode, Date start, Date end);
+    List<ErpPurchaseOrderItem> findByWaresIdAndWaresTypeAndStatusCodeInAndCreatedAtIsBetween(Long waresId, String waresType, List<String> statusCodes, Date start, Date end);
 
     List<ErpPurchaseOrderItem> findByOrderId(Long orderId);
 
