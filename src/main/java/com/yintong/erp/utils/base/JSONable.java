@@ -14,6 +14,10 @@ public interface JSONable {
         return JSONObject.fromObject(this, toDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
 
+    default JSONObject toJSONObject(String format){
+        return  JSONObject.fromObject(this, toDateFormat(format));
+    }
+
     /**
      *
      * @param includeEmpty 是否包含空信息

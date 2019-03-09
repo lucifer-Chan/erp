@@ -1,9 +1,12 @@
 package com.yintong.erp.mini.controller;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.security.ErpEmployee;
 import com.yintong.erp.domain.basis.security.ErpEmployeeRepository;
 import com.yintong.erp.domain.prod.ErpProdGarbageHistory;
 import com.yintong.erp.domain.prod.ErpProdGarbageHistoryRepository;
+import com.yintong.erp.domain.prod.ErpProdHalfFlowRecord;
+import com.yintong.erp.domain.prod.ErpProdHalfFlowRecordRepository;
 import com.yintong.erp.domain.prod.ErpProdOrder;
 import com.yintong.erp.domain.prod.ErpProdOrderRepository;
 import com.yintong.erp.domain.stock.ErpStockOptLog;
@@ -27,6 +30,7 @@ import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.base.JsonWrapper;
+import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.common.SessionUtil;
 import com.yintong.erp.utils.common.SimpleCache;
@@ -37,6 +41,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +55,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +71,8 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.V000;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.X000;
 import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_ASS_LENGTH;
 import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_TPL_LENGTH;
+import static com.yintong.erp.utils.common.Constants.ProdFlowStage;
+import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_1;
 import static com.yintong.erp.utils.common.Constants.StockHolder;
 import static com.yintong.erp.utils.common.Constants.StockHolder.BUY;
 import static com.yintong.erp.utils.common.Constants.StockHolder.INIT;
@@ -126,6 +134,8 @@ public class MiniAppController {
     @Autowired ErpProdOrderRepository prodOrderRepository;
 
     @Autowired ErpProdGarbageHistoryRepository garbageHistoryRepository;
+
+    @Autowired ErpProdHalfFlowRecordRepository flowRecordRepository;
 
     /**
      * 生成token
@@ -453,6 +463,103 @@ public class MiniAppController {
 
         return new BaseResult().setErrmsg("操作成功");
     }
+
+    /**
+     * 扫码制令单
+     * @param barcode
+     * @return
+     */
+    @GetMapping("scan/prod")
+    public BaseResult scan4CreateFlow(String barcode){
+        ErpProdOrder order = prodOrderService.findOrder4In(barcode);
+        return new BaseResult().addPojo(order, "yyyy-MM-dd");
+    }
+
+    /**
+     * 新增工序卡
+     * @param prodOrderId
+     * @param kg
+     * @return
+     */
+    @PostMapping("prod/flow")
+    public BaseResult createFlow(Long prodOrderId, Double kg){
+        ErpProdOrder order = prodOrderService.findOneOrder(prodOrderId);
+        ErpBaseEndProduct product = order.getProduct();
+        Assert.notNull(product, "未找到制令单的产品");
+        Assert.notNull(kg, "输入的重量不能为空");
+        Assert.isTrue(kg > 0, "输入的重量必须大于0");
+        int num = CommonUtil.kg2Num(product, kg);
+        ErpProdHalfFlowRecord record = flowRecordRepository.save(
+                ErpProdHalfFlowRecord.builder()
+                        .prodOrderId(prodOrderId)
+                        .stage(1).stage1Kg(kg).stage1Num(num).stage1Time(new Date())
+                    .build()
+        );
+
+        prodOrderService.afterSaveFlow(record, PROD_STAGE_1);
+
+        return new BaseResult().addPojo(prodOrderService.findOneOrder(prodOrderId), "yyyy-MM-dd");
+    }
+
+
+    /**
+     * 扫描工序卡
+     * @param barcode
+     * @return
+     */
+    @GetMapping("scan/flow")
+    public BaseResult scan2OptFlow(String barcode){
+        ErpProdHalfFlowRecord record = flowRecordRepository.findByBarCode(barcode).orElseThrow(()->new IllegalArgumentException("未找到工序卡[".concat(barcode).concat("]")));
+        return new BaseResult().addPojo(record);
+    }
+
+    /**
+     * 输入流转单的重量,保存
+     * @param next 接下来的状态
+     * @param barcode 流转单的条码
+     * @param kg
+     * @return
+     */
+    @PostMapping("prod/flow/at")
+    public BaseResult flow(int next, String barcode, Double kg){
+        ErpEmployee employee = SessionUtil.getCurrentUser();
+        ErpProdHalfFlowRecord record = flowRecordRepository.findByBarCode(barcode).orElseThrow(()->new IllegalArgumentException("未找到工序卡[".concat(barcode).concat("]")));
+        ErpProdOrder order = prodOrderService.findOneOrder(record.getProdOrderId());
+        ErpBaseEndProduct product = order.getProduct();
+        Assert.notNull(product, "未找到制令单的产品");
+        Assert.notNull(kg, "输入的重量不能为空");
+        Assert.isTrue(kg > 0, "输入的重量必须大于0");
+        ProdFlowStage currentStage = ProdFlowStage.val(record.getStage());
+        ProdFlowStage nextStage = ProdFlowStage.val(next);
+        Assert.isTrue((currentStage.stage + 1) == nextStage.stage, "当前工序为".concat(currentStage.description).concat("，不能进行").concat(nextStage.description).concat("操作"));
+        int num = CommonUtil.kg2Num(product, kg);
+        if(next == 2){
+            record.setStage2Kg(kg);
+            record.setStage2Num(num);
+            record.setStage2Time(new Date());
+            record.setStage2UserId(employee.getId());
+            record.setStage2UserName(employee.getName());
+        } else if (next == 3){
+            record.setStage3Kg(kg);
+            record.setStage3Num(num);
+            record.setStage3Time(new Date());
+            record.setStage3UserId(employee.getId());
+            record.setStage3UserName(employee.getName());
+        } else if (next ==4){
+            record.setStage4Kg(kg);
+            record.setStage4Num(num);
+            record.setStage4Time(new Date());
+            record.setStage4UserId(employee.getId());
+            record.setStage4UserName(employee.getName());
+        }
+        record.setStage(next);
+
+        record = flowRecordRepository.save(record);
+        prodOrderService.afterSaveFlow(record, ProdFlowStage.val(next));
+
+        return new BaseResult().addPojo(record);
+    }
+
 
     private StockEntity findWaresByBarcode(String barcode, boolean cacheAble){
         Assert.isTrue(StringUtils.hasText(barcode) && (barcode.length() == WARES_BAR_CODE_TPL_LENGTH || barcode.length() == WARES_BAR_CODE_ASS_LENGTH) , "条形码有误");

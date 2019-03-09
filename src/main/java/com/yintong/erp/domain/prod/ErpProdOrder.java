@@ -7,6 +7,7 @@ import com.yintong.erp.utils.bar.BarCode;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -105,6 +106,9 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
     @Transient
     private List<ErpProdGarbageHistory> garbages;
 
+    @Transient
+    private List<ErpProdHalfFlowRecord> flows = Collections.emptyList();
+
     /**
      * 获取挑拣记录
      * @return
@@ -121,6 +125,13 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
             return garbages;
         }
         return garbages = SpringUtil.getBean(ErpProdGarbageHistoryRepository.class).findByProdOrderIdOrderByCreatedAtDesc(id);
+    }
+
+    public List<ErpProdHalfFlowRecord> getFlows(){
+        if(!CollectionUtils.isEmpty(flows)){
+            return flows;
+        }
+        return flows = SpringUtil.getBean(ErpProdHalfFlowRecordRepository.class).findByProdOrderIdOrderByCreatedAtDesc(id);
     }
 
     public List<ErpProdProductBom> getBoms(){

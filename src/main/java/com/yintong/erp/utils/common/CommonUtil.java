@@ -188,6 +188,20 @@ public class CommonUtil {
     }
 
     /**
+     * KG -> 只的换算
+     * @param product
+     * @param kg
+     * @return
+     */
+    public static Integer kg2Num(ErpBaseEndProduct product, double kg){
+        //每kg生产的个数
+        Double numOneKg = parseDouble(product.getOnlyOrKg());
+        Assert.notNull(numOneKg, "请维护 ".concat(product.getDescription()).concat(" 的'只/kg'属性"));
+        return new Double(kg * numOneKg).intValue();
+    }
+
+
+    /**
      * num为kg；根据订单单位（kg／只）计算出数量
      * @param product
      * @param unit

@@ -118,7 +118,8 @@ public interface BarCodeConstants {
         D600("模具-剪切座"),
         D700("模具-偏心管"),
         D800("模具-头冲"),
-        KREC("挑拣记录");
+        KREC("挑拣记录"),
+        WF00("半成品流转");
 
         BAR_CODE_PREFIX(String description) {
             this.description = description;

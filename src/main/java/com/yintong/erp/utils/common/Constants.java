@@ -233,4 +233,33 @@ public interface Constants {
         }
     }
 
+    /**
+     * 流转单工序
+     */
+    enum ProdFlowStage {
+        PROD_STAGE_1(1, "半成品流转"),
+        PROD_STAGE_2(2, "半成品后处理"),
+        PROD_STAGE_3(3, "半成品挑拣"),
+        PROD_STAGE_4(4, "成品包装");
+
+        ProdFlowStage(int stage, String description){
+            this.stage = stage;
+            this.description = description;
+        }
+
+        public final String description;
+
+        public final int stage;
+
+        public static ProdFlowStage val(int stage){
+            for(ProdFlowStage ret : values()){
+                if(ret.stage == stage){
+                    return ret;
+                }
+            }
+
+            throw new IllegalArgumentException("未找到值为" + stage + "的工序");
+        }
+    }
+
 }

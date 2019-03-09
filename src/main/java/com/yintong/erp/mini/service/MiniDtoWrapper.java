@@ -220,6 +220,7 @@ public class MiniDtoWrapper {
                     .add("time", DateUtil.getDateString(order.getStartDate()))
                     .add("product", product)
                     .add("items", boms)
+                    .add("flows", order.getFlows().stream().map(it->it.toJSONObject("yyyy-MM-dd")).collect(Collectors.toList()))
                 .build();
     }
 
