@@ -19,5 +19,5 @@ public interface ErpProdOrderRepository extends JpaRepository<ErpProdOrder, Long
 
     List<ErpProdOrder> findByCreatedByOrderByCreatedAtDesc(Long createdBy);
 
-    List<ErpProdOrder> findByEmployeeIdAndFinishDateIsNotNull(Long employeeId);
+    List<ErpProdOrder> findByEmployeeIdAndFinishDateIsNull(Long employeeId);
 }

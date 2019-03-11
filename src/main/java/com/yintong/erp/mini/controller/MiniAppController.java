@@ -215,7 +215,7 @@ public class MiniAppController {
     public BaseResult scanEmployee(String barcode){
         Assert.hasText(barcode, "请先扫描条形码");
         ErpEmployee employee = employeeRepository.findByBarCode(barcode).orElseThrow(() -> new IllegalArgumentException("未找到编号为[".concat(barcode).concat("的员工")));
-        List<ErpProdOrder> orders = prodOrderRepository.findByEmployeeIdAndFinishDateIsNotNull(employee.getId());
+        List<ErpProdOrder> orders = prodOrderRepository.findByEmployeeIdAndFinishDateIsNull(employee.getId());
         Assert.notEmpty(orders, "未找到员工".concat(employee.getName()).concat("未完成的制令单"));
         List<JSONObject> list = orders.stream().map(it -> MiniDtoWrapper.buildOrder(it, null)).collect(Collectors.toList());
         return new BaseResult().addList(list);
