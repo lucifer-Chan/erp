@@ -47,7 +47,7 @@ public class PreDataService {
     @PostConstruct
     void init(){
 //        if(!debug) return;
-//        initMenus();
+        initMenus();
 //        initEmployees();
 //        initCategories();
 //        initDepartments();
@@ -70,7 +70,6 @@ public class PreDataService {
                 , ErpMiniRole.builder().code("inventory").name("仓库盘点").build()
                 , ErpMiniRole.builder().code("employee").name("扫码领料").build()
                 , ErpMiniRole.builder().code("garbage").name("废料入库").build()
-
 
                 , ErpMiniRole.builder().code("PROD_STAGE_1").name("半成品流转").build()
                 , ErpMiniRole.builder().code("PROD_STAGE_2").name("半成品后处理").build()
@@ -101,6 +100,7 @@ public class PreDataService {
      */
     private void initMenus(){
 //        if(! CollectionUtils.isEmpty(menuRepository.findAll())) return;
+//        if(debug) return;
         menuRepository.deleteAll();
         List<ErpMenu> menus = Arrays.asList(
                 ErpMenu.builder().code("10").name("基础数据").build()
@@ -128,6 +128,7 @@ public class PreDataService {
                 , ErpMenu.builder().code("50").name("生产管理").build()
                     , ErpMenu.builder().code("5001").name("生产计划单").matches("/prod/plan/**").uri("prod/plan.html").parentCode("50").build()
                     , ErpMenu.builder().code("5002").name("生产制令单").matches("/prod/order/**").uri("prod/order.html").parentCode("50").build()
+                    , ErpMenu.builder().code("5003").name("车间管理").matches("/prod/order/**").uri("prod/flow.html").parentCode("50").build()
 
         );
         menuRepository.saveAll(menus);

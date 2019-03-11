@@ -1,0 +1,453 @@
+<div class="erp_content animated fadeInRight full_height"  id="prod_flow_page">
+    <div class="full_height">
+        <div id="searchFilter">
+            <div class="sidebar-search">
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、内容、成品名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+            </div>
+        </div>
+        <div class="pd23 pd43">
+            <div class="row">
+                <div class="pTable">
+                    <div class="pTable-content customTable">
+                        <table class="table table-hover" id="dataTables">
+                            <thead>
+                            <tr erp-id="{id}">
+                                <th style="width:50px" erp-data="{barCode}">编号<span id="allCount"></span></th>
+                                <th style="width:70px" erp-data="{description}" >描述</th>
+                                <th style="width:70px" erp-data="{statusName}">状态</th>
+                                <th style="width:70px" erp-data="{productName}">生产成品</th>
+                                <th style="width:30px" erp-data="{employeeName}">工人</th>
+                                <th style="width:30px" erp-data="{prodNum}">分配量</th>
+                                <th style="width:30px" erp-data="{unit}">单位</th>
+                                <th style="width:30px" erp-data="{pickNum}">已包装</th>
+                                <th style="width:30px" erp-data="{finishNum}">入库量</th>
+                                <th style="width:70px" erp-data="{startDate}" erp-convert="_convertDate">生产开始日期</th>
+                                <th style="width:70px" erp-data="{finishDate}" erp-convert="_convertDate">完成时间</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 右侧 -->
+<div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
+    <div class="bugInfoTop">
+        <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+    </div>
+    <div class="bugInfoContent initOrderDetail">
+        <div class="panel-default bugInfo">
+            <div class="row">
+                <p class="pd23 pd43">
+                    <span class="col-xs-6 pd0">
+                        <span class="label label-info">制令单信息</span>
+                    </span>
+                    <span class="col-xs-6  pd21 text-right" style="font-size: 18px">
+                        <i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="base"></i>
+                    </span>
+                </p>
+                <div class="col-xs-12" data-value="baseInfo">
+                    <div class="pd43">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">制令单编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">订单状态</label>
+                                <div class="col-xs-8 txt pd0" data-name="statusName"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-2 pd0">生产成品</label>
+                                <div class="col-xs-10 txt pd0" data-name="productName" style="margin-left: -10px;"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">开始时间</label>
+                                <div class="col-xs-8 txt pd0" data-convert="startDate"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">完成时间</label>
+                                <div class="col-xs-8 txt pd0" data-convert="finishDate"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">工人</label>
+                                <div class="col-xs-8 txt pd0" data-name="employeeName"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">分配量</label>
+                                <div class="col-xs-8 txt pd0" data-num="prodNum"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">已包装</label>
+                                <div class="col-xs-8 txt pd0" data-num="pickNum"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <label class="col-xs-4 pd0">入库量</label>
+                                <div class="col-xs-8 txt pd0" data-num="finishNum"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <ul class="nav nav-tabs noborder" role="tablist">
+                    <li role="presentation" class="active"><span href="#flowList" aria-controls="flowList" role="tab" data-toggle="tab">工序卡清单</span></li>
+                    <li role="presentation"><span href="#flowLogList" aria-controls="flowLogList" role="tab" data-toggle="tab">工序流转日志</span></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="flowList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="flowLogList">
+                        <div class="col-sm-12 bugInfoHistories">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="printHolder" hidden></div>
+
+<!-- 日志模版 -->
+<script id="template-log" type="text/template">
+    {{if logs.length}}
+    {{each logs as log}}
+    <p>
+        <span class="name"><b>{{log.createdName}}</b></span>
+        <span class="content"> {{log.content}}</span>
+        <span class="right">{{log.createdAt}}</span>
+    </p>
+    {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!-- 工序模版 -->
+<script id="template-flow" type="text/template">
+    {{if flows.length}}
+    {{each flows as flow}}
+    <div class="row">
+        <div class="col-sm-12" style="margin-bottom:-20px">
+            <div class="panel panel-default" style="float: left;margin-right: 15px;width: 100%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="font-size: 13px">工序卡【{{flow.barCode}}】</h3>
+                    <div class="tools">
+                        <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="{{flow.id}}"></i></span>
+                        <button type="button" class="btn btn-info btn-xs toPrintFlowBt" data-value="{{flow.barCode}}">打印工序卡</button>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding:0 15px 10px 15px" data-value="{{flow.id}}Info">
+                    <ul class="status-horizontal">
+                        <li class="{{flow.stage1.current}}">
+                            <div class="status-title">{{flow.stage1.name}}</div>
+                            <div class="status-time">{{flow.stage1.time}}</div>
+                            <div class="status-content">{{flow.stage1.content}}</div>
+                        </li>
+                        <li class="{{flow.stage2.current}}">
+                            <div class="status-title">{{flow.stage2.name}}</div>
+                            <div class="status-time">{{flow.stage2.time}}</div>
+                            <div class="status-content">{{flow.stage2.content}}</div>
+                        </li>
+                        <li class="{{flow.stage3.current}}">
+                            <div class="status-title">{{flow.stage3.name}}</div>
+                            <div class="status-time">{{flow.stage3.time}}</div>
+                            <div class="status-content">{{flow.stage3.content}}</div>
+                        </li>
+                        <li class="{{flow.stage4.current}}">
+                            <div class="status-title">{{flow.stage4.name}}</div>
+                            <div class="status-time">{{flow.stage4.time}}</div>
+                            <div class="status-content">{{flow.stage4.content}}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <p>暂无</p>
+    {{/if}}
+</script>
+
+<!--生产工序卡打印-->
+<script id="flow_print_tpl" type="text/template">
+    <div class="table-print-860">
+        <div class="panel-default bugInfo">
+            <div>
+                <table class="table table-print table-print-860">
+                    <tr style="height: 45px" class="print-header">
+                        <th colspan="5" rowspan="2"><h3 style="font-weight: 900;font-size: 30px"><u>生产工序卡</u></h3></th>
+                        <td colspan="6" rowspan="2"><img src="{{flow.base64}}" style="width: 240px;height: 64px;"></td>
+                        <th class="nbr nbb" colspan="2" style="vertical-align: bottom;text-align: right!important;">制单日期:</th>
+                        <td class="nbt nbl nbb" colspan="2" style="vertical-align: bottom;">{{now}}</td>
+                    </tr>
+                    <tr style="height: 38px">
+                        <th class="nbr nbt" colspan="2" style="vertical-align: top;text-align: right!important;">制单人:</th>
+                        <td class="nbt nbl" colspan="2" style="vertical-align: top;">{{currentUser}}</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="7" style="width: 48px!important;height: 175px!important;">基<br>本<br>信<br>息<br>／<br>工<br>序<br>流<br>程</th>
+                        <th>客户代码</th><td colspan="2">{{product.custCodeNew}}</td>
+                        <th>操作工</th><td colspan="2">{{flow.createdName}}</td>
+                        <th>机台</th><td colspan="2"></td>
+                        <th>初始重量</th><td colspan="2">{{flow.stage1Kg}}kg</td>
+                        <th>备注</th><td></td>
+                    </tr>
+                    <tr>
+                        <th>货物名称</th><td colspan="4">{{product.endProductName}}</td>
+                        <th>规格描述</th><td colspan="4">{{product.specification}}</td>
+                        <th>材料名称</th><td colspan="3">{{product.materialName}}</td>
+                    </tr>
+                    <tr style="height: 35px;">
+                        <th colspan="4" style="border-top: solid 3px;">挑拣信息</th>
+                        <th colspan="10" style="border-top: solid 3px;">包装信息</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">挑拣前重量</th>
+                        <th colspan="4">挑拣后重量(总数量)</th>
+                        <th colspan="2">总数量</th>
+                        <th colspan="2">包数</th>
+                        <th colspan="2">包数数量/(PCS)</th>
+                        <th colspan="2">包数重量/(KG)</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2"></td>
+                        <td colspan="2"></td>
+                        <td colspan="2"></td>
+                        <td colspan="2" rowspan="3"></td>
+                        <td colspan="2" rowspan="3"></td>
+                        <td colspan="2" rowspan="3"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">废品重量</th>
+                        <th colspan="2">废品数量</th>
+                        <th colspan="2">零头重量</th>
+                        <th colspan="2">零头数量</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2"></td>
+                        <td colspan="2"></td>
+                        <td colspan="2"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/javascript">
+    requirejs(['ztree','utils','services'],function (ztree, utils, services) {
+        console.log('hello prodOrder');
+        var consts = {
+            //查询参数
+            oQueryParam : {
+                flowStart: true
+            }
+            , currentOrder : {}//当前制令单
+            , $rightPage : $('#rightInfoPage')//右侧页面
+            , flows : {}
+        };
+
+        /**
+         * 加载制令单列表
+         */
+        function loadDataTable(oParams) {
+            //缓存查询条件
+            if (oParams === true){
+                oParams = consts.oQueryParam;
+            } else {
+                consts.oQueryParam = oParams ||{};
+            }
+
+            /**
+             * 加载数据的实际方法
+             * @param params
+             */
+            function dataProvider(params){
+                return services.prodOrder.query(params);
+            }
+
+            /**
+             * 选中行事件
+             * @param $tr 选中的行事件
+             */
+            function fClickTr($tr){
+                var $rightPage = consts.$rightPage;
+                var id = $tr.attr('id');
+                if (id === $rightPage.attr('data-id')) return;
+                $rightPage.attr('data-id', id);
+                services.prodOrder.one(id).then(function (tr) {
+                    console.log('点击tr', tr);
+                    initTrDetail(tr);
+                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+                    $rightPage.find('.fa-angle-double-down').click();
+
+                }).catch(function (reason) {
+                    layer.msg(reason.caught ? reason.message : '请求失败！');
+                });
+            }
+
+            function _convertDate(array) {
+                return convertDate(array[0]);
+            }
+
+            utils.dataTable({
+                holder: '#dataTables'
+                , $dataProvider : dataProvider
+                , oParams : oParams || {}
+                , fClickTr : fClickTr
+                , aConverts : [_convertDate]
+                , unSorting : [4]
+            });
+        }
+
+        function convertDate(date) {
+            return !!date ? date.substr(0,10) : '<span class="label label-warning">尚未完成</span>';
+        }
+
+        /**
+         * 初始化右侧
+         */
+        function initTrDetail(tr) {
+            consts.currentOrder = tr;
+            consts.flows = {};
+            var unSetting = '<span class="label label-warning">无</span>';
+            var $detail = $('.initOrderDetail');
+            var $baseInfo = $detail.find('div[data-value="baseInfo"]');
+            //初始化页面数据-基本信息
+            $baseInfo.find('div[data-name]').each(function () {
+                var def = $(this).attr('data-convert') === 'false' ? '无' : unSetting;
+                $(this).html(tr[$(this).attr('data-name')] || def);
+            });
+            //data-convert="startDate finishDate"
+            $baseInfo.find('div[data-convert="startDate"]').html(tr.startDate.substr(0,10));
+            $baseInfo.find('div[data-convert="finishDate"]').html(convertDate(tr.finishDate));
+            //初始化页面数据-数量
+            $baseInfo.find('div[data-num]').each(function () {
+                var num = tr[$(this).attr('data-num')];
+                if (!num) {
+                    $(this).html(unSetting);
+                } else {
+                    $(this).html(num + '' + (tr.unit ||''));
+                }
+            });
+            //操作记录|库存记录
+            services.prodOrder.opt(tr.id).then(function (ret) {
+                var flowLogs = [];
+                ret.list.forEach(function (opt) {
+                    if(opt.optType === 'flow'){
+                        flowLogs.push(opt);
+                    }
+                });
+                //工序流转记录
+                var flowLogHtml = template('template-log', {logs : flowLogs});
+                $('#flowLogList').find('.bugInfoHistories').html(flowLogHtml);
+            });
+            //工序卡列表
+            var flows = [];
+            (tr.flows || []).forEach(function (flow) {
+                var stage1 = {}, stage2 = {}, stage3 = {}, stage4 = {};
+                var stage = flow.stage;
+                stage1.current = stage === 1 ? 'current' : '';
+                stage1.time = flow.stage1Time;
+                stage1.name = "流转【" + flow.createdName + "】";
+                stage1.content = flow.stage1Kg + "kg(" + flow.stage1Num + "只)";
+
+                stage2.current = stage === 2 ? 'current' : '';
+                stage2.time = flow.stage2Time;
+                stage2.name = "后处理" + (stage >= 2? ("【" + flow.stage2UserName + "】") : '');
+                stage2.content = stage >= 2? (flow.stage2Kg + "kg(" + flow.stage2Num + "只)") : '';
+
+                stage3.current = stage === 3 ? 'current' : '';
+                stage3.time = flow.stage3Time;
+                stage3.name = "挑拣" + (stage >= 3? ("【" + flow.stage3UserName + "】") : '');
+                stage3.content = stage >= 3? (flow.stage3Kg + "kg(" + flow.stage3Num + "只)") : '';
+
+                stage4.current = stage === 4 ? 'current' : '';
+                stage4.time = flow.stage4Time;
+                stage4.name = "包装" + (stage >= 4? ("【" + flow.stage4UserName + "】") : '');
+                stage4.content = stage >= 4? (flow.stage4Kg + "kg(" + flow.stage4Num + "只)") : '';
+                flows.push({ 'stage1' : stage1, 'stage2' : stage2, 'stage3' : stage3, 'stage4' : stage4, 'barCode': flow.barCode, id: flow.id});
+                consts.flows[flow.barCode] = flow;
+            });
+
+            var flowHtml = template('template-flow', {flows: flows});
+            $('#flowList').find('.bugInfoHistories').html(flowHtml);
+            utils.initRightAngleEvent();
+            //打印工序卡
+            init_print_prod_flow();
+        }
+
+        /**
+         * 初始化事件
+         */
+        function initEvent() {
+            //搜索
+            utils.bindQuery(function (value) {
+                consts.oQueryParam.cause = value;
+                loadDataTable(true);
+            });
+        }
+
+        //打印工序卡
+        function init_print_prod_flow(){
+            $('.toPrintFlowBt').unbind('click').click(function () {
+                var flow = consts.flows[$(this).attr('data-value')];
+                var product = consts.currentOrder.product || {};
+                var account = $.local(GLOBALS.localKeys.accountInfo);
+                var $printHolder = $('#printHolder').clone();
+                var data = {
+                    flow :flow,
+                    now : new Date().format("yyyy-MM-dd"),
+                    currentUser : account.name,
+                    product:{
+                        custCodeNew: product.custCodeNew,
+                        endProductName: product.endProductName,
+                        specification: product.specification,
+                        materialName: product.materialName,
+                    }
+                };
+
+                services.common.barcode(data.flow.barCode)
+                    .then(function (ret) {
+                        data.flow.base64 = ret.base64;
+                        console.log('打印数据', data);
+                    })
+                    .then(function () {
+                        var html = template("flow_print_tpl", data);
+                        $printHolder.html(html).show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            })
+        }
+
+        function init() {
+            initEvent();
+            loadDataTable(true);
+        }
+        init();
+    });
+</script>

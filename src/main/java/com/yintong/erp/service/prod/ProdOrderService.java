@@ -50,13 +50,16 @@ import org.apache.commons.lang.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.common.Constants.ProdBomHolder.ORDER;
+import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_1;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_2;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_3;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_4;
 import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_002;
 import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_003;
 import static com.yintong.erp.utils.common.Constants.StockHolder.PROD;
+import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
+import static javax.persistence.criteria.Predicate.BooleanOperator.AND;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 import static com.yintong.erp.utils.common.Constants.StockHolder;
 import static com.yintong.erp.utils.common.Constants.WaresType;
@@ -371,7 +374,10 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
 
         Double kg = record.getStage1Kg();
         Integer num = record.getStage1Num();
-        if(PROD_STAGE_2 == stage){
+        if(PROD_STAGE_1 == stage){
+            order.setFlowStart(true);
+            orderRepository.save(order);
+        } else if(PROD_STAGE_2 == stage){
             kg = record.getStage2Kg();
             num = record.getStage2Num();
         } else if (PROD_STAGE_3 == stage){
@@ -618,6 +624,8 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
     public static class OrderParameterDto extends QueryParameterBuilder {
         @ParameterItem(mappingTo = {"barCode", "description", "productName"}, compare = like, group = OR)
         String cause;
+        @ParameterItem(mappingTo = {"flowStart"}, compare = equal, group = AND)
+        Boolean flowStart;
     }
 
     /**

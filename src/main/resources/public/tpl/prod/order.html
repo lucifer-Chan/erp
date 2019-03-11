@@ -41,7 +41,9 @@
             <button class="btn btn-primary" id="toPrintProdOrderBt">打印制令单</button>
             <button class="btn btn-primary" id="toProductPrintBt">打印成品条形码</button>
             <button class="btn btn-primary" id="toPrintOrderBt">打印物料出库单</button>
+            <!--
             <button class="btn btn-primary" data-toggle="modal" data-target="#_addPickRecord">挑拣</button>
+            -->
             <button class="btn btn-primary" id="toPrintInBt">打印入库单</button>
         </span>
     </div>
@@ -113,7 +115,7 @@
                 <ul class="nav nav-tabs noborder" role="tablist">
                     <li role="presentation" class="active"><span href="#bomList" aria-controls="bomList" role="tab" data-toggle="tab">物料清单</span></li>
                     <li role="presentation"><span href="#mouldList" aria-controls="mouldList" role="tab" data-toggle="tab">模具清单</span></li>
-                    <li role="presentation"><span href="#recordList" aria-controls="recordList" role="tab" data-toggle="tab">挑拣记录</span></li>
+                    <!--<li role="presentation"><span href="#recordList" aria-controls="recordList" role="tab" data-toggle="tab">挑拣记录</span></li>-->
                     <li role="presentation"><span href="#stockList" aria-controls="stockList" role="tab" data-toggle="tab">库存记录</span></li>
                     <li role="presentation"><span href="#optList" aria-controls="optList" role="tab" data-toggle="tab">操作记录</span></li>
                     <li role="presentation"><span href="#garbageList" aria-controls="garbageList" role="tab" data-toggle="tab">废料入库记录</span></li>
@@ -128,10 +130,12 @@
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
+                    <!--
                     <div role="tabpanel" class="tab-pane" id="recordList">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
                     </div>
+                    -->
                     <div role="tabpanel" class="tab-pane" id="stockList">
                         <div class="col-sm-12 bugInfoHistories">
                         </div>
@@ -496,283 +500,56 @@
         </div>
     </div>
 </script>
-
-<!-- 成品入库打印 -->
-<script id="template-print_prod_order_in" type="text/template">
-    <div class="panel-default bugInfo">
-        <div class="row">
-        <span class="print-header">
-            <h3>瑞安市银通电器有限公司-成品入库单</h3>
-        </span>
-        </div>
-        <div class="row pd22">
-            <div class="col-xs-12 print-right">
-                <img src="{{o.barcode}}" class="print-barcode">
-            </div>
-        </div>
-        <div class="pd13"></div>
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="print-line" >
-                    <label>打印时间:</label>
-                    <div class="pd42">{{o.currentTime}}</div>
-                </div>
-            </div>
-            <div class="col-xs-4">
-                <div class="print-line" >
-                    <label>最近挑拣时间:</label>
-                    <div class="pd42">{{o.lastPickDate}}</div>
-                </div>
-            </div>
-            <div class="col-xs-4">
-                <div class="print-line" >
-                    <label>最近挑拣人:</label>
-                    <div class="pd42">{{o.lastPickUser}}</div>
-                </div>
-            </div>
-        </div>
-        <div style="display: flex;">
-            <table class="table table-print">
-                <thead>
-                <tr>
-                    <th width="18%">成品类型</th>
-                    <th width="18%">成品名称</th>
-                    <th width="17%">规格型号</th>
-                    <th width="7%">单位</th>
-                    <th width="10%">数量</th>
-                    <th width="30%">备注</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{o.product.typeName}}</td>
-                    <td>{{o.product.productName}}</td>
-                    <td>{{o.product.specification}}</td>
-                    <td>{{o.product.unit}}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 37px"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="row">
-            <div class="col-xs-2">
-                <div class="print-line" >
-                    <label>创建人:</label>
-                    <div>{{o.createdName}}</div>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="print-line" >
-                    <label>生产日期:</label>
-                    <div class="pd42">{{o.startDate}}</div>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="print-line" >
-                    <label>生产工人:</label>
-                    <div class="pd42">{{o.employeeName}}</div>
-                </div>
-            </div>
-            <div class="col-xs-4">
-                <div class="print-line" >
-                    <label>仓管员:</label>
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
-
-<!-- 制令单打印-->
-<script id="template-print_prod_order" type="text/template">
-    <div style="font-size: 14px;" class="table-print-a4">
+<!--生产入库通知单 打印-->
+<script id="prod_order_in_tpl" type="text/template">
+    <div class="table-print-860">
         <div class="panel-default bugInfo">
-            <div style="display: flex;">
-                <table class="table table-print table-print-a4">
-                    <tr style="height: 70px" class="print-header">
-                        <td colspan="10" class="nbb"><h2 style="font-weight: 900;">瑞安市银通电器有限公司</h2></td>
+            <div>
+                <table class="table table-print table-print-860" style="table-layout: auto;">
+                    <tr style="height: 90px" class="print-header">
+                        <th colspan="2" style="width: 245px;"><h3 style="font-weight: 900;font-size: 25px"><u>生产入库通知单</u></h3></th>
+                        <td colspan="2" style="width: 412px;"><img src="{{base64}}" class="print-barcode"></td>
+                        <th style="width: 137px;text-align: right!important;padding-left: 20px!important;" class="nbr">制单日期:</th>
+                        <td style="width: 137px;text-align: left!important;padding-left: 20px!important;">{{now}}</td>
                     </tr>
-                    <tr style="height: 40px" class="print-header">
-                        <td colspan="10" class="nbb"><h3 style="font-weight: 900;">生产制令单</h3></td>
-                    </tr>
-                    <tr>
-                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbb">单据日期</th>
-                        <td style="vertical-align: bottom;text-align: center;" class="nbt nbr nbl" colspan="2">{{now}}</td>
-                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbb">销售订单号</th>
-                        <td style="vertical-align: bottom;text-align: center;" class="nbt nbr nbl" colspan="2"></td>
-                        <td colspan="4" rowspan="2" class="nbb" style="text-align: right;">
-                            <img src="{{o.barcode}}" class="print-barcode">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbb">计划完工日期</th>
-                        <td style="padding: 0;vertical-align: bottom;text-align: center;" class="nbt nbr nbl" colspan="2">{{o.plan.endDate}}</td>
-                        <th style="font-size: 8px;padding: 0;text-align: right!important;vertical-align: bottom;" class="nbt nbr nbl nbb">生产计划单号</th>
-                        <td style="vertical-align: bottom;text-align: center;" class="nbt nbr nbl " colspan="2">{{o.plan.barCode}}</td>
+                    <tr style="height: 28px">
+                        <th style="width: 37px">序号</th>
+                        <th style="width: 208px">货物名称</th>
+                        <th style="width: 206px">规格描述</th>
+                        <th style="width: 206px">材料名称</th>
+                        <th style="width: 137px">重量</th>
+                        <th style="width: 137px">数量</th>
                     </tr>
                     <tr>
-                        <td colspan="10"></td>
+                        <th>1</th>
+                        <td>{{endProductName}}</td>
+                        <td>{{specification}}</td>
+                        <td>{{materialName}}</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
-                        <th>货物名称</th><td colspan="3">{{o.product.endProductName}}</td>
-                        <th>规格描述</th><td colspan="3">{{o.product.specification}}</td>
-                        <th>备注</th><td></td>
+                        <th>2</th><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                     <tr>
-                        <th>客户图号</th><td colspan="3">{{o.product.custDrawingNo}}</td>
-                        <th>图纸编号</th><td colspan="3">{{o.product.drawingNo}}</td>
-                        <th>操作工</th><td>{{o.employeeName}}</td>
+                        <th>3</th><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                     <tr>
-                        <th>材料名称</th><td colspan="3">{{o.product.materialName}}</td>
-                        <th>产品等级</th><td>{{o.product.level}}</td>
-                        <th>客户编码</th><td>{{o.product.custCodeOld}}</td>
-                        <th>机号</th><td></td>
+                        <th>4</th><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                     <tr>
-                        <th>生产数量</th><td colspan="2">{{o.num}}只</td>
-                        <th>生产重量</th><td colspan="2">{{o.kg}}kg</td>
-                        <th>单位银耗<br>(克/粒)</th><td>{{o.product.unitSilver}}</td>
-                        <th>单粒耗铜<br>(克/粒)</th><td>{{o.product.unitCopper}}</td>
+                        <th>5</th><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                     <tr>
-                        <th colspan="2">制打控制</th>
-                        <th>头径<br>D(mm)</th>
-                        <th>头厚<br>T(mm)</th>
-                        <th>脚径<br>d(mm)</th>
-                        <th>脚长<br>L(mm)</th>
-                        <th>头径银层<br>S1(mm)</th>
-                        <th>脱模角度<br>θ(° )</th>
-                        <th>球半径<br>SR(mm)</th>
-                        <th>同心度</th>
+                        <th>6</th><td></td><td></td><td></td><td></td><td></td>
                     </tr>
                     <tr>
-                        <th rowspan="2">制打公差</th>
-                        <th>上限</th>
-                        <td>{{o.product.spHdmmUpper}}</td>
-                        <td>{{o.product.spHtmmUpper}}</td>
-                        <td>{{o.product.spFtmmUpper}}</td>
-                        <td>{{o.product.spFlmmUpper}}</td>
-                        <td>{{o.product.spHdsmmUpper}}</td>
-                        <td>{{o.product.spTmammUpper}}</td>
-                        <td>{{o.product.spSrammUpper}}</td>
-                        <td rowspan="2">{{o.product.concentricity}}</td>
-                    </tr>
-                    <tr>
-                        <th>下限</th>
-                        <td>{{o.product.spHdmmLower}}</td>
-                        <td>{{o.product.spHtmmLower}}</td>
-                        <td>{{o.product.spFtmmLower}}</td>
-                        <td>{{o.product.spFlmmLower}}</td>
-                        <td>{{o.product.spHdsmmLower}}</td>
-                        <td>{{o.product.spTmammLower}}</td>
-                        <td>{{o.product.spSrammLower}}</td>
-                    </tr>
-                    <tr>
-                        <th colspan="2">制打控制</th>
-                        <th>同轴度<br>◎(mm)</th>
-                        <th>边缘<br>S1(mm)</th>
-                        <th>钉脚<br>S2(mm)</th>
-                        <th>脚边缘<br>S2(mm)</th>
-                        <th>头部<br>复合强度</th>
-                        <th>脚部<br>复合强度</th>
-                        <th colspan="2">模具位</th>
-                    </tr>
-                    <tr>
-                        <th rowspan="2">制打公差</th>
-                        <th>上限</th>
-                        <td>{{o.product.spAxlemmUpper}}</td>
-                        <td>{{o.product.spEdgemmUpper}}</td>
-                        <td>{{o.product.spFdsmmUpper}}</td>
-                        <td>{{o.product.spFaxlemmUpper}}</td>
-                        <td rowspan="2">{{o.product.spHCstrength}}</td>
-                        <td rowspan="2">{{o.product.spFCstrength}}</td>
-                        <td rowspan="2" colspan="2">{{o.product.modelLocation}}</td>
-                    </tr>
-                    <tr>
-                        <th>下限</th>
-                        <td>{{o.product.spAxlemmLower}}</td>
-                        <td>{{o.product.speEdgeemmLower}}</td>
-                        <td>{{o.product.speFdsmmLower}}</td>
-                        <td>{{o.product.speFaxlemmLower}}</td>
-                    </tr>
-                    <tr>
-                        <th colspan="2">特殊要求</th>
-                        <td colspan="8"></td>
-                    </tr>
-                    <tr>
-                        <th rowspan="3">物料清单</th>
-                        <th>材料种类</th>
-                        <th>材料名称</th>
-                        <th>规格</th>
-                        <th>切丝长度</th>
-                        <th>实际重量</th>
-                        <th rowspan="3">编制人</th>
-                        <td rowspan="3"></td>
-                        <th rowspan="3">审核人</th>
-                        <th rowspan="3"></th>
-                    </tr>
-                    {{each o.boms as b}}
-                    <tr>
-                        <td>{{b.material.rawTypeName}}</td>
-                        <td>{{b.material.rawName}}</td>
-                        <td>{{b.material.specification}}</td>
-                        <td>{{b.materialNum}}</td>
-                        <td>{{b.realityMaterialNum}}</td>
-                    </tr>
-                    {{/each}}
-                    {{each o.empty}}
-                    <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                    {{/each}}
-                    <tr>
-                        <th colspan="10" style="font-size: 20px">制打产品自检记录表</th>
-                    </tr>
-                    <tr>
-                        <th colspan="2">测量数据\参数</th>
-                        <th>头径<br>D(mm)</th>
-                        <th>头厚<br>T(mm)</th>
-                        <th>脚径<br>d(mm)</th>
-                        <th>脚长<br>L(mm)</th>
-                        <th>头径银层<br>S1(mm)</th>
-                        <th>钉脚S2<br>(mm)</th>
-                        <th>同轴度<br>◎(mm)</th>
-                        <th>经手人</th>
-                    </tr>
-                    <tr style="height: 49px">
-                        <th rowspan="11">测<br>量<br>日<br>期</th>
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr style="height: 49px">
-                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td></td>
+                        <th style="text-align: right!important;" class="nbr">制单人：</th>
+                        <td style="text-align: left!important;padding-left: 20px!important;" >{{currentUser}}</td>
+                        <th style="text-align: right!important" class="nbr">审核人：</th>
+                        <td></td>
+                        <th style="text-align: left!important;">备注:</th>
                     </tr>
                 </table>
             </div>
@@ -882,8 +659,8 @@
             var mouldHtml = template('template-mould', {moulds : tr.moulds});
             $('#mouldList').find('.bugInfoHistories').html(mouldHtml);
             //挑拣记录
-            var pickHtml = template('template-record', {records : tr.pickRecords});
-            $('#recordList').find('.bugInfoHistories').html(pickHtml);
+            // var pickHtml = template('template-record', {records : tr.pickRecords});
+            // $('#recordList').find('.bugInfoHistories').html(pickHtml);
             //废料入库记录
             var garbageHtml = template('garbage-record', {logs : tr.garbages});
             $('#garbageList').find('.bugInfoHistories').html(garbageHtml);
@@ -908,7 +685,7 @@
                 $('#stockList').find('.bugInfoHistories').html(stockHtml);
             });
             //隐藏操作按钮
-            if(tr.pickRecords.length){
+            if(tr.pickNum){
                 $('#toPrintInBt').show();
             } else {
                 $('#toPrintInBt').hide();
@@ -942,31 +719,21 @@
                 var order = consts.currentOrder;
                 var $printHolder = $('#printHolder').clone();
                 var data = {
-                    barcode : '',
-                    currentTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
-                    createdName : order.createdName,
-                    employeeName : order.employeeName,
-                    startDate : order.startDate.substr(0, 10),
-                    product : {
-                        typeName : order.product.typeName,
-                        productName : order.product.endProductName,
-                        specification : order.product.specification,
-                        unit : order.product.unit ||''
-                    }
+                    barCode: order.barCode,
+                    now: new Date().format("yyyy-MM-dd"),
+                    endProductName: order.product.endProductName,
+                    specification: order.product.specification,
+                    materialName: order.product.materialName,
+                    currentUser: $.local(GLOBALS.localKeys.accountInfo).name
                 };
-
-                var lastPick = order.pickRecords.length ? order.pickRecords[0] : {};
-                data.lastPickDate = lastPick.createdAt || '';
-                data.lastPickUser = lastPick.createdName || '';
-
                 //条形码
                 services.common.barcode(order.barCode)
                     .then(function (ret) {
-                        data.barcode = ret.base64;
+                        data.base64 = ret.base64;
                         console.log('打印数据', data);
                     })
                     .then(function () {
-                        var html = template("template-print_prod_order_in", {o : data});
+                        var html = template("prod_order_in_tpl", data);
                         $printHolder.html(html).show().print({
                             deferred: $.Deferred().done(function() {
                                 services.prodOrder.afterPrintIn(order.id);

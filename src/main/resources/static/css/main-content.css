@@ -233,7 +233,6 @@ div.table-print-holder {
     padding-bottom:1px;
     width:93px;
 }
-
 .table-print-right {
     max-width: 1px;
     padding-top: 10px;
@@ -245,6 +244,17 @@ div.table-print-holder {
 
 table.nb,table.nb>tbody>tr,table.nb>tbody>tr>th,table.nb>tbody>tr>td{
     border: none;
+}
+
+.table-print-860{
+    width:860px!important;table-layout: fixed;
+}
+.table-print-860>tbody>tr>th, .table-print-860>tfoot>tr>th, .table-print-860>thead>tr>th,.table-print-860>tbody>tr>td, .table-print-860>tfoot>tr>td, .table-print-860>thead>tr>td{
+    padding:0!important;
+    height: 31px;
+    /*width:58px;*/
+    font-size: 10px;
+    text-align: center;
 }
 
 /** end 打印 **/
@@ -2096,3 +2106,39 @@ ul.bugPlanNum li .PlanNumClass em {
     position: absolute;
     z-index: 20001;
 }
+
+/*横向时间轴*/
+/*.status-container {padding:40px 0 0 0}*/
+.status-container{padding: 0px 0 80px 0;}
+.status-line{border-bottom:1px solid #ccc;}
+.status-container p{height: 15px;}
+.status-horizontal {
+    list-style-type: none;
+    border-top: 3px solid #d9d9d9;;
+    max-width: 800px;
+    padding:0;
+    margin: 40px 0 0 0;
+}
+.status-horizontal li {
+    float: left;
+    position: relative;
+    text-align: center;
+    width: 25%;
+    padding-top: 10px;
+}
+.status-horizontal li:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 47%;
+    width: 18px;
+    height: 18px;
+    border: 3px solid #f3f3f3;
+    border-radius: 10px;
+    background: #d9d9d9;
+}
+.status-horizontal li.current:before{background-color:#0dad12;border-color:#f8e9e4;}
+.current{color:green;}
+.status-title{margin-left:10px;}
+.status-time{font-size: 8px;margin-top: -60px;margin-left:10px;}
+.status-content{font-size: 8px;margin-left:10px;margin-top: 45px;}
