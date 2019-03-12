@@ -220,8 +220,25 @@ public class MiniDtoWrapper {
                     .add("time", DateUtil.getDateString(order.getStartDate()))
                     .add("product", product)
                     .add("items", boms)
-                    .add("flows", order.getFlows().stream().map(it->it.toJSONObject("yyyy-MM-dd")).collect(Collectors.toList()))
+                    .add("flows", order.getFlows().stream()
+                            .map(it-> not0(it.toJSONObject("yyyy-MM-dd")
+                                    , "stage1Kg", "stage2Kg", "stage3Kg", "stage4Kg"
+                                    , "stage1Num", "stage2Num", "stage3Num", "stage4Num"
+                                    , "stage2UserId", "stage3UserId", "stage4UserId")
+                            )
+                            .collect(Collectors.toList())
+                    )
                 .build();
     }
 
+
+    private static JSONObject not0(JSONObject source, String ... numberKeys){
+        for (String numberKey : numberKeys){
+            Object value = source.opt(numberKey);
+            if(value == null || ((value instanceof Integer) && (int)value ==0) || ((value instanceof Double) && ((Double)value).intValue() ==0)){
+                source.put(numberKey, "");
+            }
+        }
+        return source;
+    }
 }
