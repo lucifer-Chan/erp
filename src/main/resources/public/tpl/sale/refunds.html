@@ -1,7 +1,15 @@
 <button class="btn btn-primary" id="toPrintProdOrderBt">打印制令单</button>
 <button class="btn btn-primary" id="toPrintEmployee">打印人员</button>
 <div id="print_holder" style="width: 350px"></div>
-<!-- 打印人员-->
+
+<div id="prod_order_holder"></div>
+<div id="prod_flow_holder"></div>
+<div id="prod_order_in_holder"></div>
+<div id="place_holder" style="width: 225px;"></div>
+<div id="purchase_in_holder"></div>
+<div id="sale_out_holder"></div>
+<!-- 打印人员工牌-->
+<!--
 <script id="employee_print_tpl" type="text/template">
     <div style="font-size: 14px;">
         <table class="table table-print table-print-mini nb" style="text-align: center">
@@ -17,11 +25,9 @@
         </table>
     </div>
 </script>
-
-<div id="prod_order_holder"></div>
-<div id="prod_flow_holder"></div>
-<div id="prod_order_in_holder"></div>
+-->
 <!-- 制令单打印-->
+<!--
 <script id="template-print_prod_order" type="text/template">
     <div style="font-size: 14px;" class="table-print-a4">
         <div class="panel-default bugInfo">
@@ -213,7 +219,9 @@
         </div>
     </div>
 </script>
+-->
 <!--生产工序卡打印-->
+<!--
 <script id="flow_print_tpl" type="text/template">
     <div class="table-print-860">
         <div class="panel-default bugInfo">
@@ -280,7 +288,9 @@
         </div>
     </div>
 </script>
+-->
 <!--生产入库通知单 打印-->
+<!--
 <script id="prod_order_in_tpl" type="text/template">
     <div class="table-print-860">
         <div class="panel-default bugInfo">
@@ -336,6 +346,7 @@
         </div>
     </div>
 </script>
+-->
 <script>
     requirejs(['ztree','utils','services'],function (ztree, utils, services) {
 
@@ -562,7 +573,6 @@
 
         //2 - 人员
         function printEmployee() {
-
             //打印数据构建 - 条形码
             var employee = {
                 barCode: "UE00000000003",
@@ -639,11 +649,152 @@
                 })
         }
 
+        //5- 原材料仓位
+        function printMaterialPlace(display) {
+            if (!display) return;
+            var data = {
+                rawTypeName:'铜丝-紫铜丝',
+                rawName:'Cu(半硬)',
+                specification:'1.9',
+                supplierName:'桂林金格电工电子材料科技有限公司',//
+                barCode: 'S000000002654M000000842',
+            };
+            services.common.barcode(data.barCode)
+                .then(function (ret) {
+                    data.base64 = ret.base64;
+                })
+                .then(function () {
+                    var html = template("material_place_print_tpl", data);
+                    $('#place_holder').html(html);//.print();
+
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                });
+        }
+
+        //6 -其它仓位（成品|模具）
+        function printOtherPlace(display) {
+            if (!display) return;
+            var data = {
+                barCode: 'S000000001521P',
+                placeCode: 'A1010'
+            };
+
+            services.common.barcode(data.barCode)
+                .then(function (ret) {
+                    data.base64 = ret.base64;
+                })
+                .then(function () {
+                    var html = template("other_place_print_tpl", data);
+                    $('#place_holder').html(html);//.print();
+
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                });
+        }
+
+        //7 - 打印采购入库通知单
+        function printPurchaseIn(display) {
+            if (!display) return;
+            var data = {
+                now : new Date().format("yyyy-MM-dd"),
+                currentUser :'当前用户',
+
+                barCode: 'V000000002657',
+                supplierName:'一个供应商',
+                createdName: '采购人',
+                approvalName : '审核人',
+
+                items : [{
+                    kg: '35.88',
+                    wares: {
+                        category : '成品-1',
+                        specification: '规格XXXX',
+                        _materialName: '成品.materialName'
+                    }
+                },{
+                    kg: '35.88',
+                    wares: {
+                        category : '原材料-1',
+                        specification: '规格XXXX',
+                        simpleName: 'Cu（粗）'
+                    }
+                }],
+
+                empty:[3,4,5,6]
+
+            };
+
+            services.common.barcode(data.barCode)
+                .then(function (ret) {
+                    data.base64 = ret.base64;
+                })
+                .then(function () {
+                    var html = template('purchase_in_print_tpl', data);
+                    $('#purchase_in_holder').html(html);
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                })
+        }
+
+        //8 - 打印销售出／入库通知单
+        function printSaleOut(display) {
+            if (!display) return;
+            var data = {
+                now : new Date().format("yyyy-MM-dd"),
+                currentUser :'当前用户',
+                barCode: 'X000000000811',
+                title: '销售出库通知单AA',
+                createdName: '采购人',
+                approvalName : '审核人',
+
+                items : [{
+                    kg: '35.88',
+                    zhi: '1000',
+                    product: {
+                        endProductName : '成品-1',
+                        specification: '规格XXXX',
+                        materialName: '成品.materialName'
+                    }
+                },{
+                    kg: '35.88',
+                    zhi: '1200',
+                    product: {
+                        endProductName : '原材料-2',
+                        specification: '规格XXXX3333',
+                        materialName: 'Cu（粗）'
+                    }
+                }],
+
+                empty:[3,4,5,6]
+
+            };
+
+            services.common.barcode(data.barCode)
+                .then(function (ret) {
+                    data.base64 = ret.base64;
+                })
+                .then(function () {
+                    var html = template('sale_stock_print_tpl', data);
+                    $('#sale_out_holder').html(html);
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                })
+        }
+
         (function init() {
             printProdOrder(false);//printProdOrder(true);
             printEmployee();
             printFlow(false);
-            printOrderIn(true)
+            printOrderIn(false);
+            printMaterialPlace(false);
+            printOtherPlace(false);
+            printPurchaseIn(false);
+            printSaleOut(true);
         })();
 
 

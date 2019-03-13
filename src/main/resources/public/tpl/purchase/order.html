@@ -333,6 +333,7 @@
         </div>
     </div>
 </div>
+<div id="printHolder" hidden></div>
 
 <script type="text/javascript">
     requirejs(['purchase'],function (purchase) {
@@ -400,7 +401,7 @@
                 '<span class="right">{time}</span>' +
                 '</p>'//历史记录模版
                 , $orderItem : $('#orderItemTemplate')//订单明细模版
-                , $printToIn : $('#print_to_in_template')//入库单打印模版
+                , $printToIn : $('#purchase_in_print_tpl')//采购入库通知单
             }
 
         };

@@ -17,7 +17,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.sf.json.JSONObject;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
@@ -75,6 +77,22 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
 
     @Transient
     private double remain;
+
+    @Transient
+    private JSONObject material = new JSONObject();
+
+    /**
+     * 获取原材料
+     * @return
+     */
+    public JSONObject getMaterial(){
+        if(!CollectionUtils.isEmpty(material)) return material;
+        if(!"M".equals(stockPlaceType)) return material;
+        return material = SpringUtil.getBean(SupplierRawMaterialService.class)
+                .getErpBaseRawMaterialByAssId(materialSupplierAssId)
+                .getTemplate();
+    }
+
 
     public Double getCurrentStorageNum(){
         return CommonUtil.toFixed2(currentStorageNum);

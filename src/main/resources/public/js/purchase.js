@@ -263,6 +263,53 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
             });
         }
 
+        //打印采购入库通知单
+        if (consts.$printToInBt && consts.$printToInBt.length && consts.template.$printToIn){
+            consts.$printToInBt.bind('click', function(){
+                var order = consts.currentOrder;
+                var $printHolder = $('#printHolder').clone();
+                var statusLogs = order.statusLogs || [];
+                var approvalPass = '';
+                for(var i = 0; i < statusLogs.length; i ++){
+                    if ('STATUS_003' === statusLogs[i].statusCode){
+                        approvalPass = statusLogs[i];
+                        break;
+                    }
+                }
+                var empty = [];
+                var max = (order.items || []).length;
+                for(var index = max+1; index <= 6; index ++){
+                    empty.push(index);
+                }
+                var data = {
+                    now: new Date().format("yyyy-MM-dd"),
+                    currentUser: $.local(GLOBALS.localKeys.accountInfo).name,
+                    barCode: order.barCode,
+                    supplierName: order.supplierName,
+                    createdName: order.createdName,
+                    approvalName : approvalPass.createdName,
+                    items: order.items,
+                    empty: empty
+                }
+
+                services.common.barcode(data.barCode)
+                    .then(function (ret) {
+                        data.base64 = ret.base64;
+                    })
+                    .then(function () {
+                        var html = template('purchase_in_print_tpl', data);
+                        $printHolder.html(html).show().print({
+                            deferred: $.Deferred().done(function() {
+                                services.purchaseOrder.afterPrint(order.id);
+                            })
+                        });
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    })
+            });
+        }
+/*
         //打印入库单
         if(consts.$printToInBt && consts.$printToInBt.length && consts.template.$printToIn && consts.template.$printToIn.length){
             consts.$printToInBt.bind('click', function(){
@@ -345,6 +392,8 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
                     });
             });
         }
+
+        */
 
         //状态变更按钮事件
         $('#_toSubmitOrderBt').bind('click', function () {

@@ -175,6 +175,19 @@ div.table-print-holder {
     display: flex;
 }
 
+.b1t{
+    border-top: solid 1px;
+}
+.b1r{
+    border-right: solid 1px;
+}
+.b1b{
+    border-bottom: solid 1px;
+}
+.b1l{
+    border-left: solid 1px;
+}
+
 .nbt{
     border-top-color: #fff!important;
 }

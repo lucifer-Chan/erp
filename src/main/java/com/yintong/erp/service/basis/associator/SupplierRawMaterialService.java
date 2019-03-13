@@ -108,6 +108,16 @@ public class SupplierRawMaterialService implements OnDeleteRawMaterialValidator,
     }
 
     /**
+     * 根据关联id获取原材料模版数据
+     * @param assId
+     * @return
+     */
+    public ErpBaseRawMaterial getErpBaseRawMaterialByAssId(Long assId){
+        ErpRawMaterialSupplier ass = rawMaterialSupplierRepository.getOne(assId);
+        return rawMaterialRepository.getOne(ass.getRawMaterId());
+    }
+
+    /**
      * 所有关联的原材料-厂家
      * @return assId：供应商-名称-规格
      */

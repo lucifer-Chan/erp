@@ -26,6 +26,21 @@ public interface TemplateWares {
     String getCategoryCode();
     
     default JSONObject getTemplate(){
+
+        String category = BarCodeConstants.BAR_CODE_PREFIX.valueOf(getCategoryCode()).description();
+
+        String simpleCategory = category;
+
+        if(category.startsWith("原材料-")){
+            simpleCategory = category.substring("原材料-".length(), category.length());
+        } else if (category.startsWith("成品-")){
+            simpleCategory = category.substring("成品-".length(), category.length());
+        } else if (category.startsWith("模具-")){
+            simpleCategory = category.substring("模具-".length(), category.length());
+        }
+
+        //prefix.substring("原材料-".length(), prefix.length());
+
         return JsonWrapper.builder()
                 .add("name", getDescription())
                 .add("waresId", getWaresId())
@@ -33,7 +48,8 @@ public interface TemplateWares {
                 .add("unit", getUnit())
                 .add("simpleName", getSimpleName())
                 .add("specification", getSpecification())
-                .add("category", BarCodeConstants.BAR_CODE_PREFIX.valueOf(getCategoryCode()).description())
+                .add("category", category)
+                .add("simpleCategory", simpleCategory)
                 .add(extInfo())
             .build();
     }

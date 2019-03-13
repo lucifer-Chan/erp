@@ -21,6 +21,9 @@ import lombok.Setter;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import static com.yintong.erp.utils.common.CommonUtil.calc2Kg;
+import static com.yintong.erp.utils.common.CommonUtil.kg2Num;
+
 /**
  * @author lucifer.chan
  * @create 2018-07-21 下午10:43
@@ -75,6 +78,32 @@ public class ErpSaleOrderItem extends BaseEntity{
 
     @Transient
     private Date orderOptDate;//订单操作时间-对应状态的最近一次操作时间
+
+    @Transient
+    private String kg;
+
+    /**
+     * 只，妈蛋，想不好英文名字
+     */
+    @Transient
+    private String zhi;
+
+    /**
+     * num -> kg,其中num可能是"只"，可能是"kg"，根据unit换算
+     * @return
+     */
+    public String getKg(){
+        if(Objects.isNull(num)) return  "";
+        if(StringUtils.hasLength(kg)) return kg;
+        return kg = calc2Kg(getProduct(), unit, num) + "";
+    }
+
+    public String getZhi(){
+        if(Objects.isNull(num)) return  "";
+        if(StringUtils.hasLength(zhi)) return zhi;
+        int iZhi = "kg".equalsIgnoreCase(unit) ? kg2Num(getProduct(), num) : num.intValue();
+        return zhi = iZhi + "";
+    }
 
     public Double getOutedNum(){
         return Objects.isNull(outedNum) ? 0d : outedNum;

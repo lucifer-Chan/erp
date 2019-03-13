@@ -254,7 +254,8 @@
         </div>
     </div>
 </div>
-
+<!-- 打印容器-->
+<div id="place_print_holder" style="width: 225px;" hidden></div>
 <script type="text/javascript">
     requirejs(['slimScroll', 'utils','services'],function (slimScroll, utils, services) {
         console.log('hello stock place');
@@ -574,6 +575,61 @@
 
             //打印仓位按钮
             $('#printPlaceBt').unbind('click').click(function () {
+                var typeCode = consts.currentPlace.stockPlaceType;
+                var $printHolder = $('#place_print_holder').clone();
+                var data = {};
+                if ("M" === typeCode){
+                    var material =  consts.currentPlace.material || {};
+
+                    var splits = consts.currentPlace.materialName.split('【');
+                    var supplierName = splits.length === 2 ? splits[0] : '';
+                    data = {
+                        rawTypeName: material.category,
+                        rawName: material.simpleName,
+                        specification: material.specification,
+                        supplierName: supplierName,
+                        barCode: consts.currentPlace.barCode
+                    };
+                    services.common.barcode(data.barCode)
+                        .then(function (ret) {
+                            data.base64 = ret.base64;
+                        })
+                        .then(function () {
+                            var html = template("material_place_print_tpl", data);
+                            $printHolder.html(html).show().print();
+
+                        })
+                        .catch(function () {
+                            layer.msg('生成条形码失败！');
+                        });
+                } else {
+                    data = {
+                        barCode: consts.currentPlace.barCode,
+                        placeCode: consts.currentPlace.placeCode
+                    };
+                    services.common.barcode(data.barCode)
+                        .then(function (ret) {
+                            data.base64 = ret.base64;
+                        })
+                        .then(function () {
+                            var html = template("other_place_print_tpl", data);
+                            $printHolder.html(html).show().print();
+
+                        })
+                        .catch(function () {
+                            layer.msg('生成条形码失败！');
+                        });
+
+
+
+
+                    //other_place_print_tpl
+                }
+            });
+
+            /*
+            //打印仓位按钮
+            $('#printPlaceBt').unbind('click').click(function () {
                 //条形码模版
                 var $printTemplate = $('#print_to_wares');
                 var $clone = $printTemplate.clone();
@@ -606,6 +662,7 @@
                         layer.msg('生成条形码失败！');
                     });
             });
+            */
 
             //更新仓位按钮
             $('#editPlaceBt').unbind('click').click(function () {

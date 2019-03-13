@@ -187,6 +187,7 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
         return JsonWrapper.builder()
                 .add("onlyOrKg", onlyOrKg)
                 .add("places", CommonUtil.defaultIfEmpty(places.stream().map(ErpStockPlace::getPlaceCode).collect(Collectors.joining(",")), "无"))
+                .add("_materialName", materialName)
                 .build();
     }
 

@@ -160,7 +160,8 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editSaleOrderItem" id="_addSaleOrderItemBt">新增订单明细</button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toSubmitOrderBt">提交审核</button>
             <button class="btn btn-primary" id="_printToOutBt">打印出库单</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toRefundsOrderBt">客户退货</button>
+            <!--<button class="btn btn-primary" data-toggle="modal" data-target="#_changeOrderStatus" id="_toRefundsOrderBt">客户退货</button>-->
+            <button class="btn btn-primary" id="_printToInBt">打印退货单</button>
             <button class="btn btn-primary" data-name="delete" id="_deleteSaleOrderBt">删除</button>
         </span>
     </div>
@@ -327,7 +328,7 @@
         </div>
     </div>
 </div>
-
+<div id="printHolder" hidden></div>
 
 <script type="text/javascript">
     requirejs(['order'],function (order) {
@@ -364,6 +365,7 @@
             , $addOrderItemBt : $('#_addSaleOrderItemBt')//新增明细按钮
             , $changeOrderStatusBt : $('#_changeOrderStatusBt')//状态变更
             , $printToOutBt: $('#_printToOutBt')//打印出库单
+            , $printToInBt: $('#_printToInBt')//打印退货入库单
             /******************** end buttons**************************/
 
             , toNewStatus : {}//要更新到的状态
@@ -394,7 +396,8 @@
                 '<span class="right">{time}</span>' +
                 '</p>'//历史记录模版
                 , $orderItem : $('#orderItemTemplate')//订单明细模版
-                , $printToOut : $('#print_to_out_template')//出库单打印模版
+                // , $printToOut : $('#print_to_out_template')//出库单打印模版
+                , $printToStock : $('#sale_stock_print_tpl')//销售出／入库通知单模版
             }
 
         };

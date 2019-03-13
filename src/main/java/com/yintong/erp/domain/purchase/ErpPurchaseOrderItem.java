@@ -1,9 +1,12 @@
 package com.yintong.erp.domain.purchase;
 
+import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
 import com.yintong.erp.domain.basis.TemplateWares;
 import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockPlaceFinder;
 import com.yintong.erp.service.basis.CommonService;
+import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.utils.base.BaseEntity;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants;
@@ -26,6 +29,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.sf.json.JSONObject;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
+import static com.yintong.erp.utils.common.CommonUtil.calc2Kg;
 
 /**
  * @author lucifer.chan
@@ -91,6 +97,23 @@ public class ErpPurchaseOrderItem  extends BaseEntity {
 
     @Transient
     private JSONObject wares;
+
+    /**
+     * 当item为产品时，计算kg，当item为原材料时，此值为num，其它情况：''
+     */
+    @Transient
+    private String kg;
+
+    public String getKg(){
+        if(Objects.isNull(num)) return  "";
+        if(StringUtils.hasLength(kg)) return kg;
+        if("M".equals(waresType)) return kg = num + "";
+        if("P".equals(waresType)){
+            ErpBaseEndProduct product = SpringUtil.getBean(ProductService.class).one(waresId);
+            return kg = calc2Kg(product, unit, num) + "";
+        }
+        return "";
+    }
 
     public Double getInNum(){
         return Objects.isNull(inNum) ? 0D : inNum;
