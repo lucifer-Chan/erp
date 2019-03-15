@@ -786,6 +786,47 @@
                 })
         }
 
+        //9 - 打印销售流转单
+        function printCirculation(display) {
+            if (!display) return;
+            var data = {
+                title : '瑞安市银通电器有限公司',
+                barCode: 'X000000000811',
+                now: new Date().format("yyyy-MM-dd"),
+                currentUser: '制单人',
+                approvalName : '审核人',
+                customerName: '一个客户',
+                items :[
+                    {
+                        product : {
+                            endProductName : 'xxxxx',
+                            specification:'xxxxx'
+                        },
+                        unitPrice: 10.21,
+                        price: 1021.00,
+                        num: 100,
+                        unit:'kg'
+                    },
+                    {
+                        product : {
+                            endProductName : 'yyyyyy',
+                            specification:'yyyyyy'
+                        },
+                        unitPrice: 10.21,
+                        price: 1021.00,
+                        num: 100,
+                        unit:'kg'
+                    }
+                ],
+                empty:[3,4,5,6],
+                totalMoney: '¥2042.00',
+                chineseMoney: '壹仟多'
+            };
+            var html = template('sale_circulation_print_tpl', data);
+            $('#sale_out_holder').html(html);
+            //sale_circulation_print_tpl
+        }
+
         (function init() {
             printProdOrder(false);//printProdOrder(true);
             printEmployee();
@@ -794,7 +835,8 @@
             printMaterialPlace(false);
             printOtherPlace(false);
             printPurchaseIn(false);
-            printSaleOut(true);
+            printSaleOut(false);
+            printCirculation(true);
         })();
 
 
@@ -804,4 +846,3 @@
 
 
 </script>
-

@@ -262,7 +262,9 @@ table.nb,table.nb>tbody>tr,table.nb>tbody>tr>th,table.nb>tbody>tr>td{
 .table-print-860{
     width:860px!important;table-layout: fixed;
 }
-.table-print-860>tbody>tr>th, .table-print-860>tfoot>tr>th, .table-print-860>thead>tr>th,.table-print-860>tbody>tr>td, .table-print-860>tfoot>tr>td, .table-print-860>thead>tr>td{
+
+.table-print-860>tbody>tr>th, .table-print-860>tfoot>tr>th, .table-print-860>thead>tr>th,.table-print-860>tbody>tr>td, .table-print-860>tfoot>tr>td, .table-print-860>thead>tr>td
+{
     padding:0!important;
     height: 31px;
     /*width:58px;*/

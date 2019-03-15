@@ -289,6 +289,27 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             });
         }
 
+        //销售流转单打印
+        $('#_printCirculationBt').unbind('click').bind('click', function (e) {
+            e.preventDefault();
+            var $printHolder = $('#printHolder').clone();
+            var data = buildPrintData('STATUS_003', '瑞安市银通电器有限公司');
+            var totalMoney = 0;
+
+            for(var index in data.items){
+                var item = data.items[index];
+                item.price = ((item.num || 0) * (item.unitPrice||0)).toFixed(2);
+                totalMoney += parseFloat(item.price);
+            }
+
+            data.totalMoney = totalMoney.toFixed(2);;
+            data.chineseMoney = utils.convertCurrency(totalMoney);
+
+            console.log('销售流转单打印',data)
+            var html = template('sale_circulation_print_tpl', data);
+            $printHolder.html(html).show().print();
+
+        });
 
         /**
          * 构建打印数据
@@ -315,6 +336,7 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
                 title: title,
                 now: new Date().format("yyyy-MM-dd"),
                 currentUser: $.local(GLOBALS.localKeys.accountInfo).name,
+                customerName: order.customerName,
                 barCode: order.barCode,
                 createdName: order.createdName,
                 approvalName : approvalPass.createdName,
@@ -643,6 +665,13 @@ define('order',['ztree','utils','services'],function(ztree, utils, services){
             $('#rightInfoPage').find('#_deleteSaleOrderBt').show();
         } else {
             $('#rightInfoPage').find('#_deleteSaleOrderBt').hide();
+        }
+
+        //审核通过|正在出库|已出库|客户退货|已完成 可操作:打印销售流转单
+        if(tr.statusCode === 'STATUS_003' || tr.statusCode === 'STATUS_049' || tr.statusCode === 'STATUS_005' || tr.statusCode === 'STATUS_006' || tr.statusCode === 'STATUS_007'){
+            $('#rightInfoPage').find('#_printCirculationBt').show();
+        } else {
+            $('#rightInfoPage').find('#_printCirculationBt').hide();
         }
 
         //明细操作按钮

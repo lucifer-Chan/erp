@@ -594,3 +594,73 @@
     </div>
 </script>
 
+<!-- 销售流转单-->
+<script id="sale_circulation_print_tpl" type="text/template">
+    <div class="table-print-860" style="width: 750px!important;">
+        <div class="panel-default bugInfo">
+            <div>
+                <table class="table table-print table-print-860 nbt" style="table-layout: auto;width: 750px!important;">
+                    <tr style="height: 49px" class="print-header">
+                        <th class="nbb" colspan="7" style="width: 714px;border-top: 1px solid #030303;"><h3 style="font-weight: 900;font-size: 24px">{{title}}</h3></th>
+                        <th class="nbr nbt nbb" style="width:36px;" rowspan="11"><br><br><br><br>白<br>客<br>户<br><br>红<br>财<br>务<br><br>蓝<br>回<br>单<br></th>
+                    </tr>
+                    <tr style="height: 21px" class="print-header">
+                        <td class="nbt nbr nbb" colspan="2" style="width: 189px;"></td>
+                        <th class="nbt nbr nbb nbl" colspan="3" style="width: 319px;font-size: 18px">销售单</th>
+                        <td class="nbt nbl" colspan="2" style="width: 206px;text-align: left!important;">单据编号：{{barCode}}</td>
+                    </tr>
+                    <tr style="height: 27px">
+                        <th class="nbt nbr" colspan="3" style="width: 359px;text-align: left!important;padding-left: 5px!important;">客户名称：{{customerName}}</th>
+                        <th class="nbt nbr nbl" colspan="2" style="width: 149px;"></th>
+                        <th class="nbl" colspan="2" style="width: 206px;text-align: left!important;">开票日期：{{now}}</th>
+                    </tr>
+                    <tr style="height: 27px">
+                        <th style="width: 37px;">序号</th>
+                        <th style="width: 153px;">货物名称</th>
+                        <th style="width: 169px;">规格描述</th>
+                        <th style="width: 37px;">单位</th>
+                        <th style="width: 111px;">重量/数量</th>
+                        <th style="width: 101px;">单价</th>
+                        <th style="width: 103px;">金额</th>
+                    </tr>
+                    {{each items as item i}}
+                    <tr style="height: 27px">
+                        <th>{{i + 1}}</th>
+                        <td>{{item.product.endProductName}}</td>
+                        <td>{{item.product.specification}}</td>
+                        <td>{{item.unit}}</td>
+                        <td>{{item.num}}</td>
+                        <td>{{item.unitPrice}}</td>
+                        <td>{{item.price}}</td>
+                    </tr>
+                    {{/each}}
+                    {{each empty as index}}
+                    <tr>
+                        <th>{{index}}</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {{/each}}
+                    <tr>
+                        <th colspan="3" style="width: 359px;text-align: left!important;padding-left: 5px!important;">合计金额（大写）：{{chineseMoney}}</th>
+                        <th colspan="4" style="text-align: left!important;padding-left: 5px!important;">合计金额（小写）：{{totalMoney}}</th>
+                    </tr>
+                    <tr>
+                        <th class="nbr nbb nbl" colspan="2" style="width: 190px;text-align: left!important;padding-left: 5px!important;">制单人：{{currentUser}}</th>
+                        <th class="nbr nbb nbl" colspan="3" style="width: 338px;text-align: left!important">审核人：{{approvalName}}</th>
+                        <th class="nbr nbb nbl" colspan="2" style="width: 150px;text-align: left!important">客户签收：</th>
+                    </tr>
+                    <tr>
+                        <th class="nbt nbr nbb nbl" colspan="7" style=";text-align: left!important;padding-left: 5px!important;">
+                            地址：瑞安市塘下镇鲍四工业区站东路22号 电话：0577-65201001/58883366 传真：0577-65211001
+                        </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
