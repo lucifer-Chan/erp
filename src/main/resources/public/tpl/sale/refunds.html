@@ -665,7 +665,7 @@
                 })
                 .then(function () {
                     var html = template("material_place_print_tpl", data);
-                    $('#place_holder').html(html);//.print();
+                    $('#place_holder').html(html).print();
 
                 })
                 .catch(function () {
@@ -687,7 +687,7 @@
                 })
                 .then(function () {
                     var html = template("other_place_print_tpl", data);
-                    $('#place_holder').html(html);//.print();
+                    $('#place_holder').html(html).print();
 
                 })
                 .catch(function () {
@@ -833,10 +833,10 @@
             printFlow(false);
             printOrderIn(false);
             printMaterialPlace(false);
-            printOtherPlace(false);
+            printOtherPlace(true);
             printPurchaseIn(false);
             printSaleOut(false);
-            printCirculation(true);
+            printCirculation(false);
         })();
 
 

@@ -113,16 +113,18 @@
 
 <!-- 打印工牌 -->
 <script id="employee_print_tpl" type="text/template">
-    <div style="font-size: 14px;">
-        <table class="table table-print table-print-mini nb" style="text-align: center">
-            <tr style="height: 20px">
-                <th style="padding: 0">{{barCode}}</th>
+    <div style="font-size: 10px;">
+        <table class="nb">
+            <tr style="height: 11px">
+                <th style="padding: 0;text-align: center">{{barCode}}</th>
             </tr>
             <tr>
-                <td style="padding: 0"><img src="{{base64}}" class="print-barcode"></td>
+                <td style="padding: 0">
+                    <img src="{{base64}}" style="width:209px;height:55px;">
+                </td>
             </tr>
-            <tr style="height: 20px">
-                <th style="padding: 0">{{name}}</th>
+            <tr style="height: 12px">
+                <th style="padding: 0;text-align: center">{{name}}</th>
             </tr>
         </table>
     </div>
@@ -448,23 +450,23 @@
 <!-- 原材料仓位打印-->
 <script id="material_place_print_tpl" type="text/template">
     <div style="width: 100%;">
-        <table style="font-size: 14px;margin-left: 8px;width: 209px;">
-            <tr style="height: 15px">
+        <table style="font-size: 12px;margin-left: 8px;width: 209px;line-height: 0.9;">
+            <tr style="height: 11px">
                 <th style="padding: 0;text-align: center;font-size: 10px;">{{barCode}}</th>
             </tr>
             <tr style="height:36px;">
                 <td style="text-align: center;vertical-align: top;padding-bottom: 5px"><img src="{{base64}}" style="width:209px;height:35px;"></td>
             </tr>
-            <tr style="height:22px;" class="b1t b1r b1l">
-                <th style="padding: 0 0 1px 5px;">类别：{{rawTypeName}}</th>
+            <tr style="height:13px;" class="b1t b1r b1l">
+                <th style="padding: 1px 0 0 5px;">类别：{{rawTypeName}}</th>
             </tr>
-            <tr style="height:22px" class="b1l b1r">
+            <tr style="height:13px" class="b1l b1r">
                 <th style="padding: 0 0 0 5px;">名称：{{rawName}}</th>
             </tr>
-            <tr style="height:22px;" class="b1l b1r b1b">
+            <tr style="height:13px;" class="b1l b1r b1b">
                 <th style="padding: 0 0 0 5px;">规格：{{specification}}</th>
             </tr>
-            <tr style="height:24px;font-size:{{supplierName.length >14? 12:14}}px">
+            <tr style="height:13px;font-size:{{supplierName.length >14? 11:12}}px">
                 <th style="padding: 0 0 0 5px;text-align:center;">{{supplierName}}</th>
             </tr>
         </table>
@@ -473,17 +475,17 @@
 <!-- 其它仓位打印-->
 <script id="other_place_print_tpl" type="text/template">
     <div style="width: 100%;">
-        <table style="margin-left: 8px;width: 209px;">
-            <tr style="height: 15px">
+        <table style="margin-left: 8px;width: 209px;line-height: 0.9;">
+            <tr style="height: 11px">
                 <th style="padding: 0;text-align: center;font-size: 10px;">{{barCode}}</th>
             </tr>
-            <tr style="height:60px;">
-                <td style="text-align: center;vertical-align: top;padding-bottom: 5px"><img src="{{base64}}" style="width:209px;height:55px;"></td>
+            <tr style="height:40px;">
+                <td style="text-align: center;vertical-align: top;padding-bottom: 5px"><img src="{{base64}}" style="width:209px;height:40px;"></td>
             </tr>
-            <tr style="height:22px;" class="b1t b1r b1l">
-                <th style="padding: 0;text-align: center;font-size:10px">仓位名</th>
+            <tr style="height:12px;" class="b1t b1r b1l">
+                <th style="padding: 0;text-align: center;font-size:11px">仓位名</th>
             </tr>
-            <tr style="height:50px;font-size: 30px" class="b1l b1r b1b">
+            <tr style="height:30px;font-size: 30px" class="b1l b1r b1b">
                 <th style="padding: 0;text-align: center;">{{placeCode}}</th>
             </tr>
         </table>
