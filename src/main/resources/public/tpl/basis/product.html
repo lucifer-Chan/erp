@@ -140,7 +140,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">规格描述</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="specification" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                                        <input type="text" class="form-control" name="specification" placeholder="最多输入40个字符" autofocus onfocus="checkStrNum(this,40)" oninput="checkStrNum(this,40)">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -167,7 +167,8 @@
                                     </div>
                                     <label class="col-sm-2 control-label">模具位</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="modelLocation" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
+                                        <div class="customDropkick" style="width: 100%;" id="_modelLocation"></div>
+                                        <!--<input type="text" class="form-control" name="modelLocation" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">-->
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -258,6 +259,9 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="remark" placeholder="最多输入60个字符" autofocus onfocus="checkStrNum(this,60)" oninput="checkStrNum(this,60)">
                                     </div>
+                                </div>
+                                <div class="modal-footer noborder">
+                                    <button class="btn btn-info noborder" name="save">保存</button>
                                 </div>
                             </form>
                         </div>
@@ -867,6 +871,7 @@
             , currentBom : {}//当前的bom
             , currentAss : {}//当前的关联
             , typeP : {}//成品大类-code|name
+            , modules:[]//模具 code:name
             , typeC : {} //供应商等级-code|name
             , supplier : {}//供应商-code|name
             , product : {}//选中的成品
@@ -1037,7 +1042,7 @@
         function prepareData() {
             //1-加载模版页面
             return $.Promise.all([
-                services.product.getTypeAll(), services.mould.findSupplierAll()
+                services.product.getTypeAll(), services.mould.lookup()
             ]).then(function (array) {
                 array[0].tree.forEach(function (value) {
                     consts.typeP[value.code] = value.name;
@@ -1048,6 +1053,15 @@
                     });
                     consts.typeAll[value.code]=typeClideArray;
                 });
+                consts.modules = [];
+                consts.modules.push({code:"", name:"【无】"});
+                array[1].list.forEach(function (item) {
+                    consts.modules.push({
+                        code: item.code,
+                        name: item.name
+                    })
+                });
+
             }).catch(function (reason) {
                 console.log('reason', reason);
             })
@@ -1385,6 +1399,16 @@
             consts.$editInfoModal.on('show.bs.modal', function () {
                 $('#myTab li:eq(0) a').tab('show');
                 var $this = $(this);
+
+                //供选原材料
+                utils.dropkick({
+                    $holder : $('#_modelLocation'),
+                    data : consts.modules,
+                    current : consts.product.modelLocation,
+                });
+
+
+
                 if(consts.product.id){
                     //更新
                     $.each(consts.product, function (name, value) {
@@ -1402,7 +1426,6 @@
                             utils.dropkick({ $holder : $('#_typeC'), data :  consts.typeAll[value] });
                         } });
                     utils.dropkick({ $holder : $('#_typeC'), data :consts.typeAll[$("#_typeP").data("value")] });
-
                 }
             }).on('hidden.bs.modal', function () {
                 //清理数据
@@ -1452,6 +1475,7 @@
                 var _function = !!consts.product.id ? services.product.update : services.product.create;
                 data.id = consts.product.id || '';
                 data.endProductTypeCode = $('#_typeC').attr('data-value');
+                data.modelLocation = $('#_modelLocation').attr('data-value');
                 console.log("save/update", data);
                 _function(data).then(function (product) {
                     loadDataTable(true);

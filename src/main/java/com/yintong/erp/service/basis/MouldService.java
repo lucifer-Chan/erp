@@ -2,12 +2,13 @@ package com.yintong.erp.service.basis;
 
 import com.yintong.erp.domain.basis.ErpBaseModelTool;
 import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
-import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
 import com.yintong.erp.utils.bar.BarCodeConstants;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteMouldValidator;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,11 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.*;
-import static com.yintong.erp.utils.query.ParameterItem.COMPARES.equal;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D100;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D200;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D300;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D400;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D500;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D600;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D700;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D800;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 
@@ -77,6 +81,7 @@ public class MouldService {
     public ErpBaseModelTool create(ErpBaseModelTool mould){
         mould.setId(null);//防止假数据
         validateModelType(mould);
+        mould.uniqueValidate();
         return modelToolRepository.save(mould);
     }
     /**
@@ -90,6 +95,7 @@ public class MouldService {
         Assert.notNull(inDb, "未找到模具");
         validateModelType(mould);
         mould.setBarCode(inDb.getBarCode());
+        mould.uniqueValidate();
         return modelToolRepository.save(mould);
     }
     /**
@@ -101,7 +107,6 @@ public class MouldService {
         if(!CollectionUtils.isEmpty(onDeleteMouldValidator))
             onDeleteMouldValidator.forEach(validator -> validator.onDeleteMould(mouldId));
         modelToolRepository.deleteById(mouldId);
-
     }
 
     /**
@@ -109,11 +114,11 @@ public class MouldService {
      * @param mould
      */
     private void validateModelType(ErpBaseModelTool mould){
-        Assert.notNull(mould, "模具null");
-        String type = mould.getModelToolTypeCode();
-        Assert.hasLength(type, "类型不能为空");
-        Assert.hasLength(mould.getModelToolName(), "模具名称不能为空");
-        Assert.isTrue(Arrays.asList(D100,D200,D300,D400,D500,D600,D700,D800).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "模具类型不正确");
+        Assert.notNull(mould, "模具不能为null");
+//        String type = mould.getModelToolTypeCode();
+//        Assert.hasLength(type, "类型不能为空");
+        Assert.hasText(mould.getModelPlace(), "模具位不能为空");
+//        Assert.isTrue(Arrays.asList(D100,D200,D300,D400,D500,D600,D700,D800).contains(BarCodeConstants.BAR_CODE_PREFIX.valueOf(type)), "模具类型不正确");
     }
 
     /**
@@ -123,11 +128,8 @@ public class MouldService {
     @Setter
     @OrderBy(fieldName = "id")
     public static class MouldParameterBuilder extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "modelToolName"}, compare = like, group = OR)
+        @ParameterItem(mappingTo = {"modelPlace", "modelToolNo", "specification", "angle"}, compare = like, group = OR)
         String cause;
-        @ParameterItem(mappingTo = "modelToolTypeCode", compare = equal)
-        String type;
     }
-
 
 }

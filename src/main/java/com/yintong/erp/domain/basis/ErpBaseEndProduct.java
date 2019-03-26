@@ -11,16 +11,23 @@ import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.Assert;
-
-import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
 import org.springframework.util.StringUtils;
 
 /**
@@ -165,6 +172,32 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Transient
     private String supplierTypeCode;
 
+    @Transient
+    private JSONObject module;
+
+    public JSONObject getModule(){
+        if(Objects.nonNull(module)) return module;
+
+        if(StringUtils.isEmpty(modelLocation)) return module = new JSONObject();
+
+        ErpBaseModelToolRepository repository = SpringUtil.getBean(ErpBaseModelToolRepository.class);
+
+        List<ErpBaseModelTool> modules = repository.findByModelPlace(getModelLocation());
+
+        if(CollectionUtils.isEmpty(modules)){
+            return module = new JSONObject();
+        }
+
+        ErpBaseModelTool m = modules.get(0);
+
+        return module = JsonWrapper.builder()
+                .add("modelPlace", m.getModelPlace())
+                .add("modelToolNo", m.getModelToolNo())
+                .add("specification", m.getSpecification())
+                .add("angle", m.getAngle())
+                .build();
+    }
+
     public String getTypeName(){
         return StringUtils.hasText(endProductTypeCode) ? BarCodeConstants.BAR_CODE_PREFIX.valueOf(endProductTypeCode).description() : "";
     }
@@ -303,11 +336,13 @@ public class ErpBaseEndProduct  extends BaseEntityWithBarCode implements Importa
     @Override
     protected void prePersist(){
         this.unit = "kg";
+        CommonUtil.trim(this);
     }
 
     @Override
     protected void preUpdate(){
         this.unit = "kg";
+        CommonUtil.trim(this);
     }
 
 }

@@ -266,6 +266,7 @@ define('services',['utils'],function (utils) {
 
     var mould = {
         sessionKey : '_services_mould_all_',
+        sessionKey2 : '_services_mould_lookup_',
 
         //库存剩余： total
         stockRemain : function (id) {
@@ -284,6 +285,22 @@ define('services',['utils'],function (utils) {
             return $.http.get('basis/mould/all')
                 .then(function (ret) {
                     $.session($this.sessionKey, ret);
+                    return ret;
+                });
+        },
+
+        //所有原材料 code : name
+        lookup : function () {
+            var $this = this;
+            var value = $.session($this.sessionKey2);
+            if (!!value){
+                return $.Promise.resolve().then(function () {
+                    return value;
+                })
+            }
+            return $.http.get('basis/mould/lookup')
+                .then(function (ret) {
+                    $.session($this.sessionKey2, ret);
                     return ret;
                 });
         },
@@ -312,6 +329,7 @@ define('services',['utils'],function (utils) {
                 contentType : $.contentType.json
             }).then(function (value) {
                 $.session($this.sessionKey, null);
+                $.session($this.sessionKey2, null);
                 return value;
             });
         },
@@ -328,6 +346,7 @@ define('services',['utils'],function (utils) {
                 contentType : $.contentType.json
             }).then(function (value) {
                 $.session($this.sessionKey, null);
+                $.session($this.sessionKey2, null);
                 return value;
             });
         },
@@ -337,6 +356,7 @@ define('services',['utils'],function (utils) {
             return $.http.delete('basis/mould/' + id)
                 .then(function (value) {
                     $.session($this.sessionKey, null);
+                    $.session($this.sessionKey2, null);
                     return value;
                 });
         }

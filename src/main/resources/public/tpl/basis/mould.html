@@ -2,14 +2,16 @@
     <div class="full_height">
         <div id="searchFilter">
             <div class="sidebar-search">
-                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、名称" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
+                <div name="fastSearchByNumberForm" id="fastSearchByNumberForm"><div class="input-group"><input type="text" class="form-control" id="fastKeyword" placeholder="编号、模具位、规格、角度" autocomplete="off"><span class="input-group-btn"><button class="btn btn-default" type="button" id="searchIcon"><i class="fa fa-search"></i></button></span></div></div>
             </div>
+            <!--
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown" id="mould_category">
                 </li>
-                <!--<li role="presentation" class="dropdown" id="mould_supplier">-->
-                <!--</li>-->
+                <li role="presentation" class="dropdown" id="mould_supplier">
+                </li>
             </ul>
+            -->
         </div>
         <div class="sidebar-operations">
             <button type="button" class="btn btn-default btn-ms operation" id="addUserBt" data-toggle="modal" data-target="#_editMould">新增模具</button>
@@ -21,14 +23,17 @@
                         <table class="table table-hover" id="dataTables">
                             <thead>
                             <tr erp-id="{id}">
-                                <th style="width:70px" erp-data="{barCode}">编号<span id="allCount"></span></th>
-                                <th style="width:90px" erp-data="{modelToolName}" >名称</th>
-                                <th style="width:40px" erp-data="{modelToolTypeCode}" erp-convert="convertType">类型</th>
+                                <th style="width:70px" erp-data="{modelToolNo}">编号<span id="allCount"></span></th>
+                                <th style="width:90px" erp-data="{modelPlace}" >模具位</th>
+                                <th style="width:90px" erp-data="{specification}" >规格</th>
+                                <th style="width:90px" erp-data="{angle}" >角度</th>
+                                <th style="width:50px" erp-data="{remark}">备注</th>
+                                <!--
                                 <th style="width:40px" erp-data="{totalNum}">库存</th>
                                 <th style="width:40px" erp-data="{unit}">单位</th>
                                 <th style="width:40px" erp-data="{specification}">规格描述</th>
-                                <!--<th style="width:40px" erp-data="{supplierTypeCode}">供应商</th>-->
-                                <th style="width:50px" erp-data="{remark}">备注</th>
+                                <th style="width:40px" erp-data="{supplierTypeCode}">供应商</th>
+                                -->
                             </tr>
                             </thead>
                         </table>
@@ -49,29 +54,31 @@
             <div class="modal-body">
                 <form class="form-horizontal pd23">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">名称</label>
+                        <label class="col-sm-2 control-label">编号</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="modelToolName" placeholder="最多输入20个字符" autofocus onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
+                            <input type="text" class="form-control" name="modelToolNo" placeholder="最多输入20个字符" autofocus onfocus="checkStrNum(this,20)" oninput="checkStrNum(this,20)">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label _type">模具类别</label>
-                        <div class="col-sm-4 _type">
-                            <div class="customDropkick" style="width: 100%;" id="_type" name="modelToolTypeCode"></div>
-                        </div>
-                        <label class="col-sm-2 control-label">单位</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" name="unit" placeholder="最多输入10个字符" autofocus onfocus="checkStrNum(this,10)" oninput="checkStrNum(this,10)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">规格描述</label>
+                        <label class="col-sm-2 control-label">模具位</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="specification" placeholder="最多输入30个字符" autofocus onfocus="checkStrNum(this,30)" oninput="checkStrNum(this,30)">
+                            <input type="text" class="form-control" name="modelPlace" placeholder="最多输入40个字符" autofocus onfocus="checkStrNum(this,40)" oninput="checkStrNum(this,40)">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" placeholder="最多输入100个字符" autofocus onfocus="checkStrNum(this,100)" oninput="checkStrNum(this,100)">备注</label>
+                        <label class="col-sm-2 control-label">规格</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="specification" placeholder="最多输入40个字符" autofocus onfocus="checkStrNum(this,40)" oninput="checkStrNum(this,40)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角度</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="angle" placeholder="最多输入40个字符" autofocus onfocus="checkStrNum(this,40)" oninput="checkStrNum(this,40)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">备注</label>
                         <div class="col-sm-10">
                             <textarea rows="5" class="form-control" name="remark" id="remark"></textarea>
                         </div>
@@ -114,8 +121,8 @@
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
         <span class="btn0 _operations">
             <button class="btn btn-primary" data-toggle="modal" data-target="#_editMould">修改模具信息</button>
-            <button class="btn btn-primary" id="printBt">打印条形码</button>
-             <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
+            <!--<button class="btn btn-primary" id="printBt">打印条形码</button>-->
+            <button class="btn btn-primary" data-toggle="modal" data-target="#_addAss">添加供应商</button>
             <button class="btn btn-primary" data-name="delete">删除</button>
         </span>
     </div>
@@ -134,32 +141,23 @@
                     <div class="pd43">
                         <div class="row">
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">名称</label>
-                                <div class="col-xs-8 txt pd0" data-name="modelToolName"></div>
+                                <label class="col-xs-4 pd0">编号</label>
+                                <div class="col-xs-8 txt pd0" data-name="modelToolNo"></div>
                             </div>
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">编号</label>
-                                <div class="col-xs-8 txt pd0" data-name="barCode"></div>
+                                <label class="col-xs-4 pd0">模具位</label>
+                                <div class="col-xs-8 txt pd0" data-name="modelPlace"></div>
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">类型</label>
-                                <div class="col-xs-8 txt pd0" data-convert="modelToolTypeCode"></div>
+                                <label class="col-xs-4 pd0">规格</label>
+                                <div class="col-xs-8 txt pd0" data-name="specification"></div>
                             </div>
                            <div class="col-xs-6">
-                                <label class="col-xs-4 pd0">单位</label>
-                                <div class="col-xs-8 txt pd0" data-name="unit"></div>
+                                <label class="col-xs-4 pd0">角度</label>
+                                <div class="col-xs-8 txt pd0" data-name="angle"></div>
                             </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <label class="col-xs-2 pd0">规格描述</label>
-                                <div class="col-xs-10 txt pd0" data-name="specification"></div>
-                            </div>
-
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
@@ -334,7 +332,7 @@
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
                 , aConverts : [convertType]
-                , unSorting : [6]
+                , unSorting : [4]
             });
         }
 
@@ -438,7 +436,7 @@
                 layer.confirm('删除操作不可恢复，确定删除吗？',{title:'提示',move:false},function(){
                     services.mould.delete(consts.selectedMould.id)
                         .then(function (ret) {
-                            layer.msg(ret._message);
+                            layer.msg("删除成功");
                             loadMouldData(true);
                             consts.selectedMould = {};
                             consts.$rightPage.hide();

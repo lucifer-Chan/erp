@@ -24,4 +24,9 @@ public interface ErpBaseModelToolRepository extends JpaRepository<ErpBaseModelTo
     List<ErpBaseModelTool> findAllByOrderByModelToolTypeCode();
 
     Optional<ErpBaseModelTool> findByBarCode(String barcode);
+
+
+    List<ErpBaseModelTool> findByModelPlace(String modelPlace);
+
+    List<ErpBaseModelTool> findByModelPlaceAndIdNot(String modelPlace, Long id);
 }

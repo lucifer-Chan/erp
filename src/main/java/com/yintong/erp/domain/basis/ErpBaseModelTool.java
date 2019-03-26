@@ -9,46 +9,61 @@ import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.SpringUtil;
 import com.yintong.erp.utils.excel.Importable;
-import java.util.stream.Collectors;
-import lombok.*;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.util.Assert;
-
-import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D100;
 
 /**
  * Created by jianqiang on 2018/5/10 0010.
+ * 模具位、编号、规格、角度，其中“模具位”不可重复；
  * 模具表
  */
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
+@BarCode(prefix = D100)
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importable, StockEntity<ErpBaseModelTool>, TemplateWares{
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(columnDefinition = "varchar(64) comment '模具位'")
+    private String modelPlace;
+
     @Column(columnDefinition = "varchar(64) comment '模具编号'")
     private String modelToolNo;
+
+    @Column(columnDefinition = "varchar(64) comment '规格描述'")
+    private String specification;
+
+    @Column(columnDefinition = "varchar(64) comment '角度'")
+    private String angle;
+
+
+
+
+    @Column(columnDefinition = "varchar(20) comment '模具类别编码'")
+    private String modelToolTypeCode = D100.name();
 
     @Column(columnDefinition = "varchar(20) comment '模具名称'")
     private String modelToolName;
 
-    @BarCode
-    @Column(columnDefinition = "varchar(20) comment '模具类别编码'")
-    private String modelToolTypeCode;
-
     @Column(columnDefinition = "varchar(64) comment '单位'")
-    private String unit;
-
-    @Column(columnDefinition = "varchar(64) comment '规格描述'")
-    private String specification;
+    private String unit = "件";
 
     @Column(columnDefinition = "varchar(128) comment '备注'")
     private String remark;
@@ -81,20 +96,13 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     }
 
     public String getMouldTypeName(){
-        return BarCodeConstants.BAR_CODE_PREFIX.valueOf(modelToolTypeCode).description();
+        return D100.description();
+
     }
 
     public String getDescription(){
         if(StringUtils.hasText(description)) return description;
-        String _type;
-        try {
-            String prefix = BarCodeConstants.BAR_CODE_PREFIX.valueOf(modelToolTypeCode).description();
-            _type = prefix.substring("模具-".length(), prefix.length()) + "-";
-        } catch (Exception e){
-            _type = "";
-        }
-
-        return description = (_type + this.getModelToolName() + (StringUtils.hasText(specification)? ("-" + specification) : ""));
+        return description = modelPlace;
     }
 
     @Override
@@ -104,7 +112,7 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
 
     @Override
     public String getSimpleName() {
-        return modelToolName;
+        return modelPlace;
     }
 
     @Override
@@ -118,7 +126,7 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
 
     @Override
     public void requiredValidate(){
-        Assert.hasLength(modelToolTypeCode, "未找到类别");
+        Assert.hasLength(modelPlace, "未找到模具位");
     }
 
     @Override
@@ -126,9 +134,9 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
         ErpBaseModelToolRepository repository = SpringUtil.getBean(ErpBaseModelToolRepository.class);
         List<ErpBaseModelTool> shouldBeEmpty
                 = Objects.isNull(id)
-                ? repository.findByModelToolNameAndSpecification(modelToolName, specification)
-                : repository.findByModelToolNameAndSpecificationAndIdNot(modelToolName, specification, id);
-        Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "名称-规格重复");
+                ? repository.findByModelPlace(modelPlace)
+                : repository.findByModelPlaceAndIdNot(modelPlace, id);
+        Assert.isTrue(CollectionUtils.isEmpty(shouldBeEmpty), "模具位重复");
     }
 
     @Override

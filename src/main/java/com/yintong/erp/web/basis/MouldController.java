@@ -7,9 +7,11 @@ import com.yintong.erp.service.basis.MouldService;
 import com.yintong.erp.service.basis.SupplierService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
 import com.yintong.erp.utils.base.BaseResult;
+import com.yintong.erp.utils.base.JsonWrapper;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +59,16 @@ public class MouldController {
                 modelToolRepository.findAllByOrderByModelToolTypeCode().stream().map(product -> product.filter("id", "description")).collect(Collectors.toList())
         );
     }
+
+    @GetMapping("lookup")
+    public BaseResult lookup(){
+        return new BaseResult().addList(
+                modelToolRepository.findAll().stream().filter(it -> StringUtils.hasLength(it.getModelPlace()))
+                    .map(it -> JsonWrapper.builder().add("code", it.getModelPlace()).add("name", it.getModelPlace()).build())
+                    .collect(Collectors.toList())
+        );
+    }
+
 
     @GetMapping("findSupplierAll")
     public BaseResult findSupplierAll(){

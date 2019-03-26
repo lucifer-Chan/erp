@@ -1,16 +1,21 @@
 package com.yintong.erp.utils.common;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import com.yintong.erp.utils.base.JSONable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -18,6 +23,8 @@ import net.sf.json.JSONObject;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author lucifer.chan
@@ -266,5 +273,47 @@ public class CommonUtil {
             swapStream.write(buff, 0, rc);
         }
         return swapStream.toByteArray();
+    }
+
+    /**
+     * 去空格
+     * @param o
+     */
+    public static void trim(Object o){
+        List<Field> fields = fields(o);
+        fields.forEach(field -> {
+            field.setAccessible(true);
+            Class type = field.getType();
+            if(type == String.class){
+                try {
+                    String value = (String) field.get(o);
+                    if(Objects.nonNull(value)){
+                        field.set(o, value.trim());
+                    }
+                } catch (Exception ignored){
+
+                }
+
+            }
+
+        });
+    }
+
+    /**
+     * 获取一个对象的所有field
+     * @param o
+     * @return
+     */
+    public static List<Field> fields(Object o){
+        if(Objects.isNull(o)) {
+            return new LinkedList<>();
+        }
+        final Class<?> clazz = o instanceof Class ? (Class)o : o.getClass();
+
+        return Arrays.asList(
+                Optional.of(clazz)
+                .map(Class::getDeclaredFields)
+                .orElse(new Field[0])
+        );
     }
 }

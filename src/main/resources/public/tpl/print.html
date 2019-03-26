@@ -282,7 +282,7 @@
                         <th>脚边缘<br>S2(mm)</th>
                         <th>头部<br>复合强度</th>
                         <th>脚部<br>复合强度</th>
-                        <th colspan="2">模具位</th>
+                        <th colspan="2">模具</th>
                     </tr>
                     <tr>
                         <th rowspan="2">制打公差</th>
@@ -293,7 +293,8 @@
                         <td>{{o.product.spFaxlemmUpper}}</td>
                         <td rowspan="2">{{o.product.spHCstrength}}</td>
                         <td rowspan="2">{{o.product.spFCstrength}}</td>
-                        <td rowspan="2" colspan="2">{{o.product.modelLocation}}</td>
+                        <th>模具位</th>
+                        <td>{{o.product.module.modelPlace}}</td>
                     </tr>
                     <tr>
                         <th>下限</th>
@@ -301,10 +302,14 @@
                         <td>{{o.product.speEdgeemmLower}}</td>
                         <td>{{o.product.speFdsmmLower}}</td>
                         <td>{{o.product.speFaxlemmLower}}</td>
+                        <th>规格</th>
+                        <td>{{o.product.module.specification}}</td>
                     </tr>
                     <tr>
                         <th colspan="2">特殊要求</th>
-                        <td colspan="8"></td>
+                        <td colspan="6"></td>
+                        <th>角度</th>
+                        <td>{{o.product.module.angle}}</td>
                     </tr>
                     <tr>
                         <th rowspan="3">物料清单</th>
