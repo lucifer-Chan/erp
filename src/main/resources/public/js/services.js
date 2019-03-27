@@ -359,7 +359,29 @@ define('services',['utils'],function (utils) {
                     $.session($this.sessionKey2, null);
                     return value;
                 });
-        }
+        },
+
+        //批量删除
+        batchDelete : function (importedAt) {
+            var $this = this;
+            return $.http.delete('basis/mould/batch/' + importedAt)
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    $.session($this.sessionKey2, null);
+                    return value;
+                });
+        },
+
+        //导入的查询
+        imported : function () {
+            var $this = this;
+            return $.http.get('basis/mould/group')
+                .then(function (value) {
+                    $.session($this.sessionKey, null);
+                    $.session($this.sessionKey2, null);
+                    return value;
+                });
+        },
     };
 
     var product = {

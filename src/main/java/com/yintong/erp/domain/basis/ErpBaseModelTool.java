@@ -71,6 +71,10 @@ public class ErpBaseModelTool extends BaseEntityWithBarCode implements Importabl
     @Column(columnDefinition = "double(20,5) comment '库存总量'")
     private Double totalNum;
 
+    @Column(columnDefinition = "varchar(20) comment '导入时间,空值表示录入'")
+    private String importedAt;
+
+
     @Transient
     private String supplierTypeCode;
 

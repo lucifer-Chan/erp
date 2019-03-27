@@ -3,14 +3,21 @@ package com.yintong.erp.service.basis;
 import com.yintong.erp.domain.basis.ErpBaseModelTool;
 import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.utils.bar.BarCodeConstants;
+import com.yintong.erp.utils.common.DateUtil;
+import com.yintong.erp.utils.excel.ExcelUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
 import com.yintong.erp.utils.query.QueryParameterBuilder;
 import com.yintong.erp.validator.OnDeleteMouldValidator;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,12 +35,14 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D700;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.D800;
 import static com.yintong.erp.utils.query.ParameterItem.COMPARES.like;
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
+import static com.yintong.erp.utils.excel.ExcelUtil.ExcelImporter;
 
 /**
  * Created by jianqiang on 2018/5/22 0022.
  * 模具
  */
 @Service
+@Slf4j
 public class MouldService {
 
     @Autowired ErpBaseModelToolRepository modelToolRepository;
@@ -130,6 +139,27 @@ public class MouldService {
     public static class MouldParameterBuilder extends QueryParameterBuilder {
         @ParameterItem(mappingTo = {"modelPlace", "modelToolNo", "specification", "angle"}, compare = like, group = OR)
         String cause;
+    }
+
+    /**
+     * 导入
+     * @param excel
+     * @return
+     */
+    public ExcelImporter<ErpBaseModelTool> import0(InputStream excel) throws IOException {
+        ExcelImporter<ErpBaseModelTool> importer = new ExcelUtil(excel).builder(ErpBaseModelTool.class);
+        List<ErpBaseModelTool> entities = importer.getSuccessData();
+        Date importedAt = new Date();
+        List<ErpBaseModelTool> count = new ArrayList<>();
+        for (ErpBaseModelTool entity : entities){
+            try{
+                entity.setImportedAt(DateUtil.getDateTimeString(importedAt));
+                count.add(create(entity));
+            } catch (Exception e){
+                log.error("导入模具失败", e);
+            }
+        }
+        return importer.setSuccessData(count);
     }
 
 }

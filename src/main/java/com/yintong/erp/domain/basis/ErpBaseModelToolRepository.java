@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * Created by jianqiang on 2018/5/10 0010.
@@ -29,4 +30,12 @@ public interface ErpBaseModelToolRepository extends JpaRepository<ErpBaseModelTo
     List<ErpBaseModelTool> findByModelPlace(String modelPlace);
 
     List<ErpBaseModelTool> findByModelPlaceAndIdNot(String modelPlace, Long id);
+
+    @Query(value = "SELECT count(imported_at) num, imported_at FROM erp_base_model_tool WHERE imported_at IS NOT NULL GROUP BY imported_at ORDER BY imported_at DESC",
+            nativeQuery = true)
+    List<Object []> groupByImportAt();
+
+    List<ErpBaseModelTool> findByImportedAt(String importedAt);
+
+    List<ErpBaseModelTool> findAllByOrderById();
 }

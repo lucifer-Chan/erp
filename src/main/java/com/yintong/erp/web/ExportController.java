@@ -2,6 +2,8 @@ package com.yintong.erp.web;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
 import com.yintong.erp.domain.basis.ErpBaseEndProductRepository;
+import com.yintong.erp.domain.basis.ErpBaseModelTool;
+import com.yintong.erp.domain.basis.ErpBaseModelToolRepository;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.excel.ExcelExporter;
@@ -33,6 +35,8 @@ public class ExportController {
 
     @Autowired ErpBaseEndProductRepository productRepository;
 
+    @Autowired ErpBaseModelToolRepository mouldRepository;
+
 
     /**
      * 导出成品数据
@@ -40,7 +44,7 @@ public class ExportController {
      * @param response
      */
     @GetMapping("product")
-    public ResponseEntity<byte[]> export(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<byte[]> exportProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
         InputStream is = ExportController.class.getResourceAsStream("/export_product.xlsx");
 
         List<JSONObject> data = productRepository.findAllByOrderById().stream()
@@ -50,6 +54,30 @@ public class ExportController {
         byte[] bytes = new ExcelExporter(is, data).export();
 
         String fileName = "成品" + DateUtil.getDateString(new Date()).concat(".xlsx");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData(fileName, new String(fileName.getBytes("UTF-8"),"iso-8859-1"));
+        return new ResponseEntity<>(bytes, headers, HttpStatus.CREATED);
+
+    }
+
+
+    /**
+     * 导出模具数据
+     * @param request
+     * @param response
+     */
+    @GetMapping("mould")
+    public ResponseEntity<byte[]> exportMould(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        InputStream is = ExportController.class.getResourceAsStream("/export_mould.xlsx");
+
+        List<JSONObject> data = mouldRepository.findAllByOrderById().stream()
+                .map(ErpBaseModelTool::toJSONObject)
+                .collect(Collectors.toList());
+
+        byte[] bytes = new ExcelExporter(is, data).export();
+
+        String fileName = "模具" + DateUtil.getDateString(new Date()).concat(".xlsx");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData(fileName, new String(fileName.getBytes("UTF-8"),"iso-8859-1"));
