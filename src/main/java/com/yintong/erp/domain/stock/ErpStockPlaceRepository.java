@@ -22,4 +22,6 @@ public interface ErpStockPlaceRepository extends JpaRepository<ErpStockPlace, Lo
     List<ErpStockPlace> findByMaterialSupplierBarCode(String materialSupplierBarCode);
 
     ErpStockPlace findByPlaceCode(String placeCode);
+
+    List<ErpStockPlace> findByStockPlaceType(String stockPlaceType);
 }

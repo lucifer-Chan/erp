@@ -44,7 +44,7 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(10) comment '仓位类型 [M-原材料|P-成品|D-模具|R-废品]'")
     private String stockPlaceType;
 
-    @Column(columnDefinition = "varchar(100) comment '仓位名称'")
+    @Column(columnDefinition = "varchar(200) comment '仓位名称'")
     private String name;
 
     @Column(columnDefinition = "varchar(40) DEFAULT '' comment '位置编码'")
@@ -57,7 +57,7 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(40) comment '关联供应商之后的原材料条码，当stock_place_type为M时有效'")
     private String materialSupplierBarCode;
 
-    @Column(columnDefinition = "varchar(40) comment '可存物料名称，当stock_place_type为M时为原材料明细，否则为:成品|模具|废品'")
+    @Column(columnDefinition = "varchar(200) comment '可存物料名称，当stock_place_type为M时为原材料明细，否则为:成品|模具|废品'")
     private String materialName;
 
     @Column(columnDefinition = "varchar(20) DEFAULT 'ON' comment '状态编码[STOP-停役|ON-在役]，停役之后不许再入库'")
@@ -80,6 +80,13 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
 
     @Transient
     private JSONObject material = new JSONObject();
+
+
+    /**
+     * 关闭校验
+     */
+    @Transient
+    private boolean closeValidate;
 
     /**
      * 获取原材料
@@ -114,6 +121,10 @@ public class ErpStockPlace extends BaseEntityWithBarCode {
      * 存库前的验证
      */
     private void onPreCommit(){
+        if(closeValidate){
+            return;
+        }
+
         Assert.hasText(placeCode, "位置编码不能为空");
         Assert.isTrue(Objects.isNull(upperLimit) || upperLimit > 0 , "库存上限不能小于0");
         Assert.isTrue(Objects.isNull(currentStorageNum) || currentStorageNum > 0, "当前存量不能小于0");
