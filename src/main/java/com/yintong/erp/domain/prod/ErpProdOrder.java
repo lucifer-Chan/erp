@@ -88,6 +88,9 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
     @Column(columnDefinition = "varchar(5) comment '单位：kg|只'")
     private String unit;
 
+    @Column(columnDefinition = "varchar(100) DEFAULT '' comment '机台号'")
+    private String machineCode;
+
     private boolean flowStart;
 
     @Transient

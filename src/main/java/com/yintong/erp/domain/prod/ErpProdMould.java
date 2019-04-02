@@ -91,7 +91,7 @@ public class ErpProdMould extends BaseEntity {
         if(Objects.nonNull(mould)) return mould;
         if(Objects.nonNull(mouldId)){
             this.mould = SpringUtil.getBean(ErpBaseModelToolRepository.class)
-                    .findById(mouldId).orElse(null);
+                    .findById(mouldId).orElseThrow(()->new IllegalArgumentException("模具信息[" + mouldId + "]缺失！"));
         }
         return mould;
     }

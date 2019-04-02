@@ -233,7 +233,7 @@
                         <th>材料名称</th><td colspan="3">{{o.product.materialName}}</td>
                         <th>产品等级</th><td>{{o.product.level}}</td>
                         <th>客户编码</th><td>{{o.product.custCodeOld}}</td>
-                        <th>机号</th><td></td>
+                        <th>机台号</th><td>{{o.machineCode}}</td>
                     </tr>
                     <tr>
                         <th>生产数量</th><td colspan="2">{{o.num}}只</td>
@@ -405,7 +405,7 @@
                         <th rowspan="7" style="width: 48px!important;height: 175px!important;">基<br>本<br>信<br>息<br>／<br>工<br>序<br>流<br>程</th>
                         <th>客户代码</th><td colspan="2">{{product.custCodeNew}}</td>
                         <th>操作工</th><td colspan="2">{{flow.createdName}}</td>
-                        <th>机台</th><td colspan="2"></td>
+                        <th>机台号</th><td colspan="2">{{machineCode}}</td>
                         <th>初始重量</th><td colspan="2">{{flow.stage1Kg}}kg</td>
                         <th>备注</th><td></td>
                     </tr>

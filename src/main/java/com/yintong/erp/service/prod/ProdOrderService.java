@@ -199,6 +199,8 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
             oldOrder.setDescription(order.getDescription());
         }
 
+        oldOrder.setMachineCode(order.getMachineCode());
+
         //3-制令单单
         ErpProdOrder ret = orderRepository.save(oldOrder);
 
@@ -622,7 +624,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
     @Getter @Setter
     @OrderBy(fieldName = "startDate")
     public static class OrderParameterDto extends QueryParameterBuilder {
-        @ParameterItem(mappingTo = {"barCode", "description", "productName"}, compare = like, group = OR)
+        @ParameterItem(mappingTo = {"barCode", "description", "productName", "machineCode"}, compare = like, group = OR)
         String cause;
         @ParameterItem(mappingTo = {"flowStart"}, compare = equal, group = AND)
         Boolean flowStart;
