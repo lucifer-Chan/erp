@@ -198,13 +198,11 @@
         var consts = {
             oQueryParam : {}//查询参数
             , currentPlan : {}//当前计划
-            , waresTypes : [{
-                code : 'M', name : '原材料'
-            },{
-                code : 'P', name : '成品'
-            },{
-                code : 'D', name : '模具'
-            }]
+            , waresTypes : [
+                {code : 'M', name : '原材料'}
+                , {code : 'P', name : '成品'}
+                //, {code : 'D', name : '模具'}
+            ]
 
             , wares : {
                 M : [],//所有原材料
@@ -233,13 +231,13 @@
             consts.wares = {
                 M : [{code : -1, name : '【请选择原材料】'}]
                 , P : [{code : -1, name : '【请选择成品】'}]
-                , D : [{code : -1, name : '【请选择模具】'}]
+               // , D : [{code : -1, name : '【请选择模具】'}]
                 , cache : {}
             };
 
             //1-加载原材料、成品、模具
             return $.Promise.all([
-                services.rawMaterial.all(), services.product.all(), services.mould.all()
+                services.rawMaterial.all(), services.product.all()//, services.mould.all()
             ]).then(function (array) {
                 array[0].list.forEach(function (value) {
                     consts.wares.M.push({code : value.id, name : value.description});
@@ -249,10 +247,12 @@
                     consts.wares.P.push({code : value.id, name : value.description});
                     consts.wares.cache[value.id + '_P'] = value.description;
                 });
+                /*
                 array[2].list.forEach(function (value) {
                     consts.wares.D.push({code : value.id, name : value.description});
                     consts.wares.cache[value.id + '_D'] = value.description;
                 });
+                */
             }).catch(function (reason) {
                 console.log('reason', reason);
             });

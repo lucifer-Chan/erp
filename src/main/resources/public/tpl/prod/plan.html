@@ -112,12 +112,28 @@
             </div>
             <div class="modal-body">
                 <div class="form-horizontal pd28">
+
+                    <!--
                     <div class="form-group _mould">
                         <label class="col-sm-3 control-label">模具</label>
                         <div class="col-sm-9">
                             <div class="customDropkick" style="width: 100%;" id="_mould"></div>
                         </div>
                     </div>
+                    -->
+
+                    <div class="form-group _mould">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" style="padding-right: 5px;">模具</label>
+                            <div class="col-sm-9">
+                                <div style="margin-left: 10px;margin-right: 15px">
+                                    <select class="form-control" id="_mould">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label">供应商</label>
                         <div class="col-sm-9">
@@ -429,7 +445,7 @@
                     <li role="presentation" class="active"><span href="#orderList" aria-controls="orderList" role="tab" data-toggle="tab">制令单列表</span></li>
                     <li role="presentation"><span href="#finishHistory" aria-controls="finishHistory" role="tab" data-toggle="tab">达成记录</span></li>
                     <li role="presentation"><span href="#bomList" aria-controls="bomList" role="tab" data-toggle="tab">物料清单</span></li>
-                    <li role="presentation"><span href="#mouldList" aria-controls="mouldList" role="tab" data-toggle="tab">模具清单</span></li>
+                    <!--<li role="presentation"><span href="#mouldList" aria-controls="mouldList" role="tab" data-toggle="tab">模具清单</span></li>-->
                     <li role="presentation"><span href="#optHistory" aria-controls="optHistory" role="tab" data-toggle="tab">操作记录</span></li>
 
                 </ul>
@@ -802,23 +818,24 @@
         //预置数据
         function prepareData() {
             return $.Promise.all([
-                services.mould.all(), services.product.allWithBom(), services.account.all()
+                services.product.allWithBom(), services.account.all()//, services.mould.all()
             ]).then(function (array) {
                 consts.moulds.push({code : -1, name : '【请选择模具】'});
                 consts.products.push({code : -1, name : '【请选择成品】'});
                 consts.employees.push({code : -1, name : '【请选择工人】'})
-
                 array[0].list.forEach(function (value) {
-                    consts.moulds.push({code : value.id, name : value.description});
-                    consts.mouldCache[value.id] = value;
-                });
-                array[1].list.forEach(function (value) {
                     consts.products.push({code : value.id, name : value.description});
                     consts.productCache[value.id] = value;
                 });
-                array[2].list.forEach(function (value) {
+                array[1].list.forEach(function (value) {
                     consts.employees.push({code : value.id, name : value.name});
                 });
+                /*
+                array[2].list.forEach(function (value) {
+                    consts.moulds.push({code : value.id, name : value.description});
+                    consts.mouldCache[value.id] = value;
+                });
+                */
             }).catch(function (reason) {
                 console.log('reason', reason);
             });

@@ -9,9 +9,9 @@ define('purchase',['ztree','utils','services'],function(ztree, utils, services){
     var waresData = {};//货物数据 key:{waresType}{assId}, value : {wares}
 
     var waresService = {
-        D : services.mould,
         P : services.product,
-        M : services.rawMaterial
+        M : services.rawMaterial,
+        D : services.mould
     };
 
     //预置数据

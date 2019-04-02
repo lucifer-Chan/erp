@@ -273,7 +273,7 @@ define('services',['utils'],function (utils) {
             return $.http.get('basis/mould/' + id + '/stockRemain');
         },
 
-        //所有原材料
+        //所有模具
         all : function () {
             var $this = this;
             var value = $.session($this.sessionKey);
@@ -289,7 +289,7 @@ define('services',['utils'],function (utils) {
                 });
         },
 
-        //所有原材料 code : name
+        //所有模具 code : name
         lookup : function () {
             var $this = this;
             var value = $.session($this.sessionKey2);
