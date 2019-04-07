@@ -1354,6 +1354,20 @@ define('services',['utils'],function (utils) {
                 url : 'prod/order',
                 data : params
             });
+        },
+
+        //包装
+        pack : function (flowId, data) {
+            return $.http.patch({
+                url : 'prod/order/pack/' + flowId,
+                data : data,
+                contentType : $.contentType.json
+            });
+        },
+
+        //强制结束
+        finish: function (orderId) {
+            return $.http.patch('prod/order/finish/' + orderId);
         }
     };
 

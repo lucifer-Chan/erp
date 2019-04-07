@@ -827,16 +827,109 @@
             //sale_circulation_print_tpl
         }
 
+        //打印合格证
+        function printCertificate(display) {
+            if (!display) return;
+            var data = {
+                "product":{
+                    "custCodeNew":"G051",
+                    "spFlmmUpper":"1.89",
+                    "custCodeOld":"8-51",
+                    "spFCstrength":"",
+                    "lastUpdatedAt":"",
+                    "spAxlemmLower":"",
+                    "spHdsmmUpper":"1/2≥0.52",
+                    "technicalRequirements":"注意-1/2(0.5)1/4(0.4)边(0.15)含量18.5%",
+                    "userDefinedOne":"",
+                    "speEdgeemmLower":"0.05",
+                    "endProductName":"CT002",
+                    "createdAt":"2018-08-23 16:58:14",
+                    "unitSilverCopper":"0.116000",
+                    "spHdmmLower":"3.96",
+                    "lastUpdatedName":"",
+                    "id":2033,
+                    "spSrammUpper":"7.5",
+                    "unitSilverLoss":"0.020700",
+                    "endProductTypeName":"触点-二复合银点",
+                    "spTmammLower":"25",
+                    "spFlmmLower":"1.85",
+                    "level":"A级",
+                    "barCode":"PTD0000002033",
+                    "materialName":"AgNi(10)/Cu",
+                    "unit":"kg",
+                    "drawingNo":"",
+                    "spFdsmmUpper":"",
+                    "concentricity":"",
+                    "spSrammLower":"6.5",
+                    "onlyOrKg":"7200",
+                    "alertUpper":"",
+                    "spTmammUpper":"27",
+                    "speFdsmmLower":"",
+                    "courseRating":"",
+                    "spHtmmLower":"1",
+                    "typeName":"成品-触点-二复合银点",
+                    "description":"触点-二复合银点-CT002-4*1(0.5)+2*1.85R倒角",
+                    "remark":"",
+                    "spFtmmLower":"1.94",
+                    "modelLocation":"",
+                    "spEdgemmUpper":"0.1",
+                    "createdName":"管理员",
+                    "userDefinedThree":"",
+                    "alertLower":"",
+                    "speFaxlemmLower":"",
+                    "importedAt":"2018-08-23 16:57:37",
+                    "spAxlemmUpper":"0.08",
+                    "spHCstrength":"1/5",
+                    "specification":"4*1(0.5)+2*1.85R倒角",
+                    "custName":"常州西玛特电器有限公司",
+                    "userDefinedTwo":"",
+                    "supplierTypeCode":"",
+                    "spFtmmUpper":"1.99",
+                    "unitCopper":"0.116000",
+                    "spFaxlemmUpper":"",
+                    "unitSilver":"0.020700",
+                    "totalNum":0,
+                    "spHdmmUpper":"4.08",
+                    "spHtmmUpper":"1.05",
+                    "custDrawingNo":"sqqde",
+                    "spHdsmmLower":"1/2≥0.5",
+                    "endProductTypeCode":"PTD0"
+                },
+                flow: {
+                    sn: '20190890-0967'
+                },
+                now : new Date().format("yyyy-MM-dd"),
+                currentUser : '质检员-1'
+            };
+
+            services.common.barcode(data.product.barCode)
+                .then(function (ret) {
+                    data.base64 = ret.base64;
+                    console.log('打印数据', data);
+                })
+                .then(function () {
+                    var html = template("flow_print_certificate_tpl", data);
+                    $('#sale_out_holder').html(html);
+                })
+                .catch(function () {
+                    layer.msg('生成条形码失败！');
+                });
+
+
+
+        }
+
         (function init() {
             printProdOrder(false);//printProdOrder(true);
             printEmployee();
             printFlow(false);
             printOrderIn(false);
             printMaterialPlace(false);
-            printOtherPlace(true);
+            printOtherPlace(false);
             printPurchaseIn(false);
             printSaleOut(false);
             printCirculation(false);
+            printCertificate(true);
         })();
 
 

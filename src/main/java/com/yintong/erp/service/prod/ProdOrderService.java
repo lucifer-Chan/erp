@@ -1,7 +1,6 @@
 package com.yintong.erp.service.prod;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
-import com.yintong.erp.domain.prod.ErpProdHalfFlowRecord;
 import com.yintong.erp.domain.prod.ErpProdMould;
 import com.yintong.erp.domain.prod.ErpProdMouldRepository;
 import com.yintong.erp.domain.prod.ErpProdOrder;
@@ -24,7 +23,6 @@ import com.yintong.erp.service.stock.StockIn4Holder;
 import com.yintong.erp.service.stock.StockOut4Holder;
 import com.yintong.erp.utils.common.Assert;
 import com.yintong.erp.utils.common.CommonUtil;
-import com.yintong.erp.utils.common.Constants;
 import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.query.OrderBy;
 import com.yintong.erp.utils.query.ParameterItem;
@@ -50,10 +48,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import static com.yintong.erp.utils.common.Constants.ProdBomHolder.ORDER;
-import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_1;
-import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_2;
-import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_3;
-import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_4;
 import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_002;
 import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_003;
 import static com.yintong.erp.utils.common.Constants.StockHolder.PROD;
@@ -364,43 +358,6 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         return pickRecordRepository.save(record);
     }
 
-    /**
-     * 保存完工序卡之后的操作
-     * @param record
-     * @param stage
-     */
-    @Transactional
-    public void afterSaveFlow(ErpProdHalfFlowRecord record, Constants.ProdFlowStage stage) {
-        Long orderId = record.getProdOrderId();
-        ErpProdOrder order = findOneOrder(orderId);
-
-        Double kg = record.getStage1Kg();
-        Integer num = record.getStage1Num();
-        if(PROD_STAGE_1 == stage){
-            order.setFlowStart(true);
-            orderRepository.save(order);
-        } else if(PROD_STAGE_2 == stage){
-            kg = record.getStage2Kg();
-            num = record.getStage2Num();
-        } else if (PROD_STAGE_3 == stage){
-            kg = record.getStage3Kg();
-            num = record.getStage3Num();
-        } else if(PROD_STAGE_4 == stage){
-            kg = record.getStage4Kg();
-            num = record.getStage4Num();
-            //已有的已包装数量
-            Double lastNum = CommonUtil.ifNotPresent(order.getPickNum(), 0d);
-            Double packNum = "kg".equalsIgnoreCase(order.getUnit()) ? kg : num;
-            order.setPickNum(lastNum + packNum);
-            orderRepository.save(order);
-        }
-        //保存日志
-        orderOptLogRepository.save(ErpProdOrderOptLog.builder()
-                .orderId(orderId)
-                .optType("flow")
-                .content(stage.description + "【"+ record.getBarCode() + "】 重量【" + kg + "kg】 数量【" + num +"只】")
-            .build());
-    }
 
     /**
      * 获取单个挑拣记录
@@ -616,6 +573,20 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         Assert.notNull(order, "未找到制令单[" + barcode + "]");
 //        Assert.isTrue(1 == order.getPreStockIn(), "尚未生产，请先打印制令单");
         return order;
+    }
+
+    /**
+     * 强制结束
+     * @param orderId
+     * @return
+     */
+    public ErpProdOrder finish(Long orderId) {
+        ErpProdOrder order = findOneOrder(orderId);
+        order.setStatusCode(S_003.name());
+        order.setStatusName(S_003.description());
+        order.setFinishDate(new Date());
+        orderOptLogRepository.save(ErpProdOrderOptLog.builder().orderId(orderId).content("强制结束").optType("order").build());
+        return orderRepository.save(order);
     }
 
     /**

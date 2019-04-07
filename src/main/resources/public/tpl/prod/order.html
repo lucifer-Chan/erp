@@ -14,7 +14,7 @@
                             <tr erp-id="{id}">
                                 <th style="width:50px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <!--<th style="width:70px" erp-data="{description}" >描述</th>-->
-                                <th style="width:70px" erp-data="{statusName}">状态</th>
+                                <th style="width:70px" erp-data="{statusName}" erp-convert="_convertStatus">状态</th>
                                 <th style="width:70px" erp-data="{machineCode}">机台号</th>
                                 <th style="width:70px" erp-data="{productName}">生产成品</th>
                                 <th style="width:30px" erp-data="{employeeName}">工人</th>
@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">订单状态</label>
-                                <div class="col-xs-8 txt pd0" data-name="statusName"></div>
+                                <div class="col-xs-8 txt pd0" data-convert="statusName"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -562,18 +562,32 @@
                 return convertDate(array[0]);
             }
 
+            function _convertStatus(array) {
+                return convertStatus(array[0]);
+            }
+
             utils.dataTable({
                 holder: '#dataTables'
                 , $dataProvider : dataProvider
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
-                , aConverts : [_convertDate]
+                , aConverts : [_convertDate, _convertStatus]
                 , unSorting : [4]
             });
         }
 
         function convertDate(date) {
             return !!date ? date.substr(0,10) : '<span class="label label-warning">尚未完成</span>';
+        }
+
+        function convertStatus(status) {
+            if (status === '生产中'){
+                return '<span class="label label-warning">生产中</span>';
+            }
+            if (status === '已完成'){
+                return '<span class="label label-success">已完成</span>';
+            }
+            return status;
         }
 
         /**
@@ -592,6 +606,7 @@
             //data-convert="startDate finishDate"
             $baseInfo.find('div[data-convert="startDate"]').html(tr.startDate.substr(0,10));
             $baseInfo.find('div[data-convert="finishDate"]').html(convertDate(tr.finishDate));
+            $baseInfo.find('div[data-convert="statusName"]').html(convertStatus(tr.statusName));
 
             //初始化页面数据-数量
             $baseInfo.find('div[data-num]').each(function () {

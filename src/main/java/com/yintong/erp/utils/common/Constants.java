@@ -153,6 +153,7 @@ public interface Constants {
         SALE("销售订单"), //出库
         REFUNDS("退货单"), //入库
         PROD("制令单"),  //出库 入库
+        FLOW("工序卡"), //入库
         BUY("采购单"),  //入库
         INIT("初始化");//入库
 

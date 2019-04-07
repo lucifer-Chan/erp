@@ -2,6 +2,7 @@ package com.yintong.erp.mini.service;
 
 import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
 import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
+import com.yintong.erp.domain.prod.ErpProdHalfFlowRecord;
 import com.yintong.erp.domain.prod.ErpProdMould;
 import com.yintong.erp.domain.prod.ErpProdOrder;
 import com.yintong.erp.domain.prod.ErpProdProductBom;
@@ -13,6 +14,7 @@ import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.domain.stock.StockPlaceFinder;
 import com.yintong.erp.service.basis.CommonService;
+import com.yintong.erp.service.prod.ProdOrderService;
 import com.yintong.erp.utils.base.BaseEntityWithBarCode;
 import com.yintong.erp.utils.base.JsonWrapper;
 import com.yintong.erp.utils.common.CommonUtil;
@@ -73,6 +75,10 @@ public class MiniDtoWrapper {
 
         if(entity instanceof ErpProdOrder){
             return buildOrder((ErpProdOrder)entity);
+        }
+
+        if(entity instanceof ErpProdHalfFlowRecord){
+            return buildOrder((ErpProdHalfFlowRecord)entity);
         }
         throw new IllegalArgumentException("订单有误[" + entity.getClass().getSimpleName() + "]");
     }
@@ -154,6 +160,29 @@ public class MiniDtoWrapper {
                     .add("customer", order.getCustomerName())
                     .add("items", items)
                 .build();
+    }
+
+    /**
+     * 工序卡
+     * @param record
+     * @return
+     */
+    private static JSONObject buildOrder(ErpProdHalfFlowRecord record) {
+        ProdOrderService orderService = SpringUtil.getBean(ProdOrderService.class);
+        ErpProdOrder order = orderService.findOneOrder(record.getProdOrderId());
+
+        JSONObject product = order.getProduct().getTemplate();
+        product.put("total", record.getStage4Kg());
+        product.put("in", record.getInKg());
+        return JsonWrapper.builder()
+                .add("id", record.getId())
+                .add("barCode", record.getBarCode())
+                .add("name", order.getDescription())
+                .add("creator", record.getCreatedName())
+                .add("time", DateUtil.getDateString(record.getCreatedAt()))
+                .add("product", product)
+            .build();
+
     }
 
     /**

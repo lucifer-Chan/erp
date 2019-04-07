@@ -176,6 +176,7 @@ public class ErpProdOrder extends BaseEntityWithBarCode {
         this.setPreStockIn(0);
         this.setPreStockOut(0);
         this.setStatusCode(Constants.ProdOrderStatus.S_001.name());
+        this.setStatusName(Constants.ProdOrderStatus.S_001.description());
         onPreCommit();
     }
 

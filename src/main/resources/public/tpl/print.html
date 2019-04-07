@@ -188,7 +188,7 @@
         </div>
     </div>
 </script>
-<!-- 制令单打印-->
+<!-- 制令单打印 -->
 <script id="template-print_prod_order" type="text/template">
     <div style="font-size: 14px;" class="table-print-a4">
         <div class="panel-default bugInfo">
@@ -385,7 +385,7 @@
         </div>
     </div>
 </script>
-<!--生产工序卡打印-->
+<!-- 生产工序卡打印 -->
 <script id="flow_print_tpl" type="text/template">
     <div class="table-print-860">
         <div class="panel-default bugInfo">
@@ -423,8 +423,8 @@
                         <th colspan="4">挑拣后重量(总数量)</th>
                         <th colspan="2">总数量</th>
                         <th colspan="2">包数</th>
-                        <th colspan="2">包数数量/(PCS)</th>
-                        <th colspan="2">包数重量/(KG)</th>
+                        <th colspan="2">包装数量/(PCS)</th>
+                        <th colspan="2">包装重量/(KG)</th>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
@@ -452,7 +452,7 @@
         </div>
     </div>
 </script>
-<!-- 原材料仓位打印-->
+<!-- 原材料仓位打印 -->
 <script id="material_place_print_tpl" type="text/template">
     <div style="width: 100%;">
         <table style="font-size: 12px;margin-left: 8px;width: 209px;line-height: 0.9;">
@@ -477,7 +477,7 @@
         </table>
     </div>
 </script>
-<!-- 其它仓位打印-->
+<!-- 其它仓位打印 -->
 <script id="other_place_print_tpl" type="text/template">
     <div style="width: 100%;">
         <table style="margin-left: 8px;width: 209px;line-height: 0.9;">
@@ -496,7 +496,7 @@
         </table>
     </div>
 </script>
-<!-- 采购入库通知单-->
+<!-- 采购入库通知单 -->
 <script id="purchase_in_print_tpl" type="text/template">
     <div class="table-print-860">
         <div class="panel-default bugInfo">
@@ -548,7 +548,7 @@
         </div>
     </div>
 </script>
-<!-- 销售出／入库通知单-->
+<!-- 销售出／入库通知单 -->
 <script id="sale_stock_print_tpl" type="text/template">
     <div class="table-print-860">
         <div class="panel-default bugInfo">
@@ -600,8 +600,7 @@
         </div>
     </div>
 </script>
-
-<!-- 销售流转单-->
+<!-- 销售流转单 -->
 <script id="sale_circulation_print_tpl" type="text/template">
     <div class="table-print-860" style="width: 750px!important;">
         <div class="panel-default bugInfo">
@@ -669,5 +668,63 @@
                 </table>
             </div>
         </div>
+    </div>
+</script>
+
+<!-- 工序合格证 -->
+<script id="flow_print_certificate_tpl" type="text/template">
+    <div style="font-size: 10px;">
+        <table class="nb" style="padding: 0;font-size: 15px">
+            <tr style="height: 27px">
+                <th colspan="2" style="font-size: 18px;text-align: center;width: 250px">瑞安市银通电器有限公司</th>
+            </tr>
+            <tr style="height: 27px">
+                <th colspan="2" style="text-align: center;">合格证</th>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">批号</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{flow.sn}}</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">图号</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{product.custDrawingNo}}</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">材料</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{product.materialName}}</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">规格</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{product.specification}}</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">数量</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{flow.perPackNum}}pcs</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">净重</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{flow.perPackKg}}kg</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">检验</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{currentUser}}</td>
+            </tr>
+            <tr style="height: 27px">
+                <th style="width: 50px;">日期</th>
+                <td class="b1bi" style="width: 200px;text-align: center;">{{now}}</td>
+            </tr>
+            <tr style="height: 27px">
+                <th colspan="2" style="text-align: center;">本产品经检验合格，准许出厂</th>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 56px;text-align: center;">
+                    <img src="{{base64}}" style="width:229px;height:55px;">
+                </td>
+            </tr>
+            <tr style="height: 11px">
+                <th colspan="2" style="padding: 0;text-align: center;font-size: 11px;text-align: center;">{{product.barCode}}</th>
+            </tr>
+
+        </table>
     </div>
 </script>

@@ -23,7 +23,7 @@ import java.util.List;
  * 预置数据服务
  **/
 
-//@Component
+@Component
 public class PreDataService {
 
     @Autowired ErpMenuRepository menuRepository;
@@ -47,7 +47,7 @@ public class PreDataService {
     @PostConstruct
     void init(){
 //        if(!debug) return;
-        initMenus();
+//        initMenus();
 //        initEmployees();
 //        initCategories();
 //        initDepartments();
@@ -55,7 +55,7 @@ public class PreDataService {
         initMiniRoles();
     }
 
-    public void initMiniRoles(){
+    private void initMiniRoles(){
         miniRoleRepository.deleteAll();
 
         List<ErpMiniRole> roles = Arrays.asList(
@@ -65,7 +65,9 @@ public class PreDataService {
                 , ErpMiniRole.builder().code("OUT_SALE").name("销售出库").build()
                 , ErpMiniRole.builder().code("IN_REFUNDS").name("销售退货").build()
                 , ErpMiniRole.builder().code("OUT_PROD").name("生产物料出库").build()
-                , ErpMiniRole.builder().code("IN_PROD_P").name("生产成品入库").build()
+
+                , ErpMiniRole.builder().code("IN_FLOW_P").name("生产成品入库").build()
+               // , ErpMiniRole.builder().code("IN_PROD_P").name("生产成品入库").build()
                 , ErpMiniRole.builder().code("IN_PROD_W").name("原材料退回").build()
                 , ErpMiniRole.builder().code("inventory").name("仓库盘点").build()
                 , ErpMiniRole.builder().code("employee").name("扫码领料").build()
@@ -74,7 +76,7 @@ public class PreDataService {
                 , ErpMiniRole.builder().code("PROD_STAGE_1").name("半成品流转").build()
                 , ErpMiniRole.builder().code("PROD_STAGE_2").name("半成品后处理").build()
                 , ErpMiniRole.builder().code("PROD_STAGE_3").name("半成品挑拣").build()
-                , ErpMiniRole.builder().code("PROD_STAGE_4").name("成品包装").build()
+//                , ErpMiniRole.builder().code("PROD_STAGE_4").name("成品包装").build()
         );
 
         miniRoleRepository.saveAll(roles);

@@ -22,6 +22,7 @@ import com.yintong.erp.service.basis.ProductService;
 import com.yintong.erp.service.basis.associator.SupplierMouldService;
 import com.yintong.erp.service.basis.associator.SupplierProductService;
 import com.yintong.erp.service.basis.associator.SupplierRawMaterialService;
+import com.yintong.erp.service.prod.ProdFlowService;
 import com.yintong.erp.service.prod.ProdOrderService;
 import com.yintong.erp.service.purchase.PurchaseOrderService;
 import com.yintong.erp.service.sale.SaleOrderService;
@@ -55,7 +56,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +68,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.Q000;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.S000;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.V000;
+import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.WF00;
 import static com.yintong.erp.utils.bar.BarCodeConstants.BAR_CODE_PREFIX.X000;
 import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_ASS_LENGTH;
 import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_TPL_LENGTH;
@@ -75,6 +76,7 @@ import static com.yintong.erp.utils.common.Constants.ProdFlowStage;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_1;
 import static com.yintong.erp.utils.common.Constants.StockHolder;
 import static com.yintong.erp.utils.common.Constants.StockHolder.BUY;
+import static com.yintong.erp.utils.common.Constants.StockHolder.FLOW;
 import static com.yintong.erp.utils.common.Constants.StockHolder.INIT;
 import static com.yintong.erp.utils.common.Constants.StockHolder.PROD;
 import static com.yintong.erp.utils.common.Constants.StockHolder.REFUNDS;
@@ -120,6 +122,8 @@ public class MiniAppController {
     @Autowired SupplierMouldService supplierMouldService;
 
     @Autowired StockOptService stockOptService;
+
+    @Autowired ProdFlowService prodFlowService;
 
     @Autowired SimpleRemote simpleRemote;
 
@@ -496,7 +500,7 @@ public class MiniAppController {
                     .build()
         );
 
-        prodOrderService.afterSaveFlow(record, PROD_STAGE_1);
+        prodFlowService.afterSaveFlow(record, PROD_STAGE_1);
 
         return new BaseResult().addPojo(prodOrderService.findOneOrder(prodOrderId), "yyyy-MM-dd");
     }
@@ -555,7 +559,7 @@ public class MiniAppController {
         record.setStage(next);
 
         record = flowRecordRepository.save(record);
-        prodOrderService.afterSaveFlow(record, ProdFlowStage.val(next));
+        prodFlowService.afterSaveFlow(record, ProdFlowStage.val(next));
 
         return new BaseResult().addPojo(record);
     }
@@ -588,6 +592,7 @@ public class MiniAppController {
         put(REFUNDS.name(), X000.name()); //销售单（退货） - X000
         put(PROD.name(), Q000.name()); //制令单 - Q000
         put(BUY.name(), V000.name()); //采购单 - V000
+        put(FLOW.name(), WF00.name());//工序卡 - WF00
     }};
 
     /**
@@ -601,6 +606,7 @@ public class MiniAppController {
             put(IN.name() + "_" + REFUNDS.name(), saleOrderService::findOrder4In);//销售单（退货） - 具体的入库信息
             put(OUT.name() + "_" + SALE.name(), saleOrderService::findOrder4Out);//销售单（销售） - 具体的出库信息
             put(IN.name() + "_" + PROD.name(), prodOrderService::findOrder4In);//制令单（生产） - 具体的入库信息
+            put(IN.name() + "_" + FLOW.name(), prodFlowService::findFlow4In);//制令单（生产） - 具体的入库信息
             put(OUT.name() + "_" + PROD.name(), prodOrderService::findOrder4Out);//制令单（生产） - 具体的出库信息
         }};
     }

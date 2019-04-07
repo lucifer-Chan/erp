@@ -188,6 +188,10 @@ div.table-print-holder {
     border-left: solid 1px;
 }
 
+.b1bi{
+    border-bottom: solid 1px!important;
+}
+
 .nbt{
     border-top-color: #fff!important;
 }
@@ -2155,5 +2159,6 @@ ul.bugPlanNum li .PlanNumClass em {
 .status-horizontal li.current:before{background-color:#0dad12;border-color:#f8e9e4;}
 .current{color:green;}
 .status-title{margin-left:10px;}
-.status-time{font-size: 8px;margin-top: -60px;margin-left:10px;}
-.status-content{font-size: 8px;margin-left:10px;margin-top: 45px;}
+.status-time{font-size: 12px;margin-top: -60px;margin-left:10px;}
+.status-content{font-size: 12px;margin-left:10px;margin-top: 45px;}
+.status-suggest{font-size: 12px;margin-left:10px;}

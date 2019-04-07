@@ -14,7 +14,7 @@
                             <tr erp-id="{id}">
                                 <th style="width:50px" erp-data="{barCode}">编号<span id="allCount"></span></th>
                                 <th style="width:70px" erp-data="{description}" >描述</th>
-                                <th style="width:70px" erp-data="{statusName}">状态</th>
+                                <th style="width:70px" erp-data="{statusName}" erp-convert="_convertStatus">状态</th>
                                 <th style="width:70px" erp-data="{productName}">生产成品</th>
                                 <th style="width:30px" erp-data="{employeeName}">工人</th>
                                 <th style="width:30px" erp-data="{prodNum}">分配量</th>
@@ -33,10 +33,80 @@
     </div>
 </div>
 
+<!-- 编辑包装确认 -->
+<div class="modal fade" role="dialog" data-backdrop="static" id="_editFlow4PackModal">
+    <div class="modal-dialog" role="document" style="z-index: 1040">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <h4 class="modal-title"><i class="fa fa-edit defaultColor"></i> 包装确认</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal pd28">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">批号</label>
+                        <div class="col-sm-9" style="display: table;">
+                            <input type="text" class="form-control" name="sn" placeholder="批次" id="sn">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">挑拣后重量</label>
+                        <div class="col-sm-9" style="display: table;">
+                            <input type="number" step="0.0001" class="form-control" name="afterPickKg" placeholder="输入挑拣后重量" id="afterPickKg">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">包数</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="1" class="form-control" name="packCount" placeholder="输入包数" id="packCount">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">包装数量/(PCS)</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="1" class="form-control" name="perPackNum" placeholder="输入包装数量" id="perPackNum">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">包装重量/(KG)</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="0.0001" class="form-control" name="perPackKg" placeholder="输入包装重量" id="perPackKg">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">零头重量</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="0.0001" class="form-control" name="remnantKg" placeholder="零头重量" id="remnantKg" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">零头数量</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="1" class="form-control" name="remnantNum" placeholder="零头数量" id="remnantNum" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">总数量</label>
+                        <div class="col-sm-9">
+                            <input type="number" step="1" class="form-control" name="totalNum" placeholder="总数量" id="totalNum" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-footer noborder">
+                        <button class="btn btn-info noborder" name="save" id="_saveFlow4PackBt">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 右侧 -->
 <div class="rightInfoPage animated fadeOutRightBig" id="rightInfoPage">
     <div class="bugInfoTop">
         <em class="fa fa-angle-right rightInfoBack" alt="隐藏" title="隐藏"></em>
+        <span class="btn0 _operations">
+            <button class="btn btn-primary" id="forceFinishBt">结束生产</button>
+        </span>
     </div>
     <div class="bugInfoContent initOrderDetail">
         <div class="panel-default bugInfo">
@@ -58,7 +128,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <label class="col-xs-4 pd0">订单状态</label>
-                                <div class="col-xs-8 txt pd0" data-name="statusName"></div>
+                                <div class="col-xs-8 txt pd0" data-convert="statusName"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -151,7 +221,14 @@
                     <h3 class="panel-title" style="font-size: 13px">工序卡【{{flow.barCode}}】</h3>
                     <div class="tools">
                         <span class="pd43"><i class="fa defaultColor cursor fa-angle-double-up" title="收起" alt="收起" data-value="{{flow.id}}"></i></span>
+                        {{if flow.stage >= 3}}
+                        <button class="btn btn-info btn-xs toPack" data-value="{{flow.barCode}}">包装确认</button>
+                        {{/if}}
                         <button type="button" class="btn btn-info btn-xs toPrintFlowBt" data-value="{{flow.barCode}}">打印工序卡</button>
+                        {{if flow.stage >= 4}}
+                        <button type="button" class="btn btn-info btn-xs toPrintCertificateBt" data-value="{{flow.barCode}}">打印包装信息</button>
+                        {{/if}}
+
                     </div>
                 </div>
                 <div class="panel-body" style="padding:0 15px 10px 15px" data-value="{{flow.id}}Info">
@@ -160,21 +237,25 @@
                             <div class="status-title">{{flow.stage1.name}}</div>
                             <div class="status-time">{{flow.stage1.time}}</div>
                             <div class="status-content">{{flow.stage1.content}}</div>
+                            <div class="status-suggest">{{flow.stage1.suggest}}</div>
                         </li>
                         <li class="{{flow.stage2.current}}">
                             <div class="status-title">{{flow.stage2.name}}</div>
                             <div class="status-time">{{flow.stage2.time}}</div>
                             <div class="status-content">{{flow.stage2.content}}</div>
+                            <div class="status-suggest">{{flow.stage2.suggest}}</div>
                         </li>
                         <li class="{{flow.stage3.current}}">
                             <div class="status-title">{{flow.stage3.name}}</div>
                             <div class="status-time">{{flow.stage3.time}}</div>
                             <div class="status-content">{{flow.stage3.content}}</div>
+                            <div class="status-suggest">{{flow.stage3.suggest}}</div>
                         </li>
                         <li class="{{flow.stage4.current}}">
                             <div class="status-title">{{flow.stage4.name}}</div>
                             <div class="status-time">{{flow.stage4.time}}</div>
                             <div class="status-content">{{flow.stage4.content}}</div>
+                            <div class="status-suggest">{{flow.stage4.suggest}}</div>
                         </li>
                     </ul>
                 </div>
@@ -198,6 +279,9 @@
             , currentOrder : {}//当前制令单
             , $rightPage : $('#rightInfoPage')//右侧页面
             , flows : {}
+            , currentFlow : {}
+            , $packModal : $('#_editFlow4PackModal')
+            , $savePackBt : $('#_saveFlow4PackBt')
         };
 
         /**
@@ -231,9 +315,6 @@
                 services.prodOrder.one(id).then(function (tr) {
                     console.log('点击tr', tr);
                     initTrDetail(tr);
-                    $rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
-                    $rightPage.find('.fa-angle-double-down').click();
-
                 }).catch(function (reason) {
                     layer.msg(reason.caught ? reason.message : '请求失败！');
                 });
@@ -243,18 +324,32 @@
                 return convertDate(array[0]);
             }
 
+            function _convertStatus(array) {
+                return convertStatus(array[0]);
+            }
+
             utils.dataTable({
                 holder: '#dataTables'
                 , $dataProvider : dataProvider
                 , oParams : oParams || {}
                 , fClickTr : fClickTr
-                , aConverts : [_convertDate]
+                , aConverts : [_convertDate, _convertStatus]
                 , unSorting : [4]
             });
         }
 
         function convertDate(date) {
             return !!date ? date.substr(0,10) : '<span class="label label-warning">尚未完成</span>';
+        }
+
+        function convertStatus(status) {
+            if (status === '生产中'){
+                return '<span class="label label-warning">生产中</span>';
+            }
+            if (status === '已完成'){
+                return '<span class="label label-success">已完成</span>';
+            }
+            return status;
         }
 
         /**
@@ -274,6 +369,7 @@
             //data-convert="startDate finishDate"
             $baseInfo.find('div[data-convert="startDate"]').html(tr.startDate.substr(0,10));
             $baseInfo.find('div[data-convert="finishDate"]').html(convertDate(tr.finishDate));
+            $baseInfo.find('div[data-convert="statusName"]').html(convertStatus(tr.statusName));
             //初始化页面数据-数量
             $baseInfo.find('div[data-num]').each(function () {
                 var num = tr[$(this).attr('data-num')];
@@ -303,23 +399,30 @@
                 stage1.current = stage === 1 ? 'current' : '';
                 stage1.time = flow.stage1Time;
                 stage1.name = "流转【" + flow.createdName + "】";
-                stage1.content = flow.stage1Kg + "kg(" + flow.stage1Num + "只)";
+                stage1.content = flow.stage1Kg + "kg";
+                stage1.suggest = flow.stage1Num + "只";
+
 
                 stage2.current = stage === 2 ? 'current' : '';
                 stage2.time = flow.stage2Time;
                 stage2.name = "后处理" + (stage >= 2? ("【" + flow.stage2UserName + "】") : '');
-                stage2.content = stage >= 2? (flow.stage2Kg + "kg(" + flow.stage2Num + "只)") : '';
+                stage2.content = stage >= 2? (flow.stage2Kg + "kg") : '';
+                stage2.suggest = stage >= 2? (flow.stage2Num + "只") : '';
 
                 stage3.current = stage === 3 ? 'current' : '';
                 stage3.time = flow.stage3Time;
                 stage3.name = "挑拣" + (stage >= 3? ("【" + flow.stage3UserName + "】") : '');
-                stage3.content = stage >= 3? (flow.stage3Kg + "kg(" + flow.stage3Num + "只)") : '';
+                stage3.content = stage >= 3? (flow.stage3Kg + "kg") : '';
+                stage3.suggest = stage >= 3? (flow.stage3Num + "只") : '';
 
                 stage4.current = stage === 4 ? 'current' : '';
                 stage4.time = flow.stage4Time;
                 stage4.name = "包装" + (stage >= 4? ("【" + flow.stage4UserName + "】") : '');
-                stage4.content = stage >= 4? (flow.stage4Kg + "kg(" + flow.stage4Num + "只)") : '';
-                flows.push({ 'stage1' : stage1, 'stage2' : stage2, 'stage3' : stage3, 'stage4' : stage4, 'barCode': flow.barCode, id: flow.id});
+                stage4.content = stage >= 4? (flow.stage4Kg + "kg") : '';
+                stage4.suggest = stage >= 4? (flow.stage4Num + "只") : '';
+                var _flow = $.extend({ 'stage1' : stage1, 'stage2' : stage2, 'stage3' : stage3, 'stage4' : stage4}, flow);
+                //flows.push({ 'stage1' : stage1, 'stage2' : stage2, 'stage3' : stage3, 'stage4' : stage4, 'barCode': flow.barCode, id: flow.id, stage: flow.stage});
+                flows.push(_flow);
                 consts.flows[flow.barCode] = flow;
             });
 
@@ -328,6 +431,21 @@
             utils.initRightAngleEvent();
             //打印工序卡
             init_print_prod_flow();
+            //编辑'包装确认'
+            init_pack_submit();
+            //打印合格证
+            init_print_flow_certificate();
+
+            consts.$rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
+            consts.$rightPage.find('.fa-angle-double-down').click();
+            //按钮可见
+            var visible = consts.currentOrder.statusCode !== 'S_003';
+            if (visible){
+                $('#forceFinishBt').show();
+            } else {
+                $('#forceFinishBt').hide();
+            }
+
         }
 
         /**
@@ -338,6 +456,136 @@
             utils.bindQuery(function (value) {
                 consts.oQueryParam.cause = value;
                 loadDataTable(true);
+            });
+            //确认包装modal
+            consts.$packModal.on('show.bs.modal', function () {
+                var $modal = $(this);
+                var flow = consts.currentFlow || {};
+                $modal.find('#sn').val(flow.sn);
+                $modal.find('#afterPickKg').val(flow.afterPickKg || flow.stage3Kg);
+                $modal.find('#packCount').val(flow.packCount || '');
+                $modal.find('#perPackNum').val(flow.perPackNum);
+                $modal.find('#perPackKg').val(flow.perPackKg);
+
+                $modal.find('#remnantKg').val(flow.remnantKg);
+                $modal.find('#remnantNum').val(flow.remnantNum);
+                $modal.find('#totalNum').val(flow.totalNum);
+
+                $('#afterPickKg, #packCount, #perPackNum, #perPackKg').bind('input propertychange', function () {
+                    calc();
+                });
+            });
+            //保存'确认包装modal'
+            consts.$savePackBt.unbind('click').bind('click', function (e) {
+                e.preventDefault();
+                var data = {
+                    sn: $('#sn').val()
+                    , afterPickKg: $('#afterPickKg').val()
+                    , packCount: $('#packCount').val()
+                    , perPackNum: $('#perPackNum').val()
+                    , perPackKg: $('#perPackKg').val()
+
+                    , remnantKg: $('#remnantKg').val()
+                    , remnantNum: $('#remnantNum').val()
+                    , totalNum:$('#totalNum').val()
+                };
+
+                if (!data.sn){
+                    return layer.msg('批次不能为空');
+                }
+
+                if (parseFloat(data.afterPickKg||0) <= 0){
+                    return layer.msg('挑拣后重量需大于0');
+                }
+                if (parseInt(data.packCount||0) < 1){
+                    return layer.msg('包数需大于0');
+                }
+                if (parseInt(data.perPackNum||0) < 1){
+                    return layer.msg('包装数量/(PCS)需大于0');
+                }
+                if (parseFloat(data.perPackKg || 0) <= 0){
+                    return layer.msg('包装重量/(KG)需大于0');
+                }
+                console.log('保存数据', data);
+                services.prodOrder.pack(consts.currentFlow.id, data)
+                    .then(function (tr) {
+                        consts.$packModal.modal('hide');
+                        initTrDetail(tr);
+                    })
+                    .catch(function (reason) {
+                        layer.msg(reason.caught ? reason.message : '保存失败！');
+                    })
+            });
+            //强制结束
+            $('#forceFinishBt').unbind('click').bind('click', function (e) {
+                e.preventDefault();
+                layer.confirm('确定结束生产?',{title:'提示',move:false},function(){
+                    services.prodOrder.finish(consts.currentOrder.id)
+                        .then(function (tr) {
+                            layer.msg('已结束该生产制令单');
+                            initTrDetail(tr);
+                            loadDataTable(true);
+                        });
+                });
+
+            });
+
+        }
+        //计算数量
+        function calc() {
+            //包装数
+            var packCount = parseInt($('#packCount').val() || 0);
+            //每包数量
+            var perPackNum = parseInt($('#perPackNum').val() || 0);
+            //每包重量
+            var perPackKg = parseFloat($('#perPackKg').val() || 0);
+
+            //1 - 零头重量=挑拣后重量-(包装数*包装重量)
+            var remnantKg = (parseFloat(($('#afterPickKg').val() || 0)) - (packCount  * perPackKg)).toFixed(4);
+            $('#remnantKg').val(remnantKg);
+
+            //2 - 零头数量=零头重量*包装数/包装重量
+            var remnantNum = parseFloat(remnantKg * perPackNum/(perPackKg || 1)).toFixed(0);
+            $('#remnantNum').val(remnantNum);
+
+            //2 - 总数量=包装数*包装数量+零头数量
+            var total = packCount * perPackNum + parseInt(remnantNum);
+            $('#totalNum').val(total);
+        }
+
+        //编辑'包装确认'
+        function init_pack_submit() {
+            $('.toPack').unbind('click').click(function () {
+                consts.currentFlow = consts.flows[$(this).attr('data-value')];
+                consts.$packModal.modal('show');
+            })
+        }
+
+        //打印合格证
+        function init_print_flow_certificate() {
+            $('.toPrintCertificateBt').unbind('click').click(function () {
+                var flow = consts.flows[$(this).attr('data-value')];
+                var product = consts.currentOrder.product || {};
+                var account = $.local(GLOBALS.localKeys.accountInfo);
+                var $printHolder = $('#printHolder').clone();
+                var data = {
+                    product: product,
+                    flow: flow,
+                    now : new Date().format("yyyy-MM-dd"),
+                    currentUser : account.name
+                };
+                services.common.barcode(data.product.barCode)
+                    .then(function (ret) {
+                        data.base64 = ret.base64;
+                        console.log('打印数据', data);
+                    })
+                    .then(function () {
+                        var html = template("flow_print_certificate_tpl", data);
+                        $printHolder.html(html).show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
             });
         }
 

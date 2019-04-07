@@ -1,11 +1,13 @@
 package com.yintong.erp.web.prod;
 
+import com.yintong.erp.domain.prod.ErpProdHalfFlowRecord;
 import com.yintong.erp.domain.prod.ErpProdMould;
 import com.yintong.erp.domain.prod.ErpProdOrder;
 import com.yintong.erp.domain.prod.ErpProdOrderPickRecord;
 import com.yintong.erp.domain.prod.ErpProdPlan;
 import com.yintong.erp.dto.ProdOrderDto;
 import com.yintong.erp.dto.ProdPlanDto;
+import com.yintong.erp.service.prod.ProdFlowService;
 import com.yintong.erp.service.prod.ProdOrderService;
 import com.yintong.erp.service.prod.ProdPlanService;
 import com.yintong.erp.utils.base.BaseResult;
@@ -36,6 +38,8 @@ public class ProdController {
     @Autowired ProdPlanService planService;
 
     @Autowired ProdOrderService orderService;
+
+    @Autowired ProdFlowService flowService;
 
     /**
      * 新增计划单 - 包括boms、不包括orders、moulds
@@ -232,5 +236,24 @@ public class ProdController {
     @PostMapping("order/pick")
     public BaseResult saveRecord(@RequestBody ErpProdOrderPickRecord record){
         return new BaseResult().addPojo(orderService.saveRecord(record));
+    }
+
+    // url : 'prod/order/pack/' + flowId,
+
+    /**
+     * 包装
+     * @param flowId
+     * @param data
+     * @return
+     */
+    @PatchMapping("order/pack/{flowId}")
+    public BaseResult pack(@PathVariable Long flowId, @RequestBody ErpProdHalfFlowRecord data){
+        ErpProdHalfFlowRecord record = flowService.pack(flowId, data);
+        return new BaseResult().addPojo(orderService.findOneOrder(record.getProdOrderId()));
+    }
+
+    @PatchMapping("order/finish/{orderId}")
+    public BaseResult finish(@PathVariable Long orderId){
+        return new BaseResult().addPojo(orderService.finish(orderId));
     }
 }
