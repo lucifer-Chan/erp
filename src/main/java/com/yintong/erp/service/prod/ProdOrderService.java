@@ -1,6 +1,8 @@
 package com.yintong.erp.service.prod;
 
 import com.yintong.erp.domain.basis.ErpBaseEndProduct;
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
+import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplierRepository;
 import com.yintong.erp.domain.prod.ErpProdMould;
 import com.yintong.erp.domain.prod.ErpProdMouldRepository;
 import com.yintong.erp.domain.prod.ErpProdOrder;
@@ -15,12 +17,14 @@ import com.yintong.erp.domain.prod.ErpProdPlanOptLogRepository;
 import com.yintong.erp.domain.prod.ErpProdPlanRepository;
 import com.yintong.erp.domain.prod.ErpProdProductBom;
 import com.yintong.erp.domain.prod.ErpProdProductBomRepository;
+import com.yintong.erp.domain.stock.ErpStockPlace;
 import com.yintong.erp.domain.stock.StockEntity;
 import com.yintong.erp.dto.BomDto;
 import com.yintong.erp.dto.MouldDto;
 import com.yintong.erp.dto.ProdOrderDto;
 import com.yintong.erp.service.stock.StockIn4Holder;
 import com.yintong.erp.service.stock.StockOut4Holder;
+import com.yintong.erp.service.stock.StockPlaceService;
 import com.yintong.erp.utils.common.Assert;
 import com.yintong.erp.utils.common.CommonUtil;
 import com.yintong.erp.utils.common.DateUtil;
@@ -80,7 +84,11 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
 
     @Autowired ErpProdOrderPickRecordRepository pickRecordRepository;
 
+    @Autowired ErpRawMaterialSupplierRepository materialSupplierRepository;
+
     @Autowired ProdPlanService planService;
+
+    @Autowired StockPlaceService stockPlaceService;
     
     /**
      * 新增制令单
@@ -522,7 +530,8 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
                 .build();
         if (WaresType.M == stockEntity.waresType()){
             //原材料出库 - 供生产使用
-            List<ErpProdProductBom> bomList = order.getBoms().stream().filter(bom -> stockEntity.templateId().equals(bom.getMaterialId())).collect(Collectors.toList());
+//            List<ErpProdProductBom> bomList = order.getBoms().stream().filter(bom -> stockEntity.templateId().equals(bom.getMaterialId())).collect(Collectors.toList());
+            List<ErpProdProductBom> bomList = order.getBoms().stream().filter(bom -> stockEntity.realityId().equals(bom.getRealityMaterialId())).collect(Collectors.toList());
             ErpProdProductBom bom = CommonUtil.single(bomList, "制令单[" + order.getBarCode() + "]的物料清单存在脏数据");
             Assert.notNull(bom, "制令单[" + order.getBarCode() + "]的物料清单中未找到" + stockEntity.template().getSimpleName());
             double currentOutNum = outNum + bom.getNumOut();
@@ -587,6 +596,49 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
         order.setFinishDate(new Date());
         orderOptLogRepository.save(ErpProdOrderOptLog.builder().orderId(orderId).content("强制结束").optType("order").build());
         return orderRepository.save(order);
+    }
+
+    /**
+     * 更换原材料：
+     *  1 - 新建一个bom,
+     *  2 - 设置originalId为原bom的id，设置原材料数量为原bom数量
+     *  3 - 原bom的原材料id和新的不能相同
+     *  4 - 新的原材料大类要和原bom相同
+     * @param orderId 制令单id
+     * @param bomId 原始物料清单id
+     * @param place 新的原材料仓位
+     * @return 制令单
+     */
+    public ErpProdOrder replaceMaterial(Long orderId, Long bomId, ErpStockPlace place) {
+        ErpProdOrder order = findOneOrder(orderId);
+        Map<Long, ErpProdProductBom> boms = order.getBoms().stream().collect(Collectors.toMap(ErpProdProductBom::getId, Function.identity()));
+        //原始物料
+        ErpProdProductBom originalBom = boms.get(bomId);
+        Assert.notNull(originalBom, "未找到原物料清单[" + bomId + "]");
+        Assert.isTrue(Objects.isNull(originalBom.getOriginalId()), "该原材料为替换后的原材料,不能再次替换");
+        //原始material_supplier_bar_code
+        String originalMsBarCode = originalBom.getRealityMaterial().getBarCode();
+        //新的仓位
+        Assert.isTrue("M".equals(place.getStockPlaceType()), "请选择原材料仓位");
+        //新的原材料条码
+        String newMsBarCode = place.getMaterialSupplierBarCode();
+
+        Assert.isTrue(!boms.values().stream().map(it ->it.getRealityMaterial().getBarCode()).collect(Collectors.toSet()).contains(newMsBarCode), "物料清单里已包含该原材料,请重新选择");
+
+        Assert.isTrue(originalMsBarCode.substring(0, 2).equals(newMsBarCode.substring(0, 2)), "更换的原材料类型不正确,请重新选择");
+
+        ErpRawMaterialSupplier materialSupplier = materialSupplierRepository.findByBarCode(newMsBarCode).orElseThrow(()-> new IllegalArgumentException("未找到原材料[" + newMsBarCode + "]"));
+
+        ErpProdProductBom newBom =  ErpProdProductBom.copyFromOriginal(originalBom, materialSupplier);
+
+        prodProductBomRepository.save(newBom);
+
+        String content = "更换原材料为:" + place.getMaterialName();
+
+        orderOptLogRepository.save(ErpProdOrderOptLog.builder().orderId(orderId).content(content).optType("order").build());
+
+        return findOneOrder(orderId);
+
     }
 
     /**

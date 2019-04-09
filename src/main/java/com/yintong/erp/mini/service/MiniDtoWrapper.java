@@ -1,5 +1,6 @@
 package com.yintong.erp.mini.service;
 
+import com.yintong.erp.domain.basis.ErpBaseRawMaterial;
 import com.yintong.erp.domain.basis.associator.ErpModelSupplier;
 import com.yintong.erp.domain.basis.associator.ErpRawMaterialSupplier;
 import com.yintong.erp.domain.prod.ErpProdHalfFlowRecord;
@@ -23,7 +24,9 @@ import com.yintong.erp.utils.common.DateUtil;
 import com.yintong.erp.utils.common.SpringUtil;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.sf.json.JSONObject;
 import org.springframework.util.Assert;
@@ -191,10 +194,23 @@ public class MiniDtoWrapper {
      * @return
      */
     private static JSONObject buildOrder(ErpProdOrder order){
+
+        Map<Long, ErpProdProductBom> bomMap = CommonUtil.ifNotPresent(order.getBoms(), new ArrayList<ErpProdProductBom>()).stream()
+                .collect(Collectors.toMap(ErpProdProductBom::getId, Function.identity()));
+
+
+
         List<JSONObject> boms = CommonUtil.ifNotPresent(order.getBoms(), new ArrayList<ErpProdProductBom>())
                 .stream()
                 .map(bom -> {
                     JSONObject json = bom.getMaterial().getTemplate();
+                    Long originalId = bom.getOriginalId();
+                    if(Objects.nonNull(originalId)){
+                        json.put("originalId", originalId);
+                        ErpBaseRawMaterial material = bomMap.get(bom.getOriginalId()).getMaterial();
+                        json.put("originalName", material.getRawName() + "-" + material.getSpecification());
+                    }
+                    json.put("bomId", bom.getId());
                     json.put("type", "M");
                     json.put("total", bom.getRealityMaterialNum());
                     json.put("in", bom.getNumIn());

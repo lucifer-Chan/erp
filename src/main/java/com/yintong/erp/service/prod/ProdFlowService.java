@@ -159,8 +159,8 @@ public class ProdFlowService implements StockIn4Holder {
         record.setRemnantNum(data.getRemnantNum());
         record.setTotalNum(data.getTotalNum());
 
-        double stage4Kg = packCount * ifNotPresent(data.getPerPackKg(), 0d);
-        int stage4Num = packCount * ifNotPresent(data.getPerPackNum(), 0);
+        double stage4Kg = packCount * ifNotPresent(data.getPerPackKg(), 0d) + data.getRemnantKg();
+        int stage4Num = packCount * ifNotPresent(data.getPerPackNum(), 0) + data.getRemnantNum();
         ErpEmployee employee = SessionUtil.getCurrentUser();
 
         record.setStage4Kg(stage4Kg);

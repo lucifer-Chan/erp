@@ -72,6 +72,9 @@ public class ErpProdProductBom extends BaseEntity {
     @Column(columnDefinition = "double(20,5) comment '切丝长度'")
     private Double materialNum;
 
+    @Column(columnDefinition = "bigint(20) default null comment '更换原材料时对应的原始物料清单id'")
+    private Long originalId;
+
     /**
      * 原材料模版
      */
@@ -179,6 +182,27 @@ public class ErpProdProductBom extends BaseEntity {
         bom.copy4Plan(source, findAssIdBySupplierIdAndMaterialIdFunction);
         bom.setHolder(PLAN.name());
         bom.setHolderId(plan.getId());
+        return bom;
+    }
+
+    /**
+     * 从原始物料清单中构建
+     * @param original
+     * @param materialSupplier
+     * @return
+     */
+    public static ErpProdProductBom copyFromOriginal(ErpProdProductBom original, ErpRawMaterialSupplier materialSupplier){
+        ErpProdProductBom bom = new ErpProdProductBom();
+        bom.setHolder(original.getHolder());
+        bom.setHolderId(original.getHolderId());
+        bom.setProductId(original.getProductId());
+        bom.setRealityMaterialNum(original.getRealityMaterialNum());
+        bom.setMaterialNum(original.getMaterialNum());
+        bom.setMaterialId(materialSupplier.getRawMaterId());
+        bom.setSupplierId(materialSupplier.getSupplierId());
+        bom.setRealityMaterialId(materialSupplier.getId());
+        bom.setSupplierName(materialSupplier.getSupplierName());
+        bom.setOriginalId(original.getId());
         return bom;
     }
 

@@ -228,6 +228,9 @@
                         {{if flow.stage >= 4}}
                         <button type="button" class="btn btn-info btn-xs toPrintCertificateBt" data-value="{{flow.barCode}}">打印包装信息</button>
                         {{/if}}
+                        {{if flow.remnantNum > 0 || flow.remnantKg > 0}}
+                        <button type="button" class="btn btn-info btn-xs toPrintRemnantCertificateBt" data-value="{{flow.barCode}}">打印零头</button>
+                        {{/if}}
 
                     </div>
                 </div>
@@ -435,6 +438,8 @@
             init_pack_submit();
             //打印合格证
             init_print_flow_certificate();
+            //打印合格证
+            init_print_flow_remnant_certificate();
 
             consts.$rightPage.show().attr('class', 'rightInfoPage animated fadeInRightBig');
             consts.$rightPage.find('.fa-angle-double-down').click();
@@ -570,8 +575,44 @@
                 var $printHolder = $('#printHolder').clone();
                 var data = {
                     product: product,
-                    flow: flow,
-                    now : new Date().format("yyyy-MM-dd"),
+                    flow: {
+                        sn: flow.sn,
+                        num: flow.perPackNum,
+                        kg: flow.perPackKg,
+                        time: flow.stage4Time.substring(0, 10)
+                    },
+                    currentUser : account.name
+                };
+                services.common.barcode(data.product.barCode)
+                    .then(function (ret) {
+                        data.base64 = ret.base64;
+                        console.log('打印数据', data);
+                    })
+                    .then(function () {
+                        var html = template("flow_print_certificate_tpl", data);
+                        $printHolder.html(html).show().print();
+                    })
+                    .catch(function () {
+                        layer.msg('生成条形码失败！');
+                    });
+            });
+        }
+
+        //打印零头合格证
+        function init_print_flow_remnant_certificate() {
+            $('.toPrintRemnantCertificateBt').unbind('click').click(function () {
+                var flow = consts.flows[$(this).attr('data-value')];
+                var product = consts.currentOrder.product || {};
+                var account = $.local(GLOBALS.localKeys.accountInfo);
+                var $printHolder = $('#printHolder').clone();
+                var data = {
+                    product: product,
+                    flow: {
+                        sn: flow.sn,
+                        num: flow.remnantNum,
+                        kg: flow.remnantKg,
+                        time: flow.stage4Time.substring(0, 10)
+                    },
                     currentUser : account.name
                 };
                 services.common.barcode(data.product.barCode)

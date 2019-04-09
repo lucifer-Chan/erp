@@ -121,7 +121,7 @@ public class ErpRawMaterialSupplier extends BaseEntityWithBarCode implements Sto
         return placeNames = SpringUtil.getBean(ErpStockPlaceRepository.class)
                 .findByMaterialSupplierAssId(id)
                 .stream()
-                .map(ErpStockPlace::getName)
+                .map(ErpStockPlace::getPlaceCode)
                 .collect(Collectors.joining(","));
     }
 

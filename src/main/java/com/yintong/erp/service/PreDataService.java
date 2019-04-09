@@ -65,6 +65,7 @@ public class PreDataService {
                 , ErpMiniRole.builder().code("OUT_SALE").name("销售出库").build()
                 , ErpMiniRole.builder().code("IN_REFUNDS").name("销售退货").build()
                 , ErpMiniRole.builder().code("OUT_PROD").name("生产物料出库").build()
+                , ErpMiniRole.builder().code("REPLACE_M").name("更换原材料").build()
 
                 , ErpMiniRole.builder().code("IN_FLOW_P").name("生产成品入库").build()
                // , ErpMiniRole.builder().code("IN_PROD_P").name("生产成品入库").build()

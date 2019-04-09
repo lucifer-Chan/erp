@@ -56,6 +56,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -195,6 +196,12 @@ public class MiniAppController {
      */
     @GetMapping("scan/order")
     public BaseResult scanOrder(String stockOpt, String stockHolder, String barcode){
+
+        if("REPLACE".equals(stockOpt)) {
+            stockOpt = "OUT";
+            stockHolder = "PROD";
+        }
+
         Assert.isTrue(IN.name().equals(stockOpt) || OUT.name().equals(stockOpt), "操作类型参数不正确");
         Assert.isTrue(StringUtils.hasText(barcode), "请先扫描条形码");
         Assert.isTrue(HOLDER_AND_PREFIX_MAP.keySet().contains(stockHolder), "条形码不合法！");
@@ -224,7 +231,6 @@ public class MiniAppController {
         List<JSONObject> list = orders.stream().map(it -> MiniDtoWrapper.buildOrder(it, null)).collect(Collectors.toList());
         return new BaseResult().addList(list);
     }
-
 
     /**
      * 2-扫码查找单个仓位
@@ -381,6 +387,11 @@ public class MiniAppController {
     @PostMapping("stock")
     public BaseResult scan2Stock(String stockOpt, String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
         orderId = -999 == orderId ? null : orderId;
+        if("REPLACE".equals(stockOpt)) {
+            stockOpt = "OUT";
+            stockHolder = "PROD";
+        }
+
         Assert.isTrue(IN.name().equals(stockOpt) || OUT.name().equals(stockOpt), "操作类型参数不正确");
         Assert.hasText(stockHolder, "订单类型不能为空");
         Assert.notNull(placeId, "仓位信息不能为空");
@@ -476,7 +487,8 @@ public class MiniAppController {
     @GetMapping("scan/prod")
     public BaseResult scan4CreateFlow(String barcode){
         ErpProdOrder order = prodOrderService.findOrder4In(barcode);
-        return new BaseResult().addPojo(order, "yyyy-MM-dd");
+        return new BaseResult().addPojo(buildOrder(order, null));
+//        return new BaseResult().addPojo(order, "yyyy-MM-dd");
     }
 
     /**
@@ -562,6 +574,42 @@ public class MiniAppController {
         prodFlowService.afterSaveFlow(record, ProdFlowStage.val(next));
 
         return new BaseResult().addPojo(record);
+    }
+
+    /**
+     * 更换制令单的原材料,然后出库
+     * @param orderId 制令单id
+     * @param bomId 物料清单id
+     * @param newPlaceId 新的原材料仓位id
+     * @param num 出库数量
+     * @return 制令单
+     */
+    @PatchMapping("prod/material/replace/out")
+    public BaseResult replaceMaterialAndOut(Long orderId, Long bomId, Long newPlaceId, Double num){
+
+        ErpStockPlace place = stockPlaceService.one(newPlaceId);
+
+        ErpProdOrder order = prodOrderService.replaceMaterial(orderId, bomId, place);
+
+        return scan2Stock(OUT.name(), PROD.name(), place.getId(), orderId, order.getBarCode(), place.getBarCode(), num);
+
+    }
+
+    // @PostMapping("stock")
+    //    public BaseResult scan2Stock(String stockOpt, String stockHolder, Long placeId, Long orderId, String orderBarcode, String barcode, Double num){
+
+    /**
+     * 更换制令单的原材料
+     * @param orderId 制令单id
+     * @param bomId 物料清单id
+     * @param barcode 新的原材料仓位条码
+     * @return 仓位
+     */
+    @GetMapping("prod/material/replace")
+    public BaseResult replaceMaterial(Long orderId, Long bomId, String barcode){
+        ErpStockPlace place = stockPlaceService.one(barcode);
+        prodOrderService.replaceMaterial(orderId, bomId, place);
+        return new BaseResult().addPojo(place);
     }
 
 
