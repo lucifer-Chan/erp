@@ -611,6 +611,7 @@ public class ProdOrderService implements StockOut4Holder, StockIn4Holder, OnDele
      */
     public ErpProdOrder replaceMaterial(Long orderId, Long bomId, ErpStockPlace place) {
         ErpProdOrder order = findOneOrder(orderId);
+        Assert.isTrue(!S_003.name().equals(order.getStatusCode()), "制令单已完成生产,不能替换原材料");
         Map<Long, ErpProdProductBom> boms = order.getBoms().stream().collect(Collectors.toMap(ErpProdProductBom::getId, Function.identity()));
         //原始物料
         ErpProdProductBom originalBom = boms.get(bomId);

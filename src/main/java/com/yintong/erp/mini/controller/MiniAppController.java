@@ -75,6 +75,7 @@ import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_ASS_LENG
 import static com.yintong.erp.utils.bar.BarCodeConstants.WARES_BAR_CODE_TPL_LENGTH;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_1;
+import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_003;
 import static com.yintong.erp.utils.common.Constants.StockHolder;
 import static com.yintong.erp.utils.common.Constants.StockHolder.BUY;
 import static com.yintong.erp.utils.common.Constants.StockHolder.FLOW;
@@ -500,6 +501,7 @@ public class MiniAppController {
     @PostMapping("prod/flow")
     public BaseResult createFlow(Long prodOrderId, Double kg){
         ErpProdOrder order = prodOrderService.findOneOrder(prodOrderId);
+        Assert.isTrue(!S_003.name().equals(order.getStatusCode()), "制令单已完成生产,不能新增工序卡");
         ErpBaseEndProduct product = order.getProduct();
         Assert.notNull(product, "未找到制令单的产品");
         Assert.notNull(kg, "输入的重量不能为空");
@@ -541,6 +543,7 @@ public class MiniAppController {
         ErpEmployee employee = SessionUtil.getCurrentUser();
         ErpProdHalfFlowRecord record = flowRecordRepository.findByBarCode(barcode).orElseThrow(()->new IllegalArgumentException("未找到工序卡[".concat(barcode).concat("]")));
         ErpProdOrder order = prodOrderService.findOneOrder(record.getProdOrderId());
+        Assert.isTrue(!S_003.name().equals(order.getStatusCode()), "制令单已完成生产,不能流转");
         ErpBaseEndProduct product = order.getProduct();
         Assert.notNull(product, "未找到制令单的产品");
         Assert.notNull(kg, "输入的重量不能为空");

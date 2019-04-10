@@ -23,6 +23,7 @@ import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_1;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_2;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_3;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage.PROD_STAGE_4;
+import static com.yintong.erp.utils.common.Constants.ProdOrderStatus.S_003;
 import static com.yintong.erp.utils.common.Constants.StockHolder.FLOW;
 import static com.yintong.erp.utils.common.Constants.StockHolder.PROD;
 import static com.yintong.erp.utils.common.Constants.ProdFlowStage;
@@ -147,6 +148,8 @@ public class ProdFlowService implements StockIn4Holder {
      */
     public ErpProdHalfFlowRecord pack(Long flowId, ErpProdHalfFlowRecord data) {
         ErpProdHalfFlowRecord record = flowRecordRepository.findById(flowId).orElseThrow(()-> new IllegalArgumentException("未找到工序卡[" + flowId + "]"));
+        ErpProdOrder order = prodOrderService.findOneOrder(record.getProdOrderId());
+        Assert.isTrue(!S_003.name().equals(order.getStatusCode()), "制令单已完成生产,不能进行包装操作");
         int packCount = ifNotPresent(data.getPackCount(), 0);
         double oldKg = ifNotPresent(record.getStage4Kg(), 0d);
         int oldNum = ifNotPresent(record.getStage4Num(), 0);

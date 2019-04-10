@@ -421,8 +421,20 @@
                 stage4.current = stage === 4 ? 'current' : '';
                 stage4.time = flow.stage4Time;
                 stage4.name = "包装" + (stage >= 4? ("【" + flow.stage4UserName + "】") : '');
-                stage4.content = stage >= 4? (flow.stage4Kg + "kg") : '';
-                stage4.suggest = stage >= 4? (flow.stage4Num + "只") : '';
+
+                if (stage < 4){
+                    stage4.content = '';
+                    stage4.suggest = '';
+                } else if (flow.remnantNum > 0 || flow.remnantKg > 0){
+                    stage4.content = flow.perPackKg + '*' + flow.packCount + '+' + flow.remnantKg + '=' + flow.stage4Kg + 'kg';
+                    stage4.suggest = flow.perPackNum + '*' + flow.packCount + '+' + flow.remnantNum + '=' + flow.stage4Num + '只';
+                } else {
+                    stage4.content = flow.perPackKg + 'kg * ' + flow.packCount + ' = ' + flow.stage4Kg + 'kg';
+                    stage4.suggest = flow.perPackNum + '只 * ' + flow.packCount + ' = ' + flow.stage4Num + '只';
+                }
+
+                // stage4.content = stage >= 4? (flow.stage4Kg + "kg") : '';
+                // stage4.suggest = stage >= 4? (flow.stage4Num + "只") : '';
                 var _flow = $.extend({ 'stage1' : stage1, 'stage2' : stage2, 'stage3' : stage3, 'stage4' : stage4}, flow);
                 //flows.push({ 'stage1' : stage1, 'stage2' : stage2, 'stage3' : stage3, 'stage4' : stage4, 'barCode': flow.barCode, id: flow.id, stage: flow.stage});
                 flows.push(_flow);
