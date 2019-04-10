@@ -72,7 +72,7 @@ public class ProductBomService implements OnDeleteProductValidator, OnDeleteRawM
      */
     public ErpBaseProductBom update(Long id, String materialNum){
         ErpBaseProductBom bom = one(id);
-        bom.setMaterialNum(CommonUtil.parseDouble(materialNum));
+        bom.setMaterialNum(materialNum);
         return productBomRepository.save(bom);
     }
 

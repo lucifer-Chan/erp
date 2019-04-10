@@ -69,8 +69,11 @@ public class ErpProdProductBom extends BaseEntity {
     @Column(columnDefinition = "double(20,5) comment '原材料数量-入库-针对制令单[用完回收]'")
     private Double numIn;
 
-    @Column(columnDefinition = "double(20,5) comment '切丝长度'")
-    private Double materialNum;
+//    @Column(columnDefinition = "double(20,5) comment '切丝长度'")
+//    private Double materialNum;
+
+    @Column(columnDefinition = "varchar(100) comment '切丝长度'")
+    private String materialNum;
 
     @Column(columnDefinition = "bigint(20) default null comment '更换原材料时对应的原始物料清单id'")
     private Long originalId;

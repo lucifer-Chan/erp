@@ -27,7 +27,8 @@ public class BomDto {
     private Long materialId;
 
     //切丝长度
-    private Double materialNum;
+//    private Double materialNum;
+    private String materialNum;
 
 
     //耗银|耗铜 总数
