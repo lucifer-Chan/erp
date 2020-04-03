@@ -96,6 +96,14 @@ public class ProductBomService implements OnDeleteProductValidator, OnDeleteRawM
     }
 
     /**
+     * 获取全部
+     * @return
+     */
+    public List<ErpBaseProductBom> all() {
+        return productBomRepository.findAll();
+    }
+
+    /**
      * 根据成品查找
      * @param productId
      * @return

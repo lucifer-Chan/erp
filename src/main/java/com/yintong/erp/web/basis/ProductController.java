@@ -12,6 +12,7 @@ import com.yintong.erp.service.stock.StockOptService;
 import com.yintong.erp.utils.base.BaseResult;
 import com.yintong.erp.utils.excel.ExcelUtil;
 import java.util.Objects;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -101,12 +102,21 @@ public class ProductController {
     @GetMapping("allWithBom")
     public BaseResult findAllWithBom(){
 
+        Set<Long> withBom = bomService.all().stream().map(ErpBaseProductBom::getProductId).collect(Collectors.toSet());
+
         List<ErpBaseEndProduct> list = productRepository.findAll()
                 .stream()
-                .filter(product -> !CollectionUtils.isEmpty(bomService.findBomList(product.getId())))
+                .filter(product -> withBom.contains(product.getId()))
                 .collect(Collectors.toList());
 
         return new BaseResult().addList(list);
+
+//        List<ErpBaseEndProduct> list = productRepository.findAll()
+//                .stream()
+//                .filter(product -> !CollectionUtils.isEmpty(bomService.findBomList(product.getId())))
+//                .collect(Collectors.toList());
+//
+//        return new BaseResult().addList(list);
     }
 
     /**
