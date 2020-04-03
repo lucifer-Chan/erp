@@ -14,10 +14,10 @@ import com.yintong.erp.utils.excel.ExcelUtil;
 import java.util.Objects;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -99,24 +99,38 @@ public class ProductController {
         );
     }
 
+//    @GetMapping("allWithBom")
+//    public BaseResult findAllWithBom(){
+//
+//        Set<Long> withBom = bomService.all().stream().map(ErpBaseProductBom::getProductId).collect(Collectors.toSet());
+//
+//        List<ErpBaseEndProduct> list = productRepository.findAll()
+//                .stream()
+//                .filter(product -> withBom.contains(product.getId()))
+//                .collect(Collectors.toList());
+//
+//        return new BaseResult().addList(list);
+//
+////        List<ErpBaseEndProduct> list = productRepository.findAll()
+////                .stream()
+////                .filter(product -> !CollectionUtils.isEmpty(bomService.findBomList(product.getId())))
+////                .collect(Collectors.toList());
+////
+////        return new BaseResult().addList(list);
+//    }
+
     @GetMapping("allWithBom")
     public BaseResult findAllWithBom(){
 
         Set<Long> withBom = bomService.all().stream().map(ErpBaseProductBom::getProductId).collect(Collectors.toSet());
 
-        List<ErpBaseEndProduct> list = productRepository.findAll()
+        List<JSONObject> list = productRepository.findAll()
                 .stream()
                 .filter(product -> withBom.contains(product.getId()))
+                .map(it -> it.filter("id", "description", "unitSilverLoss", "unitSilverCopper", "onlyOrKg"))
                 .collect(Collectors.toList());
 
         return new BaseResult().addList(list);
-
-//        List<ErpBaseEndProduct> list = productRepository.findAll()
-//                .stream()
-//                .filter(product -> !CollectionUtils.isEmpty(bomService.findBomList(product.getId())))
-//                .collect(Collectors.toList());
-//
-//        return new BaseResult().addList(list);
     }
 
     /**
